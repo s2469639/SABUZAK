@@ -94,6 +94,6 @@ sabuzak/
 └── run.py
 
 # 데이터 소스
-박람회 일정 — TradeFairDates, 공공데이터포털(해외전시회 개최정보)
+박람회 일정 — TradeFairDates
 정부 지원금 — KATI(aT 농식품 수출정보), KOTRA 해외전시포털(gep.or.kr)
 식품 규제 — 공공데이터포털(식품안전정보원 수출식품 부적합 사례)
