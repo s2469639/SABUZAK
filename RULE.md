@@ -23,22 +23,6 @@
 ## 2. 디렉토리 및 파일 구조 가이드
 
 프로젝트 전반의 혼선을 방지하기 위해 역할별로 폴더를 명확히 분리합니다.
-
-```text
-root/
-├── src/ (또는 app/)
-│   ├── assets/          # 이미지, 아이콘, 폰트 등 정적 리소스
-│   ├── components/      # 재사용 가능한 UI 컴포넌트
-│   ├── pages/ (views/)  # 라우팅/화면 단위 페이지
-│   ├── services/ (api/) # 외부 API 호출 및 통신 로직
-│   ├── utils/           # 공통 함수, 헬퍼 함수
-│   └── constants/       # 전역 상수 및 설정값
-├── tests/               # 테스트 코드
-├── .gitignore           # Git 제외 설정
-├── README.md            # 프로젝트 개요 및 실행 방법
-└── RULE.md              # 팀 협업 및 코딩 컨벤션
-```
-
 ---
 
 ## 3. Streamlit / Flask 혼용 규칙
