@@ -43,68 +43,98 @@ AI 부스 컨셉 자동 생성 후 수정·초안 저장
 기안서 자동 작성 후 수정·초안 저장, PDF/Word 내보내기
 작성 진행 상태(컨셉/기안서) 관리
 
-# 기술 스택
-Backend — Python + Flask
-데이터 처리 — pandas
-Frontend — Jinja2 템플릿 + HTML/CSS + 바닐라 JS (탭 전환·초안 저장 등)
-Database — SQLite (초안 저장용, 별도 설치 불필요)
-추가 설치 패키지
+## 기술 스택
+- Backend — Python + Flask, Flask-Login(로그인), Flask-SQLAlchemy(DB)
+- 데이터 처리 — pandas
+- Frontend — Jinja2 템플릿 + HTML/CSS + 바닐라 JS (탭 전환, AI 생성 버튼, 초안 저장 등 AJAX)
+- Database — SQLite (`instance/sabuzak.db`)
+- 외부 연동 — 환율 API(실시간 환율), OpenAI API(부스 컨셉·기안서 생성, 박람회 자동 분류)
 
-기존 python · flask · pandas 외에 아래 패키지가 필요합니다.
+## 설치
+한 번에 설치하려면:
+```bash
+./setup.sh
+```
+가상환경(.venv) 생성 (파이썬 3.11 기준) → `requirements.txt` 설치 → `.env` 생성(`.env.example` 복사) → DB 테이블 초기화까지 자동으로 처리합니다. 완료 후 `.env`에 `SECRET_KEY`, `OPENAI_API_KEY`를 채워주세요.
 
-패키지	용도
-Flask-SQLAlchemy	컨셉·기안서 초안 저장 (DB ORM)
-requests	외부 API 호출 (박람회 일정 수집)
-python-dotenv	환경변수(.env) 관리
-anthropic (또는 openai)	LLM API — 컨셉·기안서 자동 생성
-python-docx	기안서 Word(.docx) 출력
-weasyprint	기안서 PDF 출력 (HTML → PDF)
-bash
-pip install flask flask-sqlalchemy pandas requests python-dotenv anthropic python-docx weasyprint
+## 실행
+```bash
+source .venv/bin/activate
+python run.py          # 기본 포트 5000
+```
 
-weasyprint는 시스템 라이브러리(GTK/Pango 등)가 필요할 수 있습니다. 설치가 번거로우면 pdfkit(+ wkhtmltopdf)로 대체 가능합니다.
+### raw_exhibitions 컬럼
+DB 컬럼명은 영문으로 두고(SQL/ORM에서 매번 따옴표 처리를 안 해도 되고 다른 도구와의 호환성도 좋음), 화면에 한글로 보여주는 건 Jinja 템플릿의 라벨/필터가 담당합니다.
 
-환경 변수는 .env 파일에 설정합니다.
-env
-LLM_API_KEY=your_key
-PREDICTHQ_API_KEY=your_key
+| 컬럼 | 화면 표시 | 설명 |
+|---|---|---|
+| id | 순번 | PK |
+| detail_url | (비표시) | 크롤링 dedup용 내부 키 (tradefairdates.com 상세페이지 URL) |
+| name | 박람회명 | |
+| start_date / end_date | 시작일 / 종료일 | YYYYMMDD 숫자. 날짜 전체가 미상이면 `UNKNOWN_DATE`(99999999, 실존하는 모든 날짜보다 큰 sentinel), 연/월만 알고 일자가 미상이면 일(day)=`32`(예: 2027년 10월 중 → `20271032`)로 채움. **0을 미상 값으로 쓰면 오름차순 정렬에서 오히려 맨 앞으로 와버리므로 쓰지 않음** — 두 경우 모두 실제 날짜보다 큰 값이라 임박한 날짜 순 정렬 시 자연스럽게 맨 뒤로 감 |
+| country | 국가 | DB에는 영문 원문 저장, 화면에는 `country_ko` 필터로 한글 표시 (예: Morocco → 모로코) |
+| city / venue | 도시 / 장소 | 고유명사라 번역하지 않고 원문(영문) 그대로 표시 |
+| audience_note | 참관대상 | 원문 그대로(예: "professional visitors only") |
+| website | 웹사이트 | 박람회 공식 사이트 |
+| intro | 상세설명(원문) | |
+| intro_ko | 상세설명 | `preprocess.py`가 번역한 한국어 버전. 없으면 화면에서 `intro` 원문으로 대체 표시 |
+| category | (비표시) | 크롤링 카테고리(내부용, 부분 크롤링 시 비활성화 범위 판단에 필요) |
+| continent / food_yn / scale / keywords | 대륙 / food_yn / 규모 / 키워드 | `preprocess.py` 분류 결과 |
+| classified_at | (비표시) | 마지막 분류 시각 (내부용, `preprocess.py`가 이미 분류된 건 건너뛰는 기준) |
+| is_active | (비표시) | 최근 크롤링에서도 보였는지 |
+| last_updated_at | 마지막 업데이트 | 박람회 상세 페이지에 표시 |
 
-실행 방법
-bash
-flask run          # 기본 포트 5000
-
-# 코드 구조
+## 코드 구조
+```
 sabuzak/
-├── app/
-│   ├── __init__.py          # Flask 앱 생성 (create_app)
+├── app/                         # Flask 웹앱
+│   ├── __init__.py              # create_app (앱 팩토리)
+│   ├── extensions.py            # db, login_manager
+│   ├── models.py                # Exhibition(=raw_exhibitions), ConceptDraft, ProposalDraft, User
 │   ├── routes/
-│   │   ├── auth.py          # 로그인
-│   │   ├── dashboard.py     # 대시보드(대륙 선택) · 대륙별 박람회 목록
-│   │   ├── exhibition.py    # 박람회 상세 (개요·시장·HS코드·주의사항)
-│   │   ├── concept.py       # 부스 컨셉 생성 · 수정 · 초안 저장
-│   │   └── proposal.py      # 기안서 생성 · 수정 · 초안 저장 · PDF/Word 출력
-│   ├── models.py            # DB 모델 (Exhibition, ConceptDraft, ProposalDraft)
+│   │   ├── auth.py              # 로그인/로그아웃
+│   │   ├── dashboard.py         # 대시보드(세계 지도) · 대륙별 박람회 목록
+│   │   ├── exhibition.py        # 박람회 상세 (개요·시장·HS코드·주의사항 + 환율)
+│   │   ├── concept.py           # 부스 컨셉 생성 · 수정 · 초안 저장
+│   │   ├── proposal.py          # 기안서 생성 · 수정 · 초안 저장 · PDF/Word 출력
+│   │   ├── drafts.py            # 작성 중인 박람회 목록
+│   │   └── crawl.py             # 크롤링 시작(POST /crawl/run) · 상태 조회(GET /crawl/status)
 │   ├── services/
-│   │   ├── llm.py           # LLM API 호출 (컨셉·기안서 생성)
-│   │   ├── data.py          # pandas 기반 데이터 처리
-│   │   └── export.py        # PDF/Word 내보내기
+│   │   ├── data.py              # raw_exhibitions 조회/가공 (pandas)
+│   │   ├── exchange.py          # 환율 API 호출 + 캐싱
+│   │   ├── country_names.py     # 국가명 영문→한글 정적 매핑 (country_ko 필터)
+│   │   ├── crawl_runner.py      # 백그라운드 스레드로 크롤링 실행 + 진행 상태 관리
+│   │   ├── llm.py               # OpenAI 컨셉·기안서 생성
+│   │   └── export.py            # PDF(weasyprint)/Word(python-docx) 출력
 │   ├── templates/
-│   │   ├── base.html        # 공통 레이아웃 (사이드바)
+│   │   ├── base.html            # 공통 레이아웃 (사이드바)
 │   │   ├── login.html
-│   │   ├── dashboard.html   # 세계 지도 (대륙 클릭)
-│   │   ├── continent.html   # 대륙별 박람회 목록
-│   │   ├── exhibition.html  # 상세 4탭
-│   │   ├── concept.html     # 부스 컨셉 기획 (수정·저장)
-│   │   ├── proposal.html    # 기안서 작성 (수정·저장·출력)
-│   │   └── drafts.html      # 작성 중인 박람회
+│   │   ├── dashboard.html       # 세계 지도 (대륙 핀 클릭) + 크롤링 새로고침 버튼
+│   │   ├── continent.html       # 대륙별 박람회 목록
+│   │   ├── exhibition.html      # 상세 4탭
+│   │   ├── concept.html         # 부스 컨셉 기획 (AI 생성·수정·저장)
+│   │   ├── proposal.html        # 기안서 작성 (AI 생성·수정·저장·출력)
+│   │   └── drafts.html          # 작성 중인 박람회
 │   └── static/
-│       ├── css/
-│       ├── js/              # 탭 전환, 초안 저장 등
+│       ├── css/base.css
+│       ├── js/                  # map.js(지도 핀), tabs.js(탭 전환), crawl.js(크롤링 버튼+스피너), concept.js, proposal.js
 │       └── img/
-├── data/                    # 박람회·HS코드·규제 원본 데이터 (CSV 등)
+├── scripts/                     # 데이터 파이프라인 (웹앱과 분리된 배치 스크립트)
+│   ├── crawl/
+│   │   ├── tradefairdates_scraper.py
+│   │   ├── sync_to_db.py
+│   │   └── multi_crawl_gui.py
+│   └── classify/
+│       └── preprocess.py        # 전처리 분류 기준
+├── data/                        # HS코드·규제 등 정적 참조 데이터 (CSV 등, 준비 중)
+├── instance/
+│   └── sabuzak.db                # SQLite (git 미포함)
 ├── config.py
 ├── requirements.txt
-└── run.py
+├── run.py
+├── .env.
+└── README.md
+```
 
 # 데이터 소스
 박람회 일정 — TradeFairDates

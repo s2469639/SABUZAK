@@ -23,68 +23,39 @@
 ## 2. 디렉토리 및 파일 구조 가이드
 
 프로젝트 전반의 혼선을 방지하기 위해 역할별로 폴더를 명확히 분리합니다.
----
-
-## 3. Streamlit / Flask 혼용 규칙
-
-두 프레임워크를 함께 쓸 경우 역할을 명확히 분리합니다.
-
-- **Flask**: API 서버 (데이터 처리, DB 연동, 비즈니스 로직) → `backend/` 하위에 위치
-- **Streamlit**: 데이터 시각화, 데모/대시보드 UI → 별도 `dashboard/` 폴더로 분리 (Flask 앱과 물리적으로 분리 권장)
-
-```text
-root/
-├── backend/             # Flask 서버
-│   ├── app.py
-│   ├── routes/
-│   ├── services/
-│   └── models/
-├── dashboard/            # Streamlit 앱
-│   ├── main.py
-│   └── pages/
-├── src/                  # 프론트엔드(React 등) 사용 시
-├── tests/
-├── .gitignore
-├── README.md
-└── RULE.md
-```
-
-- Flask와 Streamlit이 같은 데이터/유틸 함수를 쓸 경우, 로직은 `common/` 또는 `core/`에 두고 양쪽에서 import해서 사용 (중복 구현 금지)
-- 포트 번호는 README.md에 명시 (예: Flask `:5000`, Streamlit `:8501`)
-- 환경변수(`.env`)는 공통으로 관리하되, 프레임워크별 설정은 접두어로 구분 (`FLASK_`, `STREAMLIT_`)
 
 ---
 
-## 4. 네이밍 컨벤션
+## 3. 네이밍 컨벤션
 
-### 4.1 변수 / 함수명
+### 3.1 변수 / 함수명
 - **Python**: `snake_case` 사용 (예: `user_name`, `get_user_data()`)
 - **JavaScript/React**: `camelCase` 사용 (예: `userName`, `getUserData()`)
 - 불리언 변수는 `is_`, `has_`, `should_` 접두어 사용 (예: `is_valid`, `has_permission`)
 - 약어 사용 지양, 의미가 명확한 이름 사용 (`usr` ❌ → `user` ✅)
 
-### 4.2 상수
+### 3.2 상수
 - 전역 상수는 `UPPER_SNAKE_CASE` (예: `MAX_RETRY_COUNT`, `API_BASE_URL`)
 - `constants/` 폴더에 모아서 관리, 하드코딩 금지
 
-### 4.3 클래스 / 컴포넌트명
+### 3.3 클래스 / 컴포넌트명
 - 클래스: `PascalCase` (예: `UserService`, `DataProcessor`)
 - React 컴포넌트: `PascalCase` + 파일명도 동일하게 (예: `UserCard.jsx`)
 
-### 4.4 파일 / 폴더명
+### 3.4 파일 / 폴더명
 - Python 파일: `snake_case.py`
 - React 컴포넌트 파일: `PascalCase.jsx`
 - 폴더명: 복수형 사용 (`components/`, `utils/`, `services/`)
 
-### 4.5 API 라우트 / 엔드포인트
+### 3.5 API 라우트 / 엔드포인트
 - RESTful 규칙 준수: `/api/users`, `/api/users/<id>`
 - 동사 대신 명사 사용, 복수형 유지 (`/getUser` ❌ → `/users` ✅)
 
 ---
 
-## 5. Git / GitHub 협업 규칙 (5인 팀 / 총 7개 브랜치)
+## 4. Git / GitHub 협업 규칙 (5인 팀 / 총 7개 브랜치)
 
-### 5.1 브랜치 전략
+### 4.1 브랜치 전략
 
 총 **7개 브랜치**로 운영합니다: 메인 2개(`main`, `develop`) + 팀원별 개인 브랜치 5개.
 
@@ -102,7 +73,7 @@ root/
 
 **작업 흐름**: 개인 브랜치 → PR → `develop` 병합 → (스프린트/마일스톤 단위로) PM 승인 후 `develop → main` 병합
 
-### 5.2 커밋 메시지 규칙
+### 4.2 커밋 메시지 규칙
 
 타입: 무엇을 왜 바꿨는지 간결하게 설명 (명령조/명사형 종결 권장)
 
@@ -112,7 +83,7 @@ root/
 | `fix` | 버그, 에러, 화면 깨짐 등 오류 수정 | `fix: 메인 버튼 클릭 안 되는 현상 수정` |
 | `chore` | 문서 작성/수정, 단순 코드 정리(잡무) | `chore: RULE.md 파일 업데이트` |
 
-### 5.3 Pull Request 규칙
+### 4.3 Pull Request 규칙
 
 - **PR 방향**: 개인 브랜치 → `develop` (원칙), `develop` → `main`은 팀장 승인 하에 PM이 진행
 - PR 제목은 커밋 메시지 규칙과 동일하게 작성
@@ -122,13 +93,13 @@ root/
 - 본인 PR은 본인이 머지하지 않음 (셀프 머지 지양)
 - 머지 방식은 `Squash and merge` 통일 (커밋 히스토리 정리)
 
-### 5.4 이슈 관리
+### 4.4 이슈 관리
 
 - 작업 시작 전 GitHub Issue 생성 → 브랜치명에 담당자+이슈 번호 포함 권장 (예: `feature/mem1-12-login-api`)
 - 라벨 활용: `bug`, `feature`, `docs`, `urgent`, `pm-review`
 - PM이 이슈 보드(Projects) 관리 및 스프린트 단위 우선순위 조정
 
-### 5.5 .gitignore 필수 항목
+### 4.5 .gitignore 필수 항목
 
 ```
 __pycache__/
@@ -142,7 +113,7 @@ node_modules/
 
 ---
 
-## 6. 코드 스타일 / 린트
+## 5. 코드 스타일 / 린트
 
 - Python: `black` + `flake8` (또는 `ruff`) 사용, 커밋 전 포맷팅 필수
 - JavaScript: `eslint` + `prettier` 사용
