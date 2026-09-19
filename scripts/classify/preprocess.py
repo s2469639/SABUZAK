@@ -21,7 +21,8 @@ country는 화면에 보여줄 때만 app/services/country_names.py의 정적 �
 실행:
     python preprocess.py                          # 기본 DB(../../instance/sabuzak.db), 미분류/재분류 필요분만
     python preprocess.py --db ../../instance/sabuzak.db
-    python preprocess.py --limit 5                # 연습/테스트용으로 5건만
+    python preprocess.py --limit 5                # 연습/테스트용으로 5건만 (id 순서대로)
+    python preprocess.py --limit 20 --random       # id 순서 대신 무작위로 20건 샘플 테스트
     python preprocess.py --force                  # 이미 분류된 것도 전부 재분류
     python preprocess.py --model gpt-4o-mini       # 모델 지정(기본값은 gpt-4o)
 """
@@ -53,28 +54,33 @@ def get_client():
     return OpenAI(api_key=api_key)
 
 
-def fetch_targets(conn, force: bool, limit: int):
+def fetch_targets(conn, force: bool, limit: int, random_order: bool = False):
     cur = conn.cursor()
+    order_by = "RANDOM()" if random_order else "id"
+
     if force:
-        query = """
-            SELECT id, name, country, website, audience_note, intro
-            FROM raw_exhibitions
-            WHERE is_active = 1
-            ORDER BY id
-        """
-        cur.execute(query)
+        where = "WHERE is_active = 1"
     else:
-        query = """
-            SELECT id, name, country, website, audience_note, intro
-            FROM raw_exhibitions
-            WHERE is_active = 1
-              AND (classified_at IS NULL OR last_updated_at > classified_at)
-            ORDER BY id
-        """
+        where = (
+            "WHERE is_active = 1 "
+            "AND (classified_at IS NULL OR last_updated_at > classified_at)"
+        )
+
+    query = f"""
+        SELECT id, name, country, website, audience_note, intro
+        FROM raw_exhibitions
+        {where}
+        ORDER BY {order_by}
+    """
+    # --random일 때는 SQL에서 바로 LIMIT까지 걸어서 대상 전체를 다 읽어올 필요 없게 함
+    if limit and random_order:
+        query += " LIMIT ?"
+        cur.execute(query, (limit,))
+    else:
         cur.execute(query)
 
     rows = cur.fetchall()
-    if limit:
+    if limit and not random_order:
         rows = rows[:limit]
     return rows
 
@@ -157,6 +163,11 @@ def main():
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--force", action="store_true", help="이미 분류된 것도 전부 재분류")
     parser.add_argument("--limit", type=int, default=0, help="테스트용: 최대 N건만 처리 (0=전체)")
+    parser.add_argument(
+        "--random",
+        action="store_true",
+        help="--limit과 함께 쓰면 id 순서가 아니라 무작위로 N건을 뽑음 (샘플 테스트용)",
+    )
     args = parser.parse_args()
 
     if not os.path.exists(args.db):
@@ -173,7 +184,7 @@ def main():
             "새 스키마로 마이그레이션한 뒤 다시 시도해주세요."
         )
 
-    targets = fetch_targets(conn, args.force, args.limit)
+    targets = fetch_targets(conn, args.force, args.limit, random_order=args.random)
     if not targets:
         print("분류할 신규/변경 항목이 없습니다. (모두 최신 상태)")
         conn.close()

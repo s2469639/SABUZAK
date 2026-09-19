@@ -64,6 +64,33 @@ PAGE_TEMPLATE = """
   .badge.unclassified { background: #f2f2f2; color: #888; }
   .intro { max-width: 320px; color: #555; }
   a.site { color: #2563eb; text-decoration: none; }
+
+  td.name-cell { cursor: pointer; color: #2563eb; }
+  td.name-cell:hover { text-decoration: underline; }
+  .detail-btn {
+    border: 1px solid #ddd; background: #fff; border-radius: 6px;
+    padding: 3px 8px; font-size: 12px; cursor: pointer; color: #333;
+  }
+  .detail-btn:hover { background: #f0f0f0; }
+
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+    align-items: center; justify-content: center; z-index: 100;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: #fff; border-radius: 10px; padding: 24px; max-width: 640px;
+    width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  }
+  .modal-box h3 { margin: 0 0 4px; font-size: 18px; }
+  .modal-box .modal-sub { color: #888; font-size: 13px; margin-bottom: 16px; }
+  .modal-box dl { margin: 0; }
+  .modal-box dt { font-size: 11px; color: #888; margin-top: 12px; }
+  .modal-box dd { margin: 2px 0 0; font-size: 14px; line-height: 1.6; }
+  .modal-close {
+    float: right; border: none; background: none; font-size: 20px;
+    cursor: pointer; color: #888; line-height: 1;
+  }
 </style>
 </head>
 <body>
@@ -131,21 +158,17 @@ PAGE_TEMPLATE = """
   <table>
     <thead>
       <tr>
-        <th>#</th><th>전시회명</th><th>기간</th><th>국가</th><th>도시</th><th>베뉴</th>
-        <th>참관대상</th><th>거래유형</th><th>대륙</th><th>food_yn</th><th>규모</th><th>키워드</th>
-        <th>카테고리</th><th>웹사이트</th><th>소개(intro_ko 있으면 그걸로)</th><th>상태</th>
+        <th>#</th><th>전시회명</th><th>기간</th><th>국가</th><th>거래유형</th>
+        <th>대륙</th><th>food_yn</th><th>규모</th><th>카테고리</th><th>상태</th><th></th>
       </tr>
     </thead>
     <tbody>
       {% for r in rows %}
       <tr class="{{ '' if r.is_active else 'inactive' }}">
         <td>{{ r.id }}</td>
-        <td>{{ r.name }}</td>
+        <td class="name-cell" onclick="openDetail({{ r.id }})">{{ r.name }}</td>
         <td>{{ r.period_display }}</td>
         <td>{{ r.country }}</td>
-        <td>{{ r.city }}</td>
-        <td>{{ r.venue }}</td>
-        <td>{{ r.audience_note }}</td>
         <td>{% if r.audience_type and r.audience_type != '미상' %}<span class="badge">{{ r.audience_type }}</span>{% endif %}</td>
         <td>{{ r.continent or '' }}</td>
         <td>
@@ -156,15 +179,67 @@ PAGE_TEMPLATE = """
           {% endif %}
         </td>
         <td>{{ r.scale or '' }}</td>
-        <td>{{ r.keywords or '' }}</td>
         <td><span class="badge">{{ r.category }}</span></td>
-        <td>{% if r.website %}<a class="site" href="https://{{ r.website }}" target="_blank">{{ r.website }}</a>{% endif %}</td>
-        <td class="intro">{{ r.intro_ko or r.intro }}</td>
         <td>{{ '활성' if r.is_active else '비활성' }}</td>
+        <td><button class="detail-btn" onclick="openDetail({{ r.id }})">상세보기</button></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+
+  {% for r in rows %}
+  <template id="detail-{{ r.id }}">
+    <h3>{{ r.name }}</h3>
+    <div class="modal-sub">{{ r.country }} · {{ r.city }} · {{ r.venue }} · {{ r.period_display }}</div>
+    <dl>
+      <dt>참관대상</dt>
+      <dd>
+        {% if r.audience_type and r.audience_type != '미상' %}<span class="badge">{{ r.audience_type }}</span>{% endif %}
+        {{ r.audience_note or '정보 없음' }}
+      </dd>
+      <dt>분류 결과</dt>
+      <dd>
+        {% if r.classified_at %}
+          <span class="badge {{ 'yes' if r.food_yn else 'no' }}">{{ '식품' if r.food_yn else '비식품' }}</span>
+          {{ r.continent or '' }} · {{ r.scale or '' }}
+        {% else %}
+          <span class="badge unclassified">미분류</span>
+        {% endif %}
+      </dd>
+      <dt>키워드</dt>
+      <dd>{{ r.keywords or '(없음)' }}</dd>
+      <dt>웹사이트</dt>
+      <dd>{% if r.website %}<a class="site" href="https://{{ r.website }}" target="_blank">{{ r.website }}</a>{% else %}(없음){% endif %}</dd>
+      <dt>소개{% if not r.intro_ko %} (아직 번역 전 — 원문){% endif %}</dt>
+      <dd>{{ r.intro_ko or r.intro or '(없음)' }}</dd>
+      <dt>카테고리 / 상태 / 마지막 업데이트</dt>
+      <dd>{{ r.category }} · {{ '활성' if r.is_active else '비활성' }} · {{ r.last_updated_at }}</dd>
+    </dl>
+  </template>
+  {% endfor %}
+
+  <div class="modal-overlay" id="modal-overlay" onclick="if (event.target === this) closeDetail()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeDetail()">&times;</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script>
+    function openDetail(id) {
+      var tpl = document.getElementById('detail-' + id);
+      var content = document.getElementById('modal-content');
+      content.innerHTML = '';
+      content.appendChild(tpl.content.cloneNode(true));
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+    function closeDetail() {
+      document.getElementById('modal-overlay').classList.remove('open');
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeDetail();
+    });
+  </script>
 </body>
 </html>
 """
