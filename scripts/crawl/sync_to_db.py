@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS raw_exhibitions (
     city            TEXT,
     venue           TEXT,
     audience_note   TEXT,
+    audience_type   TEXT,
     website         TEXT,
     intro           TEXT,
     category        TEXT,
@@ -85,8 +86,8 @@ CREATE TABLE IF NOT EXISTS raw_exhibitions (
 
 NEW_COLUMNS = [
     "id", "detail_url", "name", "start_date", "end_date", "country", "city", "venue",
-    "audience_note", "website", "intro", "category", "continent", "food_yn", "scale",
-    "keywords", "intro_ko", "classified_at", "is_active", "last_updated_at",
+    "audience_note", "audience_type", "website", "intro", "category", "continent", "food_yn",
+    "scale", "keywords", "intro_ko", "classified_at", "is_active", "last_updated_at",
 ]
 
 
@@ -123,6 +124,11 @@ def _old_row_to_new(old_cols, row):
     if end_date in (None, 0):
         end_date = tfd.UNKNOWN_DATE
 
+    audience_note = pick("audience_note", "참관대상", default="")
+    # audience_type은 규칙 기반이라 예전 값이 있어도 항상 audience_note 기준으로 재계산
+    # (분류 기준이 바뀔 수 있고, 재계산 비용이 사실상 0이라 굳이 예전 값을 보존할 이유가 없음)
+    audience_type = tfd.classify_audience_type(audience_note)
+
     return {
         "detail_url": row.get("detail_url"),
         "name": pick("name", "박람회명", default=""),
@@ -131,7 +137,8 @@ def _old_row_to_new(old_cols, row):
         "country": pick("country", "국가", default=""),
         "city": pick("city", "도시", default=""),
         "venue": pick("venue", "장소", default=""),
-        "audience_note": pick("audience_note", "참관대상", default=""),
+        "audience_note": audience_note,
+        "audience_type": audience_type,
         "website": pick("website", "웹사이트", default=""),
         "intro": pick("intro", "상세설명", default=""),
         "category": pick("category", default=""),
@@ -172,16 +179,17 @@ def init_db(conn):
             """
             INSERT INTO raw_exhibitions
                 (detail_url, name, start_date, end_date, country, city, venue,
-                 audience_note, website, intro, category, continent, food_yn, scale, keywords,
-                 intro_ko, classified_at, is_active, last_updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 audience_note, audience_type, website, intro, category, continent, food_yn,
+                 scale, keywords, intro_ko, classified_at, is_active, last_updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 new_row["detail_url"], new_row["name"], new_row["start_date"], new_row["end_date"],
                 new_row["country"], new_row["city"], new_row["venue"], new_row["audience_note"],
-                new_row["website"], new_row["intro"], new_row["category"], new_row["continent"],
-                new_row["food_yn"], new_row["scale"], new_row["keywords"], new_row["intro_ko"],
-                new_row["classified_at"], new_row["is_active"], new_row["last_updated_at"],
+                new_row["audience_type"], new_row["website"], new_row["intro"], new_row["category"],
+                new_row["continent"], new_row["food_yn"], new_row["scale"], new_row["keywords"],
+                new_row["intro_ko"], new_row["classified_at"], new_row["is_active"],
+                new_row["last_updated_at"],
             ),
         )
 
@@ -196,7 +204,16 @@ def row_key(row):
     )
 
 
-def crawl_selected_sites(labels_urls, with_details, verbose=True):
+def get_detail_urls_with_details(conn):
+    """website와 intro가 둘 다 이미 채워진 detail_url 집합.
+    --details로 다시 돌릴 때 이미 가져온 상세페이지를 또 방문하지 않기 위해 씀."""
+    rows = conn.execute(
+        "SELECT detail_url FROM raw_exhibitions WHERE website != '' AND intro != ''"
+    ).fetchall()
+    return {r[0] for r in rows}
+
+
+def crawl_selected_sites(labels_urls, with_details, verbose=True, skip_details_for=None):
     """여러 카테고리를 순회하며 전체 페이지 수집 + 통합 중복 제거.
 
     반환값: (all_rows, failed_labels). failed_labels는 카테고리 목록 페이지
@@ -233,9 +250,15 @@ def crawl_selected_sites(labels_urls, with_details, verbose=True):
         all_rows.extend(new_rows)
 
     if with_details:
-        total = len(all_rows)
-        print(f"\n=== 상세페이지 수집 시작: 총 {total}건 ===")
-        for i, row in enumerate(all_rows, 1):
+        skip_details_for = skip_details_for or set()
+        targets = [r for r in all_rows if r.get("_detail_url") not in skip_details_for]
+        skipped = len(all_rows) - len(targets)
+        total = len(targets)
+        print(
+            f"\n=== 상세페이지 수집 시작: 대상 {total}건 "
+            f"(이미 website/intro가 있어서 건너뛴 {skipped}건 제외) ==="
+        )
+        for i, row in enumerate(targets, 1):
             detail_url = row.get("_detail_url", "")
             if not detail_url:
                 continue
@@ -269,10 +292,13 @@ def sync_rows(conn, rows):
 
         cur.execute(
             "SELECT name, start_date, end_date, country, city, venue, audience_note, "
-            "website, intro, category FROM raw_exhibitions WHERE detail_url = ?",
+            "audience_type, website, intro, category FROM raw_exhibitions WHERE detail_url = ?",
             (detail_url,),
         )
         existing = cur.fetchone()
+
+        audience_note = row.get("참관대상", "")
+        audience_type = row.get("거래유형") or tfd.classify_audience_type(audience_note)
 
         # 이름이 같아도 날짜(시작일/종료일)가 바뀌면 다른 값으로 취급되어 아래
         # changed 비교에서 자동으로 업데이트 대상이 된다.
@@ -283,7 +309,8 @@ def sync_rows(conn, rows):
             row["개최국"],
             row["개최도시"],
             row["개최장소(베뉴)"],
-            row.get("참관대상", ""),
+            audience_note,
+            audience_type,
             row.get("축제URL", ""),
             row.get("축제소개", ""),
             row.get("category", ""),
@@ -294,8 +321,9 @@ def sync_rows(conn, rows):
                 """
                 INSERT INTO raw_exhibitions
                     (detail_url, name, start_date, end_date, country, city, venue,
-                     audience_note, website, intro, category, is_active, last_updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
+                     audience_note, audience_type, website, intro, category, is_active,
+                     last_updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
                 """,
                 (detail_url, *new_values, ts),
             )
@@ -303,10 +331,10 @@ def sync_rows(conn, rows):
         else:
             # 상세페이지를 이번에 안 가져왔으면(웹사이트/상세설명이 빈 값) 기존 값 보존
             merged = list(new_values)
-            if not row.get("축제URL") and existing[7]:
-                merged[7] = existing[7]
-            if not row.get("축제소개") and existing[8]:
+            if not row.get("축제URL") and existing[8]:
                 merged[8] = existing[8]
+            if not row.get("축제소개") and existing[9]:
+                merged[9] = existing[9]
 
             changed = tuple(merged) != tuple(existing)
             if changed:
@@ -314,8 +342,8 @@ def sync_rows(conn, rows):
                     """
                     UPDATE raw_exhibitions
                     SET name=?, start_date=?, end_date=?, country=?, city=?, venue=?,
-                        audience_note=?, website=?, intro=?, category=?, is_active=1,
-                        last_updated_at=?
+                        audience_note=?, audience_type=?, website=?, intro=?, category=?,
+                        is_active=1, last_updated_at=?
                     WHERE detail_url=?
                     """,
                     (*merged, ts, detail_url),
@@ -362,6 +390,11 @@ def main():
     )
     parser.add_argument("--details", action="store_true", help="상세페이지 정보도 함께 수집")
     parser.add_argument(
+        "--force-details",
+        action="store_true",
+        help="--details와 함께 쓰면, 이미 website/intro가 있는 항목도 다시 방문해서 갱신",
+    )
+    parser.add_argument(
         "--no-deactivate",
         action="store_true",
         help="목록에서 사라진 기존 항목을 비활성 처리하지 않음",
@@ -381,7 +414,13 @@ def main():
     conn = sqlite3.connect(args.db)
     init_db(conn)
 
-    rows, failed_labels = crawl_selected_sites(labels_urls, with_details=args.details)
+    skip_details_for = None
+    if args.details and not args.force_details:
+        skip_details_for = get_detail_urls_with_details(conn)
+
+    rows, failed_labels = crawl_selected_sites(
+        labels_urls, with_details=args.details, skip_details_for=skip_details_for
+    )
     new_count, updated_count, unchanged_count, seen_urls = sync_rows(conn, rows)
 
     deactivated = 0

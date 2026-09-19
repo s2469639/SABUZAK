@@ -69,6 +69,7 @@ FIELDNAMES = [
     "개최도시",
     "개최장소(베뉴)",
     "참관대상",
+    "거래유형",
     "축제URL",
     "축제소개",
 ]
@@ -148,6 +149,26 @@ def parse_period(period_text: str):
     return UNKNOWN_DATE, UNKNOWN_DATE
 
 
+# 참관대상(p.zutritt) 원문에서 B2B/B2C 여부를 규칙 기반으로 판별.
+# AI 호출 없이 문구만으로 판단 가능해서 크롤링 시점에 바로 계산해둔다.
+_B2B_HINTS = ("professional", "trade only", "trade visitors", "business visitors")
+_B2C_HINTS = ("general public", "open to public", "public welcome", "consumer")
+
+
+def classify_audience_type(audience_note: str) -> str:
+    """참관대상 원문 -> 'B2B' / 'B2C' / 'B2B, B2C' / '미상'."""
+    text = (audience_note or "").lower()
+    is_b2b = any(hint in text for hint in _B2B_HINTS)
+    is_b2c = any(hint in text for hint in _B2C_HINTS)
+    if is_b2b and is_b2c:
+        return "B2B, B2C"
+    if is_b2b:
+        return "B2B"
+    if is_b2c:
+        return "B2C"
+    return "미상"
+
+
 def fetch_html(url: str) -> str:
     for attempt in range(1, MAX_RETRIES + 1):
         resp = SESSION.get(url, timeout=30)
@@ -209,6 +230,7 @@ def parse_tile(tile) -> dict:
 
     detail_url = urljoin(BASE_URL, title_a["href"]) if title_a and title_a.get("href") else ""
     start_date, end_date = parse_period(date_text)
+    audience_type = classify_audience_type(audience)
 
     return {
         "전시회명": name,
@@ -218,6 +240,7 @@ def parse_tile(tile) -> dict:
         "개최도시": city,
         "개최장소(베뉴)": venue,
         "참관대상": audience,
+        "거래유형": audience_type,
         "축제URL": "",
         "축제소개": "",
         "_detail_url": detail_url,

@@ -107,19 +107,32 @@ PAGE_TEMPLATE = """
         {% endfor %}
       </div>
     </div>
+    <div class="stat-card">
+      <div class="label">거래유형 (audience_type, 규칙 기반·AI 미사용)</div>
+      <div class="rows">
+        {% for label, count in audience_type_counts %}
+          <span><b>{{ count }}</b>{{ label }}</span>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 
   <div class="filters">
-    <a href="?category=" class="{{ 'active' if not selected_category else '' }}">전체</a>
+    <a href="?category=&status={{ selected_status }}" class="{{ 'active' if not selected_category else '' }}">전체</a>
     {% for cat in categories %}
-      <a href="?category={{ cat }}" class="{{ 'active' if selected_category == cat else '' }}">{{ cat }}</a>
+      <a href="?category={{ cat }}&status={{ selected_status }}" class="{{ 'active' if selected_category == cat else '' }}">{{ cat }}</a>
     {% endfor %}
+  </div>
+  <div class="filters">
+    <a href="?category={{ selected_category }}&status=" class="{{ 'active' if not selected_status else '' }}">분류상태: 전체</a>
+    <a href="?category={{ selected_category }}&status=classified" class="{{ 'active' if selected_status == 'classified' else '' }}">분류완료만 ({{ classified }})</a>
+    <a href="?category={{ selected_category }}&status=unclassified" class="{{ 'active' if selected_status == 'unclassified' else '' }}">미분류만 ({{ total - classified }})</a>
   </div>
   <table>
     <thead>
       <tr>
         <th>#</th><th>전시회명</th><th>기간</th><th>국가</th><th>도시</th><th>베뉴</th>
-        <th>참관대상</th><th>대륙</th><th>food_yn</th><th>규모</th><th>키워드</th>
+        <th>참관대상</th><th>거래유형</th><th>대륙</th><th>food_yn</th><th>규모</th><th>키워드</th>
         <th>카테고리</th><th>웹사이트</th><th>소개(intro_ko 있으면 그걸로)</th><th>상태</th>
       </tr>
     </thead>
@@ -133,6 +146,7 @@ PAGE_TEMPLATE = """
         <td>{{ r.city }}</td>
         <td>{{ r.venue }}</td>
         <td>{{ r.audience_note }}</td>
+        <td>{% if r.audience_type and r.audience_type != '미상' %}<span class="badge">{{ r.audience_type }}</span>{% endif %}</td>
         <td>{{ r.continent or '' }}</td>
         <td>
           {% if r.classified_at %}
@@ -211,6 +225,7 @@ def index():
     scale_counts = _value_counts(df, "scale")
     food_yn_counts = _value_counts(df, "food_yn")
     category_counts = _value_counts(df, "category")
+    audience_type_counts = _value_counts(df, "audience_type")
 
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
@@ -218,13 +233,23 @@ def index():
     categories = [r[0] for r in cur.fetchall()]
 
     selected_category = request.args.get("category", "").strip()
+    selected_status = request.args.get("status", "").strip()  # "" / "classified" / "unclassified"
+
+    where = []
+    params = []
     if selected_category:
-        cur.execute(
-            "SELECT * FROM raw_exhibitions WHERE category = ? ORDER BY id DESC",
-            (selected_category,),
-        )
-    else:
-        cur.execute("SELECT * FROM raw_exhibitions ORDER BY id DESC")
+        where.append("category = ?")
+        params.append(selected_category)
+    if selected_status == "classified":
+        where.append("classified_at IS NOT NULL")
+    elif selected_status == "unclassified":
+        where.append("classified_at IS NULL")
+
+    query = "SELECT * FROM raw_exhibitions"
+    if where:
+        query += " WHERE " + " AND ".join(where)
+    query += " ORDER BY id ASC"
+    cur.execute(query, params)
     rows = cur.fetchall()
     conn.close()
 
@@ -246,6 +271,7 @@ def index():
         scale_counts=scale_counts,
         food_yn_counts=food_yn_counts,
         category_counts=category_counts,
+        audience_type_counts=audience_type_counts,
     )
 
 
