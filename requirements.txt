@@ -1,0 +1,10 @@
+flask
+flask-sqlalchemy
+flask-login
+pandas
+requests
+beautifulsoup4
+python-dotenv
+openai
+python-docx
+weasyprint
