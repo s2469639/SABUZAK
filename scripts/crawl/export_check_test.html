@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>수출 규제 체크 (테스트)</title>
+<style>
+  body { font-family: -apple-system, "Malgun Gothic", sans-serif; max-width: 900px; margin: 30px auto; padding: 0 16px; color: #222; }
+  h1 { font-size: 20px; }
+  .row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  label { font-size: 12px; color: #666; }
+  input, select { padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+  button { padding: 8px 18px; border: none; border-radius: 6px; background: #2563eb; color: white; font-size: 14px; cursor: pointer; }
+  button:disabled { background: #999; }
+  .status { margin: 10px 0; font-size: 13px; color: #666; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+  th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f3f4f6; }
+  .section-title { margin-top: 28px; font-size: 16px; border-bottom: 2px solid #2563eb; padding-bottom: 6px; }
+  .tariff-badge { display: inline-block; padding: 2px 8px; background: #dcfce7; color: #166534; border-radius: 10px; font-weight: bold; }
+  .error { color: #b91c1c; font-size: 13px; }
+  .note { font-size: 12px; color: #888; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<h1>수출 규제 체크 (테스트용) - 수출국: 대한민국 고정</h1>
+
+<div class="row">
+  <div class="field">
+    <label>수입국 (박람회 개최국)</label>
+    <select id="importerSelect">
+      <option value="842">미국 (842)</option>
+      <option value="156">중국 (156)</option>
+      <option value="392">일본 (392)</option>
+      <option value="344">홍콩 (344)</option>
+      <option value="704">베트남 (704)</option>
+      <option value="702">싱가포르 (702)</option>
+      <option value="458">말레이시아 (458)</option>
+      <option value="764">태국 (764)</option>
+      <option value="360">인도네시아 (360)</option>
+      <option value="784">아랍에미리트 (784)</option>
+      <option value="276">독일 (276)</option>
+      <option value="250">프랑스 (250)</option>
+      <option value="643">러시아 (643)</option>
+      <option value="__custom">직접입력 (UN M49 코드)</option>
+    </select>
+  </div>
+  <div class="field" id="customCountryField" style="display:none;">
+    <label>국가코드 직접입력</label>
+    <input id="customCountryInput" placeholder="예: 076 (브라질)" />
+  </div>
+  <div class="field">
+    <label>HS 코드</label>
+    <input id="hsInput" placeholder="예: 19051000" value="19051000" />
+  </div>
+  <div class="field" style="justify-content: flex-end;">
+    <button id="searchBtn">조회</button>
+  </div>
+</div>
+
+<div class="status" id="status"></div>
+
+<div class="section-title">관세율 (Customs Tariffs)</div>
+<div id="tariffResult">-</div>
+
+<div class="section-title">비관세장벽 / 수입요건 (NTM)</div>
+<div id="ntmResult">-</div>
+
+<p class="note">
+  ※ 데이터 출처: Market Access Map (macmap.org, ITC / UNCTAD TRAINS 기반). 참고용 스냅샷이며,
+  특히 미국 등 관세가 자주 바뀌는 국가는 별도 공식 소스로 최신 확인 필요.
+</p>
+
+<script>
+const EXPORTER = "410"; // 대한민국 고정 (UN M49)
+const PROXY_BASE = "http://localhost:5000"; // proxy_server.py 실행 주소로 변경
+
+document.getElementById("importerSelect").addEventListener("change", (e) => {
+  document.getElementById("customCountryField").style.display =
+    e.target.value === "__custom" ? "flex" : "none";
+});
+
+function getImporterCode() {
+  const sel = document.getElementById("importerSelect").value;
+  if (sel === "__custom") {
+    return document.getElementById("customCountryInput").value.trim();
+  }
+  return sel;
+}
+
+async function fetchProxy(path, importer, product) {
+  const url = `${PROXY_BASE}${path}?importer=${importer}&product=${product}&exporter=${EXPORTER}`;
+  const res = await fetch(url);
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
+  return body;
+}
+
+function renderTariff(data) {
+  const box = document.getElementById("tariffResult");
+  const list = data?.CustomDuty || [];
+  if (!list.length) {
+    box.innerHTML = "<p>관세율 정보 없음</p>";
+    return;
+  }
+  let html = `<table><tr><th>품목</th><th>세율구분</th><th>적용세율</th><th>연도</th><th>출처</th></tr>`;
+  for (const d of list) {
+    html += `<tr>
+      <td>${d.NTLCDescription || ""} (${d.NTLCCode || ""})</td>
+      <td>${d.TariffRegime || ""}</td>
+      <td><span class="tariff-badge">${d.TariffReported || d.TariffAve || "-"}</span></td>
+      <td>${d.Year || ""}</td>
+      <td>${data.ReferenceData || ""}</td>
+    </tr>`;
+  }
+  html += `</table>`;
+  box.innerHTML = html;
+}
+
+function renderNtm(data) {
+  const box = document.getElementById("ntmResult");
+  const groups = Array.isArray(data) ? data : [];
+  if (!groups.length) {
+    box.innerHTML = "<p>비관세장벽 정보 없음 (또는 해당 조합에 등록된 조치 없음)</p>";
+    return;
+  }
+  let html = "";
+  for (const g of groups) {
+    html += `<p style="font-weight:bold;margin-top:14px;">${g.MeasureSection || ""} (총 ${g.MeasureTotalCount || 0}건, ${g.NtmYear || "-"}년 기준, 출처: ${g.DataSource || "-"})</p>`;
+    html += `<table><tr><th>코드</th><th>제목</th><th>법령/조항</th><th>시행기관</th><th>시행일</th><th>원문</th></tr>`;
+    for (const m of (g.AllMeasures || [])) {
+      const link = m.WebLink ? `<a href="${m.WebLink}" target="_blank">링크</a>` : "-";
+      html += `<tr>
+        <td>${m.Code || ""}</td>
+        <td>${m.Title || ""}</td>
+        <td><b>${m.LegislationTitle || ""}</b><br>${m.LegislationSummary || m.Summary || ""}</td>
+        <td>${m.ImplementationAuthority || ""}</td>
+        <td>${m.StartDate || ""}${m.EndDate ? " ~ " + m.EndDate : ""}</td>
+        <td>${link}</td>
+      </tr>`;
+    }
+    html += `</table>`;
+  }
+  box.innerHTML = html;
+}
+
+document.getElementById("searchBtn").addEventListener("click", async () => {
+  const statusEl = document.getElementById("status");
+  const importer = getImporterCode();
+  const hs = document.getElementById("hsInput").value.trim();
+
+  if (!importer || !hs) {
+    statusEl.innerHTML = `<span class="error">수입국과 HS코드를 모두 입력하세요.</span>`;
+    return;
+  }
+
+  statusEl.textContent = "조회 중...";
+  document.getElementById("tariffResult").innerHTML = "-";
+  document.getElementById("ntmResult").innerHTML = "-";
+
+  try {
+    const [tariff, ntm] = await Promise.all([
+      fetchProxy("/api/tariff", importer, hs),
+      fetchProxy("/api/ntm", importer, hs),
+    ]);
+    renderTariff(tariff);
+    renderNtm(ntm);
+    statusEl.textContent = "조회 완료.";
+  } catch (err) {
+    statusEl.innerHTML = `<span class="error">오류: ${err.message} — proxy_server.py가 실행 중인지, PROXY_BASE 주소가 맞는지 확인하세요.</span>`;
+    console.error(err);
+  }
+});
+</script>
+
+</body>
+</html>
