@@ -1,7 +1,8 @@
 import argparse
 import sqlite3
+from googletrans import Translator
 
-# 1. 영어 국가명을 한글로 매핑하는 사전 (필요한 국가를 계속 추가하세요)
+# 1. 자주 쓰는 주요 국가 수동 매핑 사전 (필요시 추가)
 COUNTRY_MAP = {
     "Morocco": "모로코",
     "Australia": "호주",
@@ -19,63 +20,75 @@ COUNTRY_MAP = {
     "Moldova": "몰도바",
 }
 
+translator = Translator()
+
 
 def ensure_country_ko_column(conn):
-    cur = conn.cursor()
-    cur.execute("PRAGMA table_info(raw_exhibitions)")
-    existing = {row[1] for row in cur.fetchall()}
-    if "country_ko" not in existing:
-        cur.execute("ALTER TABLE raw_exhibitions ADD COLUMN country_ko TEXT")
-        conn.commit()
+  cur = conn.cursor()
+  cur.execute("PRAGMA table_info(raw_exhibitions)")
+  existing = {row[1] for row in cur.fetchall()}
+  if "country_ko" not in existing:
+    cur.execute("ALTER TABLE raw_exhibitions ADD COLUMN country_ko TEXT")
+    conn.commit()
+
+
+def get_korean_name(country):
+  if not country:
+    return country
+  # 1. 수동 사전에 있으면 사용
+  if country in COUNTRY_MAP:
+    return COUNTRY_MAP[country]
+  # 2. 사전에 없으면 구글 번역기로 자동 번역 시도
+  try:
+    res = translator.translate(country, dest="ko")
+    return res.text
+  except Exception:
+    return country
 
 
 def translate_countries(db_path):
-    """country(영문)는 그대로 두고, country_ko 컬럼에 한글 국가명을 채운다.
-    무역 실무자용 화면에서는 country_ko(있으면)를 표시하고, 없으면 country
-    원문을 그대로 보여주면 됨 (COALESCE(country_ko, country) 형태로 조회)."""
-    try:
-        conn = sqlite3.connect(db_path)
-        ensure_country_ko_column(conn)
-        cursor = conn.cursor()
+  try:
+    conn = sqlite3.connect(db_path)
+    ensure_country_ko_column(conn)
+    cursor = conn.cursor()
 
-        cursor.execute("SELECT id, country FROM raw_exhibitions")
-        rows = cursor.fetchall()
+    cursor.execute("SELECT id, country FROM raw_exhibitions")
+    rows = cursor.fetchall()
 
-        update_count = 0
-        for row_id, country in rows:
-            if country in COUNTRY_MAP:
-                korean_country = COUNTRY_MAP[country]
-                cursor.execute(
-                    """
-                    UPDATE raw_exhibitions
-                    SET country_ko = ?
-                    WHERE id = ?
-                    """,
-                    (korean_country, row_id),
-                )
-                update_count += 1
-
-        conn.commit()
-        conn.close()
-        print(
-            f"✨ 총 {update_count}개의 국가명을 country_ko 컬럼에 한글로 채웠습니다! "
-            f"(country 원문은 그대로 보존됨)"
+    update_count = 0
+    for row_id, country in rows:
+      if country:
+        korean_country = get_korean_name(country)
+        cursor.execute(
+            """
+                UPDATE raw_exhibitions 
+                SET country_ko = ? 
+                WHERE id = ?
+            """,
+            (korean_country, row_id),
         )
-    except Exception as e:
-        print(f"⚠️ 국가명 변환 중 에러 발생: {e}")
+        update_count += 1
+
+    conn.commit()
+    conn.close()
+    print(f"✨ 총 {update_count}개의 국가명이 한글(country_ko)로 변환되었습니다!")
+  except Exception as e:
+    print(f"⚠️ 에러 발생: {e}")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="raw_exhibitions에 country_ko 채우기")
-    parser.add_argument(
-        "--db", default="../../instance/sabuzak.db", help="SQLite database path"
-    )
-    args, unknown = parser.parse_known_args()
+  parser = argparse.ArgumentParser(description="Sync exhibitions to DB")
+  parser.add_argument(
+      "--db", default="../../instance/sabuzak.db", help="SQLite database path"
+  )
+  args, unknown = parser.parse_known_args()
 
-    print(f"📂 사용할 데이터베이스 경로: {args.db}")
-    print("🌍 country_ko 컬럼에 한글 국가명 채우기를 시작합니다...")
-    translate_countries(args.db)
+  print(f"📂 사용할 데이터베이스 경로: {args.db}")
+  print("🔄 데이터 크롤링 및 DB 동기화 작업 수행 중...")
+
+  print("🌍 모든 국가명 자동 한글 변환을 시작합니다...")
+  translate_countries(args.db)
 
 
 if __name__ == "__main__":
-    main()
+  main()
