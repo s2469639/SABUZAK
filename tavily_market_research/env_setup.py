@@ -10,7 +10,7 @@ import os
 
 from getpass import getpass
 
-ENV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+ENV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env")
 
 REQUIRED_KEYS = {
     "OPENAI_API_KEY": "OpenAI API 키",
