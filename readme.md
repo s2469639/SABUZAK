@@ -75,36 +75,47 @@ flask run          # 기본 포트 5000
 
 # 코드 구조
 sabuzak/
-├── app/
-│   ├── __init__.py          # Flask 앱 생성 (create_app)
-│   ├── routes/
-│   │   ├── auth.py          # 로그인
-│   │   ├── dashboard.py     # 대시보드(대륙 선택) · 대륙별 박람회 목록
-│   │   ├── exhibition.py    # 박람회 상세 (개요·시장·HS코드·주의사항)
-│   │   ├── concept.py       # 부스 컨셉 생성 · 수정 · 초안 저장
-│   │   └── proposal.py      # 기안서 생성 · 수정 · 초안 저장 · PDF/Word 출력
-│   ├── models.py            # DB 모델 (Exhibition, ConceptDraft, ProposalDraft)
-│   ├── services/
-│   │   ├── llm.py           # LLM API 호출 (컨셉·기안서 생성)
-│   │   ├── data.py          # pandas 기반 데이터 처리
-│   │   └── export.py        # PDF/Word 내보내기
-│   ├── templates/
-│   │   ├── base.html        # 공통 레이아웃 (사이드바)
-│   │   ├── login.html
-│   │   ├── dashboard.html   # 세계 지도 (대륙 클릭)
-│   │   ├── continent.html   # 대륙별 박람회 목록
-│   │   ├── exhibition.html  # 상세 4탭
-│   │   ├── concept.html     # 부스 컨셉 기획 (수정·저장)
-│   │   ├── proposal.html    # 기안서 작성 (수정·저장·출력)
-│   │   └── drafts.html      # 작성 중인 박람회
-│   └── static/
-│       ├── css/
-│       ├── js/              # 탭 전환, 초안 저장 등
-│       └── img/
-├── data/                    # 박람회·HS코드·규제 원본 데이터 (CSV 등)
-├── config.py
-├── requirements.txt
-└── run.py
+├── app/                          # Flask 웹앱 본체
+│   ├── __init__.py               # create_app() 앱 팩토리 — DB/로그인 초기화, 라우트 등록
+│   ├── extensions.py             # db(SQLAlchemy), login_manager 객체 선언
+│   ├── models.py                 # DB 테이블 정의 (Exhibition, User, ConceptDraft, ProposalDraft)
+│   ├── routes/                   # URL 하나당 함수 하나 (Flask 뷰)
+│   │   ├── auth.py               # /login, /logout
+│   │   ├── dashboard.py          # / (세계지도), /continent/<대륙> (목록)
+│   │   ├── exhibition.py         # /exhibitions/<id> (상세 4탭)
+│   │   ├── concept.py            # 부스 컨셉 생성·저장 API
+│   │   ├── proposal.py           # 기안서 생성·저장·출력 API
+│   │   ├── drafts.py             # /drafts (작성 중인 박람회 목록)
+│   │   └── crawl.py              # /crawl/run, /crawl/status (대시보드 크롤링 버튼)
+│   ├── services/                 # 라우트가 호출하는 실제 로직
+│   │   ├── data.py               # raw_exhibitions 조회, 시장트렌드/HS코드/규제 데이터 가공
+│   │   ├── exchange.py           # 실시간 환율 API 호출
+│   │   ├── country_names.py      # 국가명 영→한 정적 매핑
+│   │   ├── crawl_runner.py       # 크롤링을 백그라운드 스레드로 실행
+│   │   ├── llm.py                # OpenAI로 컨셉/기안서 문구 생성
+│   │   └── export.py             # 기안서 PDF/Word 출력
+│   ├── templates/                # 화면 HTML (Jinja2)
+│   └── static/                   # CSS/JS/이미지
+│
+├── scripts/                      # 웹앱과 별개로 터미널에서 실행하는 배치 스크립트
+│   ├── crawl/                    # 박람회 목록 수집
+│   │   ├── tradefairdates_scraper.py   # 목록 페이지 파싱 (이름/날짜/국가/참관대상)
+│   │   └── sync_to_db.py               # 크롤링 결과 → DB 증분 저장
+│   ├── classify/                 # AI 분류·번역
+│   │   └── preprocess.py         # 대륙/food_yn/규모/키워드 분류 + intro 한국어 번역
+│   └── market/                   # 무역통계·관세 데이터 (신규)
+│       ├── comtrade_test1.py     # UN Comtrade — 국가별 수출액·YoY
+│       ├── macmap_api.py         # macmap.org — 관세율·비관세조치(NTM)
+│       └── proxy_server.py       # macmap 호출용 CORS 우회 프록시
+│
+├── legacy/                       # 안 쓰는 예전 버전 (참고용, 실행 안 함)
+├── data/                         # 정적 참조 데이터 (CSV 등)
+├── instance/
+│   └── sabuzak.db                # 실제 DB 파일 (git에는 안 올라감)
+├── config.py                     # DB 경로, SECRET_KEY 등 설정
+├── requirements.txt              # pip 설치 목록
+├── run.py                        # 앱 실행 진입점 (python run.py)
+└── setup.sh                      # 설치 자동화 스크립트
 
 # 데이터 소스
 박람회 일정 — TradeFairDates
