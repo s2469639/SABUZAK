@@ -26,6 +26,8 @@
   .quadrant-경쟁력강화필요 { background: #fef7e0; color: #b06000; }
   .quadrant-현상유지수확 { background: #e8f0fe; color: #1a73e8; }
   .quadrant-우선순위낮음 { background: #f1f3f4; color: #666; }
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; }
+  .badge.mirror { background: #e0f2f1; color: #00695c; }
   .scatter-wrap { position: relative; width: 100%; height: 380px; border: 1px solid #ddd; border-radius: 8px; margin: 16px 0 8px; background: #fafafa; overflow: hidden; }
   .axis-line { position: absolute; background: #ccc; }
   .axis-line.h { left: 0; right: 0; height: 1px; }
@@ -88,6 +90,9 @@
       <span class="field-label">자동 후보 개수</span>
       <input type="number" name="top_n" min="2" max="20" value="{{ top_n }}">
     </div>
+    <label style="font-size:13px; color:#555; display:flex; align-items:center; gap:4px; align-self:flex-end; margin-bottom:8px;">
+      <input type="checkbox" name="force" value="1" {% if force %}checked{% endif %}> 🔄 캐시 무시하고 새로 조사
+    </label>
     <button type="submit" style="align-self:flex-end;">비교하기</button>
   </form>
 
@@ -192,6 +197,7 @@
                data-import="{{ b.total_import_usd | round | int }}"
                data-korea="{{ (b.korea_import_usd | round | int) if b.korea_import_usd else '' }}"
                data-suppliers="{{ b.supplier_country_count }}"
+               data-mirror="{{ 'true' if b.is_mirror_estimate else '' }}"
                data-href="/?hscode={{ result.hscode }}&country={{ b.label | urlencode }}"
           ></div>
           <div class="bubble-label" style="left: {{ b.x_pct }}%; top: {{ b.y_pct + 6 }}%;">{{ b.label }}</div>
@@ -224,11 +230,12 @@
     <div class="axis-caption">→ 그 나라 수입시장 성장률(CAGR)</div>
 
     <h2>⑥ 후보국별 상세</h2>
+    <p class="disclaimer">🪞 표시는 그 나라가 이 API에 직접 보고한 공식 수치가 없어서, 상대국들의 보고를 합산한 추정치를 대신 쓴 경우입니다.</p>
     <table>
       <tr><th>국가</th><th>사분면</th><th>수입 성장률(CAGR)</th><th>한국 점유율</th><th>전체 수입액(최근)</th><th>한국 수입액(최근)</th><th></th></tr>
       {% for c in result.candidates %}
         <tr>
-          <td><a href="/?hscode={{ result.hscode }}&country={{ c.label | urlencode }}">{{ c.label }}</a></td>
+          <td><a href="/?hscode={{ result.hscode }}&country={{ c.label | urlencode }}">{{ c.label }}</a>{% if c.is_mirror_estimate %} <span class="badge mirror" title="상대국 보고 기반 추정치">🪞</span>{% endif %}</td>
           <td><span class="quadrant-badge quadrant-{{ c.quadrant | replace(' ', '') | replace('/', '') }}">{{ c.quadrant }}</span></td>
           <td>{{ c.cagr_pct }}%</td>
           <td>{{ c.korea_share_pct }}%</td>
@@ -287,6 +294,7 @@ document.querySelectorAll('.flow-toggle').forEach(function (group) {
       var d = bubble.dataset;
       detail.innerHTML =
         '<strong>' + d.rank + '위. ' + d.label + '</strong>' +
+        (d.mirror ? '🪞 상대국 보고 기반 추정치<br>' : '') +
         '품목 수입금액(USD): ' + fmt(d.import) + '<br>' +
         '한국 수출금액(USD): ' + fmt(d.korea) + '<br>' +
         '해당품목 수입국가 수: ' + d.suppliers + '개국<br>' +
