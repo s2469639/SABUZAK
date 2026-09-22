@@ -1,7 +1,6 @@
 import argparse
 import sqlite3
 
-# 전 세계 주요 국가 매핑 사전 (필요한 국가를 계속 추가하세요)
 COUNTRY_MAP = {
     "Morocco": "모로코",
     "Australia": "호주",

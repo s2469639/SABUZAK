@@ -30,7 +30,10 @@ def create_app(config_object="config.Config"):
     from app.routes.mypage import bp as mypage_bp
     app.register_blueprint(mypage_bp)
 
-    # 나머지 blueprint(exhibition, concept, proposal, drafts,
+    from app.routes.exhibition import bp as exhibition_bp
+    app.register_blueprint(exhibition_bp)
+
+    # 나머지 blueprint(concept, proposal, drafts,
     # buyers, crawl)는 구현되는 대로 여기에 register_blueprint 하면 됩니다.
 
     with app.app_context():
