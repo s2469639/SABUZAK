@@ -13,6 +13,7 @@
       {% if current_user.is_authenticated %}
         <nav>
           <a href="{{ url_for('dashboard.index') }}">대시보드</a>
+          <a href="{{ url_for('mypage.index') }}">내 제품 관리</a>
           <a href="{{ url_for('auth.logout') }}">로그아웃</a>
         </nav>
       {% endif %}
