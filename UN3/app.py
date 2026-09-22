@@ -39,12 +39,12 @@ def _country_name_candidates(raw_country, iso3):
     return candidates
 
 
-def _fetch_customs_context(hscode, raw_country, iso3):
+def _fetch_customs_context(hscode, raw_country, iso3, force=False):
     """관세청 공식 자료는 완전히 선택 기능이다 - 키가 없거나 API 호출이 실패해도
     UN Comtrade 핵심 결과 화면은 그대로 보여줘야 하므로 예외를 여기서 다 삼킨다."""
     try:
         candidates = _country_name_candidates(raw_country, iso3)
-        return customs_trade_stats.get_customs_context(hscode, candidates)
+        return customs_trade_stats.get_customs_context(hscode, candidates, force=force)
     except Exception as e:
         return {"unavailable_reason": str(e)}
 
@@ -59,13 +59,19 @@ def index():
     hscode = request.args.get("hscode", "").strip()
     country = request.args.get("country", "").strip()
     customs = None
+    force = False
 
     if request.method == "POST":
         hscode = request.form.get("hscode", "").strip()
         country = request.form.get("country", "").strip()
+        # "새로고침(캐시 무시)" 체크박스 - 예전에 한 번 조사했다가 "데이터
+        # 없음"이 나온 조합을 30일 캐시가 그대로 물고 있는 경우가 있어서
+        # (실제로 이 문제로 사용자가 헷갈린 적이 있음), 웹 화면에서도 캐시를
+        # 무시하고 다시 조사할 수 있게 했다.
+        force = bool(request.form.get("force"))
         try:
-            result = get_market_research(hscode, country)
-            customs = _fetch_customs_context(hscode, country, result["target_country"])
+            result = get_market_research(hscode, country, force=force)
+            customs = _fetch_customs_context(hscode, country, result["target_country"], force=force)
         except ValueError as e:
             error = str(e)
         except Exception as e:
@@ -74,7 +80,7 @@ def index():
     return render_template(
         "un_comtrade.html",
         result=result, error=error, customs=customs,
-        hscode=hscode, country=country,
+        hscode=hscode, country=country, force=force,
     )
 
 
@@ -202,14 +208,16 @@ def matrix():
     import_line = export_line = None
     annual_customs = []
     threshold_x_pct = threshold_y_pct = 50
+    force = False
 
     if request.method == "POST":
         hscode = request.form.get("hscode", "").strip()
         candidates_raw = request.form.get("candidates", "").strip()
         top_n = int(request.form.get("top_n") or 10)
+        force = bool(request.form.get("force"))  # 캐시 무시하고 새로 조사 (단일국가 화면과 동일한 이유)
         candidate_list = [c.strip() for c in candidates_raw.split(",") if c.strip()] or None
         try:
-            result = get_multi_country_comparison(hscode, candidate_list, top_n=top_n)
+            result = get_multi_country_comparison(hscode, candidate_list, top_n=top_n, force=force)
             scatter, threshold_x_pct, threshold_y_pct = _with_scatter_positions(
                 result["candidates"], result["thresholds"]
             )
@@ -223,7 +231,7 @@ def matrix():
             # 세계시장 교역순위/점유율 추이는 완전히 선택 기능이다 - 실패해도
             # 위 매트릭스 결과 화면은 그대로 보여준다 (soft-fail).
             try:
-                overview = get_market_overview(hscode, top_n=top_n)
+                overview = get_market_overview(hscode, top_n=top_n, force=force)
                 import_line = _svg_line_series(overview["import_share_trend"])
                 export_line = _svg_line_series(overview["export_share_trend"])
             except Exception as e:
@@ -231,7 +239,7 @@ def matrix():
 
             # 한국 수출신고 연도별 추이도 마찬가지로 선택 기능 (관세청 키 없어도 무방)
             try:
-                customs = customs_trade_stats.get_customs_context(hscode, None, months=60)
+                customs = customs_trade_stats.get_customs_context(hscode, None, months=60, force=force)
                 annual_customs = customs.get("annual_totals", [])
             except Exception as e:
                 customs = {"unavailable_reason": str(e)}
@@ -242,7 +250,7 @@ def matrix():
         scatter=scatter, bubbles=bubbles, annual_customs=annual_customs,
         import_line=import_line, export_line=export_line,
         threshold_x_pct=threshold_x_pct, threshold_y_pct=threshold_y_pct,
-        hscode=hscode, candidates_raw=candidates_raw, top_n=top_n,
+        hscode=hscode, candidates_raw=candidates_raw, top_n=top_n, force=force,
     )
 
 

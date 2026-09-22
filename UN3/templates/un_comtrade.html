@@ -20,6 +20,7 @@
   .badge.cache { background: #e8f0fe; color: #1a73e8; }
   .badge.fresh { background: #e6f4ea; color: #188038; }
   .badge.warn { background: #fef7e0; color: #b06000; }
+  .badge.mirror { background: #e0f2f1; color: #00695c; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 8px; }
   th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; }
   th { color: #888; font-weight: 600; }
@@ -43,6 +44,9 @@
   <form method="post">
     <input type="text" name="hscode" placeholder="HS코드 (예: 190590)" value="{{ hscode }}" required>
     <input type="text" name="country" placeholder="국가 (예: Vietnam, VNM)" value="{{ country }}" required>
+    <label style="font-size:13px; color:#555; display:flex; align-items:center; gap:4px;">
+      <input type="checkbox" name="force" value="1" {% if force %}checked{% endif %}> 🔄 캐시 무시하고 새로 조사
+    </label>
     <button type="submit">조사하기</button>
   </form>
   <p class="disclaimer">UN Comtrade는 HS코드로만 통계를 분류하기 때문에 HS코드만 입력받습니다. 품목명은 아래 조사 결과에 UN Comtrade 공식 설명으로 자동 표시됩니다.</p>
@@ -83,6 +87,15 @@
 
     <h2>② {{ result.target_country }} 시장 경쟁력</h2>
     {% if result.competitiveness.total_import_usd %}
+      {% if result.competitiveness.is_mirror_estimate %}
+        <p><span class="badge mirror">🪞 상대국 보고 기반 추정치</span></p>
+        <p class="disclaimer">
+          ⚠️ {{ result.target_country }}이(가) 이 API에 직접 보고한 공식 수치가 없어서,
+          전세계 각국이 "{{ result.target_country }}에 수출했다"고 보고한 값들을 합산한
+          <strong>추정치</strong>입니다. {{ result.target_country }} 정부의 공식 발표 수치와
+          다를 수 있습니다.
+        </p>
+      {% endif %}
       <p>{{ result.competitiveness.year }}년 전체 수입액: <strong>${{ "{:,.0f}".format(result.competitiveness.total_import_usd) }}</strong></p>
       <table>
         <tr><th>국가</th><th>수입액(USD)</th><th>점유율</th></tr>
@@ -100,6 +113,9 @@
 
     <h2>③ 성장 트렌드 ({{ result.growth_trend.years_with_data }}/{{ result.growth_trend.years_requested | length }}개년 데이터 확보)</h2>
     {% if result.growth_trend.by_year %}
+      {% if result.growth_trend.is_mirror_estimate %}
+        <p><span class="badge mirror">🪞 상대국 보고 기반 추정치</span></p>
+      {% endif %}
       <table>
         <tr><th>연도</th><th>수입액(USD)</th><th></th></tr>
         {% for y in result.growth_trend.by_year %}
