@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}{{ expo.name }} | 사부작{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>
+      {{ expo.name }}
+      {% if expo.food_yn %}
+        <span class="badge-food">식품</span>
+      {% else %}
+        <span class="badge-nonfood">비식품</span>
+      {% endif %}
+    </h1>
+    <p class="page-desc">{{ expo.country_ko or expo.country }} · {{ expo.city }} · {{ expo.start_date }} ~ {{ expo.end_date }}</p>
+  </div>
+  <button type="button" class="btn-secondary" onclick="history.back()">← 목록으로</button>
+</div>
+
+<div class="tabs" data-active="overview">
+  <div class="tab-nav">
+    <button type="button" class="tab-btn active" data-tab="overview">박람회 개요</button>
+    <button type="button" class="tab-btn" data-tab="market">시장 개요</button>
+    <button type="button" class="tab-btn" data-tab="trend">트렌드 조사</button>
+    <button type="button" class="tab-btn" data-tab="hscode">HS코드 &amp; 수출 주의사항</button>
+  </div>
+
+  <div class="tab-panel" id="tab-overview">
+    <div class="card">
+      <h2>기본 정보</h2>
+      <dl class="detail-list">
+        <dt>개최지</dt><dd>{{ expo.venue or '정보 없음' }}</dd>
+        <dt>국가 / 도시</dt><dd>{{ expo.country_ko or expo.country }} / {{ expo.city }}</dd>
+        <dt>일정</dt><dd>{{ expo.start_date }} ~ {{ expo.end_date }}</dd>
+        <dt>규모</dt><dd>{{ expo.scale or '미상' }}</dd>
+        <dt>카테고리</dt><dd>{{ expo.category }}</dd>
+        <dt>식품 여부</dt>
+        <dd>
+          {% if expo.food_yn %}
+            <span class="badge-food">식품</span>
+          {% else %}
+            <span class="badge-nonfood">비식품</span>
+          {% endif %}
+        </dd>
+        <dt>참관 대상</dt><dd>{{ expo.audience_type }} ({{ expo.audience_note }})</dd>
+        <dt>공식 웹사이트</dt>
+        <dd>
+          {% if expo.website %}
+            <a href="https://{{ expo.website }}" target="_blank" rel="noopener">{{ expo.website }}</a>
+          {% else %}
+            -
+          {% endif %}
+        </dd>
+      </dl>
+
+      {% if expo.keywords %}
+      <h3>연관 키워드</h3>
+      <div class="keyword-tags">
+        {% for kw in expo.keywords.split(',') %}
+        <span class="keyword-tag">{{ kw.strip() }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if intro_paragraphs %}
+      <h3>박람회 소개</h3>
+      {% for para in intro_paragraphs %}
+      <p class="intro-text">{{ para }}</p>
+      {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-market" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
+    <div class="card">
+      <h2>시장 개요</h2>
+      <p class="placeholder-note">환율, YoY 성장률, 시장 인사이트 카드는 추후 연동 예정입니다.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="tab-panel" id="tab-trend" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
+    <div class="card">
+      <h2>트렌드 조사</h2>
+      <p class="placeholder-note">구글 트렌드, 경쟁사·가격, 관련 뉴스 요약은 추후 연동 예정입니다.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="tab-panel" id="tab-hscode" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
+    <div class="card">
+      <h2>HS코드 &amp; 수출 주의사항</h2>
+      <p class="placeholder-note">품목별 HS코드·관세율·필요 인증(HACCP 등)과 필수/정보/주의 등급별 규제 카드는 추후 연동 예정입니다.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
