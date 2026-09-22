@@ -3,49 +3,9 @@
 
 {% block content %}
 <div class="page-header">
-  <div>
-    <h1>{{ title }} 박람회 목록</h1>
-    <p class="page-desc">총 {{ expos|length }}건</p>
-  </div>
+  <div></div>
   <a href="{{ url_for('dashboard.index') }}" class="btn-secondary">← 대시보드로</a>
 </div>
 
-<form method="get" class="filter-bar">
-  <select name="category">
-    <option value="">전체 카테고리</option>
-    {% for c in categories %}
-    <option value="{{ c }}" {% if c == selected_category %}selected{% endif %}>{{ c }}</option>
-    {% endfor %}
-  </select>
-
-  <label class="checkbox-inline">
-    <input type="checkbox" name="food_only" value="1" {% if food_only == "1" %}checked{% endif %}>
-    식품 관련만
-  </label>
-
-  <input type="text" name="keyword" placeholder="박람회명 / 국가 / 도시 검색" value="{{ keyword }}">
-
-  <button type="submit" class="btn-primary">필터 적용</button>
-  <a href="{{ url_for(list_url[0], **list_url[1]) }}" class="btn-secondary">초기화</a>
-</form>
-
-{% if expos %}
-<div class="expo-list">
-  {% for expo in expos %}
-  <a href="{{ url_for('exhibition.detail', expo_id=expo.id, from=continent) }}" class="expo-row">
-    <div class="expo-main">
-      <strong>{{ expo.name }}</strong>
-      <span class="expo-meta">{{ expo.country_ko or expo.country }} · {{ expo.city }}</span>
-    </div>
-    <div class="expo-side">
-      <span class="expo-date">{{ expo.start_date }} ~ {{ expo.end_date }}</span>
-      <span class="expo-category">{{ expo.category }}</span>
-      {% if expo.food_yn %}<span class="badge-food">식품</span>{% endif %}
-    </div>
-  </a>
-  {% endfor %}
-</div>
-{% else %}
-<p class="empty-state">조건에 맞는 박람회가 없습니다.</p>
-{% endif %}
+{% include "dashboard/_expo_list_partial.html" %}
 {% endblock %}

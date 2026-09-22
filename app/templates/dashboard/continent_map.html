@@ -5,7 +5,7 @@
 <div class="page-header">
   <div>
     <h1>박람회 대시보드</h1>
-    <p class="page-desc">권역을 선택하면 해당 권역의 박람회 목록으로 이동합니다 (지도는 추후 추가 예정)</p>
+    <p class="page-desc">권역을 선택하면 아래에 해당 권역의 박람회 목록이 펼쳐집니다 (지도는 추후 추가 예정)</p>
   </div>
 </div>
 
@@ -21,10 +21,13 @@
 
 <div class="continent-grid">
   {% for continent in continents %}
-  <a href="{{ url_for('exhibition.expo_list', continent=continent) }}" class="continent-card">
+  <button type="button" class="continent-card" data-continent="{{ continent }}"
+          data-url="{{ url_for('exhibition.expo_list_partial', continent=continent) }}">
     <span class="continent-name">{{ continent }}</span>
     <span class="continent-count">{{ counts.get(continent, 0) }}개 박람회</span>
-  </a>
+  </button>
   {% endfor %}
 </div>
+
+<div id="continent-results" class="continent-results-wrap" hidden></div>
 {% endblock %}

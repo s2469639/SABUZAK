@@ -302,6 +302,54 @@ body {
   transform: translateY(-2px);
 }
 
+.continent-card {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.continent-card.active {
+  border-color: #ea580c;
+  box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.2);
+}
+
+.continent-results-wrap {
+  margin-top: 24px;
+}
+
+.expo-results-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.expo-results-header h2 {
+  margin: 0;
+}
+
+.keyword-filter-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.keyword-filter-tag {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #374151;
+}
+
+.keyword-filter-tag.active {
+  background: #ea580c;
+  border-color: #ea580c;
+  color: #fff;
+}
+
 .continent-name {
   font-size: 18px;
   font-weight: 700;
