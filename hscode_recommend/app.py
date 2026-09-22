@@ -201,4 +201,4 @@ if st.button("데이터 분석 실행", type="primary"):
             else:
                 st.warning(f"통화 코드({curr_code})에 해당하는 환율 데이터를 계산하지 못했습니다.")
         except Exception as e:
-            st.error(f"환율 데이터를 불러오는 중 예외가 발생했습니다: {e}")
+            st.error(f"환율 데이터를 불러오는 중 예외가 발생했습니다: {e}") #
