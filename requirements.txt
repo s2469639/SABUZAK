@@ -8,3 +8,7 @@ python-dotenv
 openai
 python-docx
 weasyprint
+googletrans
+pytrends
+tavily-python
+flask-login
