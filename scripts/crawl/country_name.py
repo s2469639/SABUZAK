@@ -1,7 +1,7 @@
 import argparse
 import sqlite3
 from googletrans import Translator
-
+# ㅇ
 # 1. 자주 쓰는 주요 국가 수동 매핑 사전 (필요시 추가)
 COUNTRY_MAP = {
     "Morocco": "모로코",
