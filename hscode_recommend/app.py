@@ -21,31 +21,30 @@ def parse_country(val: str) -> str:
 
 def get_dynamic_tariffs(importer_iso: str, hscode: str, raw_country_name: str):
     """
-    [핵심 수정] 국가와 HS 코드(품목)의 조합을 분석하여 
+    국가와 HS 코드(품목)의 조합을 분석하여 
     상품 성격과 국가별 FTA 협정에 맞는 서로 다른 관세율을 동적으로 계산합니다.
     """
-    code_prefix = hscode.replace(".", "").replace("-", "")[:2] # HS 코드 앞 2자리 추출 (예: 19, 12, 13 등)
+    code_prefix = hscode.replace(".", "").replace("-", "")[:2] # HS 코드 앞 2자리 추출
     
-    # 기본 기본세율(MFN) 및 협정세율 뼈대 설정
     base_mfn = 15.0
     base_fta = 0.0
     base_rcep = 8.0
     fta_name = f"한-{raw_country_name} FTA"
 
     # 1. 품목(HS 코드 앞 2자리)에 따른 기초 관세 성격 부여
-    if code_prefix == "19":  # 식료품, 가공식품 (라면, 스낵, 떡볶이 등)
+    if code_prefix == "19":  # 식료품, 가공식품
         base_mfn = 12.0
         base_fta = 0.0
         base_rcep = 5.0
-    elif code_prefix == "12":  # 채소류, 해조류 (마른김 등)
+    elif code_prefix == "12":  # 채소류, 해조류
         base_mfn = 10.0
         base_fta = 0.0
         base_rcep = 4.0
-    elif code_prefix == "13":  # 수액, 엑스류 (홍삼농축액 등)
+    elif code_prefix == "13":  # 수액, 엑스류
         base_mfn = 8.0
         base_fta = 2.5
         base_rcep = 3.0
-    elif code_prefix == "21":  # 각종 조제식품 (소스류 등)
+    elif code_prefix == "21":  # 조제식품 (소스류)
         base_mfn = 14.0
         base_fta = 0.0
         base_rcep = 6.0
@@ -58,7 +57,7 @@ def get_dynamic_tariffs(importer_iso: str, hscode: str, raw_country_name: str):
         base_fta = 5.0
         base_rcep = 10.0
 
-    # 2. 국가별 특성에 따른 보정 (미국, 중국, EU 등 주요국 맞춤 협정명 및 세율 조정)
+    # 2. 국가별 특성에 따른 보정
     if importer_iso == "USA":
         fta_name = "한-미 FTA (KORUS)"
         base_mfn = max(4.0, base_mfn * 0.6)
@@ -107,11 +106,17 @@ if st.button("관세율 비교 및 최저 관세 분석 실행", type="primary")
     st.subheader(f"📊 [수출국: 대한민국(KOR) / 수입국: {importer_input} ({importer_iso})] - 제품: {product_input} (HSK: {hscode_input})")
 
     duties = get_dynamic_tariffs(importer_iso, hscode_input, importer_input)
-    st.dataframe(duties, use_container_width=True)
+    
+    # [화면 배치 변경] 표와 최저 관세 추천 박스를 좌우 2단으로 깔끔하게 배치
+    table_col, info_col = st.columns([1.5, 1])
+    
+    with table_col:
+        st.dataframe(duties, use_container_width=True)
 
-    valid_duties = [d for d in duties if isinstance(d["관세율 (%)"], (int, float))]
-    if valid_duties:
-        best = min(valid_duties, key=lambda x: x["관세율 (%)"])
-        st.info(f"✨ **[최저 관세 추천]** 제품 '{product_input}' (HSK: {hscode_input})는 협정 **[{best['협정 (Regime)']}]** 적용 시 관세율 **{best['관세율 (%)']}%**로 가장 유리합니다!")
-    else:
-        st.warning("비교 가능한 유효 관세율 데이터가 없습니다.")
+    with info_col:
+        valid_duties = [d for d in duties if isinstance(d["관세율 (%)"], (int, float))]
+        if valid_duties:
+            best = min(valid_duties, key=lambda x: x["관세율 (%)"])
+            st.info(f"✨ **[최저 관세 추천]**\n\n제품 **'{product_input}'** (HSK: {hscode_input})\n\n협정 **[{best['협정 (Regime)']}]** 적용 시\n\n관세율 **{best['관세율 (%)']}%**로 가장 유리합니다!")
+        else:
+            st.warning("비교 가능한 유효 관세율 데이터가 없습니다.")
