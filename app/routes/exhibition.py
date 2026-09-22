@@ -6,8 +6,8 @@ from flask_login import current_user, login_required
 from app.extensions import db
 from app.models import Exhibition, NtmMeasure, Product
 from app.routes.dashboard import CONTINENT_DB_VALUES
-from app.services.hscode import build_hscode_context, get_m49_code, resolve_country_iso
-from app.services.macmap_client import fetch_ntm_rows, make_session
+from app.services.hscode import build_hscode_context, resolve_country_iso
+from app.services.trains_client import fetch_regulations, to_ntm_measure_rows
 
 bp = Blueprint("exhibition", __name__, url_prefix="/exhibitions")
 
@@ -150,9 +150,11 @@ def detail(expo_id):
 @bp.route("/detail/<int:expo_id>/sync-ntm", methods=["POST"])
 @login_required
 def sync_ntm(expo_id):
-    """이 박람회 국가 하나에 대해서만, 지금 등록된 제품 HS코드 기준으로 macmap을
-    그 자리에서 호출해 캐시(NtmMeasure)를 채운다. scripts/sync_ntm_cache.py를
-    전체 국가로 돌리는 대신, 필요한 조합 하나만 버튼으로 즉시 채우는 용도."""
+    """이 박람회 국가 하나에 대해 UNCTAD TRAINS Online을 그 자리에서 호출해
+    캐시(NtmMeasure)를 채운다. TRAINS Online의 export-regulations는 실제로는
+    HS코드로 필터링을 안 하고 국가 전체 규정 목록을 반환하기 때문에, HS코드별로
+    나눠 부를 필요 없이 국가당 한 번만 호출한다 (app/services/hscode.py의
+    get_country_regulations가 이후 식품 관련도로 걸러서 보여줌)."""
     expo = Exhibition.query.get_or_404(expo_id)
     country_iso = resolve_country_iso(expo.country)
 
@@ -164,36 +166,16 @@ def sync_ntm(expo_id):
         )
         return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#hscode")
 
-    m49 = get_m49_code(country_iso)
-    if not m49:
-        flash(f"{expo.country_ko or expo.country}({country_iso})의 M49 코드를 찾지 못했습니다.", "danger")
-        return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#hscode")
-
-    products = Product.query.filter(
-        Product.user_id == current_user.id,
-        Product.is_checked == True,  # noqa: E712
-        Product.hs_code.isnot(None),
-        Product.hs_code != "",
-    ).all()
-    hs6_list = sorted({p.hs_code.replace(".", "")[:6] for p in products})
-
-    if not hs6_list:
-        flash("체크된 제품(HS코드 포함)이 없습니다. 먼저 마이페이지에서 제품을 등록해주세요.", "danger")
-        return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#hscode")
-
     try:
-        session = make_session()
-        total = 0
-        for hs6 in hs6_list:
-            rows = fetch_ntm_rows(session, m49, hs6)
-            NtmMeasure.query.filter_by(reporter=m49, product=hs6).delete()
-            for row in rows:
-                db.session.add(NtmMeasure(**row))
-            total += len(rows)
+        regulations = fetch_regulations(country_iso, [])
+        rows = to_ntm_measure_rows(country_iso, "ALL", regulations)
+        NtmMeasure.query.filter_by(reporter=country_iso, product="ALL").delete()
+        for row in rows:
+            db.session.add(NtmMeasure(**row))
         db.session.commit()
-        flash(f"macmap에서 {total}건의 비관세장벽 정보를 가져왔습니다.", "success")
+        flash(f"UNCTAD TRAINS에서 {len(rows)}건의 무역 규정 정보를 가져왔습니다.", "success")
     except Exception as e:
         db.session.rollback()
-        flash(f"macmap 조회 중 오류가 발생했습니다: {e}", "danger")
+        flash(f"TRAINS 조회 중 오류가 발생했습니다: {e}", "danger")
 
     return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#hscode")

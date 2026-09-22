@@ -4,11 +4,23 @@ HS코드 & 수출 주의사항 탭용 서비스.
 관세율: scripts/market/tariff_advisor.py 의 협정별 관세율 프로필(MFN/FTA/RCEP)
 로직을 그대로 가져왔다 (정적 프로필, 주요국 외에는 추정치).
 
-비관세장벽(NTM): macmap.org 내부 API(scripts/market/macmap_api.py 로직,
-app/services/macmap_client.py로 이식)에서 가져온 실데이터를 쓴다. 다만 macmap은
-페이지 로드마다 직접 부르지 않고, scripts/market/sync_ntm_cache.py가 배치로
-NtmMeasure 테이블에 채워둔 캐시를 읽기만 한다. 캐시가 아직 없는 국가/HS코드는
-DEFAULT_REGULATION_NOTES로 폴백한다.
+비관세장벽(NTM): UNCTAD TRAINS Online 내부 API(app/services/trains_client.py)에서
+가져온 실데이터를 쓴다. macmap.org는 Cloudflare로 완전히 막혀서 포기하고,
+macmap이 원래 참조하는 원본 데이터 출처인 TRAINS Online으로 교체했다.
+
+주의: TRAINS Online의 "Explore Regulations" 내보내기는 실제로 테스트해보니
+product(HS코드) 필터와 무관하게 그 나라의 전체 무역 규정 목록을 그대로
+반환한다 (HS Codes 컬럼도 대부분 비어있음). 즉 이건 "이 HS코드에 해당하는
+규정"이 아니라 "이 나라의 수출입 관련 법령 전체 목록"이다. 그래서 제품별로
+쪼개서 캐싱하지 않고 국가 하나당 한 번만 조회하고, 식품/농산물 관련 키워드로
+관련도를 매겨 상위 몇 개만 보여주는 방식으로 처리한다.
+
+페이지 로드마다 직접 부르지 않고, scripts/market/sync_ntm_cache.py 또는 상세
+페이지의 "지금 실제 데이터 가져오기" 버튼이 NtmMeasure 테이블에 채워둔 캐시를
+읽기만 한다. 캐시가 아직 없는 국가는 DEFAULT_REGULATION_NOTES로 폴백한다.
+
+NtmMeasure.reporter 컬럼은 ISO3(예: "SGP")를 저장하고, product 컬럼은
+국가 단위 조회라 "ALL" 고정값을 쓴다.
 """
 
 from app.models import NtmMeasure
@@ -18,43 +30,20 @@ try:
 except ImportError:
     pycountry = None
 
-# ISO3 -> UN M49 숫자코드 (macmap reporter 파라미터에 사용).
-# pycountry가 있으면 이 표는 안 쓰고 전세계 국가를 동적으로 계산한다.
-# pycountry 없을 때만 쓰는 최소 폴백 표.
-_ISO3_TO_M49_FALLBACK = {
-    "USA": "842", "CHN": "156", "JPN": "392", "VNM": "704", "DEU": "276",
-    "FRA": "250", "GBR": "826", "MEX": "484", "AUS": "36", "IND": "356",
-    "BRA": "76", "SAU": "682", "CAN": "124", "ITA": "380", "ESP": "724",
-    "NLD": "528", "ARE": "784", "THA": "764", "IDN": "360", "SGP": "702",
-    "MYS": "458", "PHL": "608", "KOR": "410", "POL": "616", "MAR": "504",
-    "TUR": "792", "RUS": "643", "ZAF": "710", "EGY": "818", "NZL": "554",
-    "HKG": "344", "TWN": "158", "QAT": "634", "KWT": "414", "BEL": "56",
-    "CHE": "756", "SWE": "752", "AUT": "40", "PRT": "620", "CZE": "203",
-    "GRC": "300", "DNK": "208", "NOR": "578", "FIN": "246", "CHL": "152",
-    "ARG": "32", "COL": "170", "PER": "604",
-}
-
-
-def get_m49_code(country_iso):
-    """ISO3 -> UN M49(=ISO 3166-1 numeric) 숫자코드 문자열. pycountry로 전세계
-    국가를 커버하고, pycountry 미설치 시에만 위 폴백 표를 쓴다."""
-    if not country_iso:
-        return None
-    if pycountry is not None:
-        try:
-            country = pycountry.countries.get(alpha_3=country_iso)
-            if country:
-                return str(int(country.numeric))  # 앞의 0 제거 (051 -> 51)
-        except (KeyError, AttributeError):
-            pass
-    return _ISO3_TO_M49_FALLBACK.get(country_iso)
-
-# macmap MeasureSection/legislation 텍스트로 필수/정보/주의 등급을 대략 나누는 키워드
+# 법령 제목/요약 텍스트로 필수/정보/주의 등급을 대략 나누는 키워드
 _MANDATORY_KEYWORDS = [
     "registration", "mandatory", "requirement", "authorization", "license",
     "certificat", "must", "prohibit", "ban",
 ]
 _CAUTION_KEYWORDS = ["labelling", "labeling", "tbt", "sps", "inspection", "testing", "residue"]
+
+# 국가 전체 규정 목록 중 식품/농산물 수출과 관련 있을 법한 것만 상위로 올리는 키워드
+_FOOD_RELEVANCE_KEYWORDS = [
+    "food", "animal", "plant", "fish", "meat", "agricultur", "consumer",
+    "biological", "sanitary", "phytosanitary", "veterinary", "poultry",
+    "livestock", "seafood", "beverage", "packaging", "labell", "labeling",
+    "import", "export", "custom",
+]
 
 # 국가명(Exhibition.country, 영문) -> ISO3 코드
 COUNTRY_ISO_MAP = {
@@ -228,40 +217,46 @@ def _classify_ntm_level(measure):
     return "정보"
 
 
-def get_ntm_notes_for_product(country_iso, hs_code, limit=5):
-    """macmap NTM 캐시(NtmMeasure)에서 국가+HS코드에 맞는 비관세장벽 항목을 가져온다.
-    캐시가 비어있으면 빈 리스트를 반환 (호출부에서 정적 기본값으로 폴백)."""
-    m49 = get_m49_code(country_iso)
-    if not m49 or not hs_code:
+def _relevance_score(measure):
+    text = " ".join([
+        measure.legislation_title or "",
+        measure.legislation_summary or "",
+    ]).lower()
+    return sum(1 for kw in _FOOD_RELEVANCE_KEYWORDS if kw in text)
+
+
+def get_country_regulations(country_iso, limit=6):
+    """NTM 캐시(NtmMeasure)에서 국가(ISO3) 전체 규정을 가져와, 식품/농산물
+    관련도가 높은 순으로 정렬해 상위 N개만 반환한다. TRAINS Online이 HS코드
+    단위로는 필터링을 안 해주기 때문에(국가 전체 목록을 항상 반환) 여기서
+    직접 관련도를 매긴다. 캐시가 비어있으면 빈 리스트(호출부에서 정적 기본값 폴백)."""
+    if not country_iso:
         return []
 
-    normalized_hs = hs_code.replace(".", "")
-    hs6 = normalized_hs[:6]
-
     measures = (
-        NtmMeasure.query.filter(
-            NtmMeasure.reporter == m49,
-            NtmMeasure.product.like(f"{hs6}%"),
-        )
+        NtmMeasure.query.filter(NtmMeasure.reporter == country_iso)
         .order_by(NtmMeasure.fetched_at.desc())
-        .limit(limit)
         .all()
     )
+    if not measures:
+        return []
+
+    measures.sort(key=_relevance_score, reverse=True)
 
     notes = []
-    for m in measures:
+    for m in measures[:limit]:
         notes.append({
             "level": _classify_ntm_level(m),
             "title": m.legislation_title or m.measure_title or "비관세 조치",
             "desc": m.legislation_summary or m.measure_summary or "",
-            "ref": m.implementation_authority or m.data_source or "macmap.org",
+            "ref": m.implementation_authority or m.data_source or "UNCTAD TRAINS",
             "web_link": m.web_link,
         })
     return notes
 
 
 def get_regulation_notes(country_iso, ntm_notes=None):
-    """macmap 캐시에서 가져온 실데이터(ntm_notes)가 있으면 그걸 우선 쓰고,
+    """TRAINS 캐시에서 가져온 실데이터(ntm_notes)가 있으면 그걸 우선 쓰고,
     없으면 정적 기본 예시(REGULATION_NOTES/DEFAULT_REGULATION_NOTES)로 폴백."""
     if ntm_notes:
         return ntm_notes
@@ -280,36 +275,32 @@ def build_hscode_context(expo, products):
     is_estimated = country_iso not in TARIFF_PROFILES
 
     product_rows = []
-    all_ntm_notes = []
-    seen_titles = set()
     for product in products:
         regimes = get_tariff_regimes(country_iso)
         best = min(regimes, key=lambda r: r["tariff_ave"])
         for r in regimes:
             r["is_best"] = r is best
-        ntm_notes = get_ntm_notes_for_product(country_iso, product.hs_code)
         product_rows.append({
             "product": product,
             "regimes": regimes,
             "best_regime": best,
             "certs": get_required_certs(country_iso, expo.food_yn),
-            "ntm_notes": ntm_notes,
         })
-        for note in ntm_notes:
-            if note["title"] not in seen_titles:
-                seen_titles.add(note["title"])
-                all_ntm_notes.append(note)
 
     # 등록된 제품들 전체에서 가장 유리한 관세 조합 하나 추천
     overall_best = None
     if product_rows:
         overall_best = min(product_rows, key=lambda r: r["best_regime"]["tariff_ave"])
 
+    # 국가 전체 규정 중 식품/농산물 관련도 높은 순 상위 N개 (TRAINS는 HS코드로
+    # 필터링이 안 되고 국가 전체 목록을 반환하므로, 여기서 관련도를 매겨 추림)
+    country_regulations = get_country_regulations(country_iso)
+
     return {
         "country_iso": country_iso,
         "is_estimated": is_estimated,
         "product_rows": product_rows,
         "overall_best": overall_best,
-        "regulation_notes": get_regulation_notes(country_iso, all_ntm_notes),
-        "regulation_notes_is_live": bool(all_ntm_notes),
+        "regulation_notes": get_regulation_notes(country_iso, country_regulations),
+        "regulation_notes_is_live": bool(country_regulations),
     }

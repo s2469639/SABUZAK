@@ -664,6 +664,12 @@ body {
   padding: 6px 12px;
 }
 
+.section-label-sub {
+  font-weight: 400;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
 .section-label:first-of-type {
   margin-top: 0;
 }
@@ -913,6 +919,20 @@ body {
   border-radius: 6px;
   padding: 2px 8px;
   font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ntm-inline-link {
+  color: #2563eb;
+  font-size: 11px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.ntm-inline-link:hover {
+  text-decoration: underline;
 }
 
 .ntm-inline-more {
