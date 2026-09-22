@@ -648,6 +648,28 @@ body {
   margin: 24px 0 12px;
 }
 
+.section-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 24px 0 12px;
+}
+
+.section-label-row .section-label {
+  margin: 0;
+}
+
+.btn-sync-ntm {
+  font-size: 12px;
+  padding: 6px 12px;
+}
+
+.section-label-sub {
+  font-weight: 400;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
 .section-label:first-of-type {
   margin-top: 0;
 }
@@ -897,6 +919,20 @@ body {
   border-radius: 6px;
   padding: 2px 8px;
   font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ntm-inline-link {
+  color: #2563eb;
+  font-size: 11px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.ntm-inline-link:hover {
+  text-decoration: underline;
 }
 
 .ntm-inline-more {
@@ -947,6 +983,19 @@ body {
   flex-wrap: wrap;
   gap: 6px;
   align-items: flex-start;
+}
+
+.concept-header-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.draft-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .product-chip {

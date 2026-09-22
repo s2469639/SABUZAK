@@ -10,3 +10,5 @@ python-docx
 weasyprint
 googletrans
 pytrends
+pycountry
+babel

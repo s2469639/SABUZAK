@@ -9,13 +9,18 @@
       <h1>부스 컨셉 기획</h1>
       <p class="page-desc">{{ expo.name }} · {{ expo.country_ko or expo.country }}</p>
     </div>
-    {% if products %}
-    <div class="product-chip-list">
-      {% for p in products %}
-      <span class="product-chip">{{ p.name }}</span>
-      {% endfor %}
+    <div class="concept-header-side">
+      {% if products %}
+      <div class="product-chip-list">
+        {% for p in products %}
+        <span class="product-chip">{{ p.name }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <form method="post" action="{{ url_for('drafts.delete', draft_id=draft.id) }}">
+        <button type="submit" class="btn-text-danger" onclick="return confirm('이 박람회의 컨셉 기획을 삭제하시겠습니까?')">삭제</button>
+      </form>
     </div>
-    {% endif %}
   </div>
 </div>
 

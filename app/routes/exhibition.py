@@ -1,11 +1,13 @@
 import re
 
-from flask import Blueprint, abort, render_template, request
+from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
-from app.models import Exhibition, Product
+from app.extensions import db
+from app.models import Exhibition, NtmMeasure, Product
 from app.routes.dashboard import CONTINENT_DB_VALUES
-from app.services.hscode import build_hscode_context
+from app.services.hscode import build_hscode_context, resolve_country_iso
+from app.services.trains_client import fetch_regulations, to_ntm_measure_rows
 
 bp = Blueprint("exhibition", __name__, url_prefix="/exhibitions")
 
@@ -143,3 +145,37 @@ def detail(expo_id):
         has_linked_product=has_linked_product,
         hscode_ctx=hscode_ctx,
     )
+
+
+@bp.route("/detail/<int:expo_id>/sync-ntm", methods=["POST"])
+@login_required
+def sync_ntm(expo_id):
+    """이 박람회 국가 하나에 대해 UNCTAD TRAINS Online을 그 자리에서 호출해
+    캐시(NtmMeasure)를 채운다. TRAINS Online의 export-regulations는 실제로는
+    HS코드로 필터링을 안 하고 국가 전체 규정 목록을 반환하기 때문에, HS코드별로
+    나눠 부를 필요 없이 국가당 한 번만 호출한다 (app/services/hscode.py의
+    get_country_regulations가 이후 식품 관련도로 걸러서 보여줌)."""
+    expo = Exhibition.query.get_or_404(expo_id)
+    country_iso = resolve_country_iso(expo.country)
+
+    if not country_iso:
+        flash(
+            f"'{expo.country}' 국가명을 인식하지 못했습니다. "
+            f"pip install pycountry 설치 여부를 확인해주세요.",
+            "danger",
+        )
+        return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#hscode")
+
+    try:
+        regulations = fetch_regulations(country_iso, [])
+        rows = to_ntm_measure_rows(country_iso, "ALL", regulations)
+        NtmMeasure.query.filter_by(reporter=country_iso, product="ALL").delete()
+        for row in rows:
+            db.session.add(NtmMeasure(**row))
+        db.session.commit()
+        flash(f"UNCTAD TRAINS에서 {len(rows)}건의 무역 규정 정보를 가져왔습니다.", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"TRAINS 조회 중 오류가 발생했습니다: {e}", "danger")
+
+    return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#hscode")
