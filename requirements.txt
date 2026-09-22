@@ -10,4 +10,4 @@ python-docx
 weasyprint
 googletrans
 pytrends
-tavily-python
+tavily-
