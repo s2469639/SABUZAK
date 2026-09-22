@@ -1,7 +1,7 @@
 import argparse
 import sqlite3
 
-# 전 세계 주요 국가 매핑 사전 (필요한 국가를 계속 추가하세요)
+# 전 세계 주요 국가 영문-한글 매핑 사전 (DB 데이터 기준 확장)
 COUNTRY_MAP = {
     "Morocco": "모로코",
     "Australia": "호주",
@@ -17,8 +17,23 @@ COUNTRY_MAP = {
     "Ivory Coast": "코트디부아르",
     "Ukraine": "우크라이나",
     "Moldova": "몰도바",
+    "Japan": "일본",
+    "Bulgaria": "불가리아",
+    "Romania": "루마니아",
+    "Malaysia": "말레이시아",
+    "Western Sahara": "사하라 서부",
+    "Brazil": "브라질",
+    "South Africa": "남아프리카 공화국",
+    "Nigeria": "나이지리아",
+    "Nepal": "네팔",
+    "Guatemala": "과테말라",
+    "France": "프랑스",
+    "Canada": "캐나다",
+    "India": "인도",
+    "Switzerland": "스위스",
+    "UAE": "아랍에미리트",
+    "Russia": "러시아"
 }
-
 
 def ensure_country_ko_column(conn):
   """raw_exhibitions 테이블에 country_ko 컬럼이 없으면 자동으로 추가한다."""
