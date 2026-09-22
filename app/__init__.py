@@ -6,6 +6,7 @@ from app.extensions import db, login_manager
 def create_app(config_object="config.Config"):
     app = Flask(__name__)
     app.config.from_object(config_object)
+    app.config.setdefault("SECRET_KEY", "dev-secret-key-change-me")
 
     @app.route("/")
     def root():
@@ -26,8 +27,11 @@ def create_app(config_object="config.Config"):
     from app.routes.dashboard import bp as dashboard_bp
     app.register_blueprint(dashboard_bp)
 
+    from app.routes.mypage import bp as mypage_bp
+    app.register_blueprint(mypage_bp)
+
     # 나머지 blueprint(exhibition, concept, proposal, drafts,
-    # mypage, buyers, crawl)는 구현되는 대로 여기에 register_blueprint 하면 됩니다.
+    # buyers, crawl)는 구현되는 대로 여기에 register_blueprint 하면 됩니다.
 
     with app.app_context():
         db.create_all()

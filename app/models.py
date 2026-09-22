@@ -26,5 +26,22 @@ class User(db.Model, UserMixin):
         return f"<User {self.email}>"
 
 
+class Product(db.Model):
+    __tablename__ = "products"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    name = db.Column(db.String(150), nullable=False)
+    hs_code = db.Column(db.String(20), nullable=False)
+    ingredients = db.Column(db.Text)
+    is_checked = db.Column(db.Boolean, default=True, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", backref=db.backref("products", lazy=True))
+
+    def __repr__(self):
+        return f"<Product {self.name} ({self.hs_code})>"
+
+
 # Exhibition, ConceptDraft, ProposalDraft, Buyer 등 나머지 모델은
 # 각 기능 구현 시 이 파일에 이어서 추가합니다.
