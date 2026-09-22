@@ -12,3 +12,6 @@ googletrans
 pytrends
 pycountry
 babel
+google-auth
+google-auth-oauthlib
+cryptography

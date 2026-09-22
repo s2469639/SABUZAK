@@ -24,6 +24,8 @@
                class="{% if request.endpoint == 'drafts.index' %}active{% endif %}">작성 중인 박람회</a>
             <a href="{{ url_for('mypage.index') }}"
                class="{% if request.endpoint == 'mypage.index' %}active{% endif %}">내 제품 관리</a>
+            <a href="{{ url_for('contacts.list_contacts') }}"
+               class="{% if request.endpoint and (request.endpoint.startswith('contacts.') or request.endpoint.startswith('followup.') or request.endpoint.startswith('mail_template.') or request.endpoint.startswith('buyer_profile.')) %}active{% endif %}">바이어 메일 관리</a>
           </nav>
         </div>
 
