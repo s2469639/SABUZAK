@@ -1,9 +1,9 @@
 import re
 
 from flask import Blueprint, abort, render_template, request
-from flask_login import login_required
+from flask_login import current_user, login_required
 
-from app.models import Exhibition
+from app.models import Exhibition, Product
 from app.routes.dashboard import CONTINENT_DB_VALUES
 
 bp = Blueprint("exhibition", __name__, url_prefix="/exhibitions")
@@ -123,4 +123,21 @@ def _split_paragraphs(text):
 def detail(expo_id):
     expo = Exhibition.query.get_or_404(expo_id)
     intro_paragraphs = _split_paragraphs(expo.intro_ko) or _split_paragraphs(expo.intro)
-    return render_template("exhibition/detail.html", expo=expo, intro_paragraphs=intro_paragraphs)
+
+    # 시장 개요·트렌드 조사·HS코드 탭은 체크된 제품 + HS코드가 있어야 연결됨
+    has_linked_product = (
+        Product.query.filter(
+            Product.user_id == current_user.id,
+            Product.is_checked == True,  # noqa: E712
+            Product.hs_code.isnot(None),
+            Product.hs_code != "",
+        ).first()
+        is not None
+    )
+
+    return render_template(
+        "exhibition/detail.html",
+        expo=expo,
+        intro_paragraphs=intro_paragraphs,
+        has_linked_product=has_linked_product,
+    )

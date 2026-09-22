@@ -72,24 +72,36 @@
   </div>
 
   <div class="tab-panel" id="tab-market" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
     <div class="card">
       <h2>시장 개요</h2>
       <p class="placeholder-note">환율, YoY 성장률, 시장 인사이트 카드는 추후 연동 예정입니다.</p>
     </div>
+    {% endif %}
   </div>
 
   <div class="tab-panel" id="tab-trend" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
     <div class="card">
       <h2>트렌드 조사</h2>
       <p class="placeholder-note">구글 트렌드, 경쟁사·가격, 관련 뉴스 요약은 추후 연동 예정입니다.</p>
     </div>
+    {% endif %}
   </div>
 
   <div class="tab-panel" id="tab-hscode" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
     <div class="card">
       <h2>HS코드 &amp; 수출 주의사항</h2>
       <p class="placeholder-note">품목별 HS코드·관세율·필요 인증(HACCP 등)과 필수/정보/주의 등급별 규제 카드는 추후 연동 예정입니다.</p>
     </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}
