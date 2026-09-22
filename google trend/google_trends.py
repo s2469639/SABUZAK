@@ -13,10 +13,7 @@ client = OpenAI()
 
 def analyze_country_and_keywords(product_name: str, country: str):
     """
-    3단 키워드 프레임워크 도출:
-    1. 현지 실질 외래어 표기
-    2. 직속 마이크로 카테고리
-    3. 현지 문화권의 동급 대체재
+    3단 키워드 프레임워크 도출 (현지 실질 표기명 / 직속 마이크로 카테고리 / 현지 유사 대체재)
     """
     prompt = f"""
     당신은 글로벌 F&B 시장 분석 및 Google 트렌드 SEO 전문가입니다.
@@ -67,13 +64,13 @@ def analyze_country_and_keywords(product_name: str, country: str):
 
 def generate_fallback_trend_data(keywords_list: list, timeframe: str):
     """
-    구글 트렌드 연결 지연 또는 일시 차단 시 안정적인 차트 출력을 위한 백업 시뮬레이션
+    구글 트렌드 연결 지연 또는 차단 시 안정적인 차트 출력을 위한 백업 시뮬레이션
     """
     raw_keywords = [item["keyword"] for item in keywords_list]
     dates = []
     now = datetime.datetime.now()
     for i in range(12, 0, -1):
-        d = now - datetime.timedelta(days=i*30)
+        d = now - datetime.timedelta(days=i * 30)
         dates.append(d.strftime('%Y-%m-%d'))
 
     prompt = f"""
@@ -118,7 +115,7 @@ def generate_fallback_trend_data(keywords_list: list, timeframe: str):
 
 def fetch_google_trends(keywords_list: list, geo_code: str, timeframe: str = "today 12-m"):
     """
-    구글 트렌드 데이터 수집 및 독립 스케일링/상대 비교 분리
+    구글 트렌드 1회 호출 후 독립 정규화(자체 100 기준) 및 상대 점유율 동시 계산
     """
     raw_keywords = [item["keyword"] for item in keywords_list if isinstance(item, dict) and "keyword" in item]
     
@@ -133,7 +130,6 @@ def fetch_google_trends(keywords_list: list, geo_code: str, timeframe: str = "to
 
     try:
         pytrend = TrendReq(hl='en-US', tz=360, timeout=(10, 25))
-        
         pytrend.build_payload(
             kw_list=raw_keywords, 
             cat=0, 
@@ -172,13 +168,13 @@ def fetch_google_trends(keywords_list: list, geo_code: str, timeframe: str = "to
         }
 
     except Exception as e:
-        print(f"구글 트렌드 기본 수집 중 예외 발생: {e}")
+        print(f"구글 트렌드 수집 예외 발생: {e}")
         return generate_fallback_trend_data(keywords_list, timeframe)
 
 
 def generate_trend_insights(product_name: str, country: str, keywords_list: list, trend_data: dict) -> list:
     """
-    수집된 구글 트렌드 그래프를 기반으로 고객이 바로 이해할 수 있는 3가지 핵심 해석 요약 생성
+    트렌드 그래프 기반 비즈니스 해석 3포인트 도출
     """
     if not trend_data.get("dates"):
         return ["데이터가 충분하지 않아 상세 트렌드 분석을 생성할 수 없습니다."]
@@ -193,12 +189,12 @@ def generate_trend_insights(product_name: str, country: str, keywords_list: list
     [분석 키워드]: {kw_names}
     [트렌드 기간]: {trend_data['dates'][0]} ~ {trend_data['dates'][-1]}
     
-    위 키워드들의 구글 트렌드 그래프 결과를 고객(수출 기업, 마케터)이 보고 직관적으로 이해할 수 있도록, 
-    아래 3가지 관점으로 명확한 핵심 해석을 한국어로 각각 1~2문장씩 도출하세요:
+    위 키워드들의 구글 트렌드 그래프 결과를 고객이 보고 바로 활용할 수 있도록, 
+    아래 3가지 관점으로 실질적인 한국어 해석을 각각 1~2문장씩 작성하세요:
     
-    1. [시즌성 및 집중 타깃 시점]: 관심도가 가장 급증하는 시기(예: 특정 명절, 계절 등)와 집중 프로모션 타이밍
+    1. [시즌성 및 집중 타깃 시점]: 관심도가 가장 급증하는 시기와 사전 마케팅/입고 타이밍
     2. [키워드 간 상관관계]: 타깃 제품과 상위 카테고리(또는 현지 대체재) 검색량 흐름의 동조화 현상
-    3. [시장 진입/마케팅 액션]: 현지 이커머스(아마존 등) 및 마케팅 집행 시 활용할 실질적 키워드/소구점 전략
+    3. [시장 진입/마케팅 액션]: 현지 이커머스 상세페이지 및 광고 집행 시 활용할 실질적 키워드 소구 전략
     
     반드시 유효한 JSON 배열(문자열 3개)로만 응답하세요:
     [
@@ -226,7 +222,7 @@ def generate_trend_insights(product_name: str, country: str, keywords_list: list
     except Exception as e:
         print(f"인사이트 생성 오류: {e}")
         return [
-            "연초 및 특정 시즌(명절 등)에 검색 관심도가 급증하므로 1개월 전 사전 프로모션 준비가 필수적입니다.",
-            "상위 카테고리 검색량이 증가할 때 타깃 제품의 유입도 함께 늘어나는 동조화 경향을 보입니다.",
-            "단독 제품명 외에 현지 소비자에게 친숙한 로컬 카테고리 키워드를 상품 상세페이지에 복합 노출하는 전략이 효과적입니다."
+            "연초 및 특정 시즌에 검색 관심도가 급증하므로 1개월 전 사전 프로모션 집행이 유리합니다.",
+            "상위 카테고리 검색 증가 시 타깃 제품의 유입도 함께 늘어나는 동조화 경향을 보입니다.",
+            "단독 제품명 외에 현지 친숙 키워드를 상품 상세페이지에 복합 노출하는 전략이 효과적입니다."
         ]

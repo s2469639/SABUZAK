@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>글로벌 시장 및 트렌드 분석</title>
+  <title>글로벌 시장 및 Google Trends 분석</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; color: #1e293b; margin: 0; padding: 24px; }
@@ -21,38 +21,15 @@
     
     .reason-box { background: #f8fafc; border-left: 4px solid #3b82f6; padding: 14px 18px; margin: 12px 0 20px 0; font-size: 14px; line-height: 1.6; color: #475569; border-radius: 0 8px 8px 0; }
     
-    /* 차트 상단 툴바 */
     .chart-header { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; margin-bottom: 10px; }
     .mode-btn-group { display: flex; background: #e2e8f0; border-radius: 8px; padding: 3px; gap: 4px; }
     .mode-btn { background: transparent; border: none; padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 6px; color: #475569; transition: 0.2s; }
     .mode-btn.active { background: #fff; color: #2563eb; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-    /* 차트 하단 인사이트 박스 */
-    .insights-box {
-      margin-top: 24px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 18px 20px;
-    }
-    .insights-box h4 {
-      margin: 0 0 12px 0;
-      font-size: 16px;
-      color: #0f172a;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .insights-box ol {
-      margin: 0;
-      padding-left: 20px;
-      color: #334155;
-      font-size: 14px;
-      line-height: 1.8;
-    }
-    .insights-box li {
-      margin-bottom: 6px;
-    }
+    .insights-box { margin-top: 24px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px 20px; }
+    .insights-box h4 { margin: 0 0 12px 0; font-size: 16px; color: #0f172a; }
+    .insights-box ol { margin: 0; padding-left: 20px; color: #334155; font-size: 14px; line-height: 1.8; }
+    .insights-box li { margin-bottom: 6px; }
 
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 16px; }
     .subcard { background: #f1f5f9; border-radius: 8px; padding: 16px; }
@@ -65,12 +42,11 @@
 </head>
 <body>
 <div class="container">
-  <!-- 검색창 -->
   <div class="card">
-    <h2>🌍 글로벌 시장 및 구글 트렌드 분석</h2>
+    <h2>🌍 글로벌 시장 및 Google Trends 분석</h2>
     <form method="POST">
       <div class="form-group">
-        <input type="text" name="product_name" placeholder="제품명 입력 (예: 약과, 김부각, 호두과자)" value="{{ result.product_name if result else '' }}" required>
+        <input type="text" name="product_name" placeholder="제품명 입력 (예: 약과, 김부각)" value="{{ result.product_name if result else '' }}" required>
         <input type="text" name="country" placeholder="국가 입력 (예: 미국, 일본, 벨기에)" value="{{ result.country if result else '' }}" required>
         
         <select name="timeframe">
@@ -86,19 +62,16 @@
   </div>
 
   {% if result %}
-  <!-- 트렌드 분석 카드 -->
   <div class="card">
     <div class="chart-header">
-      <h3 style="margin: 0;">📈 Google 트렌드 분석 (국가: {{ result.country }})</h3>
+      <h3 style="margin: 0;">📈 Google Trends 분석 (국가: {{ result.country }})</h3>
       
-      <!-- 모드 전환 버튼 -->
       <div class="mode-btn-group">
         <button type="button" class="mode-btn active" id="btn-indep" onclick="switchMode('independent')">개별 트렌드 모드 (왜곡방지)</button>
         <button type="button" class="mode-btn" id="btn-rel" onclick="switchMode('relative')">상대 비교 모드 (체급비교)</button>
       </div>
     </div>
     
-    <!-- 키워드 뱃지 -->
     <div class="keyword-badges">
       <span style="line-height: 2; font-weight: 600;">선정된 현지 키워드:</span>
       {% for item in result.keywords %}
@@ -108,7 +81,6 @@
       {% endfor %}
     </div>
 
-    <!-- 키워드 선정 의미 -->
     {% if result.selection_reason %}
     <div class="reason-box">
       <strong>💡 키워드 선정 전략 및 배경:</strong><br>
@@ -116,13 +88,11 @@
     </div>
     {% endif %}
 
-    <!-- 차트 -->
     {% if result.trend_data.dates | length > 0 %}
       <div style="height: 380px; margin-top: 16px;">
         <canvas id="trendChart"></canvas>
       </div>
 
-      <!-- 차트 바로 밑 핵심 해석 인사이트 (3가지 방식 요약) -->
       {% if result.trend_insights %}
       <div class="insights-box">
         <h4>📊 그래프 핵심 해석 및 비즈니스 시사점</h4>
@@ -141,7 +111,6 @@
     {% endif %}
   </div>
 
-  <!-- 시장 분석 영역 -->
   <div class="card">
     <h3>🏬 시장 분석 & 경쟁 현황</h3>
     
@@ -181,7 +150,6 @@
     </div>
   </div>
 
-  <!-- 데이터 주입 -->
   <script id="trend-data" type="application/json">
     {{ result.trend_data | tojson | safe }}
   </script>
@@ -189,7 +157,6 @@
     {{ result.keywords | tojson | safe }}
   </script>
 
-  <!-- 차트 렌더링 스크립트 -->
   <script>
     let myChart = null;
     let currentMode = 'independent';
@@ -271,7 +238,6 @@
       renderChart(mode);
     }
 
-    // 초기 실행
     renderChart('independent');
   </script>
   {% endif %}
