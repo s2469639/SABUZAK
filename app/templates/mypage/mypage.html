@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}내 제품 관리 | 사부작{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>내 제품 관리</h1>
+    <p class="page-desc">체크된 제품만 시장 분석·부스 컨셉에 반영됩니다</p>
+  </div>
+  <button type="button" class="btn-primary" onclick="document.getElementById('add-product-form').scrollIntoView({behavior:'smooth'})">
+    + 제품 추가
+  </button>
+</div>
+
+{% if products %}
+<div class="product-list">
+  {% for product in products %}
+  <div class="product-row">
+    <form method="post" action="{{ url_for('mypage.toggle_product', product_id=product.id) }}" class="product-toggle">
+      <input type="checkbox" onchange="this.form.submit()" {% if product.is_checked %}checked{% endif %}>
+    </form>
+    <div class="product-info">
+      <strong>{{ product.name }}</strong>
+      <span class="hs-tag">{{ product.hs_code }}</span>
+      {% if product.ingredients %}
+        <p class="ingredients">{{ product.ingredients }}</p>
+      {% endif %}
+    </div>
+    <form method="post" action="{{ url_for('mypage.delete_product', product_id=product.id) }}">
+      <button type="submit" class="btn-text-danger" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="card" id="add-product-form">
+  <h2>새 제품 등록</h2>
+  <form method="post" action="{{ url_for('mypage.add_product') }}">
+    <div class="form-row">
+      <div class="form-field">
+        <label for="name">제품명 *</label>
+        <input type="text" id="name" name="name" placeholder="예: 사부작 약과" required>
+      </div>
+      <div class="form-field">
+        <label for="hs_code">HS코드 *</label>
+        <input type="text" id="hs_code" name="hs_code" placeholder="예: 1905.90" required>
+        <div class="hs-preset-list">
+          {% for preset in hs_presets %}
+          <button type="button" class="hs-preset"
+                  onclick="document.getElementById('name').value='{{ preset.name }}'; document.getElementById('hs_code').value='{{ preset.hs_code }}';">
+            {{ preset.name }} {{ preset.hs_code }}
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="ingredients">성분표</label>
+      <textarea id="ingredients" name="ingredients" rows="3" placeholder="예: 밀가루, 꿀, 참기름, 계피..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <a href="{{ url_for('mypage.index') }}" class="btn-secondary">취소</a>
+      <button type="submit" class="btn-primary">저장</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
