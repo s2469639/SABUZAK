@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}로그인 | 사부작{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <h1>사부작 로그인</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flash-list">
+        {% for category, message in messages %}
+          <li class="flash flash-{{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post" action="{{ url_for('auth.login') }}">
+    <label for="email">이메일</label>
+    <input type="email" id="email" name="email" value="{{ email or '' }}" required autofocus>
+
+    <label for="password">비밀번호</label>
+    <input type="password" id="password" name="password" required>
+
+    <label class="checkbox">
+      <input type="checkbox" name="remember"> 로그인 상태 유지
+    </label>
+
+    <button type="submit">로그인</button>
+  </form>
+
+  <p class="auth-switch">
+    계정이 없으신가요? <a href="{{ url_for('auth.register') }}">회원가입</a>
+  </p>
+</div>
+{% endblock %}
