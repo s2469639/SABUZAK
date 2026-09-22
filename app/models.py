@@ -7,6 +7,7 @@ from app.extensions import db
 
 
 class User(db.Model, UserMixin):
+    __bind_key__ = "app_data"  # instance/app_data.db (로그인/유저 데이터 전용)
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -26,5 +27,126 @@ class User(db.Model, UserMixin):
         return f"<User {self.email}>"
 
 
-# Exhibition, ConceptDraft, ProposalDraft, Buyer 등 나머지 모델은
+class Product(db.Model):
+    __bind_key__ = "app_data"  # instance/app_data.db (로그인/유저 데이터 전용)
+    __tablename__ = "products"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    name = db.Column(db.String(150), nullable=False)
+    hs_code = db.Column(db.String(20), nullable=False)
+    ingredients = db.Column(db.Text)
+    is_checked = db.Column(db.Boolean, default=True, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", backref=db.backref("products", lazy=True))
+
+    def __repr__(self):
+        return f"<Product {self.name} ({self.hs_code})>"
+
+
+class Exhibition(db.Model):
+    __tablename__ = "raw_exhibitions"
+
+    id = db.Column(db.Integer, primary_key=True)
+    detail_url = db.Column(db.Text, nullable=False)
+    name = db.Column(db.Text)
+    start_date = db.Column(db.Integer)  # YYYYMMDD
+    end_date = db.Column(db.Integer)  # YYYYMMDD
+    country = db.Column(db.Text)
+    city = db.Column(db.Text)
+    venue = db.Column(db.Text)
+    audience_note = db.Column(db.Text)
+    audience_type = db.Column(db.Text)
+    website = db.Column(db.Text)
+    intro = db.Column(db.Text)
+    category = db.Column(db.Text)
+    continent = db.Column(db.Text)
+    food_yn = db.Column(db.Integer)
+    scale = db.Column(db.Text)
+    keywords = db.Column(db.Text)
+    intro_ko = db.Column(db.Text)
+    classified_at = db.Column(db.Text)
+    is_active = db.Column(db.Integer, default=1)
+    last_updated_at = db.Column(db.Text)
+    country_ko = db.Column(db.Text)
+
+    def __repr__(self):
+        return f"<Exhibition {self.name}>"
+
+
+class HsCodeMaster(db.Model):
+    """scripts/market/load_excel.py, make_db.py 로 관세청 HS부호 엑셀을 적재한
+    hs0code_master 테이블. 명시적 PK 컬럼이 없어 SQLite의 암시적 rowid를 PK로 사용."""
+
+    __bind_key__ = "hscode_data"  # instance/hscode.db (HS코드·관세 데이터 전용)
+    __tablename__ = "hs0code_master"
+
+    rowid = db.Column("rowid", db.Integer, primary_key=True)
+    hscode = db.Column(db.Text)
+    hsk_name = db.Column(db.Text)
+    name_ko = db.Column(db.Text)
+
+    def __repr__(self):
+        return f"<HsCodeMaster {self.hscode} {self.name_ko}>"
+
+
+class NtmMeasure(db.Model):
+    """macmap.org 의 ntm-measures API 결과를 캐싱하는 테이블.
+    scripts/market/sync_ntm_cache.py 가 배치로 채워넣고, 웹앱은 이 테이블만 읽는다
+    (macmap을 페이지 로드마다 직접 호출하지 않음)."""
+
+    __bind_key__ = "hscode_data"  # instance/hscode.db (HS코드·관세 데이터 전용)
+    __tablename__ = "ntm_measures"
+
+    id = db.Column(db.Integer, primary_key=True)
+    reporter = db.Column(db.String(10), nullable=False)  # 수입국 UN M49 코드
+    partner = db.Column(db.String(10), nullable=False)  # 수출국(한국=410)
+    product = db.Column(db.String(20), nullable=False)  # 조회에 사용한 HS 코드
+    measure_code = db.Column(db.Text)
+    measure_section = db.Column(db.Text)
+    measure_title = db.Column(db.Text)
+    measure_summary = db.Column(db.Text)
+    legislation_title = db.Column(db.Text)
+    legislation_summary = db.Column(db.Text)
+    implementation_authority = db.Column(db.Text)
+    start_date = db.Column(db.Text)
+    end_date = db.Column(db.Text)
+    web_link = db.Column(db.Text)
+    data_source = db.Column(db.Text)
+    fetched_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<NtmMeasure {self.reporter}/{self.product} {self.measure_title}>"
+
+
+class ConceptDraft(db.Model):
+    """부스 컨셉 기획 초안. '부스 컨셉 기획' 버튼을 누르면 박람회당 1개씩 생성되고,
+    사이드바 '작성 중인 박람회'에서 진행 상태를 확인/이어서 작성한다."""
+
+    __bind_key__ = "app_data"  # instance/app_data.db (유저 데이터 전용)
+    __tablename__ = "concept_drafts"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    exhibition_id = db.Column(db.Integer, nullable=False)  # raw_exhibitions.id (다른 DB라 FK 불가)
+    exhibition_name = db.Column(db.String(255))  # 목록 표시용 스냅샷 (다른 DB 조인 불가하므로 복제 저장)
+    exhibition_country = db.Column(db.String(100))
+    status = db.Column(db.String(20), default="concept", nullable=False)  # concept | proposal | done
+    theme = db.Column(db.Text)
+    slogan = db.Column(db.Text)
+    description = db.Column(db.Text)
+    selling_points = db.Column(db.Text)  # JSON: [{level, title, desc}, ...]
+    events = db.Column(db.Text)  # JSON: [{tag, title, desc, timing}, ...]
+    target_buyers = db.Column(db.Text)  # JSON: ["...", ...]
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = db.relationship("User", backref=db.backref("concept_drafts", lazy=True))
+
+    def __repr__(self):
+        return f"<ConceptDraft {self.exhibition_name} ({self.status})>"
+
+
+# ProposalDraft, Buyer 등 나머지 모델은
 # 각 기능 구현 시 이 파일에 이어서 추가합니다.

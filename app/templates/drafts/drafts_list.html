@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}작성 중인 박람회 | 사부작{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>작성 중인 박람회</h1>
+    <p class="page-desc">부스 컨셉·기안서 작성 진행 상태를 관리합니다</p>
+  </div>
+</div>
+
+{% if drafts %}
+<div class="product-list">
+  {% for draft in drafts %}
+  <div class="product-row">
+    <div class="product-info">
+      <strong>{{ draft.exhibition_name }}</strong>
+      <span class="hs-tag">{{ draft.exhibition_country }}</span>
+      <p class="ingredients">{{ status_labels.get(draft.status, draft.status) }} · 마지막 수정 {{ draft.updated_at.strftime('%Y-%m-%d') }}</p>
+    </div>
+    <div class="draft-row-actions">
+      <a href="{{ url_for('concept.detail', draft_id=draft.id) }}" class="btn-secondary">이어서 작성</a>
+      <form method="post" action="{{ url_for('drafts.delete', draft_id=draft.id) }}">
+        <button type="submit" class="btn-text-danger" onclick="return confirm('이 박람회의 컨셉 기획을 삭제하시겠습니까?')">삭제</button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="no-product-state">
+  <div class="no-product-icon">📝</div>
+  <h3>작성 중인 박람회가 없습니다</h3>
+  <p>박람회 상세 페이지에서 "부스 컨셉 기획"을 시작하면<br>여기에 진행 상태가 표시됩니다</p>
+  <a href="{{ url_for('dashboard.index') }}" class="btn-primary">대시보드로 가기</a>
+</div>
+{% endif %}
+{% endblock %}

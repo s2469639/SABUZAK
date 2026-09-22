@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% block title %}{{ expo.name }} | 사부작{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>
+      {{ expo.name }}
+      {% if expo.food_yn %}
+        <span class="badge-food">식품</span>
+      {% else %}
+        <span class="badge-nonfood">비식품</span>
+      {% endif %}
+    </h1>
+    <p class="page-desc">{{ expo.country_ko or expo.country }} · {{ expo.city }} · {{ expo.start_date }} ~ {{ expo.end_date }}</p>
+  </div>
+  <a href="{{ url_for('dashboard.index') }}" class="btn-secondary">← 대시보드로</a>
+</div>
+
+<div class="tabs" data-active="overview">
+  <div class="tab-nav">
+    <div class="tab-nav-buttons">
+      <button type="button" class="tab-btn active" data-tab="overview">박람회 개요</button>
+      <button type="button" class="tab-btn" data-tab="market">시장 개요</button>
+      <button type="button" class="tab-btn" data-tab="trend">트렌드 조사</button>
+      <button type="button" class="tab-btn" data-tab="hscode">HS코드 &amp; 수출 주의사항</button>
+    </div>
+    <form method="post" action="{{ url_for('concept.start', expo_id=expo.id) }}">
+      <button type="submit" class="btn-primary">부스 컨셉 기획 →</button>
+    </form>
+  </div>
+
+  <div class="tab-panel" id="tab-overview">
+    <div class="card">
+      <h2>기본 정보</h2>
+      <dl class="detail-list">
+        <dt>개최지</dt><dd>{{ expo.venue or '정보 없음' }}</dd>
+        <dt>국가 / 도시</dt><dd>{{ expo.country_ko or expo.country }} / {{ expo.city }}</dd>
+        <dt>일정</dt><dd>{{ expo.start_date }} ~ {{ expo.end_date }}</dd>
+        <dt>규모</dt><dd>{{ expo.scale or '미상' }}</dd>
+        <dt>카테고리</dt><dd>{{ expo.category }}</dd>
+        <dt>식품 여부</dt>
+        <dd>
+          {% if expo.food_yn %}
+            <span class="badge-food">식품</span>
+          {% else %}
+            <span class="badge-nonfood">비식품</span>
+          {% endif %}
+        </dd>
+        <dt>참관 대상</dt><dd>{{ expo.audience_type }} ({{ expo.audience_note }})</dd>
+        <dt>공식 웹사이트</dt>
+        <dd>
+          {% if expo.website %}
+            <a href="https://{{ expo.website }}" target="_blank" rel="noopener">{{ expo.website }}</a>
+          {% else %}
+            -
+          {% endif %}
+        </dd>
+      </dl>
+
+      {% if expo.keywords %}
+      <h3>연관 키워드</h3>
+      <div class="keyword-tags">
+        {% for kw in expo.keywords.split(',') %}
+        <span class="keyword-tag">{{ kw.strip() }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if intro_paragraphs %}
+      <h3>박람회 소개</h3>
+      {% for para in intro_paragraphs %}
+      <p class="intro-text">{{ para }}</p>
+      {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-market" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
+    <div class="card">
+      <h2>시장 개요</h2>
+      <p class="placeholder-note">환율, YoY 성장률, 시장 인사이트 카드는 추후 연동 예정입니다.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="tab-panel" id="tab-trend" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
+    <div class="card">
+      <h2>트렌드 조사</h2>
+      <p class="placeholder-note">구글 트렌드, 경쟁사·가격, 관련 뉴스 요약은 추후 연동 예정입니다.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="tab-panel" id="tab-hscode" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
+
+    {% if hscode_ctx.overall_best %}
+    <div class="best-tariff-banner">
+      <div class="best-tariff-icon">🏆</div>
+      <div>
+        <div class="best-tariff-label">등록 제품 중 최적 관세 추천</div>
+        <div class="best-tariff-main">
+          <strong>{{ hscode_ctx.overall_best.product.name }}</strong>
+          ({{ hscode_ctx.overall_best.product.hs_code }})
+          — <strong>{{ hscode_ctx.overall_best.best_regime.regime }}</strong>
+          적용 시 <span class="best-tariff-rate">{{ hscode_ctx.overall_best.best_regime.tariff_ave }}%</span>로 가장 유리
+        </div>
+        {% if hscode_ctx.overall_best.certs %}
+        <div class="best-tariff-certs">
+          필요 서류: {{ hscode_ctx.overall_best.certs|join(', ') }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <h3 class="section-label">등록 제품의 {{ expo.country_ko or expo.country }} 수출 HS코드 및 관세율</h3>
+    <div class="tariff-card-list">
+      {% for row in hscode_ctx.product_rows %}
+      <div class="tariff-card tariff-card-stacked">
+        <div class="tariff-card-title">
+          <span class="hs-tag">{{ row.product.name }}</span>
+          <strong>{{ row.product.hs_code }}</strong>
+        </div>
+
+        <table class="tariff-regime-table">
+          <thead>
+            <tr>
+              <th>협정</th>
+              <th>관세율</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for regime in row.regimes %}
+            <tr class="{% if regime.is_best %}best-row{% endif %}">
+              <td>
+                {{ regime.regime }}
+                {% if regime.is_best %}<span class="best-pick-tag">추천</span>{% endif %}
+              </td>
+              <td class="tariff-rate-cell {% if regime.tariff_ave == 0 %}zero{% endif %}">
+                {{ regime.tariff_ave }}%
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        {% if row.certs %}
+        <div class="cert-badges">
+          <span class="cert-label">필요 인증:</span>
+          {% for cert in row.certs %}
+          <span class="cert-badge">{{ cert }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if hscode_ctx.is_estimated %}
+    <p class="placeholder-note">※ {{ expo.country_ko or expo.country }}은(는) 상세 관세 프로필이 아직 없어 추정치로 표시됩니다.</p>
+    {% endif %}
+
+    <div class="section-label-row">
+      <h3 class="section-label">
+        수출 주의사항 <span class="section-label-sub">({{ expo.country_ko or expo.country }} 수출입 관련 법령, 식품·농산물 관련도 순)</span>
+        {% if hscode_ctx.regulation_notes_is_live %}
+          <span class="data-source-badge live">UNCTAD TRAINS 실데이터</span>
+        {% else %}
+          <span class="data-source-badge">예시 데이터 · 이 국가는 아직 수집 안 됨</span>
+        {% endif %}
+      </h3>
+      <form method="post" action="{{ url_for('exhibition.sync_ntm', expo_id=expo.id) }}">
+        <button type="submit" class="btn-secondary btn-sync-ntm">
+          {% if hscode_ctx.regulation_notes_is_live %}TRAINS 데이터 다시 가져오기{% else %}지금 실제 데이터 가져오기{% endif %}
+        </button>
+      </form>
+    </div>
+    <div class="regulation-list">
+      {% for note in hscode_ctx.regulation_notes %}
+      <div class="regulation-card level-{{ note.level }}">
+        <span class="regulation-level level-{{ note.level }}">{{ note.level }}</span>
+        <strong>{{ note.title }}</strong>
+        <p>{{ note.desc }}</p>
+        <span class="regulation-ref">
+          ref: {{ note.ref }}
+          {% if note.web_link %}· <a href="{{ note.web_link }}" target="_blank" rel="noopener">원문 링크</a>{% endif %}
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
