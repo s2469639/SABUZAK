@@ -11,3 +11,4 @@ weasyprint
 googletrans
 pytrends
 tavily-python
+flask-login
