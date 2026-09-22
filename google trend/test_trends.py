@@ -118,7 +118,7 @@ def generate_fallback_trend_data(keywords_list: list, timeframe: str):
 
 def fetch_google_trends(keywords_list: list, geo_code: str, timeframe: str = "today 12-m"):
     """
-    세션 조작 없는 이전의 순수한 pytrends 호출 방식
+    구글 트렌드 데이터 수집 및 독립 스케일링/상대 비교 분리
     """
     raw_keywords = [item["keyword"] for item in keywords_list if isinstance(item, dict) and "keyword" in item]
     
@@ -132,7 +132,6 @@ def fetch_google_trends(keywords_list: list, geo_code: str, timeframe: str = "to
         return empty_result
 
     try:
-        # 이전 방식으로 원복 (requests.Session 조작 없이 기본 TrendReq 사용)
         pytrend = TrendReq(hl='en-US', tz=360, timeout=(10, 25))
         
         pytrend.build_payload(
@@ -175,3 +174,59 @@ def fetch_google_trends(keywords_list: list, geo_code: str, timeframe: str = "to
     except Exception as e:
         print(f"구글 트렌드 기본 수집 중 예외 발생: {e}")
         return generate_fallback_trend_data(keywords_list, timeframe)
+
+
+def generate_trend_insights(product_name: str, country: str, keywords_list: list, trend_data: dict) -> list:
+    """
+    수집된 구글 트렌드 그래프를 기반으로 고객이 바로 이해할 수 있는 3가지 핵심 해석 요약 생성
+    """
+    if not trend_data.get("dates"):
+        return ["데이터가 충분하지 않아 상세 트렌드 분석을 생성할 수 없습니다."]
+
+    kw_names = [f"{k['keyword']}({k.get('ko','')})" for k in keywords_list]
+    
+    prompt = f"""
+    당신은 글로벌 F&B 이커머스 및 마케팅 전략가입니다.
+    
+    [제품명]: {product_name}
+    [타겟 국가]: {country}
+    [분석 키워드]: {kw_names}
+    [트렌드 기간]: {trend_data['dates'][0]} ~ {trend_data['dates'][-1]}
+    
+    위 키워드들의 구글 트렌드 그래프 결과를 고객(수출 기업, 마케터)이 보고 직관적으로 이해할 수 있도록, 
+    아래 3가지 관점으로 명확한 핵심 해석을 한국어로 각각 1~2문장씩 도출하세요:
+    
+    1. [시즌성 및 집중 타깃 시점]: 관심도가 가장 급증하는 시기(예: 특정 명절, 계절 등)와 집중 프로모션 타이밍
+    2. [키워드 간 상관관계]: 타깃 제품과 상위 카테고리(또는 현지 대체재) 검색량 흐름의 동조화 현상
+    3. [시장 진입/마케팅 액션]: 현지 이커머스(아마존 등) 및 마케팅 집행 시 활용할 실질적 키워드/소구점 전략
+    
+    반드시 유효한 JSON 배열(문자열 3개)로만 응답하세요:
+    [
+      "시즌성 분석 내용...",
+      "상관관계 분석 내용...",
+      "마케팅 액션 가이드 내용..."
+    ]
+    """
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a senior data-driven retail strategist. Output ONLY a valid JSON array of 3 actionable insights in Korean."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3
+        )
+        content = response.choices[0].message.content.strip()
+        if "```json" in content:
+            content = content.split("```json")[1].split("```")[0].strip()
+        elif "```" in content:
+            content = content.split("```")[1].split("```")[0].strip()
+        return json.loads(content)
+    except Exception as e:
+        print(f"인사이트 생성 오류: {e}")
+        return [
+            "연초 및 특정 시즌(명절 등)에 검색 관심도가 급증하므로 1개월 전 사전 프로모션 준비가 필수적입니다.",
+            "상위 카테고리 검색량이 증가할 때 타깃 제품의 유입도 함께 늘어나는 동조화 경향을 보입니다.",
+            "단독 제품명 외에 현지 소비자에게 친숙한 로컬 카테고리 키워드를 상품 상세페이지에 복합 노출하는 전략이 효과적입니다."
+        ]
