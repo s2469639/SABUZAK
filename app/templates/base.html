@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}사부작{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <h2 class="brand">사부작</h2>
+      {% if current_user.is_authenticated %}
+        <nav>
+          <a href="{{ url_for('dashboard.index') }}">대시보드</a>
+          <a href="{{ url_for('auth.logout') }}">로그아웃</a>
+        </nav>
+      {% endif %}
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        {% if current_user.is_authenticated %}
+          <span>{{ current_user.name }}님 환영합니다</span>
+        {% endif %}
+      </header>
+
+      <main class="content">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
+</body>
+</html>
