@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 
 from app.models import Exhibition, Product
 from app.routes.dashboard import CONTINENT_DB_VALUES
+from app.services.hscode import build_hscode_context
 
 bp = Blueprint("exhibition", __name__, url_prefix="/exhibitions")
 
@@ -125,19 +126,20 @@ def detail(expo_id):
     intro_paragraphs = _split_paragraphs(expo.intro_ko) or _split_paragraphs(expo.intro)
 
     # 시장 개요·트렌드 조사·HS코드 탭은 체크된 제품 + HS코드가 있어야 연결됨
-    has_linked_product = (
-        Product.query.filter(
-            Product.user_id == current_user.id,
-            Product.is_checked == True,  # noqa: E712
-            Product.hs_code.isnot(None),
-            Product.hs_code != "",
-        ).first()
-        is not None
-    )
+    linked_products = Product.query.filter(
+        Product.user_id == current_user.id,
+        Product.is_checked == True,  # noqa: E712
+        Product.hs_code.isnot(None),
+        Product.hs_code != "",
+    ).all()
+    has_linked_product = len(linked_products) > 0
+
+    hscode_ctx = build_hscode_context(expo, linked_products) if has_linked_product else None
 
     return render_template(
         "exhibition/detail.html",
         expo=expo,
         intro_paragraphs=intro_paragraphs,
         has_linked_product=has_linked_product,
+        hscode_ctx=hscode_ctx,
     )
