@@ -9,7 +9,23 @@ import os
 
 from getpass import getpass
 
-ENV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+def _locate_env_file():
+    """.env를 최상위 프로젝트 폴더(이 폴더의 부모 디렉터리, 예: SABUZAK/)에서
+    먼저 찾는다 - 여러 도구 폴더가 .env 하나를 공유하는 구조로 바뀌었기 때문.
+    이 폴더 안에 .env를 따로 둔 경우(예전 방식)도 계속 지원한다."""
+    parent_env = os.path.join(os.path.dirname(BASE_DIR), ".env")
+    if os.path.exists(parent_env):
+        return parent_env
+    local_env = os.path.join(BASE_DIR, ".env")
+    if os.path.exists(local_env):
+        return local_env
+    return parent_env  # 둘 다 없으면 최상위 경로를 기본값으로 (여기에 새로 만들어짐)
+
+
+ENV_PATH = _locate_env_file()
 
 REQUIRED_KEYS = {
     "OPENAI_API_KEY": "OpenAI API 키",

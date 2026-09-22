@@ -89,11 +89,25 @@ KOREAN_NAME_TO_ISO3 = {
 _numeric_code_cache = {}  # ISO3 -> Comtrade 숫자 코드 (프로세스 내에서만 캐싱, 반복 조회 시 API 재호출 방지)
 
 
+def _locate_env_file():
+    """.env를 최상위 프로젝트 폴더(이 폴더의 부모 디렉터리, 예: SABUZAK/)에서
+    먼저 찾는다 - tavily_market_research, hscode_recommend, un_comtrade_market_research
+    같은 도구 폴더들이 .env 하나를 공유하는 구조로 바뀌었기 때문. 혹시 이
+    폴더 안에 .env를 따로 둔 경우(예전 방식)도 계속 지원하도록 그것도 찾아본다."""
+    parent_env = os.path.join(os.path.dirname(BASE_DIR), ".env")
+    if os.path.exists(parent_env):
+        return parent_env
+    local_env = os.path.join(BASE_DIR, ".env")
+    if os.path.exists(local_env):
+        return local_env
+    return parent_env  # 둘 다 없으면 최상위 경로를 기본값으로 (에러 메시지에 이 경로가 찍히도록)
+
+
 def get_config():
     """OpenAI 클라이언트 + Comtrade 구독키를 준비한다.
     키가 없으면 RuntimeError (Flask 요청 중 sys.exit()을 부르면 서버가
     죽어버리는 문제가 있어서 예외로 처리 — 다른 두 기능과 동일한 이유)."""
-    load_dotenv(os.path.join(BASE_DIR, ".env"))
+    load_dotenv(_locate_env_file())
     openai_key = os.getenv("OPENAI_API_KEY") or os.getenv("LLM_API_KEY")
     comtrade_key = os.getenv("UN_COMTRADE_SUBSCRIPTION_KEY")
     if not openai_key:
@@ -122,17 +136,32 @@ def resolve_iso3(country_input: str) -> str:
     return iso3
 
 
-def iso3_to_numeric(iso3: str, proxy_url: str | None = None) -> str:
-    """ISO3 -> Comtrade 숫자 국가코드. comtradeapicall의 공식 변환 함수를 쓰되,
-    같은 프로세스 안에서 반복 조회 시 매번 API를 다시 부르지 않게 캐싱한다."""
+def candidate_reporter_codes(iso3: str, proxy_url: str | None = None) -> list[str]:
+    """ISO3 -> Comtrade 숫자 국가코드 "후보 목록". comtradeapicall이 한 나라에
+    코드를 여러 개(콤마로 구분) 돌려주는 경우가 실제로 있다 - 예: 독일(DEU)은
+    "280,276"을 돌려주는데, 280은 통일 이전(1990년 이전 서독) 코드고 276이
+    현재(통일 독일) 코드다. 어느 게 "현재" 코드인지는 나라마다 다르고 미리
+    알 방법이 없어서, 여기서는 순서를 판단하지 않고 후보를 전부 반환한다 -
+    실제로 어느 코드가 맞는지는 이 코드를 쓰는 쪽(get_competitiveness 등)이
+    "그 코드로 조회했을 때 데이터가 실제로 나오는지"를 직접 시도해보고 정한다."""
     if iso3 in _numeric_code_cache:
         return _numeric_code_cache[iso3]
     result = comtradeapicall.convertCountryIso3ToCode(iso3, proxy_url=proxy_url)
     if not result:
         raise ValueError(f"UN Comtrade에서 국가코드를 찾지 못했습니다: {iso3}")
-    numeric = result.split(",")[0]
-    _numeric_code_cache[iso3] = numeric
-    return numeric
+    codes = [c.strip() for c in result.split(",") if c.strip()]
+    if not codes:
+        raise ValueError(f"UN Comtrade에서 국가코드를 찾지 못했습니다: {iso3}")
+    _numeric_code_cache[iso3] = codes
+    return codes
+
+
+def iso3_to_numeric(iso3: str, proxy_url: str | None = None) -> str:
+    """ISO3 -> Comtrade 숫자 국가코드 (단일 값이 필요한 가벼운 용도:
+    화면 표시, "이 경쟁국이 타깃국 자기 자신인지" 대략적인 판정 등).
+    후보가 여러 개면 첫 번째를 돌려준다 - 실제 데이터 조회에는
+    candidate_reporter_codes()로 전체 후보를 다 시도하는 쪽을 쓴다."""
+    return candidate_reporter_codes(iso3, proxy_url=proxy_url)[0]
 
 
 def _find_column(df, candidates, label):
@@ -209,43 +238,80 @@ def get_competitiveness(
     가져온 국가) 그대로 넘겨서 ISO3 변환을 건너뛸 수 있다. 이 경우
     target_iso3는 "자기 자신 제외" 판정과 화면 표시용 라벨로만 쓰인다."""
     competitors = competitors or DEFAULT_COMPETITORS
-    reporter_code = reporter_code or iso3_to_numeric(target_iso3, proxy_url=proxy_url)
+
+    # comtradeapicall이 한 나라에 국가코드를 여러 개 돌려주는 경우가 실제로
+    # 있다 (실사례로 검증됨: 독일 DEU -> "280,276". 280은 통일 이전 서독,
+    # 276이 현재 독일인데, 어느 게 "현재" 코드인지 미리 알 방법이 없다).
+    # reporter_code를 명시적으로 안 받았으면 후보를 전부 모아뒀다가, 아래에서
+    # 실제로 데이터가 나오는 코드를 하나씩 시도해서 찾는다.
+    candidate_codes = [reporter_code] if reporter_code else candidate_reporter_codes(
+        target_iso3, proxy_url=proxy_url
+    )
 
     # 타깃 국가 자신은 경쟁국 목록에서 제외한다. "일본이 일본으로부터
     # 수입한 금액"은 항상 0(자국→자국 거래는 존재하지 않음)인 의미 없는
     # 값인데, 이걸 그냥 두면 화면/AI 프롬프트에 "JPN: $0"으로 찍혀서
     # "이 나라는 수입이 아예 없다"는 착각을 유발한다 (실제로 이 버그 때문에
     # AI가 총 수입액이 3800만 달러인 시장을 "수입이 전혀 없다"고 잘못
-    # 해석한 사례가 있었음). ISO3 문자열이 아니라 숫자 코드로 비교해야
-    # target_iso3가 없는(자동 후보국) 경우에도 안전하게 걸러진다.
+    # 해석한 사례가 있었음). candidate_codes 중 하나라도 일치하면 제외한다.
     filtered_competitors = []
     for c in competitors:
         try:
-            if iso3_to_numeric(c, proxy_url=proxy_url) == reporter_code:
+            if iso3_to_numeric(c, proxy_url=proxy_url) in candidate_codes:
                 continue
         except ValueError:
             pass
         filtered_competitors.append(c)
     competitors = filtered_competitors
 
-    df = comtradeapicall.getFinalData(
-        subscription_key,
-        typeCode="C", freqCode="A", clCode="HS", period=str(year),
-        reporterCode=reporter_code, cmdCode=hscode, flowCode="M",
-        partnerCode=None, partner2Code=None, customsCode=None, motCode=None,
-        maxRecords=2500, format_output="JSON", aggregateBy=None,
-        breakdownMode="classic", countOnly=None, includeDesc=True,
-        proxy_url=proxy_url,
-    )
+    # 후보 코드를 하나씩 시도해서 실제로 데이터가 나오는 코드를 찾는다.
+    # 대부분의 나라는 후보가 1개뿐이라 이 루프가 한 번만 돈다.
+    df = None
+    for code in candidate_codes:
+        df = comtradeapicall.getFinalData(
+            subscription_key,
+            typeCode="C", freqCode="A", clCode="HS", period=str(year),
+            reporterCode=code, cmdCode=hscode, flowCode="M",
+            partnerCode=None, partner2Code=None, customsCode=None, motCode=None,
+            maxRecords=2500, format_output="JSON", aggregateBy=None,
+            breakdownMode="classic", countOnly=None, includeDesc=True,
+            proxy_url=proxy_url,
+        )
+        if df is not None and not df.empty:
+            break
+
+    # 미러(거울) 데이터 폴백: 후보 코드를 전부 시도해도 빈 응답이면, 그 나라가
+    # 이 API에 "자기가 직접 보고한" 무역 통계를 아예 안 주는 것이다 (실제로
+    # 미국을 reporterCode로 걸면 TOTAL 품목조차 0건이 나오는 걸 사용자와 직접
+    # 검증했음 - 연도/품목 문제가 아니라 그 나라가 reporter로서 이 API에
+    # 데이터가 없는 것). 이럴 때는 "전세계 각국이 이 타깃국에 수출했다고
+    # 보고한 값들"을 대신 모아서(reporterCode=None, partnerCode=타깃국,
+    # flowCode="X") 타깃국의 수입 통계를 역으로 추정한다. 이 경우 반드시
+    # is_mirror_estimate=True로 표시해서 "타깃국이 직접 발표한 공식 수치"와
+    # 혼동하지 않게 한다.
+    is_mirror = False
+    if df is None or df.empty:
+        for code in candidate_codes:
+            df = comtradeapicall.getFinalData(
+                subscription_key,
+                typeCode="C", freqCode="A", clCode="HS", period=str(year),
+                reporterCode=None, cmdCode=hscode, flowCode="X",
+                partnerCode=code, partner2Code=None, customsCode=None, motCode=None,
+                maxRecords=2500, format_output="JSON", aggregateBy=None,
+                breakdownMode="classic", countOnly=None, includeDesc=True,
+                proxy_url=proxy_url,
+            )
+            if df is not None and not df.empty:
+                is_mirror = True
+                break
+
     if df is None or df.empty:
         return {
             "total_import_usd": None, "breakdown": [], "year": year, "item_desc": None,
-            "supplier_country_count": None,
+            "supplier_country_count": None, "is_mirror_estimate": False,
         }
 
     value_col = _find_column(df, ["primaryValue"], "수입액")
-    partner_code_col = _find_column(df, ["partnerCode"], "파트너국 코드")
-    partner_desc_col = _find_column(df, ["partnerDesc"], "파트너국명")
     # cmdDesc: UN Comtrade가 공식으로 관리하는 이 HS코드의 품목 설명(영문).
     # 원래는 사용자가 제품명을 따로 입력받아 화면/AI에 썼는데, 사람이 타이핑한
     # 이름이 HS코드와 실제로 다른 품목을 가리킬 위험이 있어서(예: HS코드는
@@ -254,16 +320,24 @@ def get_competitiveness(
     cmd_desc_col = _find_column_optional(df, ["cmdDesc"])
     item_desc = str(df[cmd_desc_col].iloc[0]) if cmd_desc_col and not df[cmd_desc_col].isna().all() else None
 
-    world_rows = df[df[partner_code_col].astype(str) == "0"]
-    total = float(world_rows[value_col].iloc[0]) if not world_rows.empty else None
+    if not is_mirror:
+        # 일반 모드: "상대국"은 partnerCode 컬럼에, World 합계는 partnerCode='0' 행에 있다.
+        country_code_col = _find_column(df, ["partnerCode"], "파트너국 코드")
+        world_rows = df[df[country_code_col].astype(str) == "0"]
+        total = float(world_rows[value_col].iloc[0]) if not world_rows.empty else None
+        other_rows = df[df[country_code_col].astype(str) != "0"][value_col].dropna()
+    else:
+        # 미러 모드: 이제 "상대국"(=수출한 나라)은 reporterCode 컬럼에 있고,
+        # World 합계 행 자체가 없으므로 모든 행의 값을 직접 더해서 총액을 만든다.
+        country_code_col = _find_column(df, ["reporterCode"], "보고국 코드")
+        clean_values = df[value_col].dropna()
+        total = float(clean_values.sum()) if not clean_values.empty else None
+        other_rows = clean_values
 
-    # 공급국 다양성(supplier_country_count): World 합계 행(partnerCode='0')을
-    # 뺀 나머지 개별 국가 행 중 금액이 0보다 큰 행의 개수. "이 나라가 이
-    # 품목을 몇 개국에서 수입해오는가"를 뜻하며, 트라이빅 "유망시장 순위"
-    # 버블차트의 Y축(수입국가수)에 대응한다. 이미 받아온 df에서 그대로
-    # 계산하므로 API를 추가로 부를 필요가 없다.
-    non_world_rows = df[df[partner_code_col].astype(str) != "0"][value_col].dropna()
-    supplier_country_count = int((non_world_rows > 0).sum())
+    # 공급국 다양성(supplier_country_count): "이 나라가 이 품목을 몇 개국에서
+    # 수입해오는가". 일반 모드는 World 합계 행을 뺀 나머지, 미러 모드는 전체
+    # 행(각 행 자체가 서로 다른 수출국 1개)에서 값이 0보다 큰 행을 센다.
+    supplier_country_count = int((other_rows > 0).sum())
 
     breakdown = []
     for iso3 in competitors:
@@ -271,7 +345,7 @@ def get_competitiveness(
             code = iso3_to_numeric(iso3, proxy_url=proxy_url)
         except ValueError:
             continue
-        rows = df[df[partner_code_col].astype(str) == str(code)]
+        rows = df[df[country_code_col].astype(str) == str(code)]
         value = float(rows[value_col].iloc[0]) if not rows.empty else 0.0
         share = (value / total * 100) if total else None
         breakdown.append({
@@ -283,7 +357,7 @@ def get_competitiveness(
     breakdown.sort(key=lambda x: x["import_value_usd"], reverse=True)
     return {
         "total_import_usd": total, "breakdown": breakdown, "year": year, "item_desc": item_desc,
-        "supplier_country_count": supplier_country_count,
+        "supplier_country_count": supplier_country_count, "is_mirror_estimate": is_mirror,
     }
 
 
@@ -303,29 +377,67 @@ def get_growth_trend(subscription_key, hscode, target_iso3, years, proxy_url=Non
 
     reporter_code: 이미 숫자 국가코드를 알고 있으면 ISO3 변환을 건너뛴다
     (자동 후보국 비교에서 순위표의 reporterCode를 그대로 재사용할 때 씀)."""
-    reporter_code = reporter_code or iso3_to_numeric(target_iso3, proxy_url=proxy_url)
+    # get_competitiveness()와 같은 이유: comtradeapicall이 한 나라에 국가코드를
+    # 여러 개 돌려줄 수 있다 (예: 독일 DEU -> "280,276", 280은 통일 이전
+    # 서독). 후보를 전부 모아서 실제로 데이터가 나오는 코드를 찾는다.
+    candidate_codes = [reporter_code] if reporter_code else candidate_reporter_codes(
+        target_iso3, proxy_url=proxy_url
+    )
     period = ",".join(str(y) for y in years)
 
-    df = comtradeapicall.getFinalData(
-        subscription_key,
-        typeCode="C", freqCode="A", clCode="HS", period=period,
-        reporterCode=reporter_code, cmdCode=hscode, flowCode="M",
-        partnerCode="0", partner2Code=None, customsCode=None, motCode=None,
-        maxRecords=2500, format_output="JSON", aggregateBy=None,
-        breakdownMode="classic", countOnly=None, includeDesc=True,
-        proxy_url=proxy_url,
-    )
+    df = None
+    for code in candidate_codes:
+        df = comtradeapicall.getFinalData(
+            subscription_key,
+            typeCode="C", freqCode="A", clCode="HS", period=period,
+            reporterCode=code, cmdCode=hscode, flowCode="M",
+            partnerCode="0", partner2Code=None, customsCode=None, motCode=None,
+            maxRecords=2500, format_output="JSON", aggregateBy=None,
+            breakdownMode="classic", countOnly=None, includeDesc=True,
+            proxy_url=proxy_url,
+        )
+        if df is not None and not df.empty:
+            break
+
+    # get_competitiveness()와 같은 이유의 미러 폴백: 후보 코드를 전부 시도해도
+    # 빈 응답이면(실사례로 검증됨: 미국), 전세계 각국이 "우리가 타깃국에
+    # 수출했다"고 보고한 값들을 연도별로 합산해서 대신 쓴다.
+    is_mirror = False
     if df is None or df.empty:
-        return {"by_year": [], "cagr_pct": None, "years_requested": years, "years_with_data": 0}
+        for code in candidate_codes:
+            df = comtradeapicall.getFinalData(
+                subscription_key,
+                typeCode="C", freqCode="A", clCode="HS", period=period,
+                reporterCode=None, cmdCode=hscode, flowCode="X",
+                partnerCode=code, partner2Code=None, customsCode=None, motCode=None,
+                maxRecords=2500, format_output="JSON", aggregateBy=None,
+                breakdownMode="classic", countOnly=None, includeDesc=True,
+                proxy_url=proxy_url,
+            )
+            if df is not None and not df.empty:
+                is_mirror = True
+                break
+
+    if df is None or df.empty:
+        return {
+            "by_year": [], "cagr_pct": None, "years_requested": years, "years_with_data": 0,
+            "is_mirror_estimate": False,
+        }
 
     value_col = _find_column(df, ["primaryValue"], "수입액")
     year_col = _find_column(df, ["refYear", "period"], "연도")
 
-    df = df[[year_col, value_col]].dropna().sort_values(year_col)
-    by_year = [
-        {"year": int(row[year_col]), "import_value_usd": float(row[value_col])}
-        for _, row in df.iterrows()
-    ]
+    clean = df[[year_col, value_col]].dropna()
+    if not is_mirror:
+        clean = clean.sort_values(year_col)
+        by_year = [
+            {"year": int(row[year_col]), "import_value_usd": float(row[value_col])}
+            for _, row in clean.iterrows()
+        ]
+    else:
+        # 미러 모드에서는 한 연도에 여러 수출국 행이 섞여 있으니 연도별로 합산한다.
+        grouped = clean.groupby(year_col)[value_col].sum().sort_index()
+        by_year = [{"year": int(y), "import_value_usd": float(v)} for y, v in grouped.items()]
 
     # 요청한 연도 중 가장 최근 연도(latest_requested_year)는 나라에 따라
     # 아직 최종 집계가 안 끝났을 수 있다(보고 지연 1~2년은 흔한 일). 그런데도
@@ -347,6 +459,7 @@ def get_growth_trend(subscription_key, hscode, target_iso3, years, proxy_url=Non
         "cagr_pct": cagr,
         "years_requested": years,      # 사용자가 요청한 연도 (실제로 데이터가 다 있으리라는 보장은 없음)
         "years_with_data": len(by_year),  # 실제로 응답에 들어있던 연도 수
+        "is_mirror_estimate": is_mirror,
     }
 
 
@@ -398,6 +511,11 @@ def interpret_with_llm(client, model, official_item_desc, hscode, target_country
 - growth_trend.years_with_data가 growth_trend.years_requested의 개수보다
   적으면 일부 연도 데이터가 아예 없다는 뜻입니다. 이때는 "N개년 성장률"이
   아니라 실제로 데이터가 있는 연도 수를 기준으로 설명하세요.
+- korea_competitiveness.is_mirror_estimate 또는 growth_trend.is_mirror_estimate가
+  true이면, 타깃국이 직접 보고한 공식 수치가 아니라 "전세계 각국이 이
+  타깃국에 수출했다고 보고한 값들을 합산한 추정치"입니다. 이 경우 반드시
+  "이 수치는 타깃국의 공식 발표가 아니라 상대국들의 보고를 기반으로 한
+  추정치"라는 점을 언급하고, 정밀한 확정 수치처럼 단정적으로 말하지 마세요.
 
 [데이터]
 {json.dumps(payload, ensure_ascii=False, indent=2)}
@@ -693,6 +811,9 @@ def _get_candidate_point(
         # 트라이빅 "유망시장 순위" 버블차트의 Y축(공급국 다양성)에 대응.
         # get_competitiveness가 이미 받아온 응답에서 계산하므로 추가 API 호출 없음.
         "supplier_country_count": competitiveness.get("supplier_country_count"),
+        # 이 후보국이 reporter로서 이 API에 직접 데이터를 안 줘서(예: 미국)
+        # 상대국들의 보고를 합산한 추정치로 대체됐는지 여부.
+        "is_mirror_estimate": bool(competitiveness.get("is_mirror_estimate") or growth.get("is_mirror_estimate")),
     }
 
 
@@ -718,6 +839,10 @@ may_be_incomplete_latest_year가 true인 후보국은 최신 연도 통계가 �
 집계되지 않았을 수 있으니, CAGR이 낮게 보여도 곧바로 "역성장"이라 단정하지
 마세요. total_import_usd가 있는데 korea_share_pct가 낮거나 None이면 "한국이
 아직 거의 진출 못 한 시장"이지 "수요가 없는 시장"이 아닙니다.
+
+is_mirror_estimate가 true인 후보국은 그 나라가 직접 발표한 공식 수치가 아니라
+"전세계 각국이 그 나라에 수출했다고 보고한 값들을 합산한 추정치"입니다. 이런
+후보국을 언급할 때는 "공식 발표 수치가 아닌 추정치"라는 점을 짧게라도 밝히세요.
 
 [데이터]
 {json.dumps(payload, ensure_ascii=False, indent=2)}

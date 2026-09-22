@@ -52,11 +52,24 @@ COUNTRY_NAME_KO_CANDIDATES = ["cntyKorNm", "natKorNm", "countryName", "cntyNm", 
 COUNTRY_NAME_EN_CANDIDATES = ["cntyEnNm", "natEngNm", "countryNameEn", "engNm"]
 
 
+def _locate_env_file():
+    """.env를 최상위 프로젝트 폴더(이 폴더의 부모 디렉터리, 예: SABUZAK/)에서
+    먼저 찾는다 - 여러 도구 폴더가 .env 하나를 공유하는 구조로 바뀌었기 때문.
+    이 폴더 안에 .env를 따로 둔 경우(예전 방식)도 계속 지원한다."""
+    parent_env = os.path.join(os.path.dirname(BASE_DIR), ".env")
+    if os.path.exists(parent_env):
+        return parent_env
+    local_env = os.path.join(BASE_DIR, ".env")
+    if os.path.exists(local_env):
+        return local_env
+    return parent_env
+
+
 def get_config():
     """data.go.kr 인증키를 준비한다. 없으면 RuntimeError.
     이 모듈 전체가 선택 기능이라, 키가 없으면 이 함수를 부르는 쪽(app.py)이
     그냥 이 섹션을 건너뛰면 된다 - UN Comtrade 핵심 기능은 이 키 없이도 그대로 동작해야 한다."""
-    load_dotenv(os.path.join(BASE_DIR, ".env"))
+    load_dotenv(_locate_env_file())
     api_key = os.getenv("DATA_GO_KR_API_KEY")
     if not api_key:
         raise RuntimeError(
