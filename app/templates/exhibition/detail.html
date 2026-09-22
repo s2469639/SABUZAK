@@ -181,14 +181,21 @@
     <p class="placeholder-note">※ {{ expo.country_ko or expo.country }}은(는) 상세 관세 프로필이 아직 없어 추정치로 표시됩니다.</p>
     {% endif %}
 
-    <h3 class="section-label">
-      수출 주의사항
-      {% if hscode_ctx.regulation_notes_is_live %}
-        <span class="data-source-badge live">macmap 실데이터</span>
-      {% else %}
-        <span class="data-source-badge">예시 데이터 · macmap 캐시 준비 중</span>
-      {% endif %}
-    </h3>
+    <div class="section-label-row">
+      <h3 class="section-label">
+        수출 주의사항
+        {% if hscode_ctx.regulation_notes_is_live %}
+          <span class="data-source-badge live">macmap 실데이터</span>
+        {% else %}
+          <span class="data-source-badge">예시 데이터 · 이 조합은 아직 수집 안 됨</span>
+        {% endif %}
+      </h3>
+      <form method="post" action="{{ url_for('exhibition.sync_ntm', expo_id=expo.id) }}">
+        <button type="submit" class="btn-secondary btn-sync-ntm">
+          {% if hscode_ctx.regulation_notes_is_live %}macmap 데이터 다시 가져오기{% else %}지금 실제 데이터 가져오기{% endif %}
+        </button>
+      </form>
+    </div>
     <div class="regulation-list">
       {% for note in hscode_ctx.regulation_notes %}
       <div class="regulation-card level-{{ note.level }}">

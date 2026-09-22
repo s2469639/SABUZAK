@@ -1,11 +1,13 @@
 import re
 
-from flask import Blueprint, abort, render_template, request
+from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
-from app.models import Exhibition, Product
+from app.extensions import db
+from app.models import Exhibition, NtmMeasure, Product
 from app.routes.dashboard import CONTINENT_DB_VALUES
-from app.services.hscode import build_hscode_context
+from app.services.hscode import build_hscode_context, get_m49_code, resolve_country_iso
+from app.services.macmap_client import fetch_ntm_rows, make_session
 
 bp = Blueprint("exhibition", __name__, url_prefix="/exhibitions")
 
@@ -143,3 +145,55 @@ def detail(expo_id):
         has_linked_product=has_linked_product,
         hscode_ctx=hscode_ctx,
     )
+
+
+@bp.route("/detail/<int:expo_id>/sync-ntm", methods=["POST"])
+@login_required
+def sync_ntm(expo_id):
+    """이 박람회 국가 하나에 대해서만, 지금 등록된 제품 HS코드 기준으로 macmap을
+    그 자리에서 호출해 캐시(NtmMeasure)를 채운다. scripts/sync_ntm_cache.py를
+    전체 국가로 돌리는 대신, 필요한 조합 하나만 버튼으로 즉시 채우는 용도."""
+    expo = Exhibition.query.get_or_404(expo_id)
+    country_iso = resolve_country_iso(expo.country)
+
+    if not country_iso:
+        flash(
+            f"'{expo.country}' 국가명을 인식하지 못했습니다. "
+            f"pip install pycountry 설치 여부를 확인해주세요.",
+            "danger",
+        )
+        return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#hscode")
+
+    m49 = get_m49_code(country_iso)
+    if not m49:
+        flash(f"{expo.country_ko or expo.country}({country_iso})의 M49 코드를 찾지 못했습니다.", "danger")
+        return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#hscode")
+
+    products = Product.query.filter(
+        Product.user_id == current_user.id,
+        Product.is_checked == True,  # noqa: E712
+        Product.hs_code.isnot(None),
+        Product.hs_code != "",
+    ).all()
+    hs6_list = sorted({p.hs_code.replace(".", "")[:6] for p in products})
+
+    if not hs6_list:
+        flash("체크된 제품(HS코드 포함)이 없습니다. 먼저 마이페이지에서 제품을 등록해주세요.", "danger")
+        return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#hscode")
+
+    try:
+        session = make_session()
+        total = 0
+        for hs6 in hs6_list:
+            rows = fetch_ntm_rows(session, m49, hs6)
+            NtmMeasure.query.filter_by(reporter=m49, product=hs6).delete()
+            for row in rows:
+                db.session.add(NtmMeasure(**row))
+            total += len(rows)
+        db.session.commit()
+        flash(f"macmap에서 {total}건의 비관세장벽 정보를 가져왔습니다.", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"macmap 조회 중 오류가 발생했습니다: {e}", "danger")
+
+    return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#hscode")

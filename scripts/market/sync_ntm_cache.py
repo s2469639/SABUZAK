@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
 """
-macmap.org NTM(비관세조치) 데이터를 등록된 제품의 HS코드 x 주요 수입국 조합으로
+macmap.org NTM(비관세조치) 데이터를 등록된 제품의 HS코드 x 수입국 조합으로
 가져와서 NtmMeasure 캐시 테이블에 채워넣는 배치 스크립트.
 
 웹앱(app/services/hscode.py)은 이 캐시 테이블만 읽고, macmap을 직접 호출하지
 않는다. macmap이 매너 딜레이(2초)를 요구하고 세션 쿠키 기반이라 실시간 요청
 경로에 넣기엔 부적절하기 때문.
 
+국가는 pycountry로 전세계를 다 인식한다 (pip install pycountry 필요).
+--importers 없이 실행하면 raw_exhibitions에 실제로 등록된 국가들만 대상으로 한다
+(전세계 249개국을 무의미하게 다 돌리지 않기 위함).
+
 실행 (sabuzak 루트에서):
-    python scripts/market/sync_ntm_cache.py
-    python scripts/market/sync_ntm_cache.py --importers USA,CHN,JPN   # 특정 국가만
-    python scripts/market/sync_ntm_cache.py --force                  # 이미 캐시된 것도 재수집
+    python scripts/market/sync_ntm_cache.py                       # DB에 있는 박람회 국가 전부
+    python scripts/market/sync_ntm_cache.py --importers USA,CHN,ARM  # 특정 국가만 (ISO3)
+    python scripts/market/sync_ntm_cache.py --force                # 이미 캐시된 것도 재수집
 """
 
 import argparse
@@ -23,9 +27,29 @@ sys.path.insert(0, str(BASE_DIR))
 
 from app import create_app  # noqa: E402
 from app.extensions import db  # noqa: E402
-from app.models import NtmMeasure, Product  # noqa: E402
-from app.services.hscode import ISO3_TO_M49  # noqa: E402
+from app.models import Exhibition, NtmMeasure, Product  # noqa: E402
+from app.services.hscode import get_m49_code, resolve_country_iso  # noqa: E402
 from app.services.macmap_client import KOREA_M49, fetch_ntm_rows, make_session  # noqa: E402
+
+
+def _countries_from_exhibitions():
+    """raw_exhibitions에 실제로 등록된 국가들을 ISO3로 변환한 목록."""
+    country_names = [
+        row[0]
+        for row in Exhibition.query.filter(Exhibition.is_active == 1)
+        .with_entities(Exhibition.country)
+        .distinct()
+        .all()
+        if row[0]
+    ]
+    iso3_list = set()
+    for name in country_names:
+        iso3 = resolve_country_iso(name)
+        if iso3:
+            iso3_list.add(iso3)
+        else:
+            print(f"  국가명 인식 실패(건너뜀): {name}")
+    return sorted(iso3_list)
 
 
 def get_target_pairs(importer_filter):
@@ -39,12 +63,16 @@ def get_target_pairs(importer_filter):
         print("등록된 제품(HS코드)이 없습니다. 마이페이지에서 제품을 먼저 등록해주세요.")
         return []
 
-    importers = importer_filter or list(ISO3_TO_M49.keys())
+    importers = [c.upper() for c in importer_filter] if importer_filter else _countries_from_exhibitions()
+    if not importers:
+        print("대상 국가를 찾지 못했습니다.")
+        return []
+
     pairs = []
     for iso3 in importers:
-        m49 = ISO3_TO_M49.get(iso3.upper())
+        m49 = get_m49_code(iso3)
         if not m49:
-            print(f"  알 수 없는 국가 코드 무시: {iso3}")
+            print(f"  M49 코드를 못 찾아 건너뜀: {iso3}")
             continue
         for hs6 in hs_codes:
             pairs.append((m49, hs6))
@@ -59,7 +87,7 @@ def already_cached(reporter, product):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--importers", help="ISO3 코드 콤마구분 (예: USA,CHN,JPN). 미지정시 지원하는 전체 국가")
+    ap.add_argument("--importers", help="ISO3 코드 콤마구분 (예: USA,CHN,ARM). 미지정시 DB에 등록된 박람회 국가 전부")
     ap.add_argument("--force", action="store_true", help="이미 캐시된 (국가,HS코드) 조합도 재수집")
     args = ap.parse_args()
 

@@ -13,8 +13,15 @@ DEFAULT_REGULATION_NOTES로 폴백한다.
 
 from app.models import NtmMeasure
 
-# ISO3 -> UN M49 숫자코드 (macmap reporter 파라미터에 사용)
-ISO3_TO_M49 = {
+try:
+    import pycountry
+except ImportError:
+    pycountry = None
+
+# ISO3 -> UN M49 숫자코드 (macmap reporter 파라미터에 사용).
+# pycountry가 있으면 이 표는 안 쓰고 전세계 국가를 동적으로 계산한다.
+# pycountry 없을 때만 쓰는 최소 폴백 표.
+_ISO3_TO_M49_FALLBACK = {
     "USA": "842", "CHN": "156", "JPN": "392", "VNM": "704", "DEU": "276",
     "FRA": "250", "GBR": "826", "MEX": "484", "AUS": "36", "IND": "356",
     "BRA": "76", "SAU": "682", "CAN": "124", "ITA": "380", "ESP": "724",
@@ -26,6 +33,21 @@ ISO3_TO_M49 = {
     "GRC": "300", "DNK": "208", "NOR": "578", "FIN": "246", "CHL": "152",
     "ARG": "32", "COL": "170", "PER": "604",
 }
+
+
+def get_m49_code(country_iso):
+    """ISO3 -> UN M49(=ISO 3166-1 numeric) 숫자코드 문자열. pycountry로 전세계
+    국가를 커버하고, pycountry 미설치 시에만 위 폴백 표를 쓴다."""
+    if not country_iso:
+        return None
+    if pycountry is not None:
+        try:
+            country = pycountry.countries.get(alpha_3=country_iso)
+            if country:
+                return str(int(country.numeric))  # 앞의 0 제거 (051 -> 51)
+        except (KeyError, AttributeError):
+            pass
+    return _ISO3_TO_M49_FALLBACK.get(country_iso)
 
 # macmap MeasureSection/legislation 텍스트로 필수/정보/주의 등급을 대략 나누는 키워드
 _MANDATORY_KEYWORDS = [
@@ -157,7 +179,24 @@ DEFAULT_CERTS_NONFOOD = []
 def resolve_country_iso(country_name):
     if not country_name:
         return None
-    return COUNTRY_ISO_MAP.get(country_name.strip().lower())
+
+    key = country_name.strip().lower()
+    # 흔한 약칭/표기 차이는 먼저 직접 매핑 (pycountry가 못 잡는 것들: USA, UK 등)
+    if key in COUNTRY_ISO_MAP:
+        return COUNTRY_ISO_MAP[key]
+
+    if pycountry is not None:
+        try:
+            country = pycountry.countries.get(name=country_name.strip())
+            if country:
+                return country.alpha_3
+            matches = pycountry.countries.search_fuzzy(country_name.strip())
+            if matches:
+                return matches[0].alpha_3
+        except LookupError:
+            pass
+
+    return None
 
 
 def get_tariff_regimes(country_iso):
@@ -192,7 +231,7 @@ def _classify_ntm_level(measure):
 def get_ntm_notes_for_product(country_iso, hs_code, limit=5):
     """macmap NTM 캐시(NtmMeasure)에서 국가+HS코드에 맞는 비관세장벽 항목을 가져온다.
     캐시가 비어있으면 빈 리스트를 반환 (호출부에서 정적 기본값으로 폴백)."""
-    m49 = ISO3_TO_M49.get(country_iso)
+    m49 = get_m49_code(country_iso)
     if not m49 or not hs_code:
         return []
 
