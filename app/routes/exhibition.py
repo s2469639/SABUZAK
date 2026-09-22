@@ -10,30 +10,51 @@ bp = Blueprint("exhibition", __name__, url_prefix="/exhibitions")
 
 
 def _apply_filters(query):
-    category = request.args.get("category", "")
+    keyword_tag = request.args.get("keyword_tag", "")
     food_only = request.args.get("food_only", "")
-    keyword = request.args.get("keyword", "").strip()
+    search = request.args.get("search", "").strip()
 
-    if category:
-        query = query.filter(Exhibition.category == category)
+    if keyword_tag:
+        query = query.filter(Exhibition.keywords.ilike(f"%{keyword_tag}%"))
     if food_only == "1":
         query = query.filter(Exhibition.food_yn == 1)
-    if keyword:
-        like = f"%{keyword}%"
+    if search:
+        like = f"%{search}%"
         query = query.filter(
             (Exhibition.name.ilike(like))
             | (Exhibition.country_ko.ilike(like))
             | (Exhibition.city.ilike(like))
         )
-    return query, category, food_only, keyword
+    return query, keyword_tag, food_only, search
 
 
-def _categories_for(base_query):
-    return [
-        row[0]
-        for row in base_query.with_entities(Exhibition.category).distinct().all()
-        if row[0]
-    ]
+def _keyword_tags_for(base_query, limit=15):
+    seen = {}
+    for row in base_query.with_entities(Exhibition.keywords).all():
+        if not row[0]:
+            continue
+        for kw in row[0].split(","):
+            kw = kw.strip()
+            if kw:
+                seen[kw] = seen.get(kw, 0) + 1
+    return [kw for kw, _ in sorted(seen.items(), key=lambda x: -x[1])[:limit]]
+
+
+def _build_list_context(base_query, title, list_endpoint, list_kwargs, continent):
+    query, keyword_tag, food_only, search = _apply_filters(base_query)
+    expos = query.order_by(Exhibition.start_date.asc()).all()
+    keyword_tags = _keyword_tags_for(base_query)
+
+    return {
+        "title": title,
+        "list_url": (list_endpoint, list_kwargs),
+        "continent": continent,
+        "expos": expos,
+        "keyword_tags": keyword_tags,
+        "selected_keyword_tag": keyword_tag,
+        "food_only": food_only,
+        "search": search,
+    }
 
 
 @bp.route("/<continent>")
@@ -46,21 +67,10 @@ def expo_list(continent):
     base_query = Exhibition.query.filter(
         Exhibition.continent.in_(db_values), Exhibition.is_active == 1
     )
-    query, category, food_only, keyword = _apply_filters(base_query)
-    expos = query.order_by(Exhibition.start_date.asc()).all()
-    categories = _categories_for(base_query)
-
-    return render_template(
-        "dashboard/expo_list.html",
-        title=continent,
-        list_url=("exhibition.expo_list", {"continent": continent}),
-        continent=continent,
-        expos=expos,
-        categories=categories,
-        selected_category=category,
-        food_only=food_only,
-        keyword=keyword,
+    ctx = _build_list_context(
+        base_query, continent, "exhibition.expo_list", {"continent": continent}, continent
     )
+    return render_template("dashboard/expo_list.html", **ctx)
 
 
 @bp.route("/country/<country>")
@@ -69,21 +79,26 @@ def expo_list_by_country(country):
     base_query = Exhibition.query.filter(
         Exhibition.country_ko == country, Exhibition.is_active == 1
     )
-    query, category, food_only, keyword = _apply_filters(base_query)
-    expos = query.order_by(Exhibition.start_date.asc()).all()
-    categories = _categories_for(base_query)
-
-    return render_template(
-        "dashboard/expo_list.html",
-        title=country,
-        list_url=("exhibition.expo_list_by_country", {"country": country}),
-        continent="",
-        expos=expos,
-        categories=categories,
-        selected_category=category,
-        food_only=food_only,
-        keyword=keyword,
+    ctx = _build_list_context(
+        base_query, country, "exhibition.expo_list_by_country", {"country": country}, ""
     )
+    return render_template("dashboard/expo_list.html", **ctx)
+
+
+@bp.route("/partial/<continent>")
+@login_required
+def expo_list_partial(continent):
+    db_values = CONTINENT_DB_VALUES.get(continent)
+    if db_values is None:
+        abort(404)
+
+    base_query = Exhibition.query.filter(
+        Exhibition.continent.in_(db_values), Exhibition.is_active == 1
+    )
+    ctx = _build_list_context(
+        base_query, continent, "exhibition.expo_list_partial", {"continent": continent}, continent
+    )
+    return render_template("dashboard/_expo_list_partial.html", **ctx)
 
 
 def _split_paragraphs(text):
