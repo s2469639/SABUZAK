@@ -35,6 +35,17 @@ INDICATOR_AGRICULTURAL = "TP_A_0160"
 _CACHE_TTL_SEC = 24 * 60 * 60  # 하루 1번이면 충분 (연 단위 통계라 자주 안 바뀜)
 _cache: dict = {}  # {(country_iso3, indicator): (value_dict_or_None, fetched_at)}
 
+# EU는 관세를 공동으로 매기는 관세동맹이라, WTO 통계에 개별 회원국이 아니라
+# "European Union"(코드 918) 하나로만 잡힌다 (실제로 확인함 - 스페인
+# 개별조회는 204 No Content, EU로는 데이터 있음). 개별 회원국으로 조회해서
+# 데이터가 없으면 이 목록에 있는 나라는 EU 코드로 재시도한다.
+EU_MEMBER_ISO3 = {
+    "AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST", "FIN", "FRA",
+    "DEU", "GRC", "HUN", "IRL", "ITA", "LVA", "LTU", "LUX", "MLT", "NLD",
+    "POL", "PRT", "ROU", "SVK", "SVN", "ESP", "SWE",
+}
+EU_REPORTER_CODE = "918"
+
 
 def _to_wto_reporter_code(country_iso3: str):
     """WTO는 국가를 ISO3(알파벳)가 아니라 UN M49 숫자 코드로 받는다
@@ -50,34 +61,53 @@ def _to_wto_reporter_code(country_iso3: str):
         return None
 
 
+def _fetch_by_reporter_code(reporter_code: str, indicator: str):
+    """WTO 리포터 코드(UN M49 숫자, 예: "724")로 최신 연도 값 하나를 가져온다.
+    데이터 없음/실패 -> None."""
+    try:
+        resp = requests.get(
+            f"{BASE}/data",
+            headers={"Ocp-Apim-Subscription-Key": WTO_API_KEY},
+            # head=M(machine-readable)을 안 주면 응답이 {"Dataset": [...]} 로
+            # 한 번 더 감싸지고 필드명도 Value/Year처럼 대문자로 시작하는
+            # "사람이 읽기 좋은" 형태로 온다 (실제로 확인함). M으로 명시해서
+            # 평평한 배열 + 소문자 camelCase 필드로 받는다.
+            params={
+                "i": indicator, "r": reporter_code, "ps": "default", "pc": "default",
+                "head": "M",
+            },
+            timeout=10,
+        )
+        if resp.status_code == 200 and resp.content:
+            rows = resp.json()
+            # head=M이어도 혹시 몰라 {"Dataset": [...]} 래핑까지 방어적으로 처리
+            if isinstance(rows, dict):
+                rows = rows.get("Dataset", [])
+            if isinstance(rows, list) and rows:
+                latest = max(rows, key=lambda r: r.get("year") or 0)
+                if latest.get("value") is not None:
+                    return {"value": latest["value"], "year": latest.get("year")}
+    except (requests.exceptions.RequestException, ValueError):
+        pass
+    return None
+
+
 def _fetch_latest(country_iso3: str, indicator: str):
-    """이 지표의 이 나라 최신 연도 값 하나를 가져온다. 실패/데이터 없음 -> None."""
+    """이 지표의 이 나라 최신 연도 값 하나를 가져온다. 실패/데이터 없음 -> None.
+    EU 회원국은 개별 국가로 조회하면 데이터가 없는 경우가 많아(관세동맹이라
+    EU 전체로만 보고됨), 그럴 때 EU 코드로 한 번 더 시도한다."""
     cache_key = (country_iso3, indicator)
     cached = _cache.get(cache_key)
     if cached and (time.time() - cached[1]) < _CACHE_TTL_SEC:
         return cached[0]
 
     reporter_code = _to_wto_reporter_code(country_iso3)
-    if not reporter_code:
-        _cache[cache_key] = (None, time.time())
-        return None
+    result = _fetch_by_reporter_code(reporter_code, indicator) if reporter_code else None
 
-    result = None
-    try:
-        resp = requests.get(
-            f"{BASE}/data",
-            headers={"Ocp-Apim-Subscription-Key": WTO_API_KEY},
-            params={"i": indicator, "r": reporter_code, "ps": "default", "pc": "default"},
-            timeout=10,
-        )
-        if resp.status_code == 200:
-            rows = resp.json()
-            if isinstance(rows, list) and rows:
-                latest = max(rows, key=lambda r: r.get("year") or 0)
-                if latest.get("value") is not None:
-                    result = {"value": latest["value"], "year": latest.get("year")}
-    except (requests.exceptions.RequestException, ValueError):
-        pass
+    if result is None and country_iso3 in EU_MEMBER_ISO3:
+        result = _fetch_by_reporter_code(EU_REPORTER_CODE, indicator)
+        if result:
+            result["is_eu_aggregate"] = True  # 화면에 "EU 전체 기준"임을 밝혀야 함
 
     _cache[cache_key] = (result, time.time())
     return result

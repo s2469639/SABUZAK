@@ -233,10 +233,16 @@
 
     {% if wto_tariff_info %}
     <p class="placeholder-note">
-      📊 참고(WTO 통계): {{ expo.country_ko or expo.country }}의 MFN 평균 관세율 —
+      📊 참고(WTO 통계):
+      {% if wto_tariff_info.agricultural and wto_tariff_info.agricultural.is_eu_aggregate %}
+        {{ expo.country_ko or expo.country }}은(는) EU 회원국이라 개별 국가 통계가 없어 EU 전체 기준 —
+      {% else %}
+        {{ expo.country_ko or expo.country }}의
+      {% endif %}
+      MFN 평균 관세율 —
       {% if wto_tariff_info.agricultural %}농산물 {{ wto_tariff_info.agricultural.value }}% ({{ wto_tariff_info.agricultural.year }}년){% endif %}
       {% if wto_tariff_info.all_products %}{% if wto_tariff_info.agricultural %} · {% endif %}전체 품목 {{ wto_tariff_info.all_products.value }}% ({{ wto_tariff_info.all_products.year }}년){% endif %}
-      — 특정 품목이 아닌 국가 전체 평균이니 위 표의 제품별 세율과 혼동하지 마세요.
+      — 특정 품목이 아닌 국가(또는 EU) 전체 평균이니 위 표의 제품별 세율과 혼동하지 마세요.
     </p>
     {% endif %}
     {% endif %}
