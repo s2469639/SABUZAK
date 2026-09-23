@@ -143,11 +143,16 @@ def _save_disk_cache(all_cache: dict):
 
 
 def fetch_regulations_for_country(
-    country_iso3: str, page_size: int = 20, max_pages: int = 20, force_refresh: bool = False
+    country_iso3: str, page_size: int = 20, max_pages: int = 2, force_refresh: bool = False
 ) -> list:
     """UNCTAD TRAINS에서 country_iso3(예: 'DEU')가 사부작 제품군(HS 1905류)에
     대해 부과 중인 규정을 직접 조회한다 (해당 국가만 콕 집어서 조회 - 예전처럼
     전세계를 다 긁을 필요 없음).
+
+    최종적으로 쓰는 건 top_relevant_regulations()로 추린 상위 6건뿐이라,
+    끝까지 다 받을 필요가 없다. max_pages 기본값을 2(최대 40건)로 낮춰서
+    요청 자체를 적게 보낸다 - 그래도 6건 추리기엔 충분하고, 429/차단 위험도
+    그만큼 줄어든다. 정말 다 필요하면 max_pages를 늘려서 호출하면 된다.
 
     페이지마다 REQUEST_DELAY_SEC만큼 쉬고, 429를 받으면 잠깐 대기 후
     재시도한다. Retry-After가 비정상적으로 크면(장기 IP 차단) 재시도 없이
