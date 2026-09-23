@@ -9,6 +9,7 @@ venv/
 # 추가 권장
 **/__pycache__/      # 하위 모든 경로의 pycache 포함 (지금은 루트 __pycache__/ 만 매칭될 수 있음)
 *.py[cod]
+**/*.db
 *.db
 *.sqlite
 *.sqlite3
