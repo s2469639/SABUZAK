@@ -9,6 +9,7 @@ from app.models import Exhibition, NtmMeasure, Product
 from app.routes.dashboard import CONTINENT_DB_VALUES
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
+from app.services.exchange import get_exchange_info
 from app.services import market_trend
 from app.services.trains_client import (
     fetch_regulations_for_country,
@@ -362,6 +363,7 @@ def detail(expo_id):
     hscode_ctx = build_hscode_context(expo, linked_products) if has_linked_product else None
     market_rows = _build_market_rows(expo, linked_products) if has_linked_product else []
     trend_rows = _build_trend_rows(expo, linked_products) if has_linked_product else []
+    exchange_info = get_exchange_info(expo.country)
 
     return render_template(
         "exhibition/detail.html",
@@ -371,6 +373,7 @@ def detail(expo_id):
         hscode_ctx=hscode_ctx,
         market_rows=market_rows,
         trend_rows=trend_rows,
+        exchange_info=exchange_info,
     )
 
 
