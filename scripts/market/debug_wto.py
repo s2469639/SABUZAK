@@ -51,9 +51,13 @@ def main():
     p_data = sub.add_parser("data", help="실제 데이터포인트 조회")
     p_data.add_argument("--key", required=True)
     p_data.add_argument("--indicator", required=True, help="지표 코드, 예: TP_A_0010")
-    p_data.add_argument("--r", default="all", help="reporting economies, 콤마구분 ISO3 (기본 all)")
+    p_data.add_argument("--r", default="all", help="reporting economies, 콤마구분 WTO 코드 (기본 all)")
     p_data.add_argument("--pc", default="default", help="품목 분류, 예: HS6 / HS4 / default")
     p_data.add_argument("--ps", default="default", help="기간, 예: 2023 / 2020-2023 / default")
+
+    p_rep = sub.add_parser("reporters", help="국가명으로 WTO 리포터 코드 검색 (ISO3랑 다를 수 있음)")
+    p_rep.add_argument("--key", required=True)
+    p_rep.add_argument("--name", required=True, help="국가명(일부), 예: Spain")
 
     args = ap.parse_args()
 
@@ -62,6 +66,8 @@ def main():
         if args.name:
             params["name"] = args.name
         call("indicators", args.key, params)
+    elif args.cmd == "reporters":
+        call("reporters", args.key, {"name": args.name})
     else:
         params = {"i": args.indicator, "r": args.r, "pc": args.pc, "ps": args.ps}
         call("data", args.key, params)
