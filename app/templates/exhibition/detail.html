@@ -200,6 +200,9 @@
             {% else %}
               <span class="data-source-badge">예시 데이터 · 이 제품은 아직 수집 안 됨</span>
             {% endif %}
+            {% if row.regulation_strictness %}
+              <span class="strictness-badge strictness-{{ row.regulation_strictness }}">규제 강도: {{ row.regulation_strictness }}</span>
+            {% endif %}
           </h4>
           <form method="post" class="btn-loading-form" action="{{ url_for('exhibition.sync_ntm', expo_id=expo.id, product_id=row.product.id) }}">
             <button type="submit" class="btn-secondary btn-sync-ntm" data-loading-text="가져오는 중... (몇 초 걸릴 수 있어요)">

@@ -208,6 +208,27 @@ def _relevance_score(measure):
     return sum(1 for kw in _FOOD_RELEVANCE_KEYWORDS if kw in text)
 
 
+def classify_regulation_strictness(notes):
+    """이 나라·제품의 수출 주의사항 목록(get_country_regulations 결과, 각
+    항목에 level="필수"/"주의"/"정보"가 이미 붙어있음)을 보고 전체적으로
+    얼마나 까다로운지 3단계로 요약한다. "필수"(등록/인증/금지 등 강제
+    사항)가 많을수록 까다로운 것으로 본다.
+    - 데이터가 아예 없으면 None (호출부에서 "정보 없음"으로 표시)
+    - 필수 2건 이상 -> "주의요함"
+    - 필수 1건 또는 주의 2건 이상 -> "보통"
+    - 그 외 -> "낮음"
+    """
+    if not notes:
+        return None
+    mandatory_count = sum(1 for n in notes if n["level"] == "필수")
+    caution_count = sum(1 for n in notes if n["level"] == "주의")
+    if mandatory_count >= 2:
+        return "주의요함"
+    if mandatory_count >= 1 or caution_count >= 2:
+        return "보통"
+    return "낮음"
+
+
 def get_country_regulations(country_iso, hs_code, limit=6):
     """NTM 캐시(NtmMeasure)에서 국가(ISO3) + 이 제품의 hs_code로 조회했던
     규정만 가져와, 식품/농산물 관련도가 높은 순으로 정렬해 상위 N개만
@@ -276,6 +297,7 @@ def build_hscode_context(expo, products):
         # 이 제품의 hs_code로 캐시된 규정만 가져온다 (제품마다 HS코드가 다르므로
         # 국가 전체가 아니라 제품별로 따로 조회/표시함)
         product_regulations = get_country_regulations(country_iso, product.hs_code)
+        regulation_notes = get_regulation_notes(country_iso, product_regulations)
 
         product_rows.append({
             "product": product,
@@ -285,8 +307,11 @@ def build_hscode_context(expo, products):
             "has_range": has_range,
             "subitems": subitems,
             "certs": get_required_certs(country_iso, expo.food_yn),
-            "regulation_notes": get_regulation_notes(country_iso, product_regulations),
+            "regulation_notes": regulation_notes,
             "regulation_notes_is_live": bool(product_regulations),
+            # 실데이터일 때만 계산 (정적 예시 데이터 기준으로는 나라별 까다로움을
+            # 판단할 수 없으므로)
+            "regulation_strictness": classify_regulation_strictness(product_regulations) if product_regulations else None,
         })
 
     # 등록된 제품들 전체에서 가장 유리한 관세 조합 하나 추천 (데이터 있는 것만 대상)
