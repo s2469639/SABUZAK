@@ -195,16 +195,27 @@ def fetch_all_measures_affecting_korea(
         if page > 1:
             time.sleep(REQUEST_DELAY_SEC)
 
+        print(f"  [TRAINS] page {page} 요청 중...", flush=True)
+
         resp = None
         for attempt, backoff in enumerate([0] + RETRY_BACKOFF_SEC):
             if backoff:
                 time.sleep(backoff)
-            resp = requests.post(
-                f"{BASE}/denormalisedMeasures",
-                json=_payload(page, page_size),
-                headers=HEADERS,
-                timeout=60,
-            )
+            try:
+                # timeout=(연결 타임아웃, 응답 타임아웃) - 연결 자체가 막혀서
+                # 응답이 아예 안 오는 경우(방화벽 등)에도 10초 안에 실패로
+                # 끝나도록 분리. (단일 숫자로 주면 연결/읽기 모두에 60초씩
+                # 적용돼서, 막힌 경우 "영원히 멈춘 것처럼" 보일 수 있었음)
+                resp = requests.post(
+                    f"{BASE}/denormalisedMeasures",
+                    json=_payload(page, page_size),
+                    headers=HEADERS,
+                    timeout=(10, 60),
+                )
+            except requests.exceptions.RequestException as exc:
+                print(f"  [TRAINS] page {page} 요청 실패: {exc}", flush=True)
+                raise
+            print(f"  [TRAINS] page {page} 응답: {resp.status_code}", flush=True)
             if resp.status_code != 429:
                 break
             # 서버가 Retry-After를 주면 그만큼, 없으면 다음 백오프값만큼 더 기다린다
