@@ -18,6 +18,24 @@ from app.services.trains_client import (
 
 bp = Blueprint("exhibition", __name__, url_prefix="/exhibitions")
 
+# scripts/crawl/tradefairdates_scraper.py의 UNKNOWN_DATE와 같은 값. 날짜 전체가
+# 미상인 박람회는 start_date/end_date가 이 값으로 들어있다 (오름차순 정렬 시 항상
+# 맨 뒤로 가도록 일부러 큰 값을 씀 -> "오래된순"으로 뒤집으면 반대로 맨 앞에
+# "9999.99.99"로 튀어나와서, 그 경우엔 아예 목록에서 뺀다).
+UNKNOWN_DATE = 99999999
+
+
+def _ymd_int(value):
+    """<input type="date"> 값("YYYY-MM-DD")을 start_date/end_date와 비교 가능한
+    YYYYMMDD 정수로 변환. 비어있거나 형식이 이상하면 None."""
+    value = (value or "").strip()
+    if not value:
+        return None
+    try:
+        return int(value.replace("-", ""))
+    except ValueError:
+        return None
+
 
 def _with_scatter_positions(candidates, thresholds):
     """매트릭스 산점도 화면에 찍을 x/y 좌표(0~100%)를 계산한다
@@ -129,6 +147,8 @@ def _apply_filters(query):
     keyword_tag = request.args.get("keyword_tag", "")
     food_only = request.args.get("food_only", "")
     search = request.args.get("search", "").strip()
+    date_from = request.args.get("date_from", "").strip()
+    date_to = request.args.get("date_to", "").strip()
 
     if keyword_tag:
         query = query.filter(Exhibition.keywords.ilike(f"%{keyword_tag}%"))
@@ -141,7 +161,20 @@ def _apply_filters(query):
             | (Exhibition.country_ko.ilike(like))
             | (Exhibition.city.ilike(like))
         )
-    return query, keyword_tag, food_only, search
+
+    date_from_int = _ymd_int(date_from)
+    date_to_int = _ymd_int(date_to)
+    if date_from_int or date_to_int:
+        # 날짜 미상(UNKNOWN_DATE) 항목은 기간 비교 자체가 의미 없으니 범위 필터를
+        # 걸 때는 아예 대상에서 뺀다 (박람회 기간이 요청 기간과 "겹치는지"로 판단:
+        # 시작일이 조회 종료일 이전이면서, 종료일이 조회 시작일 이후인 것).
+        query = query.filter(Exhibition.start_date != UNKNOWN_DATE)
+        if date_from_int:
+            query = query.filter(Exhibition.end_date >= date_from_int)
+        if date_to_int:
+            query = query.filter(Exhibition.start_date <= date_to_int)
+
+    return query, keyword_tag, food_only, search, date_from, date_to
 
 
 def _keyword_tags_for(base_query, limit=15):
@@ -157,8 +190,14 @@ def _keyword_tags_for(base_query, limit=15):
 
 
 def _build_list_context(base_query, title, list_endpoint, list_kwargs, continent):
-    query, keyword_tag, food_only, search = _apply_filters(base_query)
-    expos = query.order_by(Exhibition.start_date.asc()).all()
+    query, keyword_tag, food_only, search, date_from, date_to = _apply_filters(base_query)
+    sort = request.args.get("sort", "asc")
+    if sort == "desc":
+        query = query.filter(Exhibition.start_date != UNKNOWN_DATE)
+        order = Exhibition.start_date.desc()
+    else:
+        order = Exhibition.start_date.asc()
+    expos = query.order_by(order).all()
     keyword_tags = _keyword_tags_for(base_query)
 
     return {
@@ -170,6 +209,9 @@ def _build_list_context(base_query, title, list_endpoint, list_kwargs, continent
         "selected_keyword_tag": keyword_tag,
         "food_only": food_only,
         "search": search,
+        "sort": sort,
+        "date_from": date_from,
+        "date_to": date_to,
     }
 
 
@@ -180,8 +222,11 @@ def expo_list(continent):
     if db_values is None:
         abort(404)
 
+    dup_ids = Exhibition.duplicate_ids()
     base_query = Exhibition.query.filter(
-        Exhibition.continent.in_(db_values), Exhibition.is_active == 1
+        Exhibition.continent.in_(db_values),
+        Exhibition.is_active == 1,
+        Exhibition.id.notin_(dup_ids),
     )
     ctx = _build_list_context(
         base_query, continent, "exhibition.expo_list", {"continent": continent}, continent
@@ -192,8 +237,11 @@ def expo_list(continent):
 @bp.route("/country/<country>")
 @login_required
 def expo_list_by_country(country):
+    dup_ids = Exhibition.duplicate_ids()
     base_query = Exhibition.query.filter(
-        Exhibition.country_ko == country, Exhibition.is_active == 1
+        Exhibition.country_ko == country,
+        Exhibition.is_active == 1,
+        Exhibition.id.notin_(dup_ids),
     )
     ctx = _build_list_context(
         base_query, country, "exhibition.expo_list_by_country", {"country": country}, ""
@@ -204,7 +252,10 @@ def expo_list_by_country(country):
 @bp.route("/partial/all")
 @login_required
 def expo_list_partial_all():
-    base_query = Exhibition.query.filter(Exhibition.is_active == 1)
+    dup_ids = Exhibition.duplicate_ids()
+    base_query = Exhibition.query.filter(
+        Exhibition.is_active == 1, Exhibition.id.notin_(dup_ids)
+    )
     ctx = _build_list_context(base_query, "전체 해외", "exhibition.expo_list_partial_all", {}, "")
     return render_template("dashboard/_expo_list_partial.html", **ctx)
 
@@ -216,8 +267,11 @@ def expo_list_partial(continent):
     if db_values is None:
         abort(404)
 
+    dup_ids = Exhibition.duplicate_ids()
     base_query = Exhibition.query.filter(
-        Exhibition.continent.in_(db_values), Exhibition.is_active == 1
+        Exhibition.continent.in_(db_values),
+        Exhibition.is_active == 1,
+        Exhibition.id.notin_(dup_ids),
     )
     ctx = _build_list_context(
         base_query, continent, "exhibition.expo_list_partial", {"continent": continent}, continent

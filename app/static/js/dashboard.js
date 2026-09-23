@@ -50,6 +50,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // 정렬 셀렉트는 필터 폼 안에 있지 않아도 되니(레이아웃상 키워드 태그 줄 옆에 있음),
+  // 값이 바뀌면 그 즉시(버튼 없이) 다시 불러온다.
+  resultsBox.addEventListener("change", function (e) {
+    var sortSelect = e.target.closest('select[name="sort"]');
+    if (!sortSelect) return;
+    var form = sortSelect.closest(".expo-results").querySelector("[data-filter-form]");
+    submitFilter(form);
+  });
+
   function submitFilter(form, overrides) {
     overrides = overrides || {};
     var box = form.closest(".expo-results");
@@ -58,9 +67,17 @@ document.addEventListener("DOMContentLoaded", function () {
     var params = new URLSearchParams();
     var foodCheckbox = form.querySelector('input[name="food_only"]');
     var searchInput = form.querySelector('input[name="search"]');
+    var sortSelect = box.querySelector('select[name="sort"]');
+    var dateFromInput = form.querySelector('input[name="date_from"]');
+    var dateToInput = form.querySelector('input[name="date_to"]');
 
     if (foodCheckbox && foodCheckbox.checked) params.set("food_only", "1");
     if (searchInput && searchInput.value.trim()) params.set("search", searchInput.value.trim());
+    if (sortSelect && sortSelect.value && sortSelect.value !== "asc") {
+      params.set("sort", sortSelect.value);
+    }
+    if (dateFromInput && dateFromInput.value) params.set("date_from", dateFromInput.value);
+    if (dateToInput && dateToInput.value) params.set("date_to", dateToInput.value);
 
     var currentTag = "";
     var activeTagBtn = box.querySelector(".keyword-filter-tag.active");

@@ -1,94 +1,76 @@
 import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
 from pytrends.request import TrendReq
-import time
-import random
-from datetime import datetime
 
 COUNTRY_GEO_MAP = {
-    "미국": "US", "United States": "US", "USA": "US",
-    "영국": "GB", "United Kingdom": "GB", "UK": "GB",
-    "베트남": "VN", "Vietnam": "VN",
-    "독일": "DE", "Germany": "DE",
-    "일본": "JP", "Japan": "JP",
-    "말레이시아": "MY", "Malaysia": "MY"
+    "영국": "GB", "미국": "US", "독일": "DE", "프랑스": "FR", "일본": "JP",
+    "베트남": "VN", "태국": "TH", "말레이시아": "MY", "인도네시아": "ID", "호주": "AU"
 }
 
-def generate_fallback_series(keywords: list, periods: int, freq: str):
-    dates = pd.date_range(end=datetime.now(), periods=periods, freq=freq).strftime('%Y-%m-%d').tolist()
-    relative_series = {}
-    independent_series = {}
-    
-    for kw in keywords:
-        base_vals = [random.randint(15, 60) for _ in range(periods)]
-        peak_idx = random.randint(0, periods - 1)
-        base_vals[peak_idx] = random.randint(85, 100)
-        relative_series[kw] = base_vals
+def generate_fallback_data(kw_list: list, timeframe: str) -> dict:
+    if timeframe == 'today 12-m':
+        dates = [(datetime.now() - timedelta(weeks=51-i)).strftime('%Y-%m-%d') for i in range(52)]
+    else:
+        dates = [(datetime.now() - timedelta(days=30*(59-i))).strftime('%Y-%m') for i in range(60)]
         
-        max_v = max(base_vals) or 1
-        independent_series[kw] = [round((v / max_v) * 100) for v in base_vals]
+    independent = {}
+    relative = {}
+    
+    for i, kw in enumerate(kw_list):
+        base_curve = np.sin(np.linspace(0, 3.14 * 2, len(dates))) * 25 + 35
+        noise = np.random.normal(0, 5, len(dates))
+        curve = np.clip(base_curve + noise, 5, 100)
+        
+        if i == 0:
+            curve[len(dates)//2] = 100
+            
+        independent[kw] = [int(x) for x in curve]
+        scale = 1.0 if i == 0 else (0.5 if i == 1 else 0.75)
+        relative[kw] = [int(x * scale) for x in curve]
         
     return {
         "dates": dates,
-        "relative": relative_series,
-        "independent": independent_series,
+        "independent": independent,
+        "relative": relative,
         "is_simulated": True
     }
 
-def fetch_period_data(pytrends, keywords: list, timeframe: str, geo_code: str, fallback_periods: int, fallback_freq: str):
-    try:
-        pytrends.build_payload(kw_list=keywords[:3], timeframe=timeframe, geo=geo_code)
-        df = pytrends.interest_over_time()
-        
-        if df.empty and geo_code:
-            pytrends.build_payload(kw_list=keywords[:3], timeframe=timeframe, geo="")
+def fetch_google_trends(kw_list: list, country_name: str) -> dict:
+    geo = COUNTRY_GEO_MAP.get(country_name, "")
+    pytrends = TrendReq(hl='en-US', tz=360, timeout=(10, 25))
+    
+    result = {}
+    for tf_key, tf_val in [("12m", "today 12-m"), ("5y", "today 5-y")]:
+        try:
+            pytrends.build_payload(kw_list, cat=0, timeframe=tf_val, geo=geo)
             df = pytrends.interest_over_time()
             
-        if df.empty:
-            return generate_fallback_series(keywords, fallback_periods, fallback_freq)
-            
-        dates = df.index.strftime('%Y-%m-%d').tolist()
-        relative_series = {}
-        independent_series = {}
-        
-        for kw in keywords[:3]:
-            if kw in df.columns:
-                vals = df[kw].tolist()
-                relative_series[kw] = vals
-                max_v = max(vals) if max(vals) > 0 else 1
-                independent_series[kw] = [round((v / max_v) * 100) for v in vals]
-            else:
-                relative_series[kw] = [0] * len(dates)
-                independent_series[kw] = [0] * len(dates)
+            if df.empty and geo != "":
+                pytrends.build_payload(kw_list, cat=0, timeframe=tf_val, geo="")
+                df = pytrends.interest_over_time()
                 
-        return {
-            "dates": dates,
-            "relative": relative_series,
-            "independent": independent_series,
-            "is_simulated": False
-        }
-    except Exception:
-        return generate_fallback_series(keywords, fallback_periods, fallback_freq)
-
-def fetch_google_trends(keywords: list, country_name: str) -> dict:
-    geo_code = COUNTRY_GEO_MAP.get(country_name, "")
-    try:
-        pytrends = TrendReq(hl='en-US', tz=360, timeout=(10, 25))
-    except Exception:
-        pytrends = None
-
-    if pytrends is None:
-        return {
-            "12m": generate_fallback_series(keywords, 52, 'W'),
-            "5y": generate_fallback_series(keywords, 60, 'ME')
-        }
-
-    # 1. 최근 12개월(주간 단위) 수집
-    data_12m = fetch_period_data(pytrends, keywords, 'today 12-m', geo_code, 52, 'W')
-    time.sleep(1)  # 429 레이트 리밋 방지
-    # 2. 최근 5년(월간 단위) 수집
-    data_5y = fetch_period_data(pytrends, keywords, 'today 5-y', geo_code, 60, 'ME')
-
-    return {
-        "12m": data_12m,
-        "5y": data_5y
-    }
+            if df.empty:
+                result[tf_key] = generate_fallback_data(kw_list, tf_val)
+                continue
+                
+            dates = [d.strftime('%Y-%m-%d') if tf_key == '12m' else d.strftime('%Y-%m') for d in df.index]
+            relative = {}
+            independent = {}
+            
+            for kw in kw_list:
+                series = df[kw].tolist() if kw in df.columns else [0] * len(dates)
+                relative[kw] = [int(v) for v in series]
+                max_v = max(series) if max(series) > 0 else 1
+                independent[kw] = [int(round((v / max_v) * 100)) for v in series]
+                
+            result[tf_key] = {
+                "dates": dates,
+                "independent": independent,
+                "relative": relative,
+                "is_simulated": False
+            }
+        except Exception:
+            result[tf_key] = generate_fallback_data(kw_list, tf_val)
+            
+    return result

@@ -29,7 +29,6 @@ def build_search_queries(country: str, kw_obj: dict, product_name: str) -> list:
     ]
 
 def extract_year(url: str, text: str) -> str:
-    """URL이나 텍스트에서 연도(2020~2027) 추출, 없으면 연도 미상"""
     matches = re.findall(r'(202[0-7])', url + " " + text[:200])
     return f"{matches[0]}년" if matches else "연도 미상"
 
@@ -60,7 +59,6 @@ def fetch_local_news(country: str, kw_obj: dict, product_name: str) -> dict:
     if not raw_results:
         return {"quotes": [], "summary": "현지 유통 및 식문화 관련 신뢰할 수 있는 기사를 찾지 못했습니다.", "is_error": False}
 
-    # 기사별 원문 문장 수집
     source_corpus = []
     for idx, r in enumerate(raw_results[:4]):
         source_corpus.append({
@@ -107,7 +105,6 @@ def fetch_local_news(country: str, kw_obj: dict, product_name: str) -> dict:
         )
         ai_data = json.loads(res.choices[0].message.content)
         
-        # 뱃지 판별 로직 적용
         final_quotes = []
         region_name = REGIONS_MAP.get(country, "해외")
         kw1 = kw_obj.get("kw1", "").lower()
@@ -122,10 +119,8 @@ def fetch_local_news(country: str, kw_obj: dict, product_name: str) -> dict:
                 
             text_combo = (q["quote"] + " " + q["translation"] + " " + src_info["domain"]).lower()
             
-            # 1. 공공기관 판별
             is_public = any(dom in src_info["domain"] for dom in ["kotra.or.kr", "kati.net"])
             
-            # 2. 시장 판정
             if country.lower() in text_combo or (is_public and country in text_combo):
                 market_badge = "대상 국가"
                 market_type = "country"
@@ -133,7 +128,6 @@ def fetch_local_news(country: str, kw_obj: dict, product_name: str) -> dict:
                 market_badge = f"권역 참고({region_name})"
                 market_type = "region"
                 
-            # 3. 발췌 범위 판정
             if kw1 and kw1 in text_combo:
                 scope_badge = "제품"
                 scope_type = "product"

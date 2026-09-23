@@ -12,21 +12,33 @@
 
     <input type="text" name="search" placeholder="박람회명 / 국가 / 도시 검색" value="{{ search }}">
 
+    <div class="date-range-field">
+      <input type="date" name="date_from" value="{{ date_from }}" aria-label="시작일">
+      <span class="date-range-sep">~</span>
+      <input type="date" name="date_to" value="{{ date_to }}" aria-label="종료일">
+    </div>
+
     <button type="submit" class="btn-primary">필터 적용</button>
     <button type="button" class="btn-secondary" data-filter-reset>초기화</button>
   </form>
 
-  {% if keyword_tags %}
-  <div class="keyword-filter-list">
-    {% for tag in keyword_tags %}
-    <button type="button"
-            class="keyword-filter-tag {% if tag == selected_keyword_tag %}active{% endif %}"
-            data-keyword-tag="{{ tag }}">
-      {{ tag }}
-    </button>
-    {% endfor %}
+  <div class="expo-list-toolbar">
+    {% if keyword_tags %}
+    <div class="keyword-filter-list">
+      {% for tag in keyword_tags %}
+      <button type="button"
+              class="keyword-filter-tag {% if tag == selected_keyword_tag %}active{% endif %}"
+              data-keyword-tag="{{ tag }}">
+        {{ tag }}
+      </button>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <select name="sort" class="expo-sort-select">
+      <option value="asc" {{ 'selected' if sort != 'desc' else '' }}>최신순</option>
+      <option value="desc" {{ 'selected' if sort == 'desc' else '' }}>오래된순</option>
+    </select>
   </div>
-  {% endif %}
 
   {% if expos %}
   <div class="expo-list">
