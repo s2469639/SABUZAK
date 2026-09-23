@@ -85,3 +85,5 @@ class FollowupEmail(db.Model):
     # "새 메일 작성"으로 새 초안을 만들어도 언제 마지막으로 발송했는지 기록은 그대로 남겨두기 위한 필드.
     # sent_at/status는 지금 작성 중인 초안 상태를 나타내고, last_sent_at은 발송 이력을 나타낸다.
     last_sent_at = db.Column(db.DateTime)
+
+# 채주현 바보
