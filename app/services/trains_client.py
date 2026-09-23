@@ -325,6 +325,16 @@ def _hs_code_overlaps_product(hs_codes_field, product_codes: list) -> bool:
     return any(code in text for code in product_codes)
 
 
+def _is_placeholder_row(reg: dict) -> bool:
+    """TRAINS는 해당 조합의 실제 데이터가 없을 때 빈 배열 대신 title/
+    description이 "-"인 더미 1행을 돌려주는 경우가 있다 (실제로 확인함 -
+    품목 필터 없이 검색했을 때, 그리고 데이터가 아예 없는 국가+품목 조합에서
+    똑같이 나왔음). 이런 행은 처음부터 걸러낸다."""
+    title = (reg.get("officialTitle") or "").strip()
+    desc = (reg.get("description") or "").strip()
+    return title in ("", "-") and desc in ("", "-")
+
+
 def is_product_relevant(reg: dict, product_codes: list) -> bool:
     """이 규정이 실제로 이 제품(product_codes)과 관련 있는지 판단.
     hsCodes가 있는데 우리 코드와 안 겹치면 다른 품목 규정이라고 보고 제외한다.
@@ -332,6 +342,8 @@ def is_product_relevant(reg: dict, product_codes: list) -> bool:
     수 없으니, 최소한 식품/농산물과 관련은 있어야 한다는 기준(_relevance_score)만
     적용한다 - 등록 제품마다 품목이 다 달라서 미리 정해둔 키워드 목록으로는
     일반화할 수 없기 때문."""
+    if _is_placeholder_row(reg):
+        return False
     if _hs_code_overlaps_product(reg.get("hsCodes"), product_codes):
         return True
     if reg.get("hsCodes"):

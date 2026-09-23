@@ -41,7 +41,8 @@ def main():
 
     print(f"\nTRAINS 호출: country={iso3}, hs_code={args.hs_code} (이 나라+제품만 바로 조회)")
     regulations = fetch_regulations_for_country(iso3, args.hs_code)
-    print(f"\n원본 수신 건수: {len(regulations)} (필터링 전)")
+    print(f"\n원본 {len(regulations)}건 (필터링 전):")
+    _print_regs(regulations)
 
     filtered = top_relevant_regulations(regulations, args.hs_code, limit=6)
     print(f"\n이 제품(HS {args.hs_code}) 관련 필터링 후 상위 {len(filtered)}건:")
