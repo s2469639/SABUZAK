@@ -37,9 +37,6 @@ def _clean_hscode(raw: str) -> str:
 def index():
     result = None
     error = None
-    # GET 쿼리스트링으로 들어오면(예: 매트릭스 화면 버블에서 "이 국가 상세보기"
-    # 클릭) 입력칸만 미리 채워두고, 실제 조사는 사용자가 직접 버튼을 눌러야
-    # 실행된다 - 링크 클릭만으로 유료/제한된 API 호출이 바로 나가지 않게 함.
     hscode = request.args.get("hscode", "").strip()
     country = request.args.get("country", "").strip()
     force = False
@@ -47,10 +44,6 @@ def index():
     if request.method == "POST":
         hscode = _clean_hscode(request.form.get("hscode", ""))
         country = request.form.get("country", "").strip()
-        # "새로고침(캐시 무시)" 체크박스 - 예전에 한 번 조사했다가 "데이터
-        # 없음"이 나온 조합을 30일 캐시가 그대로 물고 있는 경우가 있어서
-        # (실제로 이 문제로 사용자가 헷갈린 적이 있음), 웹 화면에서도 캐시를
-        # 무시하고 다시 조사할 수 있게 했다.
         force = bool(request.form.get("force"))
         try:
             result = get_market_research(hscode, country, force=force)
@@ -67,10 +60,9 @@ def index():
 
 
 def _with_scatter_positions(candidates, thresholds):
-    """산점도 화면에 찍을 x/y 좌표(0~100%)를 계산한다. 값의 최소/최대 범위에
-    10% 여백을 둬서 점이 그래프 가장자리에 딱 붙지 않게 한다."""
+    """산점도 화면에 찍을 x/y 좌표(0~100%)를 계산한다."""
     if not candidates:
-        return []
+        return [], 50, 50
     cagrs = [c["cagr_pct"] for c in candidates]
     shares = [c["korea_share_pct"] for c in candidates]
     x_min, x_max = min(cagrs + [thresholds["avg_cagr_pct"]]), max(cagrs + [thresholds["avg_cagr_pct"]])
@@ -91,22 +83,13 @@ def _with_scatter_positions(candidates, thresholds):
 
 
 def _with_bubble_positions(candidates, min_radius=11, max_radius=38):
-    """트라이빅 "유망시장 순위" 버블차트 좌표를 계산한다.
-    X축 = 수입금액 순위(import_rank), Y축 = 공급국 다양성(supplier_country_count),
-    버블 크기 = 수입금액(total_import_usd).
-
-    버블 크기는 반지름이 아니라 "넓이"가 값에 비례하도록 제곱근(sqrt)으로
-    스케일링한다 - 반지름을 값에 그대로 비례시키면 원의 넓이는 반지름의
-    제곱이라 큰 값이 실제 비율보다 훨씬 커 보이는 착시가 생긴다.
-    예) 수입액이 4배 차이나면: 반지름 비례라면 4배 차이로 보이지만(착시),
-        넓이 비례(sqrt)로 하면 반지름은 2배 차이로만 보여서 실제 크기
-        차이를 더 정확하게 눈으로 비교할 수 있다."""
+    """유망시장 순위 버블차트 좌표 및 X축 눈금(x_ticks)의 정확한 퍼센트 위치를 함께 계산한다."""
     eligible = [
         c for c in candidates
         if c.get("total_import_usd") and c.get("supplier_country_count") is not None and c.get("import_rank")
     ]
     if not eligible:
-        return []
+        return [], []
 
     values = [c["total_import_usd"] for c in eligible]
     counts = [c["supplier_country_count"] for c in eligible]
@@ -124,18 +107,38 @@ def _with_bubble_positions(candidates, min_radius=11, max_radius=38):
         else:
             t = 1.0
         radius = round(min_radius + (max_radius - min_radius) * t, 1)
-        x_pct = ((c["import_rank"] - x_min) / (x_max - x_min) * 100) if x_max > x_min else 50.0
-        y_pct = 100 - ((c["supplier_country_count"] - y_min) / (y_max - y_min) * 100)
+        
+        if x_max > x_min:
+            raw_x = (c["import_rank"] - x_min) / (x_max - x_min)
+            x_pct = 5.0 + raw_x * 90.0
+        else:
+            x_pct = 50.0
+
+        if y_max > y_min:
+            raw_y = (c["supplier_country_count"] - y_min) / (y_max - y_min)
+            y_pct = 95.0 - (raw_y * 90.0)
+        else:
+            y_pct = 50.0
+
         out.append({**c, "bubble_radius": radius, "x_pct": round(x_pct, 1), "y_pct": round(y_pct, 1)})
-    return out
+
+    # X축 순위별 정확한 눈금 위치 계산
+    x_ticks = []
+    if x_max > x_min:
+        for r in range(int(x_min), int(x_max) + 1):
+            pct = 5.0 + ((r - x_min) / (x_max - x_min)) * 90.0
+            x_ticks.append({"rank": r, "pct": round(pct, 1)})
+    else:
+        x_ticks = [{"rank": int(x_min), "pct": 50.0}]
+
+    return out, x_ticks
 
 
 _LINE_COLORS = ["#1a73e8", "#e8710a", "#188038", "#d01884", "#7c3aed", "#00838f"]
 
 
-def _svg_line_series(share_trend, width=560, height=180, pad_l=44, pad_r=16, pad_t=16, pad_b=26):
-    """주요국 세계시장 점유율 추이를 그릴 SVG 좌표(폴리라인 points 문자열)를
-    미리 계산해서 템플릿에 넘긴다. 데이터가 없는(None) 연도는 그 점만 건너뛴다."""
+def _svg_line_series(share_trend, width=850, height=240, pad_l=60, pad_r=20, pad_t=20, pad_b=30):
+    """주요국 세계시장 점유율 추이를 그릴 SVG 좌표를 미리 계산한다."""
     years = share_trend.get("years", [])
     series = share_trend.get("series", {})
     plot_w = width - pad_l - pad_r
@@ -175,9 +178,6 @@ def _svg_line_series(share_trend, width=560, height=180, pad_l=44, pad_r=16, pad
 
 @app.route("/matrix", methods=["GET", "POST"])
 def matrix():
-    """여러 후보국을 한 번에 비교하는 종합 화면 (트라이빅 "품목별 유망시장"에 대응):
-    세계시장 교역순위, 주요국 점유율 추이, 유망시장 순위(버블차트),
-    성장률x한국점유율 매트릭스를 한 페이지에 모은다."""
     result = None
     overview = None
     error = None
@@ -186,6 +186,7 @@ def matrix():
     top_n = 10
     scatter = []
     bubbles = []
+    x_ticks = []
     import_line = export_line = None
     threshold_x_pct = threshold_y_pct = 50
     force = False
@@ -194,33 +195,41 @@ def matrix():
         hscode = _clean_hscode(request.form.get("hscode", ""))
         candidates_raw = request.form.get("candidates", "").strip()
         top_n = int(request.form.get("top_n") or 10)
-        force = bool(request.form.get("force"))  # 캐시 무시하고 새로 조사 (단일국가 화면과 동일한 이유)
+        force = bool(request.form.get("force"))
         candidate_list = [c.strip() for c in candidates_raw.split(",") if c.strip()] or None
+        
         try:
             result = get_multi_country_comparison(hscode, candidate_list, top_n=top_n, force=force)
             scatter, threshold_x_pct, threshold_y_pct = _with_scatter_positions(
                 result["candidates"], result["thresholds"]
             )
-            bubbles = _with_bubble_positions(result["candidates"])
-        except ValueError as e:
-            error = str(e)
+            bubbles, x_ticks = _with_bubble_positions(result["candidates"])
         except Exception as e:
-            error = f"조사 중 오류가 발생했습니다: {e}"
+            if "403" in str(e) or "quota" in str(e).lower():
+                try:
+                    result = get_multi_country_comparison(hscode, candidate_list, top_n=top_n, force=False)
+                    scatter, threshold_x_pct, threshold_y_pct = _with_scatter_positions(
+                        result["candidates"], result["thresholds"]
+                    )
+                    bubbles, x_ticks = _with_bubble_positions(result["candidates"])
+                    error = "⚠️ API 일일 호출 한도(Quota)를 초과하여, 기존에 저장된 캐시 데이터를 불러왔습니다."
+                except Exception:
+                    error = "⚠️ UN Comtrade API 일일 호출 한도(Quota)를 초과했습니다. 잠시 후 다시 시도해 주세요."
+            else:
+                error = f"조사 중 오류가 발생했습니다: {e}"
 
         if result:
-            # 세계시장 교역순위/점유율 추이는 완전히 선택 기능이다 - 실패해도
-            # 위 매트릭스 결과 화면은 그대로 보여준다 (soft-fail).
             try:
-                overview = get_market_overview(hscode, top_n=top_n, force=force)
+                overview = get_market_overview(hscode, top_n=top_n, force=False)
                 import_line = _svg_line_series(overview["import_share_trend"])
                 export_line = _svg_line_series(overview["export_share_trend"])
             except Exception as e:
-                overview = {"unavailable_reason": str(e)}
+                overview = {"unavailable_reason": "API 한도 초과로 교역 현황 추이를 불러오지 못했습니다."}
 
     return render_template(
         "un_comtrade_matrix.html",
         result=result, overview=overview, error=error,
-        scatter=scatter, bubbles=bubbles,
+        scatter=scatter, bubbles=bubbles, x_ticks=x_ticks,
         import_line=import_line, export_line=export_line,
         threshold_x_pct=threshold_x_pct, threshold_y_pct=threshold_y_pct,
         hscode=hscode, candidates_raw=candidates_raw, top_n=top_n, force=force,

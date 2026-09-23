@@ -4,24 +4,26 @@
 <meta charset="UTF-8">
 <title>UN Comtrade 매트릭스 비교</title>
 <style>
-  body { font-family: -apple-system, "Malgun Gothic", sans-serif; max-width: 900px; margin: 40px auto; padding: 0 16px; color: #222; }
-  h1 { font-size: 20px; }
-  h2 { font-size: 15px; margin: 30px 0 10px; color: #1a73e8; }
-  form { display: flex; gap: 8px; margin: 20px 0 8px; flex-wrap: wrap; align-items: flex-start; }
-  input[type=text], input[type=number] { padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
-  input[name=hscode] { width: 120px; }
-  input[name=candidates] { width: 320px; }
-  input[name=top_n] { width: 70px; }
-  button { padding: 8px 16px; border: none; border-radius: 6px; background: #1a73e8; color: #fff; font-size: 14px; cursor: pointer; }
+  /* 💡 화면 전체 최대 폭을 1500px로 더 넓게 확장하고 좌우 여백을 넉넉히 조정 */
+  body { font-family: -apple-system, "Malgun Gothic", sans-serif; max-width: 1500px; margin: 40px auto; padding: 0 30px; color: #222; }
+  h1 { font-size: 24px; }
+  h2 { font-size: 18px; margin: 40px 0 14px; color: #1a73e8; }
+  form { display: flex; gap: 12px; margin: 24px 0 12px; flex-wrap: wrap; align-items: flex-start; }
+  input[type=text], input[type=number] { padding: 10px 14px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
+  input[name=hscode] { width: 140px; }
+  input[name=candidates] { width: 380px; }
+  input[name=top_n] { width: 90px; }
+  button { padding: 10px 20px; border: none; border-radius: 6px; background: #1a73e8; color: #fff; font-size: 15px; cursor: pointer; }
   button:hover { background: #1558b0; }
-  .hint { color: #888; font-size: 13px; margin-bottom: 8px; }
-  .field-label { font-size: 12px; color: #888; display: block; margin-bottom: 3px; }
+  .hint { color: #888; font-size: 14px; margin-bottom: 8px; }
+  .field-label { font-size: 13px; color: #888; display: block; margin-bottom: 4px; }
   .error { background: #fdecea; color: #c0392b; padding: 12px 16px; border-radius: 6px; margin: 16px 0; }
   .warn-box { background: #fef7e0; color: #5f4b00; border-left: 4px solid #f9ab00; padding: 12px 16px; border-radius: 6px; margin: 16px 0; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 8px; }
-  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; }
-  th { color: #888; font-weight: 600; }
-  .quadrant-badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 8px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee; }
+  th { color: #888; font-weight: 600; cursor: pointer; }
+  th:hover { color: #1a73e8; }
+  .quadrant-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; }
   .quadrant-집중공략 { background: #e6f4ea; color: #188038; }
   .quadrant-경쟁력강화필요 { background: #fef7e0; color: #b06000; }
   .quadrant-현상유지수확 { background: #e8f0fe; color: #1a73e8; }
@@ -29,48 +31,134 @@
   .badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; }
   .badge.mirror { background: #e0f2f1; color: #00695c; }
 
-  /* 차트 공통: Y축 세로 라벨 + 차트 본체 + 아래 X축 라벨을 감싸는 구조 */
-  .chart-frame { display: flex; align-items: stretch; gap: 8px; }
-  .axis-title-y {
-    writing-mode: vertical-rl; transform: rotate(180deg);
-    font-size: 12px; color: #555; font-weight: 600;
-    display: flex; align-items: center; justify-content: center;
-    white-space: nowrap; padding: 4px 0;
+  /* 💡 X축 가로 스크롤 컨테이너 및 넉넉한 차트 폭 설정 */
+  .chart-scroll-container {
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+    margin-top: 15px;
+    margin-bottom: 15px;
   }
-  .axis-title-x { text-align: center; font-size: 12px; color: #555; font-weight: 600; margin-top: 6px; }
+  
+  .chart-main-box {
+    position: relative;
+    width: 1800px; /* 💡 20개국 이상이 들어가도 겹치지 않도록 가로폭을 넓게 확보 */
+    height: 460px;
+    padding: 40px 50px 50px 60px; 
+    box-sizing: border-box;
+  }
 
-  .scatter-wrap { position: relative; flex: 1; min-width: 0; height: 380px; border: 1px solid #ddd; border-radius: 8px; margin: 0; background: #fafafa; overflow: hidden; }
+  .matrix-box {
+    background: 
+      linear-gradient(to right, rgba(254, 247, 224, 0.35) 50%, rgba(230, 244, 234, 0.35) 50%),
+      linear-gradient(to bottom, rgba(254, 247, 224, 0.35) 50%, rgba(241, 243, 244, 0.35) 50%);
+    background-blend-mode: overlay;
+  }
+
+  .axis-label-y-inner {
+    position: absolute;
+    left: 10px;
+    font-size: 12px;
+    color: #666;
+    font-weight: bold;
+    transform: translateY(-50%);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .axis-label-x-inner {
+    position: absolute;
+    bottom: 14px;
+    font-size: 12px;
+    color: #666;
+    font-weight: bold;
+    transform: translateX(-50%);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .axis-legends-below {
+    margin-top: 6px;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #1a73e8;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .axis-legends-below div + div {
+    margin-top: 4px;
+  }
+
+  .grid-line-h { position: absolute; left: 60px; right: 50px; height: 1px; background: #eee; }
+  .grid-line-v { position: absolute; top: 40px; bottom: 50px; width: 1px; background: #eee; }
+
   .axis-line { position: absolute; background: #ccc; }
-  .axis-line.h { left: 0; right: 0; height: 1px; }
-  .axis-line.v { top: 0; bottom: 0; width: 1px; }
-  .quadrant-tag { position: absolute; font-size: 11px; color: #aaa; padding: 4px 6px; }
-  .dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #1a73e8; border: 2px solid #fff; box-shadow: 0 0 0 1px #1a73e8; transform: translate(-50%, -50%); cursor: default; }
-  .dot-label { position: absolute; font-size: 11px; white-space: nowrap; transform: translate(-50%, 6px); color: #333; pointer-events: none; }
-  .insight-box { background: #f8f9fa; border-left: 4px solid #1a73e8; padding: 14px 16px; border-radius: 6px; margin-top: 8px; font-size: 14px; line-height: 1.6; }
-  .insight-box .label { font-weight: 700; color: #1a73e8; display: block; margin-bottom: 2px; }
-  .insight-box div + div { margin-top: 10px; }
+  .axis-line.h { left: 60px; right: 50px; height: 1px; }
+  .axis-line.v { top: 40px; bottom: 50px; width: 1px; }
+  
+  .quadrant-tag { 
+    position: absolute; 
+    font-size: 13px; 
+    font-weight: 700;
+    color: #444; 
+    background: rgba(255, 255, 255, 0.85);
+    padding: 6px 10px; 
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+    z-index: 2; 
+  }
+  
+  .dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #1a73e8; border: 2px solid #fff; box-shadow: 0 0 0 1px #1a73e8; transform: translate(-50%, -50%); cursor: default; z-index: 3; }
+  
+  .dot-label { 
+    position: absolute; 
+    font-size: 12px; 
+    white-space: nowrap; 
+    color: #333; 
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2px 5px;
+    border-radius: 2px;
+    pointer-events: none; 
+    z-index: 4; 
+    transform: translate(-50%, 0);
+  }
+  .dot-label.even { transform: translate(-50%, -18px); }
+  .dot-label.odd  { transform: translate(-50%, 8px); }
+  
+  .insight-box { background: #f8f9fa; border-left: 4px solid #1a73e8; padding: 16px 18px; border-radius: 6px; margin-top: 10px; font-size: 15px; line-height: 1.6; }
+  .insight-box .label { font-weight: 700; color: #1a73e8; display: block; margin-bottom: 4px; }
+  .insight-box div + div { margin-top: 12px; }
   .empty { color: #888; padding: 10px 0; }
-  .disclaimer { font-size: 12px; color: #888; }
+  .disclaimer { font-size: 13px; color: #888; }
 
-  /* 수입/수출 토글 버튼 */
-  .flow-toggle { display: inline-flex; border: 1px solid #ccc; border-radius: 999px; overflow: hidden; margin-bottom: 10px; }
-  .flow-toggle button { background: #fff; color: #444; border-radius: 0; padding: 5px 14px; font-size: 12px; }
+  .flow-toggle { display: inline-flex; border: 1px solid #ccc; border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
+  .flow-toggle button { background: #fff; color: #444; border-radius: 0; padding: 6px 16px; font-size: 13px; }
   .flow-toggle button.active { background: #1a73e8; color: #fff; }
   .flow-panel.hidden { display: none; }
 
-  /* 주요국 점유율 추이 SVG 라인차트 */
-  .line-chart-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; margin-bottom: 6px; }
-  .line-chart-legend span { display: inline-flex; align-items: center; gap: 4px; }
-  .line-chart-legend .swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-  .axis-label-svg { font-size: 10px; fill: #999; }
-
-  /* 유망시장 순위 버블차트 */
-  .bubble-wrap { position: relative; flex: 1; min-width: 0; height: 340px; border: 1px solid #ddd; border-radius: 8px; margin: 0; background: #fafafa; overflow: hidden; }
-  .bubble { position: absolute; border-radius: 50%; background: rgba(26,115,232,0.55); border: 1.5px solid #1a73e8; transform: translate(-50%, -50%); cursor: pointer; transition: background 0.15s; }
+  .bubble { position: absolute; border-radius: 50%; background: rgba(26,115,232,0.55); border: 1.5px solid #1a73e8; transform: translate(-50%, -50%); cursor: pointer; transition: background 0.15s; z-index: 3; }
   .bubble:hover, .bubble.selected { background: rgba(26,115,232,0.85); }
-  .bubble-label { position: absolute; font-size: 10px; color: #333; pointer-events: none; white-space: nowrap; }
-  .bubble-detail { position: absolute; display: none; background: #3c4043; color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.6; min-width: 190px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 5; pointer-events: none; }
-  .bubble-detail strong { display: block; font-size: 13px; margin-bottom: 4px; }
+  
+  .bubble-label { 
+    position: absolute; 
+    font-size: 12px; 
+    font-weight: 600;
+    white-space: nowrap; 
+    transform: translate(-50%, 6px); 
+    color: #1a73e8; 
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2px 5px;
+    border-radius: 3px;
+    pointer-events: none; 
+    z-index: 4; 
+  }
+
+  .bubble-detail { position: absolute; display: none; background: #3c4043; color: #fff; padding: 12px 16px; border-radius: 8px; font-size: 13px; line-height: 1.6; min-width: 210px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 10; pointer-events: none; }
+  .bubble-detail strong { display: block; font-size: 14px; margin-bottom: 6px; }
   .bubble-detail a { color: #8ab4f8; pointer-events: auto; }
 </style>
 </head>
@@ -79,7 +167,7 @@
   <p class="hint">HS코드 하나로 여러 후보국의 세계시장 순위·점유율 추이·유망시장 순위·성장률x한국점유율 매트릭스를 한 번에 봅니다. KOTRA TriBig의 "품목별 유망시장" 화면과 같은 구조입니다.</p>
   <p class="hint">국가 하나만 자세히 보고 싶으신가요? → <a href="/">단일 국가 상세 조사</a></p>
 
-  <form method="post">
+  <form method="post" id="search-form">
     <div>
       <span class="field-label">HS코드(6자리)</span>
       <input type="text" name="hscode" id="hscode-input" placeholder="예: 1905.90" value="{{ hscode }}" maxlength="7" required>
@@ -92,10 +180,10 @@
       <span class="field-label">자동 후보 개수</span>
       <input type="number" name="top_n" min="2" max="20" value="{{ top_n }}">
     </div>
-    <label style="font-size:13px; color:#555; display:flex; align-items:center; gap:4px; align-self:flex-end; margin-bottom:8px;">
+    <label style="font-size:14px; color:#555; display:flex; align-items:center; gap:6px; align-self:flex-end; margin-bottom:10px;">
       <input type="checkbox" name="force" value="1" {% if force %}checked{% endif %}> 🔄 캐시 무시하고 새로 조사
     </label>
-    <button type="submit" style="align-self:flex-end;">비교하기</button>
+    <button type="submit" id="submit-btn" style="align-self:flex-end;">비교하기</button>
   </form>
   <p class="disclaimer">앞 4자리 뒤에 마침표가 자동으로 찍히는 건 국제 표준 HS코드 표기 방식이고(예: 1905.90), 실제 조회 시에는 숫자만 사용됩니다.</p>
 
@@ -160,15 +248,27 @@
 
     <h2>③ 유망시장 순위</h2>
     <p class="disclaimer">
-      버블 크기 = 수입금액(넓이 비례, 클수록 그 나라가 이 품목을 많이 수입함). 버블을 클릭하면 상세 수치가 뜹니다.
-      ⚠️ X축 순위는 저희가 "수입금액이 큰 순"으로 단순 계산한 것입니다 - 트라이빅이 실제로 어떤
-      공식(성장률/점유율을 섞은 자체 점수 등)으로 순위를 매기는지는 공개돼 있지 않아 그대로
-      재현할 수 없었습니다.
+      버블 크기 = 수입금액(넓이 비례, 클수록 그 나라가 이 품목을 많이 수입함). 버블을 클릭하면 상세 수치가 뜹니다. ↔ 좌우로 스크롤하여 확인하세요.
     </p>
     {% if bubbles %}
-      <div class="chart-frame">
-        <div class="axis-title-y">Y축: 공급국 다양성 (이 나라가 이 품목을 몇 개국에서 수입해오는가, 개국) — 위로 갈수록 공급국이 많고 시장이 분산돼 있음</div>
-        <div class="bubble-wrap" id="bubble-wrap">
+      <div class="chart-scroll-container">
+        <div class="chart-main-box" id="bubble-wrap">
+          <span class="axis-label-y-inner" style="top: 40px;">100개국</span>
+          <span class="axis-label-y-inner" style="top: 142.5px;">75개국</span>
+          <span class="axis-label-y-inner" style="top: 245px;">50개국</span>
+          <span class="axis-label-y-inner" style="top: 347.5px;">25개국</span>
+          <span class="axis-label-y-inner" style="top: 450px;">0개국</span>
+
+          {% for tick in x_ticks %}
+            <span class="axis-label-x-inner" style="left: {{ tick.pct }}%;">{{ tick.rank }}위</span>
+            <div class="grid-line-v" style="left: {{ tick.pct }}%;"></div>
+          {% endfor %}
+
+          <div class="grid-line-h" style="top: 40px;"></div>
+          <div class="grid-line-h" style="top: 142.5px;"></div>
+          <div class="grid-line-h" style="top: 245px;"></div>
+          <div class="grid-line-h" style="top: 347.5px;"></div>
+
           {% for b in bubbles %}
             <div class="bubble" data-idx="{{ loop.index0 }}"
                  style="left: {{ b.x_pct }}%; top: {{ b.y_pct }}%; width: {{ b.bubble_radius * 2 }}px; height: {{ b.bubble_radius * 2 }}px;"
@@ -180,12 +280,15 @@
                  data-mirror="{{ 'true' if b.is_mirror_estimate else '' }}"
                  data-href="/?hscode={{ result.hscode }}&country={{ b.label | urlencode }}"
             ></div>
-            <div class="bubble-label" style="left: {{ b.x_pct }}%; top: {{ b.y_pct + 6 }}%;">{{ b.label }}</div>
+            <div class="bubble-label" style="left: {{ b.x_pct }}%; top: {{ b.y_pct + (b.bubble_radius / 6) + 4 }}%;">{{ b.label }}</div>
           {% endfor %}
           <div class="bubble-detail" id="bubble-detail"></div>
         </div>
       </div>
-      <div class="axis-title-x">X축: 수입금액 순위 (1위 = 이 품목을 전세계에서 가장 많이 수입하는 나라) — 오른쪽으로 갈수록 순위가 낮은(수입액이 적은) 나라</div>
+      <div class="axis-legends-below">
+        <div><strong>Y축 범례:</strong> 공급국 다양성 (이 나라가 수입해오는 국가 수, 개국) — 위로 갈수록 공급국이 많고 시장이 분산돼 있음</div>
+        <div><strong>X축 범례:</strong> 수입금액 순위 (1위 = 이 품목을 전세계에서 가장 많이 수입하는 나라) — 오른쪽으로 갈수록 순위가 낮은(수입액이 적은) 나라</div>
+      </div>
     {% else %}
       <div class="empty">버블차트를 그릴 데이터가 부족합니다.</div>
     {% endif %}
@@ -193,41 +296,61 @@
     <h2>④ 성장률 x 한국 점유율 매트릭스</h2>
     <p class="disclaimer">
       점선은 후보국 평균 기준선입니다 (성장률 평균 {{ result.thresholds.avg_cagr_pct }}%,
-      한국 점유율 평균 {{ result.thresholds.avg_korea_share_pct }}%). 오른쪽 위로 갈수록
-      "시장도 크고 한국도 잘하고 있는" 시장입니다.
+      한국 점유율 평균 {{ result.thresholds.avg_korea_share_pct }}%). ↔ 좌우로 스크롤하여 확인하세요.
     </p>
-    <div class="chart-frame">
-      <div class="axis-title-y">Y축: 그 나라 수입시장에서 한국의 점유율 (%) — 위로 갈수록 한국이 이미 선전 중인 시장</div>
-      <div class="scatter-wrap">
-        <div class="axis-line h" style="top: {{ threshold_y_pct }}%; border-top: 1px dashed #bbb;"></div>
-        <div class="axis-line v" style="left: {{ threshold_x_pct }}%; border-left: 1px dashed #bbb;"></div>
-        <span class="quadrant-tag" style="right:6px; top:6px;">집중 공략 ↗</span>
-        <span class="quadrant-tag" style="left:6px; top:6px;">경쟁력 강화 필요</span>
-        <span class="quadrant-tag" style="right:6px; bottom:6px;">현상 유지/수확</span>
-        <span class="quadrant-tag" style="left:6px; bottom:6px;">우선순위 낮음</span>
+    <div class="chart-scroll-container">
+      <div class="chart-main-box matrix-box" style="height: 460px;">
+        <div class="grid-line-h" style="top: 40px;"></div>
+        <div class="grid-line-h" style="top: 142.5px;"></div>
+        <div class="grid-line-h" style="top: 245px;"></div>
+        <div class="grid-line-h" style="top: 347.5px;"></div>
+
+        <div class="axis-line h" style="top: {{ threshold_y_pct }}%; border-top: 1px dashed #666; z-index: 1;"></div>
+        <div class="axis-line v" style="left: {{ threshold_x_pct }}%; border-left: 1px dashed #666; z-index: 1;"></div>
+        
+        <span class="quadrant-tag" style="right:20px; top:50px; color:#188038;">집중 공략 ↗</span>
+        <span class="quadrant-tag" style="left:65px; top:50px; color:#b06000;">경쟁력 강화 필요</span>
+        <span class="quadrant-tag" style="right:20px; bottom:50px; color:#1a73e8;">현상 유지/수확</span>
+        <span class="quadrant-tag" style="left:65px; bottom:50px; color:#666;">우선순위 낮음</span>
+
         {% for c in scatter %}
           <div class="dot" style="left: {{ c.x_pct }}%; top: {{ c.y_pct }}%;" title="{{ c.label }}: 성장률 {{ c.cagr_pct }}%, 한국점유율 {{ c.korea_share_pct }}%"></div>
-          <div class="dot-label" style="left: {{ c.x_pct }}%; top: {{ c.y_pct }}%;">{{ c.label }}</div>
+          <div class="dot-label {{ 'even' if loop.index0 % 2 == 0 else 'odd' }}" style="left: {{ c.x_pct }}%; top: {{ c.y_pct }}%;">{{ c.label }}</div>
         {% endfor %}
       </div>
     </div>
-    <div class="axis-title-x">X축: 그 나라 수입시장 성장률 (CAGR, 연평균 %) — 오른쪽으로 갈수록 시장이 빠르게 크고 있음</div>
+    <div class="axis-legends-below">
+      <div><strong>Y축 범례:</strong> 한국 점유율 (%) — 위로 갈수록 한국이 이미 선전 중인 시장</div>
+      <div><strong>X축 범례:</strong> 그 나라 수입시장 성장률 (CAGR, 연평균 %) — 오른쪽으로 갈수록 시장이 빠르게 크고 있음</div>
+    </div>
 
     <h2>⑤ 후보국별 상세</h2>
     <p class="disclaimer">🪞 표시는 그 나라가 UN Comtrade에 직접 보고한 공식 수치가 없어서, 상대국들의 보고를 합산한 추정치를 대신 쓴 경우입니다.</p>
-    <table>
-      <tr><th>국가</th><th>사분면</th><th>수입 성장률(CAGR)</th><th>한국 점유율</th><th>전체 수입액(최근)</th><th>한국 수입액(최근)</th><th></th></tr>
-      {% for c in result.candidates %}
+    <table id="candidate-table">
+      <thead>
         <tr>
-          <td><a href="/?hscode={{ result.hscode }}&country={{ c.label | urlencode }}">{{ c.label }}</a>{% if c.is_mirror_estimate %} <span class="badge mirror" title="상대국 보고 기반 추정치">🪞</span>{% endif %}</td>
-          <td><span class="quadrant-badge quadrant-{{ c.quadrant | replace(' ', '') | replace('/', '') }}">{{ c.quadrant }}</span></td>
-          <td>{{ c.cagr_pct }}%</td>
-          <td>{{ c.korea_share_pct }}%</td>
-          <td>${{ "{:,.0f}".format(c.total_import_usd) if c.total_import_usd else "N/A" }}</td>
-          <td>${{ "{:,.0f}".format(c.korea_import_usd) if c.korea_import_usd else "N/A" }}</td>
-          <td>{% if c.may_be_incomplete_latest_year %}<span class="disclaimer">⚠️ 최신연도 집계중일 수 있음</span>{% endif %}</td>
+          <th onclick="sortTable(0)">국가 ⥮</th>
+          <th onclick="sortTable(1)">사분면 ⥮</th>
+          <th onclick="sortTable(2)">수입 성장률(CAGR) ⥮</th>
+          <th onclick="sortTable(3)">한국 점유율 ⥮</th>
+          <th onclick="sortTable(4)">전체 수입액(최근) ⥮</th>
+          <th onclick="sortTable(5)">한국 수입액(최근) ⥮</th>
+          <th></th>
         </tr>
-      {% endfor %}
+      </thead>
+      <tbody>
+        {% for c in result.candidates %}
+          <tr>
+            <td><a href="/?hscode={{ result.hscode }}&country={{ c.label | urlencode }}">{{ c.label }}</a>{% if c.is_mirror_estimate %} <span class="badge mirror" title="상대국 보고 기반 추정치">🪞</span>{% endif %}</td>
+            <td><span class="quadrant-badge quadrant-{{ c.quadrant | replace(' ', '') | replace('/', '') }}">{{ c.quadrant }}</span></td>
+            <td data-value="{{ c.cagr_pct }}">{{ c.cagr_pct }}%</td>
+            <td data-value="{{ c.korea_share_pct }}">{{ c.korea_share_pct }}%</td>
+            <td data-value="{{ c.total_import_usd or 0 }}">${{ "{:,.0f}".format(c.total_import_usd) if c.total_import_usd else "N/A" }}</td>
+            <td data-value="{{ c.korea_import_usd or 0 }}">${{ "{:,.0f}".format(c.korea_import_usd) if c.korea_import_usd else "N/A" }}</td>
+            <td>{% if c.may_be_incomplete_latest_year %}<span class="disclaimer">⚠️ 최신연도 집계중일 수 있음</span>{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
     </table>
 
     {% if result.excluded %}
@@ -249,9 +372,6 @@
   {% endif %}
 
 <script>
-// HS코드 입력창: 숫자만 최대 6자리 받되, 국제 표준 표기(예: "1905.90")처럼
-// 4자리 입력 후 자동으로 마침표를 찍어준다. 실제 서버에는 숫자만 보낸다
-// (app.py의 _clean_hscode가 한 번 더 걸러내므로 이중으로 안전함).
 (function () {
   var input = document.getElementById('hscode-input');
   if (!input) return;
@@ -261,7 +381,13 @@
   });
 })();
 
-// 수입/수출 토글 (서버 재호출 없이 미리 렌더링된 두 패널을 보이기/숨기기만 전환)
+document.getElementById('search-form').addEventListener('submit', function () {
+  var btn = document.getElementById('submit-btn');
+  btn.innerText = '조사 분석 중...';
+  btn.style.opacity = '0.7';
+  btn.disabled = true;
+});
+
 document.querySelectorAll('.flow-toggle').forEach(function (group) {
   var name = group.dataset.toggleGroup;
   group.querySelectorAll('button').forEach(function (btn) {
@@ -275,7 +401,6 @@ document.querySelectorAll('.flow-toggle').forEach(function (group) {
   });
 });
 
-// 버블 클릭 -> 회색 상세정보 박스 표시
 (function () {
   var wrap = document.getElementById('bubble-wrap');
   if (!wrap) return;
@@ -298,7 +423,7 @@ document.querySelectorAll('.flow-toggle').forEach(function (group) {
 
       var left = parseFloat(bubble.style.left);
       var top = parseFloat(bubble.style.top);
-      detail.style.left = (left > 60 ? left - 22 : left + 4) + '%';
+      detail.style.left = (left > 70 ? left - 25 : left + 4) + '%';
       detail.style.top = Math.max(top - 4, 4) + '%';
       detail.style.display = 'block';
     });
@@ -311,6 +436,40 @@ document.querySelectorAll('.flow-toggle').forEach(function (group) {
     }
   });
 })();
+
+function sortTable(colIndex) {
+  var table = document.getElementById("candidate-table");
+  var switching = true, dir = "asc", switchCount = 0;
+  
+  while (switching) {
+    switching = false;
+    var rows = table.rows;
+    for (var i = 1; i < (rows.length - 1); i++) {
+      var shouldSwitch = false;
+      var x = rows[i].cells[colIndex];
+      var y = rows[i + 1].cells[colIndex];
+      
+      var xVal = x.getAttribute("data-value") !== null ? parseFloat(x.getAttribute("data-value")) : x.innerText.toLowerCase();
+      var yVal = y.getAttribute("data-value") !== null ? parseFloat(y.getAttribute("data-value")) : y.innerText.toLowerCase();
+      
+      if (dir == "asc") {
+        if (xVal > yVal) { shouldSwitch = true; break; }
+      } else if (dir == "desc") {
+        if (xVal < yVal) { shouldSwitch = true; break; }
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchCount++;
+    } else {
+      if (switchCount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
 </script>
 </body>
 </html>

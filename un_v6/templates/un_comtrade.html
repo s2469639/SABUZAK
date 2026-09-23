@@ -4,153 +4,108 @@
 <meta charset="UTF-8">
 <title>UN Comtrade 시장조사</title>
 <style>
-  body { font-family: -apple-system, "Malgun Gothic", sans-serif; max-width: 800px; margin: 40px auto; padding: 0 16px; color: #222; }
-  h1 { font-size: 20px; }
-  h2 { font-size: 15px; margin: 28px 0 10px; color: #1a73e8; }
-  form { display: flex; gap: 8px; margin: 20px 0 8px; flex-wrap: wrap; }
-  input[type=text] { padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
-  input[name=hscode] { width: 120px; }
-  input[name=country] { width: 160px; }
-  button { padding: 8px 16px; border: none; border-radius: 6px; background: #1a73e8; color: #fff; font-size: 14px; cursor: pointer; }
+  /* 💡 단일 국가 조사 화면도 최대 폭을 1500px로 넓히고 좌우 여백을 넉넉하게 확장 */
+  body { font-family: -apple-system, "Malgun Gothic", sans-serif; max-width: 1500px; margin: 40px auto; padding: 0 30px; color: #222; }
+  h1 { font-size: 24px; }
+  h2 { font-size: 18px; margin: 40px 0 14px; color: #1a73e8; }
+  form { display: flex; gap: 12px; margin: 24px 0 12px; flex-wrap: wrap; align-items: flex-start; }
+  input[type=text], input[type=number] { padding: 10px 14px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
+  input[name=hscode] { width: 140px; }
+  input[name=country] { width: 220px; }
+  button { padding: 10px 20px; border: none; border-radius: 6px; background: #1a73e8; color: #fff; font-size: 15px; cursor: pointer; }
   button:hover { background: #1558b0; }
-  .hint { color: #888; font-size: 13px; margin-bottom: 24px; }
+  .hint { color: #888; font-size: 14px; margin-bottom: 8px; }
+  .field-label { font-size: 13px; color: #888; display: block; margin-bottom: 4px; }
   .error { background: #fdecea; color: #c0392b; padding: 12px 16px; border-radius: 6px; margin: 16px 0; }
-  .summary-bar { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin: 20px 0 12px; font-size: 14px; }
-  .badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; }
-  .badge.cache { background: #e8f0fe; color: #1a73e8; }
-  .badge.fresh { background: #e6f4ea; color: #188038; }
-  .badge.warn { background: #fef7e0; color: #b06000; }
-  .badge.mirror { background: #e0f2f1; color: #00695c; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 8px; }
-  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; }
+  .warn-box { background: #fef7e0; color: #5f4b00; border-left: 4px solid #f9ab00; padding: 14px 18px; border-radius: 6px; margin: 16px 0; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 8px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee; }
   th { color: #888; font-weight: 600; }
-  .cagr { font-size: 14px; font-weight: 700; }
-  .cagr.up { color: #188038; }
-  .cagr.down { color: #c0392b; }
-  .insight-box { background: #f8f9fa; border-left: 4px solid #1a73e8; padding: 14px 16px; border-radius: 6px; margin-top: 8px; font-size: 14px; line-height: 1.6; }
-  .insight-box .label { font-weight: 700; color: #1a73e8; display: block; margin-bottom: 2px; }
-  .insight-box div + div { margin-top: 10px; }
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; }
+  .badge.mirror { background: #e0f2f1; color: #00695c; }
+  
+  .insight-box { background: #f8f9fa; border-left: 4px solid #1a73e8; padding: 20px; border-radius: 6px; margin-top: 14px; font-size: 15px; line-height: 1.7; }
   .empty { color: #888; padding: 10px 0; }
-  .disclaimer { font-size: 12px; color: #888; }
+  .disclaimer { font-size: 13px; color: #888; }
 </style>
 </head>
 <body>
   <h1>UN Comtrade 시장조사</h1>
   <p class="hint">HS코드(6자리)와 국가를 입력하면 글로벌 수입 순위, 한국 경쟁력, 3개년 성장 트렌드를 UN 공식 무역통계로 조사합니다. (개발 확인용 화면)</p>
-  <p class="hint">국가 하나가 아니라 여러 후보국을 한 번에 비교하고 싶으신가요? → <a href="/matrix">성장률 x 한국 점유율 매트릭스 비교</a></p>
+  <p class="hint">국가 하나가 아니라 여러 후보견을 한 번에 비교하고 싶으신가요? → <a href="/matrix">성장률 x 한국 점유율 매트릭스 비교</a></p>
 
-  <form method="post">
-    <input type="text" name="hscode" id="hscode-input" placeholder="HS코드 (예: 1905.90)" value="{{ hscode }}" maxlength="7" required>
-    <input type="text" name="country" placeholder="국가 (예: Vietnam, VNM)" value="{{ country }}" required>
-    <label style="font-size:13px; color:#555; display:flex; align-items:center; gap:4px;">
+  <form method="post" id="search-form">
+    <div>
+      <span class="field-label">HS코드(6자리)</span>
+      <input type="text" name="hscode" id="hscode-input" placeholder="예: 1905.90" value="{{ hscode }}" maxlength="7" required>
+    </div>
+    <div>
+      <span class="field-label">국가 (예: Vietnam, VNM)</span>
+      <input type="text" name="country" placeholder="예: Vietnam, VNM" value="{{ country }}" required>
+    </div>
+    <label style="font-size:14px; color:#555; display:flex; align-items:center; gap:6px; align-self:flex-end; margin-bottom:10px;">
       <input type="checkbox" name="force" value="1" {% if force %}checked{% endif %}> 🔄 캐시 무시하고 새로 조사
     </label>
-    <button type="submit">조사하기</button>
+    <button type="submit" id="submit-btn" style="align-self:flex-end;">조사하기</button>
   </form>
-  <p class="disclaimer">UN Comtrade는 HS코드로만 통계를 분류하기 때문에 HS코드만 입력받습니다 (앞 4자리 뒤에 마침표가 자동으로 찍히는 건 국제 표준 HS코드 표기 방식이고, 실제 조회 시에는 숫자만 사용됩니다). 품목명은 아래 조사 결과에 UN Comtrade 공식 설명으로 자동 표시됩니다.</p>
+  <p class="disclaimer">UN Comtrade는 HS코드만 통계를 분류하기 때문에 HS코드만 입력받습니다 (앞 4자리 뒤에 마침표가 자동으로 찍히는 건 국제 표준 HS코드 표기 방식이고, 실제 조회 시에는 숫자만 사용됩니다). 품목명은 아래 조사 결과에 UN Comtrade 공식 설명으로 자동 표시됩니다.</p>
 
   {% if error %}
     <div class="error">⚠️ {{ error }}</div>
   {% endif %}
 
   {% if result %}
-    <div class="summary-bar">
-      <strong>[{{ result.target_country }}] HS {{ result.hscode }}</strong>
-      {% if result.from_cache %}
-        <span class="badge cache">캐시 결과 · {{ result.fetched_at }}</span>
-      {% else %}
-        <span class="badge fresh">새로 조사함 · {{ result.fetched_at }}</span>
-      {% endif %}
-      <span class="disclaimer">조회 연도: {{ result.years | join(', ') }}</span>
-    </div>
+    <div class="hint">HS {{ result.hscode }} · {{ result.target_country }} · 캐시 사용: {{ result.from_cache }}</div>
 
     {% if result.official_item_desc %}
-      <div class="error" style="background:#fef7e0; color:#5f4b00; border-left:4px solid #f9ab00;">
-        📋 <strong>UN Comtrade 공식 품목 설명(HS {{ result.hscode }}):</strong> {{ result.official_item_desc }}
-        <br>이 설명이 조사하려던 품목과 다르면 HS코드를 잘못 입력하셨을 수 있습니다. 다시 확인해주세요.
-      </div>
+      <div class="warn-box">📋 <strong>UN Comtrade 공식 품목 설명(HS {{ result.hscode }}):</strong> {{ result.official_item_desc }}</div>
     {% endif %}
 
-    <h2>① 글로벌 수입 순위 (상위 10개국)</h2>
-    {% if result.global_import_ranking %}
+    <h2>① 글로벌 수입 순위 (World 수입 랭킹)</h2>
+    {% if result.ranking %}
       <table>
-        <tr><th>#</th><th>국가</th><th>수입액(USD)</th></tr>
-        {% for r in result.global_import_ranking %}
-          <tr><td>{{ loop.index }}</td><td>{{ r.country }}</td><td>${{ "{:,.0f}".format(r.import_value_usd) }}</td></tr>
+        <tr><th>순위</th><th>국가명</th><th>수입액(USD)</th></tr>
+        {% for r in result.ranking %}
+          <tr><td>{{ loop.index }}</td><td>{{ r.country }}</td><td>${{ "{:,.0f}".format(r.value_usd) }}</td></tr>
         {% endfor %}
       </table>
     {% else %}
       <div class="empty">데이터 없음</div>
     {% endif %}
 
-    <h2>② {{ result.target_country }} 시장 경쟁력</h2>
-    {% if result.competitiveness.total_import_usd %}
-      {% if result.competitiveness.is_mirror_estimate %}
-        <p><span class="badge mirror">🪞 상대국 보고 기반 추정치</span></p>
-        <p class="disclaimer">
-          ⚠️ {{ result.target_country }}이(가) 이 API에 직접 보고한 공식 수치가 없어서,
-          전세계 각국이 "{{ result.target_country }}에 수출했다"고 보고한 값들을 합산한
-          <strong>추정치</strong>입니다. {{ result.target_country }} 정부의 공식 발표 수치와
-          다를 수 있습니다.
-        </p>
-      {% endif %}
-      <p>{{ result.competitiveness.year }}년 전체 수입액: <strong>${{ "{:,.0f}".format(result.competitiveness.total_import_usd) }}</strong></p>
-      <table>
-        <tr><th>국가</th><th>수입액(USD)</th><th>점유율</th></tr>
-        {% for b in result.competitiveness.breakdown %}
-          <tr>
-            <td>{{ b.country_iso3 }}</td>
-            <td>${{ "{:,.0f}".format(b.import_value_usd) }}</td>
-            <td>{% if b.share_pct is not none %}{{ b.share_pct }}%{% else %}N/A{% endif %}</td>
-          </tr>
-        {% endfor %}
-      </table>
-    {% else %}
-      <div class="empty">데이터 없음</div>
-    {% endif %}
+    <h2>② 한국 경쟁력 및 점유율</h2>
+    <p class="disclaimer">
+      총 수입액: ${{ "{:,.0f}".format(result.competitiveness.total_import_usd) if result.competitiveness.total_import_usd else "N/A" }}
+      {% if result.competitiveness.is_mirror_estimate %} <span class="badge mirror">🪞 상대국 보고 기반 추정치</span>{% endif %}
+      · 공급국 수: {{ result.competitiveness.supplier_country_count }}개국
+    </p>
+    <table>
+      <tr><th>경쟁국/한국</th><th>수입액(USD)</th><th>점유율(%)</th></tr>
+      {% for b in result.competitiveness.breakdown %}
+        <tr><td>{{ b.country_iso3 | upper }}</td><td>${{ "{:,.0f}".format(b.import_value_usd) }}</td><td>{{ b.share_pct }}%</td></tr>
+      {% endfor %}
+    </table>
 
-    <h2>③ 성장 트렌드 ({{ result.growth_trend.years_with_data }}/{{ result.growth_trend.years_requested | length }}개년 데이터 확보)</h2>
-    {% if result.growth_trend.by_year %}
-      {% if result.growth_trend.is_mirror_estimate %}
-        <p><span class="badge mirror">🪞 상대국 보고 기반 추정치</span></p>
-      {% endif %}
+    <h2>③ 3개년 수입 성장 트렌드</h2>
+    {% if result.growth.years_with_data %}
+      <p class="disclaimer">3개년 CAGR(연평균 성장률): <strong>{{ result.growth.cagr_pct }}%</strong></p>
       <table>
-        <tr><th>연도</th><th>수입액(USD)</th><th></th></tr>
-        {% for y in result.growth_trend.by_year %}
-          <tr>
-            <td>{{ y.year }}</td>
-            <td>${{ "{:,.0f}".format(y.import_value_usd) }}</td>
-            <td>{% if y.may_be_incomplete %}<span class="badge warn">⚠️ 아직 집계 중일 수 있음</span>{% endif %}</td>
-          </tr>
+        <tr><th>연도</th><th>수입액(USD)</th></tr>
+        {% for y in result.growth.years_with_data %}
+          <tr><td>{{ y.year }}년</td><td>${{ "{:,.0f}".format(y.import_value_usd) }}</td></tr>
         {% endfor %}
       </table>
-      {% if result.growth_trend.cagr_pct is not none %}
-        <p class="cagr {{ 'up' if result.growth_trend.cagr_pct >= 0 else 'down' }}">
-          CAGR (연평균 성장률): {{ result.growth_trend.cagr_pct }}%
-        </p>
-        <p class="disclaimer">⚠️ 가장 최근 연도가 아직 집계 중이라면, 실제 수치는 이보다 높아지고 CAGR도 달라질 수 있습니다.</p>
-      {% endif %}
     {% else %}
       <div class="empty">데이터 없음</div>
     {% endif %}
 
     <h2>④ AI 전략 시사점</h2>
-    <p class="disclaimer">위 UN Comtrade 수치를 바탕으로 한 AI 해석입니다. 실제 전략 결정 전 추가 검증을 권장합니다.</p>
-    {% if result.ai_insight %}
-      <div class="insight-box">
-        <div><span class="label">시장 매력도</span>{{ result.ai_insight.market_attractiveness }}</div>
-        <div><span class="label">경쟁 구도</span>{{ result.ai_insight.competitive_position }}</div>
-        <div><span class="label">전략 제언</span>{{ result.ai_insight.strategic_recommendation }}</div>
-      </div>
-    {% else %}
-      <div class="empty">AI 해석 생성에 실패했습니다 (위 원본 수치는 그대로 유효합니다).</div>
-    {% endif %}
+    <div class="insight-box">
+      {{ result.ai_insight | safe }}
+    </div>
   {% endif %}
 
 <script>
-// HS코드 입력창: 숫자만 최대 6자리 받되, 국제 표준 표기(예: "1905.90")처럼
-// 4자리 입력 후 자동으로 마침표를 찍어준다. 실제 서버에는 숫자만 보낸다
-// (app.py의 _clean_hscode가 한 번 더 걸러내므로 이중으로 안전함).
 (function () {
   var input = document.getElementById('hscode-input');
   if (!input) return;
@@ -159,6 +114,13 @@
     this.value = digits.length > 4 ? digits.slice(0, 4) + '.' + digits.slice(4) : digits;
   });
 })();
+
+document.getElementById('search-form').addEventListener('submit', function () {
+  var btn = document.getElementById('submit-btn');
+  btn.innerText = '조사 분석 중...';
+  btn.style.opacity = '0.7';
+  btn.disabled = true;
+});
 </script>
 </body>
 </html>
