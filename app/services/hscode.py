@@ -64,21 +64,31 @@ COUNTRY_ISO_MAP = {
     "chile": "CHL", "argentina": "ARG", "colombia": "COL", "peru": "PER",
 }
 
-# 국가별 협정 관세율 프로필 (tariff_advisor.py 그대로)
+# 국가별 협정 관세율 프로필. 전부 관세청 실시간 데이터가 아니라 손으로
+# 입력한 추정치이며, "fta"가 None인 나라는 한국과 체결된 양자 FTA 자체가
+# 없는 나라라서 우대세율 행을 아예 보여주지 않는다 (실재하지 않는 협정을
+# 있는 것처럼 보여주면 안 되므로).
+#
+# 아래 근거로 fta를 None 처리함:
+#   - JPN: 한-일 양자 FTA는 체결된 적 없음. 실제 적용되는 건 RCEP뿐.
+#   - SAU: 한-GCC(사우디 포함) FTA는 협상만 진행 중, 타결 안 됨.
+#   - BRA: 한-메르코수르(브라질 포함) FTA도 협상만 진행 중, 타결 안 됨.
+#   - MEX: 한-멕시코 FTA 미체결 (fta_name에 이미 명시돼 있었음. fta=mfn과
+#     중복 표시되던 걸 정리).
 TARIFF_PROFILES = {
     "CHN": {"fta_name": "한-중 FTA", "mfn": 12.0, "fta": 0.0, "rcep": 5.0},
     "USA": {"fta_name": "한-미 FTA (KORUS)", "mfn": 6.4, "fta": 0.0, "rcep": 6.4},
-    "VNM": {"fta_name": "한-베트남 FTA / RCEP", "mfn": 15.0, "fta": 0.0, "rcep": 5.0},
-    "JPN": {"fta_name": "RCEP / 양자 간 협정", "mfn": 8.0, "fta": 2.5, "rcep": 3.0},
-    "BRA": {"fta_name": "일반관세 (MERCOSUR 연계)", "mfn": 35.0, "fta": 32.0, "rcep": 35.0},
-    "MEX": {"fta_name": "일반관세 (FTA 미체결)", "mfn": 20.0, "fta": 20.0, "rcep": 20.0},
+    "VNM": {"fta_name": "한-베트남 FTA", "mfn": 15.0, "fta": 0.0, "rcep": 5.0},
+    "JPN": {"fta_name": None, "mfn": 8.0, "fta": None, "rcep": 3.0},
+    "BRA": {"fta_name": None, "mfn": 35.0, "fta": None, "rcep": 35.0},
+    "MEX": {"fta_name": None, "mfn": 20.0, "fta": None, "rcep": 20.0},
     "DEU": {"fta_name": "한-EU FTA", "mfn": 14.2, "fta": 0.0, "rcep": 14.2},
     "FRA": {"fta_name": "한-EU FTA", "mfn": 14.2, "fta": 0.0, "rcep": 14.2},
     "AUS": {"fta_name": "한-호주 FTA", "mfn": 10.0, "fta": 0.0, "rcep": 4.0},
-    "SAU": {"fta_name": "한-사우디 일반 협정", "mfn": 15.0, "fta": 5.0, "rcep": 10.0},
+    "SAU": {"fta_name": None, "mfn": 15.0, "fta": None, "rcep": 10.0},
 }
 
-DEFAULT_PROFILE = {"fta_name": "일반 협정 (추정치)", "mfn": 15.0, "fta": 5.0, "rcep": 10.0}
+DEFAULT_PROFILE = {"fta_name": None, "mfn": 15.0, "fta": None, "rcep": 10.0}
 
 # RCEP(역내포괄적경제동반자협정) 실제 회원국만 RCEP 관세율을 보여준다.
 # 예전엔 국가와 무관하게 항상 RCEP 행을 보여줘서 미국·EU·멕시코·브라질·
@@ -200,13 +210,15 @@ def resolve_country_iso(country_name):
 
 def get_tariff_regimes(country_iso):
     """국가별 협정 관세율 목록. [{regime, tariff_ave}, ...].
-    RCEP은 실제 회원국일 때만 포함한다 (비회원국에 RCEP 관세율을 잘못
-    표시하던 문제 수정)."""
+    - RCEP은 실제 회원국일 때만 포함 (비회원국에 RCEP 관세율을 잘못
+      표시하던 문제 수정).
+    - 양자 FTA(profile["fta"])는 실제로 체결된 협정이 있는 나라만 포함
+      (한-일, 한-사우디, 한-브라질처럼 협정 자체가 없는데 우대세율을
+      보여주던 문제 수정)."""
     profile = TARIFF_PROFILES.get(country_iso, DEFAULT_PROFILE)
-    regimes = [
-        {"regime": "MFN (기본세율)", "tariff_ave": profile["mfn"]},
-        {"regime": profile["fta_name"], "tariff_ave": profile["fta"]},
-    ]
+    regimes = [{"regime": "MFN (기본세율)", "tariff_ave": profile["mfn"]}]
+    if profile.get("fta") is not None:
+        regimes.append({"regime": profile["fta_name"], "tariff_ave": profile["fta"]})
     if country_iso in RCEP_MEMBERS:
         regimes.append({"regime": "RCEP (역내)", "tariff_ave": profile["rcep"]})
     return regimes

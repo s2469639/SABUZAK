@@ -166,9 +166,8 @@
       {% endfor %}
     </div>
 
-    {% if hscode_ctx.is_estimated %}
-    <p class="placeholder-note">※ {{ expo.country_ko or expo.country }}은(는) 상세 관세 프로필이 아직 없어 추정치로 표시됩니다.</p>
-    {% endif %}
+    <p class="placeholder-note">⚠️ 위 관세율은 관세청 실시간 데이터가 아니라 <strong>손으로 입력해둔 추정치</strong>입니다. 실제 통관·수출 전 반드시 관세청 또는 관세사를 통해 정확한 세율을 확인하세요.
+    {% if hscode_ctx.is_estimated %}({{ expo.country_ko or expo.country }}은(는) 상세 프로필조차 없어 더 부정확할 수 있습니다.){% endif %}</p>
 
     <div class="section-label-row">
       <h3 class="section-label">
