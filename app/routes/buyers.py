@@ -12,7 +12,7 @@ from flask import Blueprint, flash, redirect, render_template, request, session,
 from flask_login import current_user, login_required
 
 from app.extensions import db
-from app.models import Contact, EmailTemplate, Exhibition, FollowupEmail
+from app.models import Contact, ConceptDraft, EmailTemplate, Exhibition, FollowupEmail
 from app.services.card_scan import scan_business_card
 from app.services.google_oauth import build_flow, encrypt_token, fetch_userinfo
 from app.services.mail_llm import revise_email_template, revise_individual_email
@@ -38,6 +38,27 @@ def _is_stale(contact: Contact) -> bool:
     return datetime.utcnow() - followup.sent_at >= timedelta(days=STALE_DAYS)
 
 
+def _drafted_exhibitions():
+    """바이어 등록/검색 드롭다운에 띄울 박람회 목록. raw_exhibitions와 concept_drafts는
+    서로 다른 DB(bind)라 JOIN이 안 돼서, exhibition_id를 먼저 뽑고 그걸로 다시 조회한다.
+    '작성 중인 박람회' 목록(app/routes/drafts.py)과 동일하게 상태 구분 없이 그 사용자의
+    ConceptDraft가 있는 박람회는 전부 포함한다."""
+    exhibition_ids = [
+        row[0]
+        for row in db.session.query(ConceptDraft.exhibition_id)
+        .filter(ConceptDraft.user_id == current_user.id)
+        .distinct()
+        .all()
+    ]
+    if not exhibition_ids:
+        return []
+    return (
+        Exhibition.query.filter(Exhibition.id.in_(exhibition_ids), Exhibition.is_active == 1)
+        .order_by(Exhibition.name)
+        .all()
+    )
+
+
 @contacts_bp.route("/contacts")
 @login_required
 def list_contacts():
@@ -57,7 +78,7 @@ def list_contacts():
     stale_ids = {c.id for c in stale}
     stale_days = {c.id: (datetime.utcnow() - c.followup.sent_at).days for c in stale}
 
-    exhibitions = Exhibition.query.filter_by(is_active=1).order_by(Exhibition.name).all()
+    exhibitions = _drafted_exhibitions()
     active_template = EmailTemplate.query.filter_by(user_id=current_user.id, is_active=True).first()
     has_usable_template = bool(active_template and active_template.subject and active_template.body)
     template_labels = {
@@ -79,7 +100,7 @@ def list_contacts():
 @contacts_bp.route("/contacts/new", methods=["GET", "POST"])
 @login_required
 def new_contact():
-    exhibitions = Exhibition.query.filter_by(is_active=1).order_by(Exhibition.name).all()
+    exhibitions = _drafted_exhibitions()
     template_versions = (
         EmailTemplate.query.filter_by(user_id=current_user.id).order_by(EmailTemplate.version).all()
     )
@@ -135,7 +156,14 @@ def scan_card():
 @login_required
 def edit_contact(contact_id):
     contact = Contact.query.filter_by(id=contact_id, user_id=current_user.id).first_or_404()
-    exhibitions = Exhibition.query.filter_by(is_active=1).order_by(Exhibition.name).all()
+    exhibitions = _drafted_exhibitions()
+    # 이 바이어가 등록된 박람회의 '작성 중인 박람회' 항목이 그 사이 지워졌다면
+    # 드롭다운에서 통째로 사라져서 저장할 때 실수로 다른 박람회로 바뀔 수 있으니,
+    # 그 경우엔 원래 박람회를 목록에 그대로 끼워넣는다.
+    if contact.exhibition_id not in {e.id for e in exhibitions}:
+        original = Exhibition.query.get(contact.exhibition_id)
+        if original:
+            exhibitions = sorted([*exhibitions, original], key=lambda e: e.name or "")
     template_versions = (
         EmailTemplate.query.filter_by(user_id=current_user.id).order_by(EmailTemplate.version).all()
     )

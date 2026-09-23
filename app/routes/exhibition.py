@@ -147,7 +147,7 @@ def expo_list_partial_all():
     base_query = Exhibition.query.filter(
         Exhibition.is_active == 1, Exhibition.id.notin_(dup_ids)
     )
-    ctx = _build_list_context(base_query, "전체 해외", "exhibition.expo_list_partial_all", {}, "")
+    ctx = _build_list_context(base_query, "해외", "exhibition.expo_list_partial_all", {}, "")
     return render_template("dashboard/_expo_list_partial.html", **ctx)
 
 
