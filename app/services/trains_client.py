@@ -44,6 +44,7 @@ ID를 그대로 고정 필터로 쓴다 - 마침 이게 우리가 필요한 카�
 필터링이 된다.
 """
 
+import threading
 import time
 from urllib.parse import quote
 
@@ -53,6 +54,17 @@ import requests
 REQUEST_DELAY_SEC = 0.6
 # 429(Too Many Requests) 받았을 때 재시도 대기 시간(초), 점점 늘어남
 RETRY_BACKOFF_SEC = [2, 5, 10]
+
+# TRAINS는 국가를 내부 숫자 ID로만 지정할 수 있어서(ISO코드 매핑을 모름) 나라
+# 하나만 필요할 때도 어쩔 수 없이 전세계(allImposingCountries=True)를 페이지
+# 단위로 쭉 훑어야 한다. 그런데 박람회 상세페이지에서 "지금 실제 데이터
+# 가져오기" 버튼을 누를 때마다(국가 1개씩) 매번 이 전세계 훑기를 처음부터
+# 다시 하면, 여러 국가를 연달아 조회할 때마다 매번 몇십 페이지를 다시
+# 받아오느라 체감상 "멈춘 것처럼" 오래 걸린다. 그래서 전세계 조회 결과를
+# 프로세스 메모리에 잠깐 캐싱해두고, TTL 안에는 재사용한다.
+_WORLD_CACHE_TTL_SEC = 15 * 60
+_world_cache_lock = threading.Lock()
+_world_cache: dict = {"rows": None, "fetched_at": 0.0}
 
 try:
     import pycountry
@@ -148,7 +160,9 @@ def _payload(page_number: int, page_size: int) -> dict:
     }
 
 
-def fetch_all_measures_affecting_korea(page_size: int = 20, max_pages: int = 100) -> list:
+def fetch_all_measures_affecting_korea(
+    page_size: int = 20, max_pages: int = 100, force_refresh: bool = False
+) -> list:
     """한국에 영향을 주는 전세계 비관세조치(NTM)를 전부 가져온다 (페이지네이션 처리).
 
     국가 ID를 몰라도 되도록 전세계(allImposingCountries=true)를 조회하고,
@@ -161,7 +175,21 @@ def fetch_all_measures_affecting_korea(page_size: int = 20, max_pages: int = 100
 
     페이지마다 REQUEST_DELAY_SEC만큼 쉬고, 429(너무 빠른 연속 호출)를 받으면
     잠깐 대기 후 재시도한다 (예전엔 딜레이 없이 최대 100번을 연달아 불러서
-    429로 막히는 문제가 있었음)."""
+    429로 막히는 문제가 있었음).
+
+    결과는 _WORLD_CACHE_TTL_SEC 동안 프로세스 메모리에 캐싱된다. 국가 하나만
+    필요한 호출(fetch_regulations_for_country)도 내부적으로는 이 전세계
+    조회를 쓰기 때문에, 캐싱 없이는 국가를 바꿔가며 조회할 때마다 매번
+    수십 페이지를 처음부터 다시 받아와 매우 느려진다. force_refresh=True면
+    캐시를 무시하고 새로 받는다."""
+    with _world_cache_lock:
+        if (
+            not force_refresh
+            and _world_cache["rows"] is not None
+            and (time.time() - _world_cache["fetched_at"]) < _WORLD_CACHE_TTL_SEC
+        ):
+            return _world_cache["rows"]
+
     all_rows = []
     for page in range(1, max_pages + 1):
         if page > 1:
@@ -197,6 +225,10 @@ def fetch_all_measures_affecting_korea(page_size: int = 20, max_pages: int = 100
         all_rows.extend(batch)
         if len(batch) < page_size:
             break
+
+    with _world_cache_lock:
+        _world_cache["rows"] = all_rows
+        _world_cache["fetched_at"] = time.time()
     return all_rows
 
 
