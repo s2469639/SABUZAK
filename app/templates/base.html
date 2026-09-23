@@ -25,6 +25,21 @@
       </div>
 
       {% if current_user.is_authenticated %}
+        <button type="button" class="sidebar-user-info" data-modal-open="edit-profile-modal">
+          <span class="sidebar-user-avatar">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M4.5 19.5c1.4-3.4 4.4-5.2 7.5-5.2s6.1 1.8 7.5 5.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="sidebar-user-text">
+            <span class="sidebar-user-name">{{ current_user.name }}님</span>
+            {% if current_user.company or current_user.position %}
+              <span class="sidebar-user-company">{{ [current_user.company, current_user.position] | select | join(' · ') }}</span>
+            {% endif %}
+          </span>
+        </button>
+
         <div class="sidebar-section">
           <p class="sidebar-section-title">메뉴</p>
           <nav>
@@ -41,14 +56,10 @@
 
         <div class="sidebar-section">
           <p class="sidebar-section-title">바로가기</p>
-<<<<<<< Updated upstream
           <nav class="sidebar-external-links">
-=======
-          <nav>
->>>>>>> Stashed changes
-            <a href="https://www.gep.or.kr" target="_blank" rel="noopener">↗ GEP 글로벌전시플랫폼</a>
-            <a href="https://www.kati.net" target="_blank" rel="noopener">↗ KaTi 농식품수출정보</a>
-            <a href="https://www.exportvoucher.com" target="_blank" rel="noopener">↗ 수출지원기반활용사업</a>
+            <a href="https://www.gep.or.kr" target="_blank" rel="noopener"><span class="external-link-arrow">↗</span> GEP 글로벌전시플랫폼</a>
+            <a href="https://www.kati.net" target="_blank" rel="noopener"><span class="external-link-arrow">↗</span> KaTi 농식품수출정보</a>
+            <a href="https://www.exportvoucher.com" target="_blank" rel="noopener"><span class="external-link-arrow">↗</span> 수출지원기반활용사업</a>
           </nav>
         </div>
 
@@ -75,6 +86,36 @@
       </main>
     </div>
   </div>
+
+  {% if current_user.is_authenticated %}
+  <div class="modal-overlay" id="edit-profile-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2>내 정보 수정</h2>
+        <button type="button" class="modal-close" data-modal-close aria-label="닫기">✕</button>
+      </div>
+
+      <form method="post" action="{{ url_for('auth.edit_profile') }}">
+        <div class="form-field">
+          <label for="profile-name">이름 *</label>
+          <input type="text" id="profile-name" name="name" value="{{ current_user.name }}" required>
+        </div>
+        <div class="form-field">
+          <label for="profile-company">회사명</label>
+          <input type="text" id="profile-company" name="company" value="{{ current_user.company or '' }}">
+        </div>
+        <div class="form-field">
+          <label for="profile-position">소속·직급</label>
+          <input type="text" id="profile-position" name="position" placeholder="예: 해외영업팀 대리" value="{{ current_user.position or '' }}">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" data-modal-close>취소</button>
+          <button type="submit" class="btn-primary">저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% endif %}
 
   <script src="{{ url_for('static', filename='js/layout.js') }}"></script>
   <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
