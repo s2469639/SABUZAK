@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>UN Comtrade 매트릭스 비교</title>
 <style>
-  body { font-family: -apple-system, "Malgun Gothic", sans-serif; max-width: 900px; margin: 40px auto; padding: 0 16px; color: #222; }
+  body { font-family: -apple-system, "Malgun Gothic", sans-serif; max-width: 920px; margin: 40px auto; padding: 0 16px; color: #222; }
   h1 { font-size: 20px; }
   h2 { font-size: 15px; margin: 30px 0 10px; color: #1a73e8; }
   form { display: flex; gap: 8px; margin: 20px 0 8px; flex-wrap: wrap; align-items: flex-start; }
@@ -28,6 +28,7 @@
   .quadrant-우선순위낮음 { background: #f1f3f4; color: #666; }
   .badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; }
   .badge.mirror { background: #e0f2f1; color: #00695c; }
+<<<<<<< Updated upstream:un_v6/templates/un_comtrade_matrix.html
 
   /* 차트 공통: Y축 세로 라벨 + 차트 본체 + 아래 X축 라벨을 감싸는 구조 */
   .chart-frame { display: flex; align-items: stretch; gap: 8px; }
@@ -51,6 +52,8 @@
   .insight-box div + div { margin-top: 10px; }
   .empty { color: #888; padding: 10px 0; }
   .disclaimer { font-size: 12px; color: #888; }
+=======
+>>>>>>> Stashed changes:UN3/templates/un_comtrade_matrix.html
 
   /* 수입/수출 토글 버튼 */
   .flow-toggle { display: inline-flex; border: 1px solid #ccc; border-radius: 999px; overflow: hidden; margin-bottom: 10px; }
@@ -64,6 +67,7 @@
   .line-chart-legend .swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
   .axis-label-svg { font-size: 10px; fill: #999; }
 
+<<<<<<< Updated upstream:un_v6/templates/un_comtrade_matrix.html
   /* 유망시장 순위 버블차트 */
   .bubble-wrap { position: relative; flex: 1; min-width: 0; height: 340px; border: 1px solid #ddd; border-radius: 8px; margin: 0; background: #fafafa; overflow: hidden; }
   .bubble { position: absolute; border-radius: 50%; background: rgba(26,115,232,0.55); border: 1.5px solid #1a73e8; transform: translate(-50%, -50%); cursor: pointer; transition: background 0.15s; }
@@ -72,11 +76,40 @@
   .bubble-detail { position: absolute; display: none; background: #3c4043; color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.6; min-width: 190px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 5; pointer-events: none; }
   .bubble-detail strong { display: block; font-size: 13px; margin-bottom: 4px; }
   .bubble-detail a { color: #8ab4f8; pointer-events: auto; }
+=======
+  /* 한국 수출입 신고 연도별 막대그래프 */
+  .bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 160px; border-bottom: 1px solid #ddd; padding: 0 4px 4px; margin: 12px 0 4px; }
+  .bar-chart .bar-group { flex: 1; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%; position: relative; }
+  .bar-chart .bar { width: 40%; border-radius: 3px 3px 0 0; }
+  .bar-chart .bar.export { background: #1a73e8; }
+  .bar-chart .bar.import { background: #7c3aed; opacity: 0.55; }
+  .bar-chart .bar-year { position: absolute; bottom: -20px; font-size: 11px; color: #888; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+
+  /* 통합 버블 매트릭스 차트 */
+  .matrix-wrap { position: relative; width: 100%; height: 420px; border: 1px solid #ddd; border-radius: 8px; margin: 16px 0 8px; background: #fafafa; overflow: hidden; }
+  .axis-line { position: absolute; z-index: 1; }
+  .axis-line.h { left: 0; right: 0; height: 1px; border-top: 1px dashed #bbb; }
+  .axis-line.v { top: 0; bottom: 0; width: 1px; border-left: 1px dashed #bbb; }
+  .quadrant-tag { position: absolute; font-size: 11px; color: #888; font-weight: 600; padding: 6px 8px; z-index: 1; pointer-events: none; background: rgba(250,250,250,0.7); border-radius: 4px; }
+  .bubble { position: absolute; border-radius: 50%; background: rgba(26,115,232,0.45); border: 2px solid #1a73e8; transform: translate(-50%, -50%); cursor: pointer; transition: transform 0.15s, background-color 0.15s, border-color 0.15s; z-index: 2; }
+  .bubble:hover, .bubble.selected { background: rgba(26,115,232,0.85); border-color: #0d47a1; z-index: 4; transform: translate(-50%, -50%) scale(1.08); }
+  .bubble-label { position: absolute; font-size: 11px; font-weight: 500; color: #222; pointer-events: none; white-space: nowrap; transform: translate(-50%, 4px); z-index: 3; text-shadow: 0 0 3px #fff, 0 0 3px #fff; }
+  .bubble-detail { position: absolute; display: none; background: #2d3033; color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 12px; line-height: 1.6; min-width: 210px; box-shadow: 0 4px 14px rgba(0,0,0,0.3); z-index: 10; pointer-events: none; }
+  .bubble-detail strong { display: block; font-size: 13px; margin-bottom: 4px; color: #90caf9; }
+  .bubble-detail a { color: #8ab4f8; pointer-events: auto; text-decoration: underline; }
+  .axis-caption { font-size: 11px; color: #888; text-align: center; margin-top: 2px; }
+
+  .insight-box { background: #f8f9fa; border-left: 4px solid #1a73e8; padding: 14px 16px; border-radius: 6px; margin-top: 8px; font-size: 14px; line-height: 1.6; }
+  .insight-box .label { font-weight: 700; color: #1a73e8; display: block; margin-bottom: 2px; }
+  .insight-box div + div { margin-top: 10px; }
+  .empty { color: #888; padding: 10px 0; }
+  .disclaimer { font-size: 12px; color: #888; }
+>>>>>>> Stashed changes:UN3/templates/un_comtrade_matrix.html
 </style>
 </head>
 <body>
   <h1>UN Comtrade 매트릭스 비교</h1>
-  <p class="hint">HS코드 하나로 여러 후보국의 세계시장 순위·점유율 추이·유망시장 순위·성장률x한국점유율 매트릭스를 한 번에 봅니다. KOTRA TriBig의 "품목별 유망시장" 화면과 같은 구조입니다.</p>
+  <p class="hint">HS코드 하나로 여러 후보국의 세계시장 순위·점유율 추이·성장률x한국점유율 버블 매트릭스를 한 번에 봅니다. KOTRA TriBig의 "품목별 유망시장" 화면과 같은 구조입니다.</p>
   <p class="hint">국가 하나만 자세히 보고 싶으신가요? → <a href="/">단일 국가 상세 조사</a></p>
 
   <form method="post">
@@ -158,6 +191,7 @@
       <div class="empty">데이터 없음</div>
     {% endif %}
 
+<<<<<<< Updated upstream:un_v6/templates/un_comtrade_matrix.html
     <h2>③ 유망시장 순위</h2>
     <p class="disclaimer">
       버블 크기 = 수입금액(넓이 비례, 클수록 그 나라가 이 품목을 많이 수입함). 버블을 클릭하면 상세 수치가 뜹니다.
@@ -186,10 +220,74 @@
         </div>
       </div>
       <div class="axis-title-x">X축: 수입금액 순위 (1위 = 이 품목을 전세계에서 가장 많이 수입하는 나라) — 오른쪽으로 갈수록 순위가 낮은(수입액이 적은) 나라</div>
+=======
+    <h2>③ 한국 수출입 신고 추이 (관세청 기준)</h2>
+    <p class="disclaimer">⚠️ 위 ①②는 UN Comtrade 미러 통계, 아래는 한국 관세청에 직접 신고된 통계입니다 - 두 출처가 다를 수 있으니 어느 쪽이 "맞다"고 판단하지 말고 방향성만 참고하세요.</p>
+    {% if customs and customs.unavailable_reason %}
+      <div class="empty">관세청 자료를 가져오지 못했습니다 ({{ customs.unavailable_reason }}). 선택 기능이라 다른 섹션에는 영향이 없습니다.</div>
+    {% elif annual_customs %}
+      <div class="bar-chart">
+        {% set max_val = (annual_customs | map(attribute='export_usd') | list + annual_customs | map(attribute='import_usd') | list) | max %}
+        {% for y in annual_customs %}
+          <div class="bar-group">
+            <div class="bar export" style="height: {{ (y.export_usd / max_val * 100) if max_val else 0 }}%;" title="{{ y.year }}년 수출 ${{ '{:,.0f}'.format(y.export_usd) }}"></div>
+            <div class="bar import" style="height: {{ (y.import_usd / max_val * 100) if max_val else 0 }}%;" title="{{ y.year }}년 수입 ${{ '{:,.0f}'.format(y.import_usd) }}"></div>
+            <span class="bar-year">{{ y.year }}{% if y.has_gap %}*{% endif %}</span>
+          </div>
+        {% endfor %}
+      </div>
+      <p class="disclaimer" style="margin-top:22px;">
+        <span style="color:#1a73e8;">■</span> 수출 &nbsp;
+        <span style="color:#7c3aed;">■</span> 수입 &nbsp;
+        {% if annual_customs | selectattr('has_gap') | list %}· * 표시 연도는 일부 월 자료가 아직 없어 부분 집계일 수 있습니다{% endif %}
+      </p>
     {% else %}
-      <div class="empty">버블차트를 그릴 데이터가 부족합니다.</div>
+      <div class="empty">DATA_GO_KR_API_KEY가 설정되어 있지 않아 이 섹션은 건너뛰었습니다 (선택 기능).</div>
     {% endif %}
 
+    <h2>④ 유망시장 매트릭스 (성장률 × 한국 점유율 × 시장 규모)</h2>
+    <p class="disclaimer">
+      <strong>X축</strong> = 수입시장 성장률(CAGR), <strong>Y축</strong> = 한국 점유율, <strong>버블 크기</strong> = 수입금액(넓이 비례).
+      점선은 후보국 평균 기준선(성장률 {{ result.thresholds.avg_cagr_pct }}%, 한국 점유율 {{ result.thresholds.avg_korea_share_pct }}%)입니다.
+      버블을 클릭하면 세부 수치가 표시됩니다.
+    </p>
+    {% if bubble_matrix %}
+      <div class="matrix-wrap" id="matrix-wrap">
+        <div class="axis-line h" style="top: {{ threshold_y_pct }}%;"></div>
+        <div class="axis-line v" style="left: {{ threshold_x_pct }}%;"></div>
+
+        <!-- 사분면 라벨 -->
+        <span class="quadrant-tag" style="right:8px; top:8px; color:#188038;">집중 공략 ↗</span>
+        <span class="quadrant-tag" style="left:8px; top:8px; color:#1a73e8;">현상 유지/수확 ↖</span>
+        <span class="quadrant-tag" style="right:8px; bottom:8px; color:#b06000;">경쟁력 강화 필요 ↘</span>
+        <span class="quadrant-tag" style="left:8px; bottom:8px; color:#666;">우선순위 낮음 ↙</span>
+
+        {% for b in bubble_matrix %}
+          <div class="bubble"
+               style="left: {{ b.x_pct }}%; top: {{ b.y_pct }}%; width: {{ b.bubble_radius * 2 }}px; height: {{ b.bubble_radius * 2 }}px;"
+               data-label="{{ b.label }}"
+               data-cagr="{{ b.cagr_pct }}"
+               data-share="{{ b.korea_share_pct }}"
+               data-rank="{{ b.import_rank or 'N/A' }}"
+               data-import="{{ (b.total_import_usd | round | int) if b.total_import_usd else '' }}"
+               data-korea="{{ (b.korea_import_usd | round | int) if b.korea_import_usd else '' }}"
+               data-suppliers="{{ b.supplier_country_count or 'N/A' }}"
+               data-mirror="{{ 'true' if b.is_mirror_estimate else '' }}"
+               data-href="/?hscode={{ result.hscode }}&country={{ b.label | urlencode }}"
+          ></div>
+          <div class="bubble-label" style="left: {{ b.x_pct }}%; top: {{ b.y_pct + (b.bubble_radius * 0.4) }}%;">
+            {{ b.label }}
+          </div>
+        {% endfor %}
+        <div class="bubble-detail" id="bubble-detail"></div>
+      </div>
+      <div class="axis-caption">→ 그 나라 수입시장 성장률(CAGR) / ↑ 한국 점유율(%)</div>
+>>>>>>> Stashed changes:UN3/templates/un_comtrade_matrix.html
+    {% else %}
+      <div class="empty">매트릭스를 그릴 데이터가 부족합니다.</div>
+    {% endif %}
+
+<<<<<<< Updated upstream:un_v6/templates/un_comtrade_matrix.html
     <h2>④ 성장률 x 한국 점유율 매트릭스</h2>
     <p class="disclaimer">
       점선은 후보국 평균 기준선입니다 (성장률 평균 {{ result.thresholds.avg_cagr_pct }}%,
@@ -215,6 +313,10 @@
 
     <h2>⑤ 후보국별 상세</h2>
     <p class="disclaimer">🪞 표시는 그 나라가 UN Comtrade에 직접 보고한 공식 수치가 없어서, 상대국들의 보고를 합산한 추정치를 대신 쓴 경우입니다.</p>
+=======
+    <h2>⑤ 후보국별 상세</h2>
+    <p class="disclaimer">🪞 표시는 그 나라가 이 API에 직접 보고한 공식 수치가 없어서, 상대국들의 보고를 합산한 추정치를 대신 쓴 경우입니다.</p>
+>>>>>>> Stashed changes:UN3/templates/un_comtrade_matrix.html
     <table>
       <tr><th>국가</th><th>사분면</th><th>수입 성장률(CAGR)</th><th>한국 점유율</th><th>전체 수입액(최근)</th><th>한국 수입액(최근)</th><th></th></tr>
       {% for c in result.candidates %}
@@ -249,6 +351,7 @@
   {% endif %}
 
 <script>
+<<<<<<< Updated upstream:un_v6/templates/un_comtrade_matrix.html
 // HS코드 입력창: 숫자만 최대 6자리 받되, 국제 표준 표기(예: "1905.90")처럼
 // 4자리 입력 후 자동으로 마침표를 찍어준다. 실제 서버에는 숫자만 보낸다
 // (app.py의 _clean_hscode가 한 번 더 걸러내므로 이중으로 안전함).
@@ -262,6 +365,9 @@
 })();
 
 // 수입/수출 토글 (서버 재호출 없이 미리 렌더링된 두 패널을 보이기/숨기기만 전환)
+=======
+// 수입/수출 토글
+>>>>>>> Stashed changes:UN3/templates/un_comtrade_matrix.html
 document.querySelectorAll('.flow-toggle').forEach(function (group) {
   var name = group.dataset.toggleGroup;
   group.querySelectorAll('button').forEach(function (btn) {
@@ -275,30 +381,33 @@ document.querySelectorAll('.flow-toggle').forEach(function (group) {
   });
 });
 
-// 버블 클릭 -> 회색 상세정보 박스 표시
+// 버블 클릭 -> 세부 정보 박스 표시
 (function () {
-  var wrap = document.getElementById('bubble-wrap');
+  var wrap = document.getElementById('matrix-wrap');
   if (!wrap) return;
   var detail = document.getElementById('bubble-detail');
   var fmt = function (n) { return n === '' || n === undefined ? 'N/A' : '$' + Number(n).toLocaleString(); };
 
   wrap.querySelectorAll('.bubble').forEach(function (bubble) {
-    bubble.addEventListener('click', function () {
+    bubble.addEventListener('click', function (e) {
+      e.stopPropagation();
       wrap.querySelectorAll('.bubble').forEach(function (b) { b.classList.remove('selected'); });
       bubble.classList.add('selected');
 
       var d = bubble.dataset;
       detail.innerHTML =
-        '<strong>' + d.rank + '위. ' + d.label + '</strong>' +
+        '<strong>' + d.label + (d.rank !== 'N/A' ? ' (' + d.rank + '위)' : '') + '</strong>' +
         (d.mirror ? '🪞 상대국 보고 기반 추정치<br>' : '') +
-        '품목 수입금액(USD): ' + fmt(d.import) + '<br>' +
-        '한국 수출금액(USD): ' + fmt(d.korea) + '<br>' +
-        '해당품목 수입국가 수: ' + d.suppliers + '개국<br>' +
+        '수입 성장률(CAGR): ' + d.cagr + '%<br>' +
+        '한국 점유율: ' + d.share + '%<br>' +
+        '품목 총 수입액: ' + fmt(d.import) + '<br>' +
+        '한국 수출금액: ' + fmt(d.korea) + '<br>' +
+        (d.suppliers !== 'N/A' ? '수입 공급국 수: ' + d.suppliers + '개국<br>' : '') +
         '<a href="' + d.href + '">이 국가 상세보기 →</a>';
 
       var left = parseFloat(bubble.style.left);
       var top = parseFloat(bubble.style.top);
-      detail.style.left = (left > 60 ? left - 22 : left + 4) + '%';
+      detail.style.left = (left > 60 ? left - 24 : left + 4) + '%';
       detail.style.top = Math.max(top - 4, 4) + '%';
       detail.style.display = 'block';
     });
