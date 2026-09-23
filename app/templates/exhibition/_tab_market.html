@@ -2,6 +2,17 @@
    그대로 이식. 원본은 HS코드/국가를 직접 입력받았지만, 여기선 이미 박람회
    국가 + 등록 제품 HS코드를 알고 있으니 제품별로 자동 표시하고 "조사하기"
    버튼만 누르면 된다. #}
+{% if exchange_info %}
+<div class="exchange-rate-card">
+  <div class="exchange-rate-icon">$</div>
+  <div class="exchange-rate-info">
+    <span class="exchange-rate-label">현재 환율 ({{ exchange_info.currency_code }} → KRW)</span>
+    <strong class="exchange-rate-value">1 {{ exchange_info.currency_code }} = 약 {{ "{:,.0f}".format(exchange_info.rate_krw) }}원</strong>
+  </div>
+  <span class="exchange-rate-note">참고용 · 실시간 아님</span>
+</div>
+{% endif %}
+
 <p class="page-desc">
   UN Comtrade(UN 공식 무역통계)로 글로벌 수입 순위·한국 경쟁력·3개년 성장 추이를 조사합니다.
   여러 후보국과 비교하고 싶으신가요? →

@@ -61,21 +61,12 @@ def register():
         db.session.commit()
 
         login_user(user)
-        flash("회원가입이 완료되었습니다.", "success")
         return redirect(url_for("dashboard.index"))
 
     return render_template("auth/register.html")
 
 
-@bp.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    flash("로그아웃되었습니다.", "info")
-    return redirect(url_for("auth.login"))
-
-
-@bp.route("/edit-profile", methods=["POST"])
+@bp.route("/profile", methods=["POST"])
 @login_required
 def edit_profile():
     name = request.form.get("name", "").strip()
@@ -92,3 +83,11 @@ def edit_profile():
     db.session.commit()
     flash("내 정보를 수정했습니다.", "success")
     return redirect(request.referrer or url_for("dashboard.index"))
+
+
+@bp.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("로그아웃되었습니다.", "info")
+    return redirect(url_for("auth.login"))

@@ -1050,6 +1050,53 @@ body {
   color: #92400e;
 }
 
+.exchange-rate-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid #ebe8e2;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.exchange-rate-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: #f7f6f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.exchange-rate-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.exchange-rate-label {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.exchange-rate-value {
+  font-size: 16px;
+  color: #1a1a1a;
+}
+
+.exchange-rate-note {
+  margin-left: auto;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
 .tariff-card-list {
   display: flex;
   flex-direction: column;
@@ -1799,7 +1846,7 @@ body {
 .world-map {
   padding: 4px 8px;
   background: transparent;
-  width: 80%;
+  width: 85%;
   margin: 0 auto;
 }
 .world-map svg { width: 100%; height: auto; display: block; }
@@ -1822,7 +1869,7 @@ body {
   background: none;
   border: none;
   padding: 0;
-  font-size: 12px;
+  font-size: 14px;
   color: #666;
   cursor: pointer;
   font-family: inherit;
@@ -1839,8 +1886,8 @@ body {
 }
 
 .legend-count {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
+  font-family: inherit;
+  font-size: 12px;
   background: #eee;
   color: #888;
   border-radius: 10px;
