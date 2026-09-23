@@ -4,14 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}사부작{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
   <div class="layout" id="layout-root">
     <aside class="sidebar">
+      {% if current_user.is_authenticated %}
+        <button type="button" id="sidebar-toggle" class="sidebar-toggle" aria-label="사이드바 접기/펴기">☰</button>
+      {% endif %}
+
       <div class="brand-block">
-        <h2 class="brand">사부작</h2>
-        <p class="brand-sub">박람회 운영 대시보드</p>
+        <div class="brand-badge">{% include "_logo_icon.html" %}</div>
+        <div>
+          <h2 class="brand">사부작</h2>
+          <p class="brand-sub">박람회 운영 대시보드</p>
+        </div>
       </div>
 
       {% if current_user.is_authenticated %}
@@ -25,16 +35,16 @@
             <a href="{{ url_for('mypage.index') }}"
                class="{% if request.endpoint == 'mypage.index' %}active{% endif %}">내 제품 관리</a>
             <a href="{{ url_for('contacts.list_contacts') }}"
-               class="{% if request.endpoint and (request.endpoint.startswith('contacts.') or request.endpoint.startswith('followup.') or request.endpoint.startswith('mail_template.') or request.endpoint.startswith('buyer_profile.')) %}active{% endif %}">바이어 메일 관리</a>
+               class="{% if request.endpoint and (request.endpoint.startswith('contacts.') or request.endpoint.startswith('followup.') or request.endpoint.startswith('mail_template.') or request.endpoint.startswith('buyer_profile.')) %}active{% endif %}">바이어 관리</a>
           </nav>
         </div>
 
         <div class="sidebar-section">
           <p class="sidebar-section-title">바로가기</p>
-          <nav>
-            <a href="https://www.gep.or.kr" target="_blank" rel="noopener">↗ KOTRA 한국관 단체 참가</a>
-            <a href="https://www.kati.net" target="_blank" rel="noopener">↗ 정부 수출 지원 사업</a>
-            <a href="https://www.exportvoucher.com" target="_blank" rel="noopener">↗ 중기부 수출바우처</a>
+          <nav class="sidebar-external-links">
+            <a href="https://www.gep.or.kr" target="_blank" rel="noopener">↗ GEP 글로벌전시플랫폼</a>
+            <a href="https://www.kati.net" target="_blank" rel="noopener">↗ KaTi 농식품수출정보</a>
+            <a href="https://www.exportvoucher.com" target="_blank" rel="noopener">↗ 수출지원기반활용사업</a>
           </nav>
         </div>
 
@@ -47,13 +57,6 @@
     </aside>
 
     <div class="main">
-      <header class="topbar">
-        {% if current_user.is_authenticated %}
-          <button type="button" id="sidebar-toggle" class="sidebar-toggle" aria-label="사이드바 접기/펴기">☰</button>
-          <span>{{ current_user.name }}님 환영합니다</span>
-        {% endif %}
-      </header>
-
       <main class="content">
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
