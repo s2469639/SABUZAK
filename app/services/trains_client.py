@@ -44,6 +44,8 @@ ID를 그대로 고정 필터로 쓴다 - 마침 이게 우리가 필요한 카�
 필터링이 된다.
 """
 
+from urllib.parse import quote
+
 import requests
 
 try:
@@ -289,6 +291,13 @@ def to_ntm_measure_rows(country_iso3: str, product_key: str, regulations: list, 
         description = reg.get("measureDescription") or ""
         summary_ko = summarize_regulation_ko(title, description) if summarize else description
 
+        regulation_file = reg.get("regulationFile")
+        web_link = (
+            f"{BASE}/get-regulation-file?filename={quote(regulation_file)}"
+            if regulation_file
+            else ""
+        )
+
         rows.append({
             "reporter": country_iso3,
             "partner": "KOR",
@@ -302,7 +311,7 @@ def to_ntm_measure_rows(country_iso3: str, product_key: str, regulations: list, 
             "implementation_authority": reg.get("issuingAgency") or "",
             "start_date": reg.get("implementationDate") or "",
             "end_date": reg.get("repealDate") or "",
-            "web_link": "",  # regulationFile은 URL이 아니라 파일명이라 링크로 못 씀
+            "web_link": web_link,
             "data_source": "UNCTAD TRAINS",
         })
     return rows
