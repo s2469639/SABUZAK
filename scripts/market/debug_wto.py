@@ -54,6 +54,7 @@ def main():
     p_data.add_argument("--r", default="all", help="reporting economies, 콤마구분 WTO 코드 (기본 all)")
     p_data.add_argument("--pc", default="default", help="품목 분류, 예: HS6 / HS4 / default")
     p_data.add_argument("--ps", default="default", help="기간, 예: 2023 / 2020-2023 / default")
+    p_data.add_argument("--head", default="M", help="H(사람이 읽기 좋은 형태) / M(기계 파싱용, 기본값)")
 
     p_rep = sub.add_parser("reporters", help="국가명으로 WTO 리포터 코드 검색 (ISO3랑 다를 수 있음)")
     p_rep.add_argument("--key", required=True)
@@ -69,7 +70,7 @@ def main():
     elif args.cmd == "reporters":
         call("reporters", args.key, {"name": args.name})
     else:
-        params = {"i": args.indicator, "r": args.r, "pc": args.pc, "ps": args.ps}
+        params = {"i": args.indicator, "r": args.r, "pc": args.pc, "ps": args.ps, "head": args.head}
         call("data", args.key, params)
 
 
