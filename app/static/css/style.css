@@ -1593,6 +1593,17 @@ body {
   cursor: not-allowed;
 }
 
+.concept-image-prompt {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: #f7f6f3;
+  border: 1px solid #ebe8e2;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #6b7280;
+  max-width: 640px;
+}
+
 .regenerate-form {
   margin-top: 16px;
   text-align: center;
