@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from flask_login import UserMixin
@@ -68,6 +69,7 @@ class Exhibition(db.Model):
     website = db.Column(db.Text)
     intro = db.Column(db.Text)
     image_url = db.Column(db.Text)
+    hero_image_url = db.Column(db.Text)
     category = db.Column(db.Text)
     continent = db.Column(db.Text)
     food_yn = db.Column(db.Integer)
@@ -81,6 +83,40 @@ class Exhibition(db.Model):
 
     def __repr__(self):
         return f"<Exhibition {self.name}>"
+
+    _DETAIL_URL_FAIR_ID_RE = re.compile(r"-M(\d+)/")
+
+    @staticmethod
+    def duplicate_ids():
+        """tradefairdates.com이 같은 박람회를 도시 페이지만 다르게 두 번 올려두는
+        경우가 있다 (예: Café & Brasserie Expo Indonesia가 detail_url의 박람회
+        번호는 같은 "M2727"인데 /Jakarta.html, /Tangerang.html로 각각 따로 등록됨).
+
+        이름만으로 묶으면 안 된다 — "Aux Vignobles!"처럼 여러 도시에서 열리는
+        진짜 별개의 지역 박람회 시리즈가 이름을 공유하는 경우가 많아서, 이름
+        기준으로 중복 판정하면 서로 다른 박람회를 잘못 지워버린다. 대신
+        detail_url 안의 "-M<번호>/" 부분(tradefairdates.com이 매기는 박람회 고유
+        번호)이 같은 것끼리만 진짜 중복으로 보고, 그중 가장 완성도 높은(분류·번역
+        완료된, 그중 id가 가장 작은) 것 하나만 남기고 나머지 id를 돌려준다."""
+        rows = (
+            db.session.query(Exhibition.id, Exhibition.detail_url, Exhibition.classified_at)
+            .filter(Exhibition.is_active == 1)
+            .all()
+        )
+        groups = {}
+        for expo_id, detail_url, classified_at in rows:
+            m = Exhibition._DETAIL_URL_FAIR_ID_RE.search(detail_url or "")
+            if not m:
+                continue
+            groups.setdefault(m.group(1), []).append((classified_at is None, expo_id))
+
+        dup_ids = []
+        for items in groups.values():
+            if len(items) < 2:
+                continue
+            items.sort()
+            dup_ids.extend(expo_id for _, expo_id in items[1:])
+        return dup_ids
 
 
 class HsCodeMaster(db.Model):

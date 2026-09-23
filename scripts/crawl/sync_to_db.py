@@ -83,6 +83,7 @@ CREATE TABLE IF NOT EXISTS raw_exhibitions (
     website         TEXT,
     intro           TEXT,
     image_url       TEXT,
+    hero_image_url  TEXT,
     category        TEXT,
     continent       TEXT,
     food_yn         INTEGER,
@@ -105,7 +106,8 @@ CREATE TABLE IF NOT EXISTS raw_exhibitions (
 # 실수로 날리지 않도록 스키마 정의에는 포함해둔다.
 NEW_COLUMNS = [
     "id", "detail_url", "name", "start_date", "end_date", "country", "city", "venue",
-    "audience_note", "website", "intro", "image_url", "category", "continent", "food_yn",
+    "audience_note", "website", "intro", "image_url", "hero_image_url", "category",
+    "continent", "food_yn",
     "scale", "keywords", "intro_ko", "classified_at", "is_active", "last_updated_at",
     "country_ko", "organizer_email", "organizer_phone", "contact_synced_at",
 ]
@@ -168,6 +170,7 @@ def _old_row_to_new(old_cols, row):
         "website": pick("website", "웹사이트", default=""),
         "intro": pick("intro", "상세설명", default=""),
         "image_url": pick("image_url", default=None),
+        "hero_image_url": pick("hero_image_url", default=None),
         "category": pick("category", default=""),
         "continent": pick("continent", "대륙", default=None),
         "food_yn": pick("food_yn", default=None),
@@ -228,16 +231,18 @@ def init_db(conn):
             """
             INSERT INTO raw_exhibitions
                 (id, detail_url, name, start_date, end_date, country, city, venue,
-                 audience_note, website, intro, image_url, category, continent, food_yn,
+                 audience_note, website, intro, image_url, hero_image_url, category,
+                 continent, food_yn,
                  scale, keywords, intro_ko, classified_at, is_active, last_updated_at,
                  country_ko, organizer_email, organizer_phone, contact_synced_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 row.get("id"), new_row["detail_url"], new_row["name"], new_row["start_date"],
                 new_row["end_date"], new_row["country"], new_row["city"], new_row["venue"],
                 new_row["audience_note"], new_row["website"], new_row["intro"],
-                new_row["image_url"], new_row["category"], new_row["continent"],
+                new_row["image_url"], new_row["hero_image_url"], new_row["category"],
+                new_row["continent"],
                 new_row["food_yn"], new_row["scale"], new_row["keywords"], new_row["intro_ko"],
                 new_row["classified_at"], new_row["is_active"], new_row["last_updated_at"],
                 new_row["country_ko"], new_row["organizer_email"], new_row["organizer_phone"],

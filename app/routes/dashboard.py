@@ -23,14 +23,18 @@ CONTINENT_DB_VALUES = {
 def index():
     from app.routes.exhibition import _build_list_context
 
+    dup_ids = Exhibition.duplicate_ids()
+
     counts = {}
     for region, db_values in CONTINENT_DB_VALUES.items():
         counts[region] = Exhibition.query.filter(
-            Exhibition.continent.in_(db_values), Exhibition.is_active == 1
+            Exhibition.continent.in_(db_values),
+            Exhibition.is_active == 1,
+            Exhibition.id.notin_(dup_ids),
         ).count()
 
     all_list_ctx = _build_list_context(
-        Exhibition.query.filter(Exhibition.is_active == 1),
+        Exhibition.query.filter(Exhibition.is_active == 1, Exhibition.id.notin_(dup_ids)),
         "전체 해외",
         "exhibition.expo_list_partial_all",
         {},
