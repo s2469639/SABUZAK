@@ -118,7 +118,7 @@
           <strong>{{ hscode_ctx.overall_best.product.name }}</strong>
           ({{ hscode_ctx.overall_best.product.hs_code }})
           — <strong>{{ hscode_ctx.overall_best.best_regime.regime }}</strong>
-          적용 시 <span class="best-tariff-rate">{{ hscode_ctx.overall_best.best_regime.tariff_ave }}%</span>로 가장 유리
+          적용 시 <span class="best-tariff-rate">{{ hscode_ctx.overall_best.best_regime.display }}</span>로 가장 유리
         </div>
         {% if hscode_ctx.overall_best.certs %}
         <div class="best-tariff-certs">
@@ -138,6 +138,7 @@
           <strong>{{ row.product.hs_code }}</strong>
         </div>
 
+        {% if row.has_data %}
         <table class="tariff-regime-table">
           <thead>
             <tr>
@@ -153,12 +154,15 @@
                 {% if regime.is_best %}<span class="best-pick-tag">추천</span>{% endif %}
               </td>
               <td class="tariff-rate-cell {% if regime.tariff_ave == 0 %}zero{% endif %}">
-                {{ regime.tariff_ave }}%
+                {{ regime.display }}
               </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
+        {% else %}
+        <p class="placeholder-note">이 국가·HS코드 조합의 협정관세 데이터가 없습니다 (해당 협정 미체결이거나 자료 미수록).</p>
+        {% endif %}
 
         {% if row.certs %}
         <div class="cert-badges">
@@ -172,9 +176,8 @@
       {% endfor %}
     </div>
 
-    {% if hscode_ctx.is_estimated %}
-    <p class="placeholder-note">※ {{ expo.country_ko or expo.country }}은(는) 상세 관세 프로필이 아직 없어 추정치로 표시됩니다.</p>
-    {% endif %}
+    <p class="placeholder-note">⚠️ 위 관세율은 농림축산식품부 "농축산물 FTA 협정세율 현황"(공공데이터포털) 자료를 기준으로 하며, 세부 품목별로 예외가 있을 수 있습니다. 실제 통관·수출 전 반드시 관세청 또는 관세사를 통해 최종 세율을 확인하세요.
+    {% if not hscode_ctx.has_country_data %}({{ expo.country_ko or expo.country }}은(는) 이 자료에 협정 정보가 없는 국가입니다 - 한국과 체결된 관세 협정이 없거나 자료에 미수록된 경우입니다.){% endif %}</p>
 
     <div class="section-label-row">
       <h3 class="section-label">
