@@ -504,7 +504,7 @@ def sync_ntm(expo_id, product_id):
 
     try:
         regulations = fetch_regulations_for_country(country_iso, product.hs_code)
-        top6 = top_relevant_regulations(regulations, product.hs_code, limit=6)
+        top6 = top_relevant_regulations(regulations, product.hs_code, product_name=product.name, limit=6)
         rows = to_ntm_measure_rows(country_iso, product.hs_code, top6, summarize=True)
         NtmMeasure.query.filter_by(reporter=country_iso, product=product.hs_code).delete()
         for row in rows:
