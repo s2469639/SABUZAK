@@ -54,6 +54,9 @@ import requests
 REQUEST_DELAY_SEC = 0.6
 # 429(Too Many Requests) 받았을 때 재시도 대기 시간(초), 점점 늘어남
 RETRY_BACKOFF_SEC = [2, 5, 10]
+# 서버가 Retry-After 헤더로 이보다 큰 값을 요구해도 이 이상은 기다리지 않는다
+# (큰 값을 그대로 따르면 로그 없이 오래 멈춰있는 것처럼 보임)
+MAX_RETRY_AFTER_SEC = 15
 
 # TRAINS는 국가를 내부 숫자 ID로만 지정할 수 있어서(ISO코드 매핑을 모름) 나라
 # 하나만 필요할 때도 어쩔 수 없이 전세계(allImposingCountries=True)를 페이지
@@ -218,11 +221,18 @@ def fetch_all_measures_affecting_korea(
             print(f"  [TRAINS] page {page} 응답: {resp.status_code}", flush=True)
             if resp.status_code != 429:
                 break
-            # 서버가 Retry-After를 주면 그만큼, 없으면 다음 백오프값만큼 더 기다린다
+            # 서버가 Retry-After로 대기시간을 알려주기도 하는데, 이 값을 그대로
+            # 믿고 sleep하면 서버가 큰 값(몇십초~그 이상)을 줄 경우 아무 로그도
+            # 없이 통째로 멈춰버린 것처럼 보인다. 그래서 상한(MAX_RETRY_AFTER_SEC)을
+            # 씌우고, 대기 전에 몇 초 기다리는지 꼭 출력한다. (다음 for 반복에서
+            # 어차피 백오프도 다시 도니까 여기서 추가로 자체 대기까지 두 번 잘
+            # 필요는 없음)
             retry_after = resp.headers.get("Retry-After")
             if retry_after:
                 try:
-                    time.sleep(float(retry_after))
+                    wait_sec = min(float(retry_after), MAX_RETRY_AFTER_SEC)
+                    print(f"  [TRAINS] page {page} 429, Retry-After={retry_after}s -> {wait_sec}s 대기", flush=True)
+                    time.sleep(wait_sec)
                 except ValueError:
                     pass
         resp.raise_for_status()
