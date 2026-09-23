@@ -476,10 +476,9 @@ def market_matrix():
 @login_required
 def sync_ntm(expo_id):
     """이 박람회 국가 하나에 대해 UNCTAD TRAINS Online을 그 자리에서 호출해
-    캐시(NtmMeasure)를 채운다. TRAINS의 새 API(denormalisedMeasures)는 국가를
-    UNCTAD 내부 숫자 ID로만 지정할 수 있어서, 전세계를 한 번에 조회한 뒤
-    응답에 포함된 국가명 문자열로 이 박람회 국가에 해당하는 것만 걸러낸다
-    (app/services/trains_client.fetch_regulations_for_country).
+    캐시(NtmMeasure)를 채운다. TRAINS API(denormalisedRegulations)는
+    imposingCountries에 ISO3 코드를 그대로 받기 때문에 이 나라만 콕 집어서
+    바로 조회한다 (app/services/trains_client.fetch_regulations_for_country).
     이후 app/services/hscode.py의 get_country_regulations가 식품 관련도로
     한 번 더 걸러서 보여준다."""
     expo = Exhibition.query.get_or_404(expo_id)

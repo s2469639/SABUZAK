@@ -4,48 +4,41 @@ UNCTAD TRAINS Online(trainsonline.unctad.org) 내부 API 클라이언트.
 macmap.org 대신 사용. macmap은 Cloudflare로 완전히 막혀서(403 + JS challenge)
 requests로는 접근 불가능해졌다.
 
-2026-09 기준 실제로 확인된 엔드포인트(브라우저 개발자도구로 확인, "Detailed
-search" 화면 - 예전에 참고했던 export-regulations는 지금 404가 뜨는 걸 보면
-이미 없어진 것으로 보임):
+2026-09 기준 실제로 확인된 엔드포인트(브라우저 개발자도구 Network 탭 Headers/
+Response 탭으로 직접 확인함 - 예전에 이 파일이 쓰던 denormalisedMeasures는
+더 이상 사이트가 쓰지 않는 옛날 경로였던 것으로 보임, EXPLORE REGULATIONS 화면):
 
-    POST https://api-trains2.unctad.org/denormalisedMeasures
+    POST https://api-trains2.unctad.org/denormalisedRegulations
     Content-Type: application/json
     {
-      "imposingCountries": [202],       # UNCTAD 내부 숫자 ID (ISO코드 아님!)
+      "imposingCountries": ["DEU"],         # ISO3 코드 그대로! (내부 숫자 ID 아님)
       "allImposingCountries": false,
-      "affectedCountries": [117],       # 마찬가지로 내부 숫자 ID
-      "allAffectedCountries": false,
-      "products": [2451798, ...],       # 이것도 내부 숫자 ID (HS코드 아님!)
+      "products": [2451798, ...],           # 내부 숫자 ID (기존 SNACK_PRODUCT_IDS와 동일)
+      "productsHsCodes": ["1905", ...],      # 실제 HS 코드 문자열 (병행으로 같이 보냄)
       "allProducts": false,
+      "NTMType": null, "FromDate": null, "ToDate": null,
       "pageNumber": 1, "pageSize": 20,
       "columnsVisibility": {...},
       "exportTo": "excel"
     }
-    -> JSON 배열 응답 (Excel/CSV 아님). 필드명 그대로 사용 가능:
-       countryImposingNTMs(국가명 문자열), ntmCode, ntmDescription,
-       measureDescription, hsCode, regulationTitle, implementationDate,
-       issuingAgency, regulationFile, affectedCountriesNames, ...
+    -> JSON 배열 응답. 필드명: imposingCountryName, officialTitle,
+       officialTitleOriginal, description, descriptionOriginal,
+       implementationDate, repealDate, source, originalLanguageCode, symbol,
+       publicationSymbol, publicationDate, agencies, documentation, links,
+       ntmTypes, hsCodes, affectedProductsDesc.
+    응답 헤더에 X-Total-Count로 전체 건수가 옴 (Access-Control-Expose-Headers에
+    노출되어 있어 브라우저/requests 양쪽에서 다 읽을 수 있음).
 
-문제: "imposingCountries"/"affectedCountries"/"products"는 ISO코드나
-HS코드가 아니라 UNCTAD 내부 전용 숫자 ID라서, 어떤 코드가 어느 나라/품목인지
-알아내려면 그 나라를 프론트엔드 드롭다운에서 직접 선택해봐야 한다. 그래서
-이 클라이언트는 나라 ID를 몰라도 되도록 **"전체 국가 선택"을 브라우저에서
-직접 해보고 캡처한 실제 요청**을 그대로 흉내낸다: "allImposingCountries":
-true만 보내면 400이 나고, 실제로는 UNCTAD가 아는 모든 나라 ID를
-"imposingCountries" 배열에 통째로 채워서 보내야 한다 (ALL_IMPOSING_COUNTRY_IDS,
-아래 참고). 그 결과에서 응답에 이미 문자열로 들어있는 countryImposingNTMs
-값으로 우리 쪽에서 국가를 매칭한다.
-
-"affectedCountries"는 한국(117) + World(999, EU/World 같은 그룹 ID로 추정)로
-고정. "products"도 "전체 상품" 대신, 사부작 제품군(약과/유과 등)에 해당하는
-"Bread, gingerbread and the like, sweet biscuits..." 카테고리(HS 1905 계열)
-ID를 그대로 고정 필터로 쓴다 - 마침 이게 우리가 필요한 카테고리와 일치해서,
-어차피 국가 전체 규정 중 식품 관련만 추리던 예전 방식보다 오히려 더 정확한
-필터링이 된다.
+중요: "affectedCountries"(어느 나라에 영향을 주는지, 예: 한국) 같은 필터는
+이 API에 아예 없다. 즉 "한국에 영향 주는 규정만" 걸러주는 기능 자체가 없고,
+그냥 "이 나라가 부과한 규정"을 조회하는 것 뿐이다. 그래서 예전 코드처럼
+전세계를 다 긁어서 국가명으로 걸러낼 필요가 없다 - imposingCountries에
+원하는 나라 ISO3 하나만 넣으면 그 나라 것만 바로 온다. 나라별로 직접
+조회 가능해지면서, 예전에 있던 "전세계 조회 후 필터링"과 그로 인한 429/
+장기 IP 차단 문제가 근본적으로 없어진다.
 """
 
 import json
-import threading
 import time
 from pathlib import Path
 from urllib.parse import quote
@@ -53,7 +46,7 @@ from urllib.parse import quote
 import requests
 
 # 페이지 요청 사이 최소 대기 (매너 호출 - 너무 빨리 연달아 부르면 429 뜸, 심하면
-# 장기 IP 차단까지 감. 0.6초는 너무 공격적이었던 것으로 보여 여유있게 늘림)
+# 장기 IP 차단까지 감)
 REQUEST_DELAY_SEC = 2.0
 # 429(Too Many Requests) 받았을 때 재시도 대기 시간(초), 점점 늘어남
 RETRY_BACKOFF_SEC = [2, 5, 10]
@@ -65,64 +58,12 @@ MAX_RETRY_AFTER_SEC = 15
 # 끝낸다. 계속 재시도하면 차단만 더 길어질 수 있음.
 LONG_BAN_THRESHOLD_SEC = 300
 
-# TRAINS는 국가를 내부 숫자 ID로만 지정할 수 있어서(ISO코드 매핑을 모름) 나라
-# 하나만 필요할 때도 어쩔 수 없이 전세계(allImposingCountries=True)를 페이지
-# 단위로 쭉 훑어야 한다. 그런데 박람회 상세페이지에서 "지금 실제 데이터
-# 가져오기" 버튼을 누를 때마다(국가 1개씩) 매번 이 전세계 훑기를 처음부터
-# 다시 하면, 여러 국가를 연달아 조회할 때마다 매번 몇십 페이지를 다시
-# 받아오느라 체감상 "멈춘 것처럼" 오래 걸린다. 그래서 전세계 조회 결과를
-# 프로세스 메모리에 잠깐 캐싱해두고, TTL 안에는 재사용한다.
-_WORLD_CACHE_TTL_SEC = 15 * 60
-_world_cache_lock = threading.Lock()
-_world_cache: dict = {"rows": None, "fetched_at": 0.0}
-
-# 전세계 훑기 도중(429/장기차단/네트워크 에러 등으로) 실패해도 그때까지 모은
-# 페이지는 버리지 않고 여기에 이어서 저장한다. 다음 호출은 처음부터가 아니라
-# 여기서 멈춘 다음 페이지부터 이어서 받는다. _PARTIAL_TTL_SEC이 지나면 너무
-# 오래된 진행상황이라 보고 그냥 처음부터 다시 시작한다.
-_PARTIAL_CACHE_FILE = Path(__file__).resolve().parent.parent.parent / "instance" / "trains_world_partial.json"
-_PARTIAL_TTL_SEC = 6 * 60 * 60  # 6시간
-
-try:
-    import pycountry
-except ImportError:
-    pycountry = None
-
 BASE = "https://api-trains2.unctad.org"
+ENDPOINT = f"{BASE}/denormalisedRegulations"
 UA = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 )
-
-# "Affected Markets"에서 "Korea, Republic of"를 선택했을 때 실제로 확인된
-# UNCTAD 내부 숫자 ID. (imposingCountries와 달리 이건 항상 한국 고정이라
-# 하나만 알면 됨.) 999는 "Select All" 캡처 시 같이 딸려온 ID로, World/EU 같은
-# 그룹을 가리키는 것으로 추정 - 그대로 포함해서 흉내낸다.
-AFFECTED_COUNTRY_IDS = [117, 999]
-
-# "Economies applying the NTMs"에서 "Select All"을 눌렀을 때 실제로 전송된
-# 전체 국가(+그룹) ID 목록. allImposingCountries=true만 보내면 400이 나서,
-# "전체 선택"을 흉내내려면 이 목록을 그대로 같이 보내야 한다.
-ALL_IMPOSING_COUNTRY_IDS = [
-    1, 2, 4, 8, 10, 16, 11, 12, 9, 13, 14, 15, 17, 34, 18, 59, 21, 22, 23, 25,
-    30, 31, 242, 33, 38, 35, 36, 37, 42, 43, 44, 48, 49, 51, 53, 54, 55, 56,
-    57, 58, 110, 52, 60, 61, 63, 234, 64, 68, 215, 66, 279, 72, 73, 75, 80,
-    82, 81, 84, 85, 88, 90, 93, 94, 95, 99, 100, 101, 102, 103, 104, 107,
-    108, 109, 111, 112, 114, 113, 115, 87, 277, 118, 119, 120, 123, 121, 122,
-    124, 127, 128, 131, 132, 134, 135, 168, 137, 138, 139, 167, 142, 143,
-    145, 146, 32, 148, 149, 150, 151, 158, 159, 160, 161, 162, 233, 164, 147,
-    170, 169, 83, 171, 172, 173, 174, 175, 177, 178, 182, 184, 185, 186, 247,
-    197, 198, 199, 200, 202, 203, 205, 28, 207, 117, 209, 41, 213, 216, 217,
-    219, 239, 220, 180, 221, 223, 224, 226, 230, 227, 231, 225, 240, 243,
-    157, 245, 204, 249, 208, 999,
-]
-
-# "Products affected"에서 "Bread, gingerbread and the like, sweet biscuits..."
-# 카테고리(HS 1905 계열 - 약과/유과 등 사부작 제품군과 일치)를 선택했을 때
-# 실제로 전송된 UNCTAD 내부 상품 ID 목록. "전체 상품"이 아니라 이 카테고리로
-# 고정해서 쓴다 (오히려 우리 제품군에 딱 맞는 필터가 됨).
-SNACK_PRODUCT_IDS = [2451798, 2451799, 2451800, 2451802, 2451803, 2451804, 2451805]
-
 HEADERS = {
     "Accept": "application/json, text/plain, */*",
     "Content-Type": "application/json",
@@ -131,45 +72,45 @@ HEADERS = {
     "User-Agent": UA,
 }
 
+# "Products affected"에서 "Bread, gingerbread and the like, sweet biscuits..."
+# 카테고리(HS 1905 계열 - 약과/유과 등 사부작 제품군과 일치)를 선택했을 때
+# 실제로 전송된 UNCTAD 내부 상품 ID + 실제 HS코드. 둘 다 같이 보내는 게
+# 브라우저가 실제로 하는 방식이라 그대로 따름.
+SNACK_PRODUCT_IDS = [2451798, 2451799, 2451800, 2451802, 2451803, 2451804, 2451805]
+SNACK_HS_CODES = ["1905", "190531", "190532", "190510", "190520", "190540", "190590"]
+
 COLUMNS_VISIBILITY = {
-    "countryImposingNTMsVisible": True,
-    "affectedCountriesNamesVisible": True,
-    "ntmCodeVisible": True,
-    "ntmDescriptionVisible": True,
-    "measureDescriptionVisible": True,
-    "productDescriptionVisible": True,
-    "hsCodeVisible": True,
-    "issuingAgencyVisible": True,
-    "regulationTitleVisible": True,
-    "regulationSymbolVisible": False,
-    "implementationDateVisible": True,
-    "regulationFileVisible": True,
-    "regulationOfficialTitleOriginalVisible": False,
-    "measureDescriptionOriginalVisible": False,
-    "measureProductDescriptionOriginalVisible": False,
-    "supportingRegulationsVisible": False,
-    "measureObjectivesOriginalVisible": False,
-    "yearsOfDataCollectionVisible": False,
-    "repealDateVisible": True,
-    "objectiveCodesVisible": True,
+    "imposingCountryName": True,
+    "officialTitle": True,
+    "officialTitleOriginal": False,
+    "implementationDate": True,
+    "repealDate": True,
+    "agencies": True,
+    "hsCodes": True,
+    "affectedProductsDesc": True,
+    "links": True,
+    "documentation": True,
+    "description": True,
+    "descriptionOriginal": False,
+    "source": False,
+    "publicationDate": False,
+    "publicationSymbol": False,
+    "symbol": False,
+    "ntmTypes": True,
 }
 
 
-def _payload(page_number: int, page_size: int) -> dict:
+def _payload(country_iso3: str, page_number: int, page_size: int) -> dict:
     return {
-        "imposingCountries": ALL_IMPOSING_COUNTRY_IDS,
-        "allImposingCountries": True,
+        "imposingCountries": [country_iso3],
+        "allImposingCountries": False,
         "internationalStandardsImposing": False,
-        "affectedCountries": AFFECTED_COUNTRY_IDS,
-        "allAffectedCountries": False,
         "products": SNACK_PRODUCT_IDS,
+        "productsHsCodes": SNACK_HS_CODES,
         "allProducts": False,
         "NTMType": None,
-        "ExcludeHorizontalMeasures": None,
         "FromDate": None,
         "ToDate": None,
-        "IsImportNtm": None,
-        "IsUnilateral": None,
         "pageNumber": page_number,
         "pageSize": page_size,
         "columnsVisibility": COLUMNS_VISIBILITY,
@@ -177,82 +118,70 @@ def _payload(page_number: int, page_size: int) -> dict:
     }
 
 
-def _load_partial_progress():
-    if not _PARTIAL_CACHE_FILE.exists():
-        return [], 1
+# 나라별 조회 결과 캐시(메모리 + 디스크). 박람회 상세페이지에서 여러 나라를
+# 연달아 조회하거나, 디버그 스크립트를 여러 번 재실행해도 CACHE_TTL_SEC
+# 안에는 같은 나라를 다시 네트워크로 긁지 않는다. 디스크에도 저장하는 이유는
+# `python debug_trains_ntm.py`처럼 매번 새 프로세스로 실행하는 스크립트는
+# 메모리 캐시만으로는 재실행할 때마다 초기화된 것과 같기 때문 - 이걸 몰라서
+# 테스트로 반복 실행하다가 실제로 장기 IP 차단을 당한 적이 있다.
+CACHE_TTL_SEC = 6 * 60 * 60  # 6시간
+_CACHE_FILE = Path(__file__).resolve().parent.parent.parent / "instance" / "trains_country_cache.json"
+_memory_cache: dict = {}  # {iso3: {"rows": [...], "fetched_at": ts}}
+
+
+def _load_disk_cache() -> dict:
+    if not _CACHE_FILE.exists():
+        return {}
     try:
-        data = json.loads(_PARTIAL_CACHE_FILE.read_text(encoding="utf-8"))
+        return json.loads(_CACHE_FILE.read_text(encoding="utf-8"))
     except (ValueError, OSError):
-        return [], 1
-    if (time.time() - data.get("fetched_at", 0.0)) >= _PARTIAL_TTL_SEC:
-        return [], 1
-    return data.get("rows", []), data.get("next_page", 1)
+        return {}
 
 
-def _save_partial_progress(rows: list, next_page: int):
+def _save_disk_cache(all_cache: dict):
     try:
-        _PARTIAL_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
-        _PARTIAL_CACHE_FILE.write_text(
-            json.dumps({"rows": rows, "next_page": next_page, "fetched_at": time.time()}, ensure_ascii=False),
-            encoding="utf-8",
-        )
+        _CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        _CACHE_FILE.write_text(json.dumps(all_cache, ensure_ascii=False), encoding="utf-8")
     except OSError:
-        pass  # 진행상황 저장 실패해도 이번 페이지 데이터 자체는 메모리에 남아있으니 계속 진행
+        pass  # 캐싱 실패해도 기능 자체는 계속 동작해야 하므로 조용히 무시
 
 
-def _clear_partial_progress():
-    try:
-        _PARTIAL_CACHE_FILE.unlink(missing_ok=True)
-    except OSError:
-        pass
-
-
-def fetch_all_measures_affecting_korea(
-    page_size: int = 20, max_pages: int = 100, force_refresh: bool = False
+def fetch_regulations_for_country(
+    country_iso3: str, page_size: int = 20, max_pages: int = 20, force_refresh: bool = False
 ) -> list:
-    """한국에 영향을 주는 전세계 비관세조치(NTM)를 전부 가져온다 (페이지네이션 처리).
+    """UNCTAD TRAINS에서 country_iso3(예: 'DEU')가 사부작 제품군(HS 1905류)에
+    대해 부과 중인 규정을 직접 조회한다 (해당 국가만 콕 집어서 조회 - 예전처럼
+    전세계를 다 긁을 필요 없음).
 
-    국가 ID를 몰라도 되도록 전세계(allImposingCountries=true)를 조회하고,
-    각 행의 countryImposingNTMs(국가명 문자열)로 나중에 걸러서 쓴다.
-    응답 형식이 예상과 다르면(리스트가 아니면) 명확한 예외를 던진다.
+    페이지마다 REQUEST_DELAY_SEC만큼 쉬고, 429를 받으면 잠깐 대기 후
+    재시도한다. Retry-After가 비정상적으로 크면(장기 IP 차단) 재시도 없이
+    바로 에러로 끝낸다."""
+    now = time.time()
 
-    page_size 기본값 20: 실제로 500을 보내면 서버가 400 Bad Request로
-    거부하는 걸 확인함 (브라우저가 실제로 쓰는 값인 20으로 검증됨). 더 큰
-    값이 어디까지 허용되는지 확인 안 됐으니 함부로 올리지 말 것.
+    if not force_refresh:
+        cached = _memory_cache.get(country_iso3)
+        if cached and (now - cached["fetched_at"]) < CACHE_TTL_SEC:
+            return cached["rows"]
 
-    페이지마다 REQUEST_DELAY_SEC만큼 쉬고, 429(너무 빠른 연속 호출)를 받으면
-    잠깐 대기 후 재시도한다 (예전엔 딜레이 없이 최대 100번을 연달아 불러서
-    429로 막히는 문제가 있었음).
-
-    결과는 _WORLD_CACHE_TTL_SEC 동안 프로세스 메모리에 캐싱된다. 국가 하나만
-    필요한 호출(fetch_regulations_for_country)도 내부적으로는 이 전세계
-    조회를 쓰기 때문에, 캐싱 없이는 국가를 바꿔가며 조회할 때마다 매번
-    수십 페이지를 처음부터 다시 받아와 매우 느려진다. force_refresh=True면
-    캐시를 무시하고 새로 받는다."""
-    with _world_cache_lock:
-        if (
-            not force_refresh
-            and _world_cache["rows"] is not None
-            and (time.time() - _world_cache["fetched_at"]) < _WORLD_CACHE_TTL_SEC
-        ):
-            return _world_cache["rows"]
-
-    if force_refresh:
-        all_rows, start_page = [], 1
-    else:
-        all_rows, start_page = _load_partial_progress()
-        if start_page > 1:
+        disk_cache = _load_disk_cache()
+        entry = disk_cache.get(country_iso3)
+        if entry and (now - entry.get("fetched_at", 0.0)) < CACHE_TTL_SEC:
             print(
-                f"  [TRAINS] 이전에 중단된 지점부터 이어서 받음 "
-                f"(지금까지 {len(all_rows)}건, page {start_page}부터)",
+                f"  [TRAINS] {country_iso3} 디스크 캐시 사용 "
+                f"(마지막 수집: {now - entry['fetched_at']:.0f}초 전, {len(entry['rows'])}건)",
                 flush=True,
             )
+            _memory_cache[country_iso3] = entry
+            return entry["rows"]
 
-    for page in range(start_page, max_pages + 1):
-        if page > start_page:
+    all_rows = []
+    total_count = None
+    for page in range(1, max_pages + 1):
+        if page > 1:
             time.sleep(REQUEST_DELAY_SEC)
 
-        print(f"  [TRAINS] page {page} 요청 중... (누적 {len(all_rows)}건)", flush=True)
+        total_note = f"/{total_count}" if total_count is not None else ""
+        print(f"  [TRAINS] {country_iso3} page {page} 요청 중... (누적 {len(all_rows)}{total_note}건)", flush=True)
 
         resp = None
         for attempt, backoff in enumerate([0] + RETRY_BACKOFF_SEC):
@@ -261,26 +190,23 @@ def fetch_all_measures_affecting_korea(
             try:
                 # timeout=(연결 타임아웃, 응답 타임아웃) - 연결 자체가 막혀서
                 # 응답이 아예 안 오는 경우(방화벽 등)에도 10초 안에 실패로
-                # 끝나도록 분리. (단일 숫자로 주면 연결/읽기 모두에 60초씩
-                # 적용돼서, 막힌 경우 "영원히 멈춘 것처럼" 보일 수 있었음)
+                # 끝나도록 분리.
                 resp = requests.post(
-                    f"{BASE}/denormalisedMeasures",
-                    json=_payload(page, page_size),
+                    ENDPOINT,
+                    json=_payload(country_iso3, page, page_size),
                     headers=HEADERS,
                     timeout=(10, 60),
                 )
             except requests.exceptions.RequestException as exc:
-                print(f"  [TRAINS] page {page} 요청 실패: {exc}", flush=True)
+                print(f"  [TRAINS] {country_iso3} page {page} 요청 실패: {exc}", flush=True)
                 raise
-            print(f"  [TRAINS] page {page} 응답: {resp.status_code}", flush=True)
+            print(f"  [TRAINS] {country_iso3} page {page} 응답: {resp.status_code}", flush=True)
             if resp.status_code != 429:
                 break
             # 서버가 Retry-After로 대기시간을 알려주기도 하는데, 이 값을 그대로
             # 믿고 sleep하면 서버가 큰 값(몇십초~그 이상)을 줄 경우 아무 로그도
             # 없이 통째로 멈춰버린 것처럼 보인다. 그래서 상한(MAX_RETRY_AFTER_SEC)을
-            # 씌우고, 대기 전에 몇 초 기다리는지 꼭 출력한다. (다음 for 반복에서
-            # 어차피 백오프도 다시 도니까 여기서 추가로 자체 대기까지 두 번 잘
-            # 필요는 없음)
+            # 씌우고, 대기 전에 몇 초 기다리는지 꼭 출력한다.
             retry_after = resp.headers.get("Retry-After")
             if retry_after:
                 try:
@@ -296,9 +222,15 @@ def fetch_all_measures_affecting_korea(
                     )
                 if retry_after_sec is not None:
                     wait_sec = min(retry_after_sec, MAX_RETRY_AFTER_SEC)
-                    print(f"  [TRAINS] page {page} 429, Retry-After={retry_after}s -> {wait_sec}s 대기", flush=True)
+                    print(f"  [TRAINS] {country_iso3} page {page} 429, Retry-After={retry_after}s -> {wait_sec}s 대기", flush=True)
                     time.sleep(wait_sec)
         resp.raise_for_status()
+
+        if total_count is None:
+            header_total = resp.headers.get("X-Total-Count")
+            if header_total and header_total.isdigit():
+                total_count = int(header_total)
+
         try:
             batch = resp.json()
         except ValueError as exc:
@@ -314,120 +246,15 @@ def fetch_all_measures_affecting_korea(
         if not batch:
             break
         all_rows.extend(batch)
-        _save_partial_progress(all_rows, page + 1)
-        if len(batch) < page_size:
+        if len(batch) < page_size or (total_count is not None and len(all_rows) >= total_count):
             break
 
-    _clear_partial_progress()  # 끝까지 다 돌았으니 이어서 받을 필요 없음
-    with _world_cache_lock:
-        _world_cache["rows"] = all_rows
-        _world_cache["fetched_at"] = time.time()
-    return all_rows
-
-
-def _resolve_country_name(name: str):
-    """UNCTAD가 준 국가명 문자열(예: 'Singapore')을 ISO3로 변환.
-    app.services.hscode.resolve_country_iso와 동일한 규칙을 쓰되, 순환
-    import를 피하려 여기서 pycountry를 직접 부른다."""
-    if not name:
-        return None
-    if pycountry is None:
-        return None
-    try:
-        country = pycountry.countries.get(name=name.strip())
-        if country:
-            return country.alpha_3
-        matches = pycountry.countries.search_fuzzy(name.strip())
-        if matches:
-            return matches[0].alpha_3
-    except LookupError:
-        pass
-    return None
-
-
-# 전세계 조회 결과 캐시. sync_ntm 버튼을 여러 박람회(=여러 나라)에서 누를 때마다,
-# 또는 디버그 스크립트를 여러 번 재실행할 때마다 매번 전세계를 다시 긁으면
-# 짧은 시간에 요청이 몰려서 429/장기 IP 차단을 유발하므로, 한 번 긁은 결과를
-# CACHE_TTL_SEC 동안 재사용한다.
-#
-# 파일로도 저장하는 이유: 위쪽 _world_cache는 프로세스 메모리 캐시라서,
-# `python debug_trains_ntm.py`처럼 매번 새 파이썬 프로세스로 실행하는
-# 스크립트는 실행할 때마다 캐시가 초기화된 것과 같다 - 테스트로 여러 번
-# 재실행하면 그때마다 전세계 100페이지를 처음부터 다시 긁어서 실제로 IP
-# 차단을 유발한 적이 있다. 디스크에 저장해두면 프로세스가 바뀌어도
-# CACHE_TTL_SEC 안에는 네트워크 요청 없이 캐시를 재사용한다.
-CACHE_TTL_SEC = 6 * 60 * 60  # 6시간
-_CACHE_FILE = Path(__file__).resolve().parent.parent.parent / "instance" / "trains_world_cache.json"
-_cache_rows = None
-_cache_time = 0.0
-
-
-def _load_disk_cache():
-    if not _CACHE_FILE.exists():
-        return None, 0.0
-    try:
-        data = json.loads(_CACHE_FILE.read_text(encoding="utf-8"))
-        return data.get("rows"), data.get("fetched_at", 0.0)
-    except (ValueError, OSError):
-        return None, 0.0
-
-
-def _save_disk_cache(rows: list, fetched_at: float):
-    try:
-        _CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
-        _CACHE_FILE.write_text(
-            json.dumps({"rows": rows, "fetched_at": fetched_at}, ensure_ascii=False),
-            encoding="utf-8",
-        )
-    except OSError:
-        pass  # 캐싱 실패해도 기능 자체는 계속 동작해야 하므로 조용히 무시
-
-
-def fetch_all_measures_affecting_korea_cached(page_size: int = 20, max_pages: int = 100) -> list:
-    """fetch_all_measures_affecting_korea()와 같지만, CACHE_TTL_SEC 이내 재호출 시
-    실제 HTTP 요청 없이 캐시된 결과를 그대로 반환한다 (메모리 -> 디스크 순으로 확인)."""
-    global _cache_rows, _cache_time
     now = time.time()
-    if _cache_rows is not None and (now - _cache_time) < CACHE_TTL_SEC:
-        return _cache_rows
-
-    disk_rows, disk_time = _load_disk_cache()
-    if disk_rows is not None and (now - disk_time) < CACHE_TTL_SEC:
-        print(f"  [TRAINS] 디스크 캐시 사용 (마지막 수집: {now - disk_time:.0f}초 전, {len(disk_rows)}건)", flush=True)
-        _cache_rows, _cache_time = disk_rows, disk_time
-        return disk_rows
-
-    rows = fetch_all_measures_affecting_korea(page_size=page_size, max_pages=max_pages)
-    _cache_rows = rows
-    _cache_time = now
-    _save_disk_cache(rows, now)
-    return rows
-
-
-def fetch_regulations_for_country(country_iso3: str, page_size: int = 20) -> list:
-    """전세계 조회 결과 중 country_iso3(예: 'SGP')에 해당하는 것만 걸러서 반환.
-    전세계 조회 자체는 캐시를 타므로, 다른 나라를 연달아 조회해도 실제 TRAINS
-    호출은 캐시 만료 전까지 한 번만 나간다."""
-    all_rows = fetch_all_measures_affecting_korea_cached(page_size=page_size)
-    matched = []
-    for row in all_rows:
-        row_iso3 = _resolve_country_name(row.get("countryImposingNTMs"))
-        if row_iso3 == country_iso3:
-            matched.append(row)
-    return matched
-
-
-def group_measures_by_country(all_rows: list) -> dict:
-    """fetch_all_measures_affecting_korea()로 받은 전세계 결과를 국가(ISO3)별로
-    묶는다. 여러 나라를 한 번에 캐싱할 때(sync_ntm_cache.py) 나라마다 다시
-    전세계 조회를 반복하지 않도록 쓴다. 국가명을 ISO3로 못 바꾼 행은 버린다."""
-    grouped = {}
-    for row in all_rows:
-        iso3 = _resolve_country_name(row.get("countryImposingNTMs"))
-        if not iso3:
-            continue
-        grouped.setdefault(iso3, []).append(row)
-    return grouped
+    _memory_cache[country_iso3] = {"rows": all_rows, "fetched_at": now}
+    disk_cache = _load_disk_cache()
+    disk_cache[country_iso3] = {"rows": all_rows, "fetched_at": now}
+    _save_disk_cache(disk_cache)
+    return all_rows
 
 
 # 식품/농산물 수출과 관련 있을 법한 규정을 상위로 올리는 키워드
@@ -442,9 +269,8 @@ _FOOD_RELEVANCE_KEYWORDS = [
 
 def _relevance_score(reg: dict) -> int:
     text = " ".join([
-        reg.get("regulationTitle") or "",
-        reg.get("measureDescription") or "",
-        reg.get("ntmDescription") or "",
+        reg.get("officialTitle") or "",
+        reg.get("description") or "",
     ]).lower()
     return sum(1 for kw in _FOOD_RELEVANCE_KEYWORDS if kw in text)
 
@@ -486,34 +312,37 @@ def summarize_regulation_ko(title: str, description: str) -> str:
 
 
 def to_ntm_measure_rows(country_iso3: str, product_key: str, regulations: list, summarize: bool = True) -> list:
-    """denormalisedMeasures 응답 dict 리스트 -> NtmMeasure(**row)에 바로 넣을 dict 리스트.
+    """denormalisedRegulations 응답 dict 리스트 -> NtmMeasure(**row)에 바로 넣을 dict 리스트.
     summarize=True면 각 항목을 한국어 1~2문장으로 요약해서 저장한다 (호출부에서
     이미 top_relevant_regulations로 최대 6개까지 추린 뒤에 넘기는 걸 권장 -
     그래야 AI 요약 호출 횟수도 6번으로 제한됨)."""
     rows = []
     for reg in regulations:
-        title = reg.get("regulationTitle") or reg.get("ntmDescription") or ""
-        description = reg.get("measureDescription") or ""
+        title = reg.get("officialTitle") or ""
+        description = reg.get("description") or ""
         summary_ko = summarize_regulation_ko(title, description) if summarize else description
 
-        regulation_file = reg.get("regulationFile")
-        web_link = (
-            f"{BASE}/get-regulation-file?filename={quote(regulation_file)}"
-            if regulation_file
-            else ""
-        )
+        # documentation은 파일명만 옴(예: "CHN_..._1.pdf"). links가 있으면 그걸
+        # 우선 쓰고, 없으면 예전에 쓰던 get-regulation-file 경로로 추정해서
+        # 만든다 (이 경로가 새 API에서도 유효한지는 아직 미확인 - 안 열리면
+        # documentation 필드를 다른 방식으로 다뤄야 함).
+        web_link = reg.get("links") or ""
+        if not web_link:
+            documentation = reg.get("documentation")
+            if documentation:
+                web_link = f"{BASE}/get-regulation-file?filename={quote(documentation)}"
 
         rows.append({
             "reporter": country_iso3,
             "partner": "KOR",
             "product": product_key,
-            "measure_code": reg.get("ntmCode") or "",
-            "measure_section": reg.get("ntmType") or "",
+            "measure_code": reg.get("hsCodes") or "",
+            "measure_section": reg.get("ntmTypes") or "",
             "measure_title": title,
             "measure_summary": summary_ko,
             "legislation_title": title,
             "legislation_summary": summary_ko,
-            "implementation_authority": reg.get("issuingAgency") or "",
+            "implementation_authority": reg.get("agencies") or "",
             "start_date": reg.get("implementationDate") or "",
             "end_date": reg.get("repealDate") or "",
             "web_link": web_link,

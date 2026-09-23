@@ -1,6 +1,6 @@
 """
-UNCTAD TRAINS Online의 denormalisedMeasures API가 실제로 뭘 돌려주는지 확인하는
-디버그 스크립트.
+UNCTAD TRAINS Online의 denormalisedRegulations API가 실제로 뭘 돌려주는지
+확인하는 디버그 스크립트.
 
 사용법 (sabuzak/scripts/market 에서):
     python debug_trains_ntm.py --country Singapore
@@ -27,13 +27,13 @@ def main():
         print("!! ISO3 변환 실패.")
         return
 
-    print(f"\nTRAINS 호출: country={iso3} (전세계 조회 후 국가명으로 필터링, 시간이 좀 걸릴 수 있음)")
+    print(f"\nTRAINS 호출: country={iso3} (이 나라만 바로 조회)")
     regulations = fetch_regulations_for_country(iso3)
 
     print(f"\n파싱된 규정 수: {len(regulations)}")
     for r in regulations[:5]:
         print("-" * 40)
-        for k in ("countryImposingNTMs", "ntmCode", "regulationTitle", "hsCode", "implementationDate"):
+        for k in ("imposingCountryName", "officialTitle", "hsCodes", "implementationDate", "agencies"):
             if r.get(k):
                 print(f"  {k}: {r[k]}")
 

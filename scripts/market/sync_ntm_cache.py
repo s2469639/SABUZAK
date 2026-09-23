@@ -7,11 +7,10 @@ macmap.org는 Cloudflare로 막혀서(403 + JS challenge) requests로 접근 불
 포기했고, macmap이 원래 참조하는 원본 데이터 출처인 TRAINS Online으로 교체했다.
 로그인/세션쿠키 없이 호출 가능해서 macmap보다 오히려 쉽다.
 
-주의: TRAINS의 현재 API(denormalisedMeasures)는 국가를 UNCTAD 내부 숫자
-ID로만 지정할 수 있어서(ISO코드 아님), 나라별로 따로 조회하는 대신
-**전세계를 한 번만 조회**하고 응답에 포함된 국가명 문자열로 우리 쪽에서
-나라별로 묶는다 (app.services.trains_client.group_measures_by_country).
-이후 웹앱(app/services/hscode.py의 get_country_regulations)이 식품/농산물
+TRAINS의 현재 API(denormalisedRegulations)는 imposingCountries에 ISO3
+코드를 그대로 받아서, 나라별로 바로바로 따로 조회한다
+(app.services.trains_client.fetch_regulations_for_country). 이후
+웹앱(app/services/hscode.py의 get_country_regulations)이 식품/농산물
 관련도로 한 번 더 걸러서 보여준다.
 
 웹앱은 이 캐시 테이블만 읽고, TRAINS를 직접 호출하지 않는다 (박람회 상세
@@ -39,8 +38,7 @@ from app.extensions import db  # noqa: E402
 from app.models import Exhibition, NtmMeasure  # noqa: E402
 from app.services.hscode import resolve_country_iso  # noqa: E402
 from app.services.trains_client import (  # noqa: E402
-    fetch_all_measures_affecting_korea,
-    group_measures_by_country,
+    fetch_regulations_for_country,
     to_ntm_measure_rows,
     top_relevant_regulations,
 )
@@ -95,24 +93,13 @@ def main():
 
         print(f"대상: {len(countries)}개국 (UNCTAD TRAINS Online)")
 
-        # 새 API는 국가를 UNCTAD 내부 숫자 ID로만 지정할 수 있어서, 나라별로
-        # 따로 조회하는 대신 전세계를 한 번만 조회하고 국가명으로 묶는다.
-        print("전세계 데이터 조회 중 (한 번만 호출, 페이지네이션 처리)...")
-        try:
-            all_rows = fetch_all_measures_affecting_korea()
-        except Exception as e:
-            print(f"전세계 조회 실패: {e}")
-            return
-        print(f"전세계 {len(all_rows)}건 수신, 국가별로 분류 중...")
-        grouped = group_measures_by_country(all_rows)
-
         total_rows = 0
         failed = 0
 
         for i, iso3 in enumerate(countries, 1):
             print(f"[{i}/{len(countries)}] country={iso3}")
             try:
-                regulations = grouped.get(iso3, [])
+                regulations = fetch_regulations_for_country(iso3)
                 top6 = top_relevant_regulations(regulations, limit=6)
                 rows = to_ntm_measure_rows(iso3, "ALL", top6, summarize=True)
                 NtmMeasure.query.filter_by(reporter=iso3, product="ALL").delete()
