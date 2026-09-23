@@ -11,19 +11,26 @@
     </div>
   </div>
 
+  {% if not (row.specs.target_price and row.specs.certifications and row.specs.strengths) %}
+  <p class="placeholder-note">
+    ⚠️ 목표 가격대·보유 인증·식감 정보가 일부 비어있으면 분석 품질이 떨어질 수 있어요.
+    <a href="{{ url_for('mypage.index') }}">마이페이지 제품 관리</a>에서 채워주세요.
+  </p>
+  {% endif %}
+
   <form method="post" action="{{ url_for('exhibition.trend_research', expo_id=expo.id, product_id=row.product.id) }}" class="mta-form">
     <div class="mta-form-grid">
       <div>
         <span class="un-field-label">목표 소매 가격대/단위중량</span>
-        <input type="text" name="target_price" placeholder="예: 4.99 GBP / 350g" value="{{ row.specs.target_price }}">
+        <p class="page-desc">{{ row.specs.target_price or '미입력' }}</p>
       </div>
       <div>
         <span class="un-field-label">보유 인증</span>
-        <input type="text" name="certifications" placeholder="예: 비건, 코셔, HACCP" value="{{ row.specs.certifications }}">
+        <p class="page-desc">{{ row.specs.certifications or '미입력' }}</p>
       </div>
       <div>
         <span class="un-field-label">식감/가공 메커니즘</span>
-        <input type="text" name="strengths" placeholder="예: 얇고 쫄깃한 만두피, 버섯 채즙" value="{{ row.specs.strengths }}">
+        <p class="page-desc">{{ row.specs.strengths or '미입력' }}</p>
       </div>
       <div>
         <span class="un-field-label">박람회 개최월</span>

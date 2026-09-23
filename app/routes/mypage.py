@@ -91,6 +91,9 @@ def add_product():
     name = request.form.get("name", "").strip()
     hs_code = request.form.get("hs_code", "").strip()
     ingredients = request.form.get("ingredients", "").strip()
+    target_price = request.form.get("target_price", "").strip()
+    certifications = request.form.get("certifications", "").strip()
+    strengths = request.form.get("strengths", "").strip()
     next_param = request.form.get("next")
 
     if name and hs_code:
@@ -114,6 +117,9 @@ def add_product():
                 form_name=name,
                 form_hs_code=hs_code,
                 form_ingredients=ingredients,
+                form_target_price=target_price,
+                form_certifications=certifications,
+                form_strengths=strengths,
             )
 
         product = Product(
@@ -121,6 +127,9 @@ def add_product():
             name=name,
             hs_code=hs_code,
             ingredients=ingredients or None,
+            target_price=target_price or None,
+            certifications=certifications or None,
+            strengths=strengths or None,
         )
         db.session.add(product)
         db.session.commit()
@@ -137,6 +146,9 @@ def edit_product(product_id):
     name = request.form.get("name", "").strip()
     hs_code = request.form.get("hs_code", "").strip()
     ingredients = request.form.get("ingredients", "").strip()
+    target_price = request.form.get("target_price", "").strip()
+    certifications = request.form.get("certifications", "").strip()
+    strengths = request.form.get("strengths", "").strip()
 
     if not name or not hs_code:
         flash("제품명과 HS코드는 필수입니다.", "danger")
@@ -150,6 +162,9 @@ def edit_product(product_id):
     product.name = name
     product.hs_code = hs_code
     product.ingredients = ingredients or None
+    product.target_price = target_price or None
+    product.certifications = certifications or None
+    product.strengths = strengths or None
     db.session.commit()
     flash(f"'{name}' 제품을 수정했습니다.", "success")
 

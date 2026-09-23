@@ -44,6 +44,9 @@ class Product(db.Model):
     name = db.Column(db.String(150), nullable=False)
     hs_code = db.Column(db.String(20), nullable=False)
     ingredients = db.Column(db.Text)
+    target_price = db.Column(db.String(100))  # 목표 소매 가격대/단위중량 (예: "4.99 GBP / 350g")
+    certifications = db.Column(db.String(200))  # 보유 인증 (예: "비건, 코셔, HACCP")
+    strengths = db.Column(db.Text)  # 식감/가공 메커니즘
     is_checked = db.Column(db.Boolean, default=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

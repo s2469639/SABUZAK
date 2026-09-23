@@ -318,13 +318,16 @@ def _exhibition_month(expo):
 
 
 def _default_trend_specs(expo, product):
+    """제품관리(마이페이지)에 등록해둔 목표가/인증/식감 정보를 그대로 쓴다
+    (예전엔 이 탭에서 매번 다시 입력받았는데, 어차피 제품 고유 정보라
+    마이페이지 제품 등록/수정 폼으로 옮겼다)."""
     return {
         "product_name": product.name,
         "country": expo.country_ko or expo.country or "",
         "ingredients": product.ingredients or "",
-        "target_price": "",
-        "certifications": "",
-        "strengths": "",
+        "target_price": product.target_price or "",
+        "certifications": product.certifications or "",
+        "strengths": product.strengths or "",
         "exhibition_month": _exhibition_month(expo),
     }
 
@@ -381,9 +384,6 @@ def trend_research(expo_id, product_id):
     product = Product.query.filter_by(id=product_id, user_id=current_user.id).first_or_404()
 
     specs = _default_trend_specs(expo, product)
-    specs["target_price"] = request.form.get("target_price", "").strip()
-    specs["certifications"] = request.form.get("certifications", "").strip()
-    specs["strengths"] = request.form.get("strengths", "").strip()
     specs["exhibition_month"] = request.form.get("exhibition_month", "").strip() or specs["exhibition_month"]
     force = bool(request.form.get("force"))
 
