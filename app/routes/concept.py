@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.models import ConceptDraft, Exhibition, Product
-from app.services.llm import generate_booth_concept
+from app.services.booth_concept import generate_booth_concept
 
 bp = Blueprint("concept", __name__, url_prefix="/concept")
 
@@ -75,13 +75,15 @@ def generate(draft_id):
     )
 
     result = generate_booth_concept(expo, products)
+    theme = result.get("booth_theme", {})
 
-    draft.theme = result.get("theme", "")
-    draft.slogan = result.get("slogan", "")
-    draft.description = result.get("description", "")
+    draft.theme = theme.get("title", "")
+    draft.slogan = theme.get("slogan", "")
+    draft.description = theme.get("description", "")
     draft.selling_points = json.dumps(result.get("selling_points", []), ensure_ascii=False)
-    draft.events = json.dumps(result.get("events", []), ensure_ascii=False)
+    draft.events = json.dumps(result.get("event_plans", []), ensure_ascii=False)
     draft.target_buyers = json.dumps(result.get("target_buyers", []), ensure_ascii=False)
+    draft.image_prompt = result.get("image_generation", {}).get("prompt", "")
     db.session.commit()
 
     return redirect(url_for("concept.detail", draft_id=draft.id))

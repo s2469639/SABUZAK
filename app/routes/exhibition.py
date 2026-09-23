@@ -391,8 +391,15 @@ def trend_research(expo_id, product_id):
     force = bool(request.form.get("force"))
 
     try:
-        market_trend.run_analysis(specs, force=force)
-        flash(f"{product.name} · {specs['country']} 시장·트렌드 분석을 가져왔습니다.", "success")
+        payload = market_trend.run_analysis(specs, force=force)
+        if payload.get("news", {}).get("is_error"):
+            flash(
+                f"뉴스/트렌드 API 키가 없거나 오류가 있어 분석을 저장하지 못했습니다: "
+                f"{payload['news'].get('summary')}",
+                "danger",
+            )
+        else:
+            flash(f"{product.name} · {specs['country']} 시장·트렌드 분석을 가져왔습니다.", "success")
     except Exception as e:
         flash(f"시장·트렌드 분석 중 오류가 발생했습니다: {e}", "danger")
 

@@ -183,9 +183,10 @@ class ConceptDraft(db.Model):
     theme = db.Column(db.Text)
     slogan = db.Column(db.Text)
     description = db.Column(db.Text)
-    selling_points = db.Column(db.Text)  # JSON: [{level, title, desc}, ...]
-    events = db.Column(db.Text)  # JSON: [{tag, title, desc, timing}, ...]
+    selling_points = db.Column(db.Text)  # JSON: [{badge, title, description}, ...]
+    events = db.Column(db.Text)  # JSON: [{id, tag, title, schedule, description}, ...]
     target_buyers = db.Column(db.Text)  # JSON: ["...", ...]
+    image_prompt = db.Column(db.Text)  # 3D 렌더링용 완성형 영문 프롬프트
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

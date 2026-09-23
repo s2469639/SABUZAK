@@ -53,9 +53,9 @@
 <div class="selling-point-grid">
   {% for sp in selling_points %}
   <div class="selling-point-card">
-    <span class="sp-level-tag level-{{ sp.level }}">{{ sp.level }}</span>
+    <span class="sp-level-tag level-{{ sp.badge }}">{{ sp.badge }}</span>
     <strong>{{ sp.title }}</strong>
-    <p>{{ sp.desc }}</p>
+    <p>{{ sp.description }}</p>
   </div>
   {% endfor %}
 </div>
@@ -66,15 +66,15 @@
 <div class="event-list">
   {% for event in events %}
   <div class="event-row">
-    <span class="event-index">{{ "%02d"|format(loop.index) }}</span>
+    <span class="event-index">{{ event.id or "%02d"|format(loop.index) }}</span>
     <div class="event-main">
       <div class="event-title-row">
         <strong>{{ event.title }}</strong>
         <span class="event-tag">{{ event.tag }}</span>
       </div>
-      <p>{{ event.desc }}</p>
+      <p>{{ event.description }}</p>
     </div>
-    <span class="event-timing">{{ event.timing }}</span>
+    <span class="event-timing">{{ event.schedule }}</span>
   </div>
   {% endfor %}
 </div>
@@ -92,7 +92,12 @@
 <div class="card concept-image-card">
   <div>
     <p class="section-eyebrow">부스 컨셉 예상 이미지</p>
+    {% if draft.image_prompt %}
+    <p class="placeholder-note">실제 이미지 생성은 준비 중입니다. 아래 프롬프트를 Midjourney/DALL-E에 직접 붙여넣어 미리 확인할 수 있어요.</p>
+    <p class="concept-image-prompt">{{ draft.image_prompt }}</p>
+    {% else %}
     <p class="placeholder-note">AI 이미지 생성은 준비 중입니다.</p>
+    {% endif %}
   </div>
   <button type="button" class="btn-primary" disabled title="준비 중">AI 이미지 생성</button>
 </div>
