@@ -86,4 +86,4 @@ class FollowupEmail(db.Model):
     # sent_at/status는 지금 작성 중인 초안 상태를 나타내고, last_sent_at은 발송 이력을 나타낸다.
     last_sent_at = db.Column(db.DateTime)
 
-# 채주현 바보
+# 채주현 바보바보
