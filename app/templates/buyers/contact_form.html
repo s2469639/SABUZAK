@@ -4,8 +4,13 @@
 {% block content %}
 {% include "buyers/_nav.html" %}
 
-<h1>{{ '바이어 수정' if contact else '바이어 등록' }}</h1>
-<p class="page-desc">아래 항목은 모두 박람회에서 만난 <strong>상대방(바이어)</strong> 정보입니다.</p>
+<div class="page-header">
+  <div>
+    <h1>{{ '바이어 수정' if contact else '바이어 등록' }}</h1>
+    <p class="page-desc">아래 항목은 모두 박람회에서 만난 <strong>상대방(바이어)</strong> 정보입니다.</p>
+  </div>
+  <a href="{{ url_for('contacts.list_contacts') }}" class="btn-secondary">← 바이어 목록으로</a>
+</div>
 
 {% if not exhibitions %}
 <p class="page-desc">등록된 박람회가 없습니다.</p>

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}바이어 메일 관리 | 사부작{% endblock %}
+{% block title %}바이어 관리 | 사부작{% endblock %}
 
 {% block content %}
 {% include "buyers/_nav.html" %}
@@ -9,7 +9,7 @@
     <h1>바이어 목록</h1>
     <p class="page-desc">박람회에서 만난 바이어 연락처와 팔로업 메일 이력을 관리합니다</p>
   </div>
-  <div class="actions">
+  <div class="page-header-actions">
     <button type="submit" form="bulk-send-form" class="btn-primary">선택 발송</button>
     <a class="btn-secondary" href="{{ url_for('contacts.new_contact') }}">+ 바이어 등록</a>
   </div>

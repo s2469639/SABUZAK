@@ -34,10 +34,16 @@ REQUIRED_KEYS = {
 
 
 def ensure_required_keys():
-    """필요한 키가 .env/환경변수에 없으면 터미널에서 직접 입력받는다."""
+    """필요한 키가 .env/환경변수에 없으면 터미널에서 직접 입력받는다.
+
+    load_dotenv(override=True): 에디터가 터미널을 열 때 .env를 미리 한 번
+    읽어서 터미널 환경변수에 넣어두는 경우가 있는데, 그 뒤에 .env 파일
+    내용을 고쳐도 이미 열려있던 터미널엔 옛날/빈 값이 그대로 남아있어서
+    반영이 안 되는 문제가 실제로 있었다. override=True로 ".env 파일이
+    항상 최종 진실"이 되게 한다."""
     from dotenv import load_dotenv
 
-    load_dotenv(ENV_PATH)
+    load_dotenv(ENV_PATH, override=True)
 
     for env_name, label in REQUIRED_KEYS.items():
         if os.getenv(env_name):

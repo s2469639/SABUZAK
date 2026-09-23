@@ -106,15 +106,28 @@ def _locate_env_file():
 def get_config():
     """OpenAI 클라이언트 + Comtrade 구독키를 준비한다.
     키가 없으면 RuntimeError (Flask 요청 중 sys.exit()을 부르면 서버가
-    죽어버리는 문제가 있어서 예외로 처리 — 다른 두 기능과 동일한 이유)."""
-    load_dotenv(_locate_env_file())
+    죽어버리는 문제가 있어서 예외로 처리 — 다른 두 기능과 동일한 이유).
+
+    load_dotenv(override=True): python-dotenv는 기본값이 "os.environ에 이미
+    그 이름의 값이 있으면 .env 내용으로 덮어쓰지 않음"이다. VS Code 등
+    에디터가 터미널을 열 때 워크스페이스의 .env를 자동으로 한 번 읽어서
+    터미널 환경변수에 미리 넣어두는 경우가 있는데, 그 상태에서 나중에
+    .env 파일 내용을 고쳐도 이미 열려있던 터미널에는 옛날 값(또는 빈 값)이
+    그대로 남아있어서 반영이 안 되는 문제가 실제로 있었다. override=True로
+    ".env 파일이 항상 최종 진실"이 되게 한다."""
+    env_path = _locate_env_file()
+    load_dotenv(env_path, override=True)
     openai_key = os.getenv("OPENAI_API_KEY") or os.getenv("LLM_API_KEY")
     comtrade_key = os.getenv("UN_COMTRADE_SUBSCRIPTION_KEY")
     if not openai_key:
-        raise RuntimeError("OPENAI_API_KEY가 설정되어 있지 않습니다 (.env 파일 확인).")
+        raise RuntimeError(
+            f"OPENAI_API_KEY가 설정되어 있지 않습니다 "
+            f"(찾아본 .env 경로: {env_path}, 파일 존재: {os.path.exists(env_path)})."
+        )
     if not comtrade_key:
         raise RuntimeError(
-            "UN_COMTRADE_SUBSCRIPTION_KEY가 설정되어 있지 않습니다 (.env 파일 확인). "
+            f"UN_COMTRADE_SUBSCRIPTION_KEY가 설정되어 있지 않습니다 "
+            f"(찾아본 .env 경로: {env_path}, 파일 존재: {os.path.exists(env_path)}). "
             "comtradeplus.un.org에서 무료로 가입하면 자동 승인됩니다."
         )
     return OpenAI(api_key=openai_key), comtrade_key

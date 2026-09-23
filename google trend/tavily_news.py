@@ -1,66 +1,50 @@
-import os
 import json
+import logging
+import os
+
+from dotenv import load_dotenv
 from openai import OpenAI
 from tavily import TavilyClient
-from dotenv import load_dotenv
 
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
-openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY") or os.getenv("LLM_API_KEY"))
-tavily_key = os.getenv("TAVILY_API_KEY")
-tavily_client = TavilyClient(api_key=tavily_key) if tavily_key else None
+load_dotenv()
+logger = logging.getLogger("sabusak.tavily")
 
-def search_tavily_news(country_name: str, product_name: str) -> tuple[list, list]:
-    """
-    Tavily를 활용해 개최국 시장의 최근 식품/스낵 트렌드 뉴스 수집
-    """
-    if not tavily_client:
-        return ["TAVILY_API_KEY 미설정"], []
 
-    # 1. 현지 시장 조사를 위한 영문 검색 키워드 3개 생성
-    prompt = f"""
-    국가: {country_name}
-    제품: {product_name}
+def get_tavily_news(product_name: str, country: str) -> dict:
+    tavily_key = os.getenv("TAVILY_API_KEY")
+    openai_key = os.getenv("OPENAI_API_KEY")
+    if not tavily_key or not openai_key:
+        return {"overall_summary_ko": "API 키가 설정되지 않았습니다.", "insights": []}
 
-    위 국가의 최신 제과/스낵 시장 동향, 수입 식품 트렌드, 소비자 반응을 조사하기 위한 영문 검색 쿼리 3개를 JSON으로 작성하세요.
-    반드시 아래 포맷으로 응답하세요:
-    {{"queries": ["query 1", "query 2", "query 3"]}}
-    """
     try:
-        res = openai_client.chat.completions.create(
+        t_client = TavilyClient(api_key=tavily_key)
+        o_client = OpenAI(api_key=openai_key)
+
+        query = f"{product_name} {country} food market trends news"
+        results = t_client.search(query=query, search_depth="advanced", max_results=3).get("results", [])
+
+        insights = []
+        for r in results:
+            content = r.get("content", "")
+            insights.append({
+                "title": r.get("title"),
+                "url": r.get("url"),
+                "summary": content[:200] + ("..." if len(content) > 200 else ""),
+            })
+
+        summary_prompt = f"""
+        당신은 F&B 시장조사원입니다. 아래 {country}의 {product_name} 관련 뉴스 검색결과를 종합하여
+        한국어 2문장으로 전체 트렌드를 요약하세요:
+        {json.dumps(insights, ensure_ascii=False)}
+        """
+        resp = o_client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}],
-            response_format={"type": "json_object"},
-            temperature=0.0
+            messages=[{"role": "user", "content": summary_prompt}],
+            temperature=0.2,
         )
-        queries = json.loads(res.choices[0].message.content).get("queries", [])
-    except Exception:
-        queries = [f"{product_name} market trends {country_name}", f"snack industry in {country_name}"]
+        overall_summary = resp.choices[0].message.content.strip()
 
-    # 2. Tavily 뉴스 검색 실행
-    articles = []
-    seen_urls = set()
-    for q in queries[:2]:  # API 쿼터 절약을 위해 상위 2개 쿼리 실행
-        try:
-            response = tavily_client.search(
-                query=q,
-                search_depth="advanced",
-                topic="news",
-                days=180,
-                max_results=2
-            )
-            for r in response.get("results", []):
-                url = r.get("url")
-                if not url or url in seen_urls:
-                    continue
-                seen_urls.add(url)
-                articles.append({
-                    "query": q,
-                    "title": r.get("title"),
-                    "url": url,
-                    "summary": r.get("content", "")[:200] + "...",
-                    "published_date": r.get("published_date")
-                })
-        except Exception as e:
-            print(f"Tavily 검색 에러 ({q}): {e}")
-
-    return queries, articles
+        return {"overall_summary_ko": overall_summary, "insights": insights}
+    except Exception as e:
+        logger.error("Tavily 뉴스 수집 오류: %s", e)
+        return {"overall_summary_ko": "최신 뉴스를 가져오는 중 오류가 발생했습니다.", "insights": []}
