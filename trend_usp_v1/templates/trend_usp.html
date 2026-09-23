@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>시장 트렌드 & USP 진단</title>
+<style>
+  :root {
+    --bg: #0f1623;
+    --panel: #172131;
+    --panel-2: #1d2a3d;
+    --line: #2a3a52;
+    --text: #e6ebf2;
+    --muted: #93a1b5;
+    --accent: #5b8def;
+    --green: #3ecf8e;
+    --green-bg: rgba(62, 207, 142, .12);
+    --red: #ff6b6b;
+    --red-bg: rgba(255, 107, 107, .12);
+    --amber: #f5b94a;
+    --amber-bg: rgba(245, 185, 74, .12);
+    --violet: #a78bfa;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+         font-size: 14px; line-height: 1.55; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; font-size: 13px; }
+
+  /* 입력 폼 */
+  form.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px; }
+  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  input[type=text] { width: 100%; background: var(--panel-2); color: var(--text); border: 1px solid var(--line);
+                     border-radius: 8px; padding: 9px 10px; font-size: 14px; }
+  input[type=text]:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .form-actions { display: flex; gap: 16px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+  button { background: var(--accent); color: #fff; border: 0; border-radius: 8px; padding: 10px 18px;
+           font-size: 14px; font-weight: 600; cursor: pointer; }
+  button:disabled { opacity: .6; cursor: progress; }
+  .check { display: flex; gap: 6px; align-items: center; color: var(--muted); font-size: 13px; margin: 0; }
+
+  .alert { border-radius: 10px; padding: 12px 14px; margin-top: 16px; font-size: 13px; }
+  .alert.error { background: var(--red-bg); border: 1px solid var(--red); color: #ffd3d3; }
+  .alert.warn { background: var(--amber-bg); border: 1px solid var(--amber); color: #ffe7bd; }
+  .alert.danger { background: var(--red-bg); border: 1px solid var(--red); color: #ffd3d3; font-weight: 600; }
+  .alert ul { margin: 0; padding-left: 18px; }
+
+  /* 메타 정보 */
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .chip { background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px;
+          font-size: 12px; color: var(--muted); }
+  .chip b { color: var(--text); font-weight: 600; }
+  .chip.low b { color: var(--red); }
+  .chip.medium b { color: var(--amber); }
+  .chip.high b { color: var(--green); }
+  .chip.est b { color: var(--amber); }
+
+  /* 섹션 */
+  section { margin-top: 32px; }
+  .sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;
+              margin-bottom: 12px; }
+  .sec-head h2 { font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px; }
+  .sec-head h2::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  #s2 .sec-head h2::before { background: var(--green); }
+  #s3 .sec-head h2::before { background: var(--violet); }
+  .sec-head .note { color: var(--muted); font-size: 12px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); gap: 12px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px;
+          display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .card-label { font-size: 12px; font-weight: 700; letter-spacing: .04em; color: var(--accent); }
+  .card-tag { font-size: 11px; border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px;
+              color: var(--muted); white-space: nowrap; }
+  .card h3 { font-size: 15px; margin: 0; }
+  .card .desc { color: var(--muted); font-size: 13px; margin: 0; }
+  .kw-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .kw { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+        display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .kw-text { min-width: 0; }
+  .kw-orig { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 12.5px; word-break: break-word; }
+  .kw-ko { color: var(--muted); font-size: 11.5px; }
+  .kw-flags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 3px; }
+  .flag { font-size: 10.5px; border-radius: 4px; padding: 0 5px; background: rgba(255,255,255,.06); color: var(--muted); }
+  .flag.hot { background: var(--red-bg); color: var(--red); }
+  .flag.stage { background: rgba(91,141,239,.15); color: #b9cdfa; }
+  .badge { font-size: 12px; font-weight: 700; border-radius: 6px; padding: 2px 8px; white-space: nowrap;
+           font-variant-numeric: tabular-nums; }
+  .badge.up { background: var(--green-bg); color: var(--green); }
+  .badge.down { background: var(--red-bg); color: var(--red); }
+  .badge.flat { background: rgba(255,255,255,.06); color: var(--text); }
+  .badge.na { background: transparent; border: 1px dashed var(--line); color: var(--muted); font-weight: 500; }
+  .insight { margin-top: auto; border-top: 1px solid var(--line); padding-top: 10px; font-size: 12.5px; }
+  .insight::before { content: "↗ "; color: var(--accent); }
+  .empty { color: var(--muted); font-size: 12.5px; font-style: italic; }
+
+  /* USP 표 */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+  table { width: 100%; border-collapse: collapse; min-width: 760px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; color: var(--muted); font-weight: 600; background: var(--panel-2); }
+  tr:last-child td { border-bottom: 0; }
+  td.target b { display: block; }
+  td.target span { color: var(--muted); font-size: 12px; }
+  td.weak { color: #ff9b9b; }
+  td.usp { color: #8ff0c0; }
+  td.pitch em { color: #b9cdfa; }
+  td .ko { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .evidence { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+  .cert-warn { margin-top: 6px; font-size: 11.5px; color: var(--amber); }
+
+  /* 부스 카드 */
+  .booth .card-label { color: var(--violet); }
+  .booth h3 { display: flex; gap: 6px; }
+  .booth .title-ko { color: var(--muted); font-size: 12px; margin-top: -6px; }
+  .slogan { background: var(--panel-2); border-left: 3px solid var(--violet); border-radius: 6px; padding: 8px 10px;
+            font-size: 13px; }
+  .slogan .ko { display: block; color: var(--muted); font-size: 12px; }
+
+  details { margin-top: 24px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+  summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+  details ul { margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: 12.5px; }
+  pre { white-space: pre-wrap; word-break: break-word; font-size: 12px; color: var(--muted); max-height: 480px; overflow: auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>연관 검색어 기반 시장 트렌드 & USP 진단</h1>
+  <p class="sub">현지 소비자가 현지 언어로 검색한 Google 연관 검색어를 수집해, 한국어로 분석·정리합니다.</p>
+
+  <form class="panel" method="post" id="analyze-form">
+    <div class="form-grid">
+      <div><label for="name">제품명 *</label><input type="text" id="name" name="name" required value="{{ form.name }}" placeholder="예: 약과"></div>
+      <div><label for="country">진출 대상 국가 *</label><input type="text" id="country" name="country" required value="{{ form.country }}" placeholder="예: 미국, 일본, 독일, DE"></div>
+      <div><label for="strengths">제품 강점</label><input type="text" id="strengths" name="strengths" value="{{ form.strengths }}" placeholder="예: 조청 흡수가 적어 손에 안 묻는 식감"></div>
+      <div><label for="ingredients">주요 원료</label><input type="text" id="ingredients" name="ingredients" value="{{ form.ingredients }}" placeholder="예: 밀가루, 꿀, 참기름"></div>
+      <div><label for="certifications">보유 인증</label><input type="text" id="certifications" name="certifications" value="{{ form.certifications }}" placeholder="예: HACCP, 비건"></div>
+      <div><label for="price">가격대</label><input type="text" id="price" name="price" value="{{ form.price }}" placeholder="예: 200g 소매가 6~7달러"></div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" id="submit-btn">분석 실행</button>
+      <label class="check"><input type="checkbox" name="force" {% if force %}checked{% endif %}> 캐시 무시하고 새로 조회</label>
+    </div>
+  </form>
+
+  {% if error %}<div class="alert error">{{ error }}</div>{% endif %}
+
+  {% if result %}
+  {% set meta = result.meta %}
+
+  <div class="meta">
+    <span class="chip">대상 시장 <b>{{ meta.country_ko }} ({{ meta.geo }})</b></span>
+    <span class="chip">검색 언어 <b>{{ meta.languages | join(', ') }}</b></span>
+    <span class="chip {% if meta.is_estimated %}est{% endif %}">데이터 <b>{{ meta.data_level_label_ko }}</b></span>
+    <span class="chip {{ meta.reliability }}">Google 데이터 신뢰도 <b>{{ meta.reliability_label_ko }}</b></span>
+    <span class="chip">바이어 언어 <b>{{ meta.buyer_language }}</b></span>
+    <span class="chip">조회 <b>{{ meta.fetched_at }}</b></span>
+  </div>
+
+  {% if meta.reliability_note_ko %}<div class="alert danger">⚠ {{ meta.reliability_note_ko }}</div>{% endif %}
+  {% if meta.warnings %}
+  <div class="alert warn"><ul>{% for w in meta.warnings %}<li>{{ w }}</li>{% endfor %}</ul></div>
+  {% endif %}
+
+  <!-- 1. 4단계 클러스터링 -->
+  <section id="s1">
+    <div class="sec-head">
+      <h2>1. 연관 검색어 기반 시장 트렌드 4단계 클러스터링</h2>
+      <span class="note">
+        시드: {% for s in meta.seed_keywords %}{{ s.keyword }}{% if not loop.last %}, {% endif %}{% endfor %}
+        · 배지 = 전년 동기 대비 증감률 (최근 13주)
+      </span>
+    </div>
+    <div class="cards">
+      {% for key in cluster_keys %}
+      {% set c = result.trend_analysis[key] %}
+      <article class="card">
+        <div class="card-top">
+          <span class="card-label">{{ cluster_meta[key].label }}</span>
+          {% if c.tag %}<span class="card-tag">{{ c.tag }}</span>{% endif %}
+        </div>
+        <h3>{{ cluster_meta[key].title_ko }}</h3>
+        <p class="desc">{{ c.summary }}</p>
+        {% if c.keywords %}
+        <ul class="kw-list">
+          {% for kw in c.keywords %}
+          <li class="kw">
+            <div class="kw-text">
+              <div class="kw-orig">{{ kw.keyword }}</div>
+              {% if kw.ko %}<div class="kw-ko">{{ kw.ko }}</div>{% endif %}
+              <div class="kw-flags">
+                {% if kw.stage %}<span class="flag stage">{{ funnel_stages[kw.stage] }}</span>{% endif %}
+                {% if kw.is_breakout %}<span class="flag hot">급등</span>
+                {% elif kw.rising_value is not none and not kw.is_estimated %}<span class="flag">급상승 +{{ kw.rising_value }}%</span>{% endif %}
+                {% if kw.level != 'seed' and kw.level != 'estimated' %}<span class="flag">{{ '글로벌' if kw.level == 'global' else '상위 카테고리' }}</span>{% endif %}
+              </div>
+            </div>
+            {% if kw.yoy_status == 'estimated' %}
+              <span class="badge na">AI 추정</span>
+            {% elif kw.yoy_pct is none %}
+              <span class="badge na">데이터 부족</span>
+            {% elif kw.yoy_pct > 0 %}
+              <span class="badge up">+{{ kw.yoy_pct }}%</span>
+            {% elif kw.yoy_pct < 0 %}
+              <span class="badge down">{{ kw.yoy_pct }}%</span>
+            {% else %}
+              <span class="badge flat">0%</span>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="empty">이 분류에 해당하는 검색 신호가 없습니다.</p>
+        {% endif %}
+        {% if c.insight %}<div class="insight">{{ c.insight }}</div>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- 2. USP 매트릭스 -->
+  <section id="s2">
+    <div class="sec-head">
+      <h2>2. 연관어 결합 기반 경쟁사/대체재 차별화(USP) 매트릭스</h2>
+      <span class="note">차별점은 입력한 제품 스펙만 근거로 작성 · 헤드라인은 {{ meta.buyer_language }}</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>경쟁 품목 / 대체재</th><th>현지 소비자의 한계</th><th>우리 제품의 차별점 (USP)</th><th>바이어 피칭 헤드라인</th></tr>
+        </thead>
+        <tbody>
+          {% for row in result.usp_matrix %}
+          <tr>
+            <td class="target"><b>{{ row.target }}</b><span>{{ row.target_ko }}</span></td>
+            <td class="weak">{{ row.weakness_ko }}</td>
+            <td class="usp">
+              {{ row.our_usp_ko }}
+              {% if row.evidence %}<div class="evidence">{% for e in row.evidence %}<span class="flag">근거: {{ e }}</span>{% endfor %}</div>{% endif %}
+              {% if row.unsupported_certs %}<div class="cert-warn">⚠ 입력하지 않은 인증 언급: {{ row.unsupported_certs | join(', ') }}. 사용 전 확인하세요.</div>{% endif %}
+            </td>
+            <td class="pitch"><em>“{{ row.pitch_headline }}”</em><span class="ko">{{ row.pitch_headline_ko }}</span></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="empty">USP를 생성하지 못했습니다.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 3. 부스 컨셉 -->
+  <section id="s3">
+    <div class="sec-head">
+      <h2>3. 데이터 기반 박람회 부스 컨셉 및 세일즈 피치 솔루션</h2>
+      <span class="note">오프라인 전시 부스 기획 & 인포그래픽 월 제안</span>
+    </div>
+    {% set booth_labels = {
+      'headline_slogan': '메인 비주얼 & 슬로건',
+      'sampling_strategy': '비교 체험 (SAMPLING)',
+      'pitching_wall': '바이어 피칭 월 (WALL)',
+      'packaging_display': '패키징 / 진열 가이드'} %}
+    <div class="cards booth">
+      {% for key, label in booth_labels.items() %}
+      {% set b = result.booth_concept[key] %}
+      <article class="card">
+        <span class="card-label">{{ label }}</span>
+        <h3>{{ b.title }}</h3>
+        {% if b.title_ko %}<div class="title-ko">{{ b.title_ko }}</div>{% endif %}
+        {% if b.slogan %}<div class="slogan">“{{ b.slogan }}”<span class="ko">{{ b.slogan_ko }}</span></div>{% endif %}
+        <p class="desc">{{ b.description_ko }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <details>
+    <summary>수집 과정 · 제외된 검색어 ({{ result.excluded_keywords | length }}개)</summary>
+    <ul>
+      {% for a in meta.collection_attempts %}
+      <li>{{ a.level }} @ {{ a.geo }}: {{ a.keywords | join(', ') }} → {{ a.count }}건{% if a.error %} (오류: {{ a.error[:120] }}){% endif %}</li>
+      {% endfor %}
+      <li>분석 대상 검색어 풀: {{ meta.keyword_pool_size }}개 · 증감률 기준: {{ meta.yoy_basis_ko }}</li>
+      {% for ex in result.excluded_keywords %}
+      <li>제외: {{ ex.keyword }}{% if ex.reason %} — {{ ex.reason }}{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </details>
+  <details>
+    <summary>원본 JSON</summary>
+    <pre>{{ result_json }}</pre>
+  </details>
+  {% endif %}
+</div>
+<script>
+  document.getElementById("analyze-form").addEventListener("submit", function () {
+    var btn = document.getElementById("submit-btn");
+    btn.disabled = true;
+    btn.textContent = "분석 중… (1~2분 소요)";
+  });
+</script>
+</body>
+</html>
