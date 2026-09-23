@@ -4,21 +4,25 @@
 {% block content %}
 {% include "buyers/_nav.html" %}
 
-<h1>팔로업 메일 템플릿</h1>
+<div class="page-header">
+  <div>
+    <h1>팔로업 메일 템플릿</h1>
+    <p class="page-desc">
+      박람회 구분 없이 회사 전체가 공용으로 쓰는 템플릿입니다. 최대 3개 버전을 만들어두고, 그중 하나만
+      "발송용"으로 지정해서 사용합니다.<br>
+      제목/본문에 {% raw %}{{exhibition}}{% endraw %}, {% raw %}{{name}}{% endraw %}, {% raw %}{{company}}{% endraw %}
+      를 넣으면 발송 시 박람회명·바이어 이름·회사명으로 자동 치환됩니다.<br>
+      {% raw %}{{date}}{% endraw %} 는 발송일로, {% raw %}{{sender_name}}{% endraw %},
+      {% raw %}{{sender_company}}{% endraw %}, {% raw %}{{sender_position}}{% endraw %} 는
+      <a href="{{ url_for('buyer_profile.edit_profile') }}">발신 정보</a>에 입력한 값으로 자동 치환됩니다.
+    </p>
+  </div>
+  <a href="{{ url_for('contacts.list_contacts') }}" class="btn-secondary">← 바이어 목록으로</a>
+</div>
 
 {% if not all_versions|selectattr('is_active')|selectattr('body')|list %}
 <p class="callout-warning">⚠️ 아직 발송용으로 지정된 템플릿이 없습니다. 아래에서 버전을 선택해 작성한 뒤 "이 버전을 발송용으로 사용"을 눌러주세요.</p>
 {% endif %}
-
-<p class="page-desc">
-  박람회 구분 없이 회사 전체가 공용으로 쓰는 템플릿입니다. 최대 3개 버전을 만들어두고, 그중 하나만
-  "발송용"으로 지정해서 사용합니다.<br>
-  제목/본문에 {% raw %}{{exhibition}}{% endraw %}, {% raw %}{{name}}{% endraw %}, {% raw %}{{company}}{% endraw %}
-  를 넣으면 발송 시 박람회명·바이어 이름·회사명으로 자동 치환됩니다.<br>
-  {% raw %}{{date}}{% endraw %} 는 발송일로, {% raw %}{{sender_name}}{% endraw %},
-  {% raw %}{{sender_company}}{% endraw %}, {% raw %}{{sender_position}}{% endraw %} 는
-  <a href="{{ url_for('buyer_profile.edit_profile') }}">발신 정보</a>에 입력한 값으로 자동 치환됩니다.
-</p>
 
 <div class="version-tabs-row">
   <div class="version-tabs">
@@ -73,6 +77,4 @@
 </form>
 <form id="activate-form" method="post" action="{{ url_for('mail_template.activate', version=version) }}"></form>
 </div>
-
-<p><a href="{{ url_for('contacts.list_contacts') }}" class="btn-secondary">← 바이어 목록으로 돌아가기</a></p>
 {% endblock %}

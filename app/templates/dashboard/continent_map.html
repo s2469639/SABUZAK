@@ -5,18 +5,7 @@
 <div class="dash-header">
   <div>
     <h1>박람회 운영 대시보드</h1>
-    <p class="page-desc">지도에서 권역을 클릭하거나 국가를 선택해 박람회 목록을 확인하세요</p>
-  </div>
-  <div class="dash-header-actions">
-    <div class="dash-country-select">
-      <label for="country-select" class="sr-only">국가로 바로 찾기</label>
-      <select id="country-select" onchange="if (this.value) { window.location.href = this.value; }">
-        <option value="">국가 선택...</option>
-        {% for country in countries %}
-        <option value="{{ url_for('exhibition.expo_list_by_country', country=country) }}">{{ country }}</option>
-        {% endfor %}
-      </select>
-    </div>
+    <p class="page-desc">지도에서 권역을 클릭해 박람회 목록을 확인하세요</p>
   </div>
 </div>
 
@@ -35,7 +24,9 @@
   </div>
 </div>
 
-<div id="continent-results" class="continent-results-wrap" hidden></div>
+<div id="continent-results" class="continent-results-wrap">
+  {% include "dashboard/_expo_list_partial.html" %}
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-geo-projection@4/dist/d3-geo-projection.min.js"></script>

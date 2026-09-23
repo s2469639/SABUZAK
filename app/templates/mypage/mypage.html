@@ -45,7 +45,7 @@
     <div class="form-row">
       <div class="form-field hs-autocomplete-field">
         <label for="name">제품명 *</label>
-        <input type="text" id="name" name="name" placeholder="예: 사부작 약과"
+        <input type="text" id="name" name="name" placeholder="예: 약과"
                value="{{ form_name or '' }}" autocomplete="off" required>
         <div class="hs-autocomplete-dropdown" id="name-autocomplete" hidden></div>
       </div>
@@ -54,14 +54,6 @@
         <input type="text" id="hs_code" name="hs_code" placeholder="예: 1905.90"
                value="{{ form_hs_code or '' }}" autocomplete="off" required>
         <div class="hs-autocomplete-dropdown" id="hs_code-autocomplete" hidden></div>
-        <div class="hs-preset-list">
-          {% for preset in hs_presets %}
-          <button type="button" class="hs-preset"
-                  onclick="document.getElementById('name').value='{{ preset.name }}'; document.getElementById('hs_code').value='{{ preset.hs_code }}';">
-            {{ preset.name }} {{ preset.hs_code }}
-          </button>
-          {% endfor %}
-        </div>
       </div>
     </div>
 

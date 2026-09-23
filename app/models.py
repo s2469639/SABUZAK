@@ -67,6 +67,7 @@ class Exhibition(db.Model):
     audience_type = db.Column(db.Text)
     website = db.Column(db.Text)
     intro = db.Column(db.Text)
+    image_url = db.Column(db.Text)
     category = db.Column(db.Text)
     continent = db.Column(db.Text)
     food_yn = db.Column(db.Integer)

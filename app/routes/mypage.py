@@ -9,15 +9,6 @@ from app.models import HsCodeMaster, Product
 
 bp = Blueprint("mypage", __name__, url_prefix="/mypage")
 
-# 빠른 선택용 HS코드 프리셋 (README 제품군 기준)
-HS_CODE_PRESETS = [
-    {"name": "약과", "hs_code": "1905.90"},
-    {"name": "유과", "hs_code": "1904.10"},
-    {"name": "누룽지칩", "hs_code": "1904.10"},
-    {"name": "김부각", "hs_code": "2106.90"},
-    {"name": "고구마스틱", "hs_code": "2005.99"},
-]
-
 # 4~10자리 숫자, 점(.) 유무나 자릿수 상관없이 허용 (예: 1905, 1905.90, 190590, 1904901000)
 HS_CODE_FORMAT_RE = re.compile(r"^\d{2,4}(\.\d{1,4}){0,3}$|^\d{4,10}$")
 
@@ -42,9 +33,7 @@ def index():
         .order_by(Product.created_at.desc())
         .all()
     )
-    return render_template(
-        "mypage/mypage.html", products=products, hs_presets=HS_CODE_PRESETS
-    )
+    return render_template("mypage/mypage.html", products=products)
 
 
 @bp.route("/hscode-search")
@@ -101,7 +90,6 @@ def add_product():
             return render_template(
                 "mypage/mypage.html",
                 products=products,
-                hs_presets=HS_CODE_PRESETS,
                 form_error=error,
                 form_name=name,
                 form_hs_code=hs_code,

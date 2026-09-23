@@ -32,14 +32,29 @@
   <div class="expo-list">
     {% for expo in expos %}
     <a href="{{ url_for('exhibition.detail', expo_id=expo.id) }}" class="expo-row" target="_blank">
+      <div class="expo-thumb">
+        {% if expo.image_url %}
+        <img src="{{ expo.image_url }}" alt="" loading="lazy">
+        {% else %}
+        <svg class="expo-thumb-fallback" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="8.5" cy="9.5" r="1.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M21 16l-5.5-5.5a1 1 0 0 0-1.4 0L4 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        {% endif %}
+      </div>
       <div class="expo-main">
         <strong>{{ expo.name }}</strong>
         <span class="expo-meta">{{ expo.country_ko or expo.country }} · {{ expo.city }}</span>
       </div>
       <div class="expo-side">
-        <span class="expo-date">{{ expo.start_date }} ~ {{ expo.end_date }}</span>
+        <span class="expo-date">{{ expo.start_date|kdate }} ~ {{ expo.end_date|kdate }}</span>
         <span class="expo-category">{{ expo.category }}</span>
-        {% if expo.food_yn %}<span class="badge-food">식품</span>{% endif %}
+        {% if expo.food_yn %}
+          <span class="badge-food">식품</span>
+        {% else %}
+          <span class="badge-nonfood">비식품</span>
+        {% endif %}
       </div>
     </a>
     {% endfor %}

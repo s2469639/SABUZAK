@@ -2,6 +2,12 @@
 {% block title %}{{ expo.name }} | 사부작{% endblock %}
 
 {% block content %}
+{% if expo.image_url %}
+<div class="expo-hero">
+  <img src="{{ expo.image_url }}" alt="">
+</div>
+{% endif %}
+
 <div class="page-header">
   <div>
     <h1>
@@ -12,7 +18,7 @@
         <span class="badge-nonfood">비식품</span>
       {% endif %}
     </h1>
-    <p class="page-desc">{{ expo.country_ko or expo.country }} · {{ expo.city }} · {{ expo.start_date }} ~ {{ expo.end_date }}</p>
+    <p class="page-desc">{{ expo.country_ko or expo.country }} · {{ expo.city }} · {{ expo.start_date|kdate }} ~ {{ expo.end_date|kdate }}</p>
   </div>
   <a href="{{ url_for('dashboard.index') }}" class="btn-secondary">← 대시보드로</a>
 </div>
@@ -36,7 +42,7 @@
       <dl class="detail-list">
         <dt>개최지</dt><dd>{{ expo.venue or '정보 없음' }}</dd>
         <dt>국가 / 도시</dt><dd>{{ expo.country_ko or expo.country }} / {{ expo.city }}</dd>
-        <dt>일정</dt><dd>{{ expo.start_date }} ~ {{ expo.end_date }}</dd>
+        <dt>일정</dt><dd>{{ expo.start_date|kdate }} ~ {{ expo.end_date|kdate }}</dd>
         <dt>규모</dt><dd>{{ expo.scale or '미상' }}</dd>
         <dt>카테고리</dt><dd>{{ expo.category }}</dd>
         <dt>식품 여부</dt>
