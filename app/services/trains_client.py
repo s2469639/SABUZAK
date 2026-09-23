@@ -44,9 +44,15 @@ ID를 그대로 고정 필터로 쓴다 - 마침 이게 우리가 필요한 카�
 필터링이 된다.
 """
 
+import time
 from urllib.parse import quote
 
 import requests
+
+# 페이지 요청 사이 최소 대기 (매너 호출 - 너무 빨리 연달아 부르면 429 뜸)
+REQUEST_DELAY_SEC = 0.6
+# 429(Too Many Requests) 받았을 때 재시도 대기 시간(초), 점점 늘어남
+RETRY_BACKOFF_SEC = [2, 5, 10]
 
 try:
     import pycountry
@@ -151,15 +157,28 @@ def fetch_all_measures_affecting_korea(page_size: int = 20, max_pages: int = 100
 
     page_size 기본값 20: 실제로 500을 보내면 서버가 400 Bad Request로
     거부하는 걸 확인함 (브라우저가 실제로 쓰는 값인 20으로 검증됨). 더 큰
-    값이 어디까지 허용되는지 확인 안 됐으니 함부로 올리지 말 것."""
+    값이 어디까지 허용되는지 확인 안 됐으니 함부로 올리지 말 것.
+
+    페이지마다 REQUEST_DELAY_SEC만큼 쉬고, 429(너무 빠른 연속 호출)를 받으면
+    잠깐 대기 후 재시도한다 (예전엔 딜레이 없이 최대 100번을 연달아 불러서
+    429로 막히는 문제가 있었음)."""
     all_rows = []
     for page in range(1, max_pages + 1):
-        resp = requests.post(
-            f"{BASE}/denormalisedMeasures",
-            json=_payload(page, page_size),
-            headers=HEADERS,
-            timeout=60,
-        )
+        if page > 1:
+            time.sleep(REQUEST_DELAY_SEC)
+
+        resp = None
+        for attempt, backoff in enumerate([0] + RETRY_BACKOFF_SEC):
+            if backoff:
+                time.sleep(backoff)
+            resp = requests.post(
+                f"{BASE}/denormalisedMeasures",
+                json=_payload(page, page_size),
+                headers=HEADERS,
+                timeout=60,
+            )
+            if resp.status_code != 429:
+                break
         resp.raise_for_status()
         try:
             batch = resp.json()
