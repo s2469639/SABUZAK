@@ -170,7 +170,7 @@ def _save_disk_cache(all_cache: dict):
 
 
 def fetch_regulations_for_country(
-    country_iso3: str, hs_code: str, page_size: int = 20, max_pages: int = 3, force_refresh: bool = False
+    country_iso3: str, hs_code: str, page_size: int = 20, max_pages: int = 5, force_refresh: bool = False
 ) -> list:
     """UNCTAD TRAINS에서 country_iso3(예: 'DEU')가 이 제품의 hs_code(마이페이지에
     등록된 실제 HS코드, 예: "1905.90")에 대해 부과 중인 규정을 직접 조회한다
@@ -178,8 +178,9 @@ def fetch_regulations_for_country(
 
     최종적으로 쓰는 건 top_relevant_regulations()로 추린 상위 6건뿐이지만,
     관련도 필터링이 고를 수 있는 후보가 너무 적으면 걸러낼 게 없어서
-    무관한 것까지 올라올 수 있다. max_pages 기본값 3(최대 60건)이면 후보가
-    넉넉해서 필터링이 더 잘 추릴 수 있다.
+    무관한 것까지 올라올 수 있다. max_pages 기본값 5(최대 100건)면 후보가
+    더 넉넉해서 필터링이 더 잘 추릴 수 있다 (3->5로 올려도 딜레이 몇 초
+    늘어나는 정도라 부담 적음).
 
     페이지마다 REQUEST_DELAY_SEC만큼 쉬고, 429를 받으면 잠깐 대기 후
     재시도한다. Retry-After가 비정상적으로 크면(장기 IP 차단) 재시도 없이
