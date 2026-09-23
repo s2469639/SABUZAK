@@ -21,22 +21,22 @@ CONTINENT_DB_VALUES = {
 @bp.route("/")
 @login_required
 def index():
+    from app.routes.exhibition import _build_list_context
+
     counts = {}
     for region, db_values in CONTINENT_DB_VALUES.items():
         counts[region] = Exhibition.query.filter(
             Exhibition.continent.in_(db_values), Exhibition.is_active == 1
         ).count()
 
-    countries = [
-        row[0]
-        for row in Exhibition.query.filter(Exhibition.is_active == 1)
-        .with_entities(Exhibition.country_ko)
-        .distinct()
-        .order_by(Exhibition.country_ko.asc())
-        .all()
-        if row[0]
-    ]
+    all_list_ctx = _build_list_context(
+        Exhibition.query.filter(Exhibition.is_active == 1),
+        "전체 해외",
+        "exhibition.expo_list_partial_all",
+        {},
+        "",
+    )
 
     return render_template(
-        "dashboard/continent_map.html", continents=CONTINENTS, counts=counts, countries=countries
+        "dashboard/continent_map.html", continents=CONTINENTS, counts=counts, **all_list_ctx
     )

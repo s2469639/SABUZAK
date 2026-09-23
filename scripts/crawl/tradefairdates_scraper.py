@@ -38,6 +38,12 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
+# Windows 콘솔 기본 인코딩(cp949 등)에 없는 문자(é, ń 등)를 print()하다가
+# UnicodeEncodeError로 죽는 걸 막기 위해 강제로 UTF-8 사용.
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 PAGE_RE = re.compile(r"-S(\d+)\.html$")
 BASE_URL = "https://www.tradefairdates.com/"
 
@@ -71,6 +77,7 @@ FIELDNAMES = [
     "참관대상",
     "축제URL",
     "축제소개",
+    "이미지URL",
 ]
 
 MONTHS = {
@@ -225,7 +232,7 @@ def parse_tile(tile) -> dict:
 
 
 def parse_detail(url: str) -> dict:
-    """상세페이지에서 전시회 공식 웹사이트와 한 줄 소개를 추출."""
+    """상세페이지에서 전시회 공식 웹사이트, 한 줄 소개, 로고 이미지를 추출."""
     html = fetch_html(url)
     soup = BeautifulSoup(html, "html.parser")
 
@@ -241,7 +248,16 @@ def parse_detail(url: str) -> dict:
             intro = text
             break
 
-    return {"축제URL": website, "축제소개": intro}
+    # 박람회 로고 이미지 (예: img.messe-logo, src에 실제 URL이 바로 들어있음.
+    # "platzhalter"(플레이스홀더) 파일명이면 로고가 없는 것이므로 빈 값 처리)
+    image_url = ""
+    logo_img = soup.select_one("img.messe-logo")
+    if logo_img:
+        src = logo_img.get("src", "").strip()
+        if src and "platzhalter" not in src.lower():
+            image_url = urljoin(BASE_URL, src)
+
+    return {"축제URL": website, "축제소개": intro, "이미지URL": image_url}
 
 
 def crawl_page(url: str):
@@ -313,6 +329,7 @@ def enrich_with_details(rows):
             detail = parse_detail(detail_url)
             row["축제URL"] = detail["축제URL"]
             row["축제소개"] = detail["축제소개"]
+            row["이미지URL"] = detail["이미지URL"]
         except requests.exceptions.RequestException as e:
             print(f"  -> 실패: {e}")
         polite_sleep()

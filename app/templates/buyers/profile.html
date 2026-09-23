@@ -4,17 +4,21 @@
 {% block content %}
 {% include "buyers/_nav.html" %}
 
-<h1>발신 정보</h1>
+<div class="page-header">
+  <div>
+    <h1>발신 정보</h1>
+    <p class="page-desc">
+      여기 입력한 값은 팔로업 메일 템플릿에서 {% raw %}{{sender_name}}{% endraw %},
+      {% raw %}{{sender_company}}{% endraw %}, {% raw %}{{sender_position}}{% endraw %} 로 사용할 수 있습니다
+      (예: 메일 서명). 제품/사업 설명은 AI로 템플릿·메일 내용을 생성할 때 참고 정보로 쓰입니다.
+    </p>
+  </div>
+  <a href="{{ url_for('contacts.list_contacts') }}" class="btn-secondary">← 바이어 목록으로</a>
+</div>
 
 {% if not current_user.company or not current_user.position %}
 <p class="callout-warning">⚠️ 회사명/직급을 아직 입력하지 않으셨습니다. 팔로업 메일 서명에 자동으로 들어가니 채워주세요.</p>
 {% endif %}
-
-<p class="page-desc">
-  여기 입력한 값은 팔로업 메일 템플릿에서 {% raw %}{{sender_name}}{% endraw %},
-  {% raw %}{{sender_company}}{% endraw %}, {% raw %}{{sender_position}}{% endraw %} 로 사용할 수 있습니다
-  (예: 메일 서명). 제품/사업 설명은 AI로 템플릿·메일 내용을 생성할 때 참고 정보로 쓰입니다.
-</p>
 
 <div class="card">
 <form method="post" class="form" autocomplete="off">
