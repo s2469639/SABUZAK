@@ -27,6 +27,7 @@ KO = Locale("ko")
 MANUAL_OVERRIDES = {
     "Ivory Coast": "코트디부아르",
     "Myanmar (Burma)": "미얀마",
+    "Myanmar": "미얀마",
     "South Korea": "대한민국",
     "North Korea": "북한",
     "Russia": "러시아",
@@ -36,6 +37,9 @@ MANUAL_OVERRIDES = {
     "Czech Republic": "체코",
     "UAE": "아랍에미리트",
     "Turkey": "튀르키예",
+    "Ukraine": "우크라이나",
+    "Moldova": "몰도바",
+    "Western Sahara": "사하라 서부",
 }
 
 
