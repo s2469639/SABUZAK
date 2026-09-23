@@ -179,6 +179,13 @@ def fetch_all_measures_affecting_korea(page_size: int = 20, max_pages: int = 100
             )
             if resp.status_code != 429:
                 break
+            # 서버가 Retry-After를 주면 그만큼, 없으면 다음 백오프값만큼 더 기다린다
+            retry_after = resp.headers.get("Retry-After")
+            if retry_after:
+                try:
+                    time.sleep(float(retry_after))
+                except ValueError:
+                    pass
         resp.raise_for_status()
         try:
             batch = resp.json()
@@ -220,9 +227,32 @@ def _resolve_country_name(name: str):
     return None
 
 
+# 전세계 조회 결과 캐시. sync_ntm 버튼을 여러 박람회(=여러 나라)에서 누를 때마다
+# 매번 전세계를 다시 긁으면 요청이 국가 수만큼 배로 늘어나 429를 유발하므로,
+# 한 번 긁은 결과를 CACHE_TTL_SEC 동안 재사용한다.
+CACHE_TTL_SEC = 6 * 60 * 60  # 6시간
+_cache_rows = None
+_cache_time = 0.0
+
+
+def fetch_all_measures_affecting_korea_cached(page_size: int = 20, max_pages: int = 100) -> list:
+    """fetch_all_measures_affecting_korea()와 같지만, CACHE_TTL_SEC 이내 재호출 시
+    실제 HTTP 요청 없이 캐시된 결과를 그대로 반환한다."""
+    global _cache_rows, _cache_time
+    now = time.time()
+    if _cache_rows is not None and (now - _cache_time) < CACHE_TTL_SEC:
+        return _cache_rows
+    rows = fetch_all_measures_affecting_korea(page_size=page_size, max_pages=max_pages)
+    _cache_rows = rows
+    _cache_time = now
+    return rows
+
+
 def fetch_regulations_for_country(country_iso3: str, page_size: int = 20) -> list:
-    """전세계 조회 결과 중 country_iso3(예: 'SGP')에 해당하는 것만 걸러서 반환."""
-    all_rows = fetch_all_measures_affecting_korea(page_size=page_size)
+    """전세계 조회 결과 중 country_iso3(예: 'SGP')에 해당하는 것만 걸러서 반환.
+    전세계 조회 자체는 캐시를 타므로, 다른 나라를 연달아 조회해도 실제 TRAINS
+    호출은 캐시 만료 전까지 한 번만 나간다."""
+    all_rows = fetch_all_measures_affecting_korea_cached(page_size=page_size)
     matched = []
     for row in all_rows:
         row_iso3 = _resolve_country_name(row.get("countryImposingNTMs"))
