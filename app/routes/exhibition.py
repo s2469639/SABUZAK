@@ -10,6 +10,7 @@ from app.routes.dashboard import CONTINENT_DB_VALUES
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
 from app.services.exchange import get_exchange_info
+from app.services.wto_client import get_country_tariff_averages
 from app.services import market_trend
 from app.services.trains_client import (
     fetch_regulations_for_country,
@@ -364,6 +365,9 @@ def detail(expo_id):
     market_rows = _build_market_rows(expo, linked_products) if has_linked_product else []
     trend_rows = _build_trend_rows(expo, linked_products) if has_linked_product else []
     exchange_info = get_exchange_info(expo.country)
+    wto_tariff_info = (
+        get_country_tariff_averages(hscode_ctx["country_iso"]) if hscode_ctx else None
+    )
 
     return render_template(
         "exhibition/detail.html",
@@ -374,6 +378,7 @@ def detail(expo_id):
         market_rows=market_rows,
         trend_rows=trend_rows,
         exchange_info=exchange_info,
+        wto_tariff_info=wto_tariff_info,
     )
 
 
