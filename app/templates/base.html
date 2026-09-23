@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <div class="layout">
+  <div class="layout" id="layout-root">
     <aside class="sidebar">
       <div class="brand-block">
         <h2 class="brand">사부작</h2>
@@ -49,6 +49,7 @@
     <div class="main">
       <header class="topbar">
         {% if current_user.is_authenticated %}
+          <button type="button" id="sidebar-toggle" class="sidebar-toggle" aria-label="사이드바 접기/펴기">☰</button>
           <span>{{ current_user.name }}님 환영합니다</span>
         {% endif %}
       </header>
@@ -68,6 +69,7 @@
     </div>
   </div>
 
+  <script src="{{ url_for('static', filename='js/layout.js') }}"></script>
   <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
   <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
   <script src="{{ url_for('static', filename='js/mypage.js') }}"></script>

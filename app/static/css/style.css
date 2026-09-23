@@ -21,6 +21,35 @@ body {
   padding: 24px 16px;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: width 0.18s ease, padding 0.18s ease;
+}
+
+.layout.sidebar-collapsed .sidebar {
+  width: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.layout.sidebar-collapsed .sidebar > * {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-toggle {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #374151;
+}
+
+.sidebar-toggle:hover {
+  background: #eee;
 }
 
 .brand-block {
@@ -89,6 +118,9 @@ body {
   padding: 12px 24px;
   border-bottom: 1px solid #e2e2e2;
   background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .content {
@@ -1465,13 +1497,15 @@ body {
 .dash-map-card {
   border-radius: 8px;
   overflow: hidden;
-  background: #fff;
+  background: transparent;
   border: 1px solid #ebe8e2;
 }
 
 .world-map {
   padding: 4px 8px;
   background: transparent;
+  width: 80%;
+  margin: 0 auto;
 }
 .world-map svg { width: 100%; height: auto; display: block; }
 
