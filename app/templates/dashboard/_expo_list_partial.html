@@ -31,7 +31,7 @@
   {% if expos %}
   <div class="expo-list">
     {% for expo in expos %}
-    <a href="{{ url_for('exhibition.detail', expo_id=expo.id) }}" class="expo-row" target="_blank">
+    <a href="{{ url_for('exhibition.detail', expo_id=expo.id) }}" class="expo-row">
       <div class="expo-main">
         <strong>{{ expo.name }}</strong>
         <span class="expo-meta">{{ expo.country_ko or expo.country }} · {{ expo.city }}</span>
