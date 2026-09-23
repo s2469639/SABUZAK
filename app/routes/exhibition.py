@@ -9,6 +9,7 @@ from app.models import Exhibition, NtmMeasure, Product
 from app.routes.dashboard import CONTINENT_DB_VALUES
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
+from app.services import market_trend
 from app.services.trains_client import (
     fetch_regulations_for_country,
     to_ntm_measure_rows,
@@ -16,6 +17,24 @@ from app.services.trains_client import (
 )
 
 bp = Blueprint("exhibition", __name__, url_prefix="/exhibitions")
+
+# scripts/crawl/tradefairdates_scraper.py의 UNKNOWN_DATE와 같은 값. 날짜 전체가
+# 미상인 박람회는 start_date/end_date가 이 값으로 들어있다 (오름차순 정렬 시 항상
+# 맨 뒤로 가도록 일부러 큰 값을 씀 -> "오래된순"으로 뒤집으면 반대로 맨 앞에
+# "9999.99.99"로 튀어나와서, 그 경우엔 아예 목록에서 뺀다).
+UNKNOWN_DATE = 99999999
+
+
+def _ymd_int(value):
+    """<input type="date"> 값("YYYY-MM-DD")을 start_date/end_date와 비교 가능한
+    YYYYMMDD 정수로 변환. 비어있거나 형식이 이상하면 None."""
+    value = (value or "").strip()
+    if not value:
+        return None
+    try:
+        return int(value.replace("-", ""))
+    except ValueError:
+        return None
 
 
 def _with_scatter_positions(candidates, thresholds):
@@ -128,6 +147,8 @@ def _apply_filters(query):
     keyword_tag = request.args.get("keyword_tag", "")
     food_only = request.args.get("food_only", "")
     search = request.args.get("search", "").strip()
+    date_from = request.args.get("date_from", "").strip()
+    date_to = request.args.get("date_to", "").strip()
 
     if keyword_tag:
         query = query.filter(Exhibition.keywords.ilike(f"%{keyword_tag}%"))
@@ -140,7 +161,20 @@ def _apply_filters(query):
             | (Exhibition.country_ko.ilike(like))
             | (Exhibition.city.ilike(like))
         )
-    return query, keyword_tag, food_only, search
+
+    date_from_int = _ymd_int(date_from)
+    date_to_int = _ymd_int(date_to)
+    if date_from_int or date_to_int:
+        # 날짜 미상(UNKNOWN_DATE) 항목은 기간 비교 자체가 의미 없으니 범위 필터를
+        # 걸 때는 아예 대상에서 뺀다 (박람회 기간이 요청 기간과 "겹치는지"로 판단:
+        # 시작일이 조회 종료일 이전이면서, 종료일이 조회 시작일 이후인 것).
+        query = query.filter(Exhibition.start_date != UNKNOWN_DATE)
+        if date_from_int:
+            query = query.filter(Exhibition.end_date >= date_from_int)
+        if date_to_int:
+            query = query.filter(Exhibition.start_date <= date_to_int)
+
+    return query, keyword_tag, food_only, search, date_from, date_to
 
 
 def _keyword_tags_for(base_query, limit=15):
@@ -156,8 +190,14 @@ def _keyword_tags_for(base_query, limit=15):
 
 
 def _build_list_context(base_query, title, list_endpoint, list_kwargs, continent):
-    query, keyword_tag, food_only, search = _apply_filters(base_query)
-    expos = query.order_by(Exhibition.start_date.asc()).all()
+    query, keyword_tag, food_only, search, date_from, date_to = _apply_filters(base_query)
+    sort = request.args.get("sort", "asc")
+    if sort == "desc":
+        query = query.filter(Exhibition.start_date != UNKNOWN_DATE)
+        order = Exhibition.start_date.desc()
+    else:
+        order = Exhibition.start_date.asc()
+    expos = query.order_by(order).all()
     keyword_tags = _keyword_tags_for(base_query)
 
     return {
@@ -169,6 +209,9 @@ def _build_list_context(base_query, title, list_endpoint, list_kwargs, continent
         "selected_keyword_tag": keyword_tag,
         "food_only": food_only,
         "search": search,
+        "sort": sort,
+        "date_from": date_from,
+        "date_to": date_to,
     }
 
 
@@ -179,8 +222,11 @@ def expo_list(continent):
     if db_values is None:
         abort(404)
 
+    dup_ids = Exhibition.duplicate_ids()
     base_query = Exhibition.query.filter(
-        Exhibition.continent.in_(db_values), Exhibition.is_active == 1
+        Exhibition.continent.in_(db_values),
+        Exhibition.is_active == 1,
+        Exhibition.id.notin_(dup_ids),
     )
     ctx = _build_list_context(
         base_query, continent, "exhibition.expo_list", {"continent": continent}, continent
@@ -191,8 +237,11 @@ def expo_list(continent):
 @bp.route("/country/<country>")
 @login_required
 def expo_list_by_country(country):
+    dup_ids = Exhibition.duplicate_ids()
     base_query = Exhibition.query.filter(
-        Exhibition.country_ko == country, Exhibition.is_active == 1
+        Exhibition.country_ko == country,
+        Exhibition.is_active == 1,
+        Exhibition.id.notin_(dup_ids),
     )
     ctx = _build_list_context(
         base_query, country, "exhibition.expo_list_by_country", {"country": country}, ""
@@ -203,7 +252,10 @@ def expo_list_by_country(country):
 @bp.route("/partial/all")
 @login_required
 def expo_list_partial_all():
-    base_query = Exhibition.query.filter(Exhibition.is_active == 1)
+    dup_ids = Exhibition.duplicate_ids()
+    base_query = Exhibition.query.filter(
+        Exhibition.is_active == 1, Exhibition.id.notin_(dup_ids)
+    )
     ctx = _build_list_context(base_query, "전체 해외", "exhibition.expo_list_partial_all", {}, "")
     return render_template("dashboard/_expo_list_partial.html", **ctx)
 
@@ -215,8 +267,11 @@ def expo_list_partial(continent):
     if db_values is None:
         abort(404)
 
+    dup_ids = Exhibition.duplicate_ids()
     base_query = Exhibition.query.filter(
-        Exhibition.continent.in_(db_values), Exhibition.is_active == 1
+        Exhibition.continent.in_(db_values),
+        Exhibition.is_active == 1,
+        Exhibition.id.notin_(dup_ids),
     )
     ctx = _build_list_context(
         base_query, continent, "exhibition.expo_list_partial", {"continent": continent}, continent
@@ -254,6 +309,41 @@ def _build_market_rows(expo, linked_products):
     return rows
 
 
+def _exhibition_month(expo):
+    """start_date(YYYYMMDD int) -> 'N월' (없으면 기본값 10월)."""
+    s = str(expo.start_date) if expo.start_date else ""
+    if len(s) == 8 and s.isdigit():
+        return f"{int(s[4:6])}월"
+    return "10월"
+
+
+def _default_trend_specs(expo, product):
+    """제품관리(마이페이지)에 등록해둔 목표가/인증/식감 정보를 그대로 쓴다
+    (예전엔 이 탭에서 매번 다시 입력받았는데, 어차피 제품 고유 정보라
+    마이페이지 제품 등록/수정 폼으로 옮겼다)."""
+    return {
+        "product_name": product.name,
+        "country": expo.country_ko or expo.country or "",
+        "ingredients": product.ingredients or "",
+        "target_price": product.target_price or "",
+        "certifications": product.certifications or "",
+        "strengths": product.strengths or "",
+        "exhibition_month": _exhibition_month(expo),
+    }
+
+
+def _build_trend_rows(expo, linked_products):
+    """트렌드 조사 탭에 쓸 제품별 시장·트렌드 분석 현황. 네트워크 호출 없이
+    캐시만 읽는다 (실제 분석은 "지금 분석하기" 버튼 -> trend_research 라우트가
+    담당 - 시장 개요 탭과 동일한 패턴)."""
+    rows = []
+    for product in linked_products:
+        specs = _default_trend_specs(expo, product)
+        cached = market_trend.get_cached_analysis(specs)
+        rows.append({"product": product, "specs": specs, "result": cached})
+    return rows
+
+
 @bp.route("/detail/<int:expo_id>")
 @login_required
 def detail(expo_id):
@@ -271,6 +361,7 @@ def detail(expo_id):
 
     hscode_ctx = build_hscode_context(expo, linked_products) if has_linked_product else None
     market_rows = _build_market_rows(expo, linked_products) if has_linked_product else []
+    trend_rows = _build_trend_rows(expo, linked_products) if has_linked_product else []
 
     return render_template(
         "exhibition/detail.html",
@@ -279,7 +370,30 @@ def detail(expo_id):
         has_linked_product=has_linked_product,
         hscode_ctx=hscode_ctx,
         market_rows=market_rows,
+        trend_rows=trend_rows,
     )
+
+
+@bp.route("/detail/<int:expo_id>/trend-research/<int:product_id>", methods=["POST"])
+@login_required
+def trend_research(expo_id, product_id):
+    """market_trend_analysis/ 로직(구글 트렌드 + 리드타임 + 경쟁사 + 뉴스)을
+    이 제품 + 박람회 국가 기준으로 실행한다 (캐시 있으면 캐시, "새로 분석"
+    체크 시 강제 재실행)."""
+    expo = Exhibition.query.get_or_404(expo_id)
+    product = Product.query.filter_by(id=product_id, user_id=current_user.id).first_or_404()
+
+    specs = _default_trend_specs(expo, product)
+    specs["exhibition_month"] = request.form.get("exhibition_month", "").strip() or specs["exhibition_month"]
+    force = bool(request.form.get("force"))
+
+    try:
+        market_trend.run_analysis(specs, force=force)
+        flash(f"{product.name} · {specs['country']} 시장·트렌드 분석을 가져왔습니다.", "success")
+    except Exception as e:
+        flash(f"시장·트렌드 분석 중 오류가 발생했습니다: {e}", "danger")
+
+    return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#trend")
 
 
 @bp.route("/detail/<int:expo_id>/market-research/<int:product_id>", methods=["POST"])

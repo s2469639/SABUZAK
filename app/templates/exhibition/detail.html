@@ -2,9 +2,9 @@
 {% block title %}{{ expo.name }} | 사부작{% endblock %}
 
 {% block content %}
-{% if expo.image_url %}
+{% if expo.hero_image_url %}
 <div class="expo-hero">
-  <img src="{{ expo.image_url }}" alt="">
+  <img src="{{ expo.hero_image_url }}" alt="">
 </div>
 {% endif %}
 
@@ -94,10 +94,7 @@
     {% if not has_linked_product %}
       {% include "exhibition/_no_product_state.html" %}
     {% else %}
-    <div class="card">
-      <h2>트렌드 조사</h2>
-      <p class="placeholder-note">구글 트렌드, 경쟁사·가격, 관련 뉴스 요약은 추후 연동 예정입니다.</p>
-    </div>
+    {% include "exhibition/_tab_trend.html" %}
     {% endif %}
   </div>
 
@@ -162,7 +159,7 @@
         {% endif %}
 
         {% if row.has_range and row.subitems %}
-        <details class="tariff-subitem-detail">
+        <details class="tariff-subitem-detail" open>
           <summary>⚠️ 등록하신 HS코드({{ row.product.hs_code }})가 세부 10자리 코드까지는 아니라서, 범위로 표시된 협정의 세부 품목별 실제 세율을 확인하세요</summary>
           <table class="tariff-regime-table">
             <thead>

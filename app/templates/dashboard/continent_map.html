@@ -7,6 +7,42 @@
     <h1>박람회 운영 대시보드</h1>
     <p class="page-desc">지도에서 권역을 클릭해 박람회 목록을 확인하세요</p>
   </div>
+  <button type="button" class="btn-primary" data-modal-open="add-product-modal">+ 제품 추가하기</button>
+</div>
+
+<div class="modal-overlay" id="add-product-modal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h2>제품 추가하기</h2>
+      <button type="button" class="modal-close" data-modal-close aria-label="닫기">✕</button>
+    </div>
+
+    <form method="post" action="{{ url_for('mypage.add_product') }}">
+      <input type="hidden" name="next" value="dashboard">
+      <div class="form-row">
+        <div class="form-field hs-autocomplete-field">
+          <label for="modal-name">제품명 *</label>
+          <input type="text" id="modal-name" name="name" placeholder="예: 약과" autocomplete="off" required>
+          <div class="hs-autocomplete-dropdown" hidden></div>
+        </div>
+        <div class="form-field hs-autocomplete-field">
+          <label for="modal-hs_code">HS코드 *</label>
+          <input type="text" id="modal-hs_code" name="hs_code" placeholder="예: 1905.90" autocomplete="off" required>
+          <div class="hs-autocomplete-dropdown" hidden></div>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="modal-ingredients">성분표</label>
+        <textarea id="modal-ingredients" name="ingredients" rows="3" placeholder="예: 밀가루, 꿀, 참기름, 계피..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" data-modal-close>취소</button>
+        <button type="submit" class="btn-primary">추가하기</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <div class="dash-map-card">

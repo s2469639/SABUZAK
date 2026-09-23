@@ -34,6 +34,10 @@ import sys
 import time
 from datetime import datetime, timezone
 
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+
 from dotenv import load_dotenv
 from openai import OpenAI
 

@@ -25,10 +25,27 @@
       {% if product.ingredients %}
         <p class="ingredients">{{ product.ingredients }}</p>
       {% endif %}
+      {% if product.target_price or product.certifications or product.strengths %}
+      <p class="ingredients">
+        {% if product.target_price %}💰 {{ product.target_price }}{% endif %}
+        {% if product.certifications %} · 🏷️ {{ product.certifications }}{% endif %}
+        {% if product.strengths %} · 🍽️ {{ product.strengths }}{% endif %}
+      </p>
+      {% endif %}
     </div>
-    <form method="post" action="{{ url_for('mypage.delete_product', product_id=product.id) }}">
-      <button type="submit" class="btn-text-danger" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
-    </form>
+    <div class="action-buttons">
+      <button type="button" class="btn-chip" data-modal-open="edit-product-modal" data-edit-product
+              data-edit-url="{{ url_for('mypage.edit_product', product_id=product.id) }}"
+              data-edit-name="{{ product.name }}"
+              data-edit-hscode="{{ product.hs_code }}"
+              data-edit-ingredients="{{ product.ingredients or '' }}"
+              data-edit-target-price="{{ product.target_price or '' }}"
+              data-edit-certifications="{{ product.certifications or '' }}"
+              data-edit-strengths="{{ product.strengths or '' }}">수정</button>
+      <form method="post" action="{{ url_for('mypage.delete_product', product_id=product.id) }}">
+        <button type="submit" class="btn-text-danger" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+      </form>
+    </div>
   </div>
   {% endfor %}
 </div>
@@ -62,10 +79,77 @@
       <textarea id="ingredients" name="ingredients" rows="3" placeholder="예: 밀가루, 꿀, 참기름, 계피...">{{ form_ingredients or '' }}</textarea>
     </div>
 
+    <p class="page-desc">아래 3개 항목은 박람회 상세 페이지의 "트렌드 조사" 탭에서 시장·트렌드 분석 시 자동으로 사용됩니다.</p>
+    <div class="form-row">
+      <div class="form-field">
+        <label for="target_price">목표 소매 가격대/단위중량</label>
+        <input type="text" id="target_price" name="target_price" placeholder="예: 4.99 GBP / 350g"
+               value="{{ form_target_price or '' }}">
+      </div>
+      <div class="form-field">
+        <label for="certifications">보유 인증</label>
+        <input type="text" id="certifications" name="certifications" placeholder="예: 비건, 코셔, HACCP"
+               value="{{ form_certifications or '' }}">
+      </div>
+    </div>
+    <div class="form-field">
+      <label for="strengths">식감/가공 메커니즘</label>
+      <textarea id="strengths" name="strengths" rows="2" placeholder="예: 얇고 쫄깃한 만두피, 버섯 채즙으로 육즙 모사">{{ form_strengths or '' }}</textarea>
+    </div>
+
     <div class="form-actions">
       <a href="{{ url_for('mypage.index') }}" class="btn-secondary">취소</a>
       <button type="submit" class="btn-primary">저장</button>
     </div>
   </form>
+</div>
+
+<div class="modal-overlay" id="edit-product-modal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h2>제품 수정하기</h2>
+      <button type="button" class="modal-close" data-modal-close aria-label="닫기">✕</button>
+    </div>
+
+    <form method="post" action="" id="edit-product-form">
+      <div class="form-row">
+        <div class="form-field hs-autocomplete-field">
+          <label for="edit-name">제품명 *</label>
+          <input type="text" id="edit-name" name="name" placeholder="예: 약과" autocomplete="off" required>
+          <div class="hs-autocomplete-dropdown" hidden></div>
+        </div>
+        <div class="form-field hs-autocomplete-field">
+          <label for="edit-hs_code">HS코드 *</label>
+          <input type="text" id="edit-hs_code" name="hs_code" placeholder="예: 1905.90" autocomplete="off" required>
+          <div class="hs-autocomplete-dropdown" hidden></div>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="edit-ingredients">성분표</label>
+        <textarea id="edit-ingredients" name="ingredients" rows="3" placeholder="예: 밀가루, 꿀, 참기름, 계피..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="edit-target_price">목표 소매 가격대/단위중량</label>
+          <input type="text" id="edit-target_price" name="target_price" placeholder="예: 4.99 GBP / 350g">
+        </div>
+        <div class="form-field">
+          <label for="edit-certifications">보유 인증</label>
+          <input type="text" id="edit-certifications" name="certifications" placeholder="예: 비건, 코셔, HACCP">
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="edit-strengths">식감/가공 메커니즘</label>
+        <textarea id="edit-strengths" name="strengths" rows="2" placeholder="예: 얇고 쫄깃한 만두피, 버섯 채즙으로 육즙 모사"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" data-modal-close>취소</button>
+        <button type="submit" class="btn-primary">수정하기</button>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}

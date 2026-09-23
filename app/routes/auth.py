@@ -39,8 +39,9 @@ def register():
         password_confirm = request.form.get("password_confirm", "")
         name = request.form.get("name", "").strip()
         company = request.form.get("company", "").strip()
+        position = request.form.get("position", "").strip()
 
-        form_data = {"email": email, "name": name, "company": company}
+        form_data = {"email": email, "name": name, "company": company, "position": position}
 
         if not email or not password or not name:
             flash("이메일, 비밀번호, 이름은 필수 입력 항목입니다.", "danger")
@@ -54,7 +55,7 @@ def register():
             flash("이미 가입된 이메일입니다.", "danger")
             return render_template("auth/register.html", **form_data)
 
-        user = User(email=email, name=name, company=company or None)
+        user = User(email=email, name=name, company=company or None, position=position or None)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
@@ -72,3 +73,22 @@ def logout():
     logout_user()
     flash("로그아웃되었습니다.", "info")
     return redirect(url_for("auth.login"))
+
+
+@bp.route("/edit-profile", methods=["POST"])
+@login_required
+def edit_profile():
+    name = request.form.get("name", "").strip()
+    company = request.form.get("company", "").strip()
+    position = request.form.get("position", "").strip()
+
+    if not name:
+        flash("이름은 필수 입력 항목입니다.", "danger")
+        return redirect(request.referrer or url_for("dashboard.index"))
+
+    current_user.name = name
+    current_user.company = company or None
+    current_user.position = position or None
+    db.session.commit()
+    flash("내 정보를 수정했습니다.", "success")
+    return redirect(request.referrer or url_for("dashboard.index"))
