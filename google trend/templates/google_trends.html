@@ -1,246 +1,226 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>글로벌 시장 및 Google Trends 분석</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; color: #1e293b; margin: 0; padding: 24px; }
-    .container { max-width: 1080px; margin: 0 auto; }
-    .card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08); margin-bottom: 24px; }
-    .form-group { display: flex; gap: 12px; margin-bottom: 12px; }
-    input, select, button { padding: 10px 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; }
-    input { flex: 1; }
-    select { min-width: 160px; background-color: #fff; }
-    button.submit-btn { background: #2563eb; color: #fff; font-weight: 600; cursor: pointer; border: none; padding: 10px 24px; }
-    button.submit-btn:hover { background: #1d4ed8; }
-    
-    .keyword-badges { display: flex; gap: 8px; margin: 14px 0 10px 0; flex-wrap: wrap; }
-    .badge { background: #eff6ff; color: #1d4ed8; padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 14px; border: 1px solid #bfdbfe; }
-    .badge span.ko { font-weight: 400; color: #3b82f6; margin-left: 4px; }
-    
-    .reason-box { background: #f8fafc; border-left: 4px solid #3b82f6; padding: 14px 18px; margin: 12px 0 20px 0; font-size: 14px; line-height: 1.6; color: #475569; border-radius: 0 8px 8px 0; }
-    
-    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; margin-bottom: 10px; }
-    .mode-btn-group { display: flex; background: #e2e8f0; border-radius: 8px; padding: 3px; gap: 4px; }
-    .mode-btn { background: transparent; border: none; padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 6px; color: #475569; transition: 0.2s; }
-    .mode-btn.active { background: #fff; color: #2563eb; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글로벌 F&B 시장 및 Google Trends 분석 시스템</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; color: #0f172a; margin: 0; padding: 24px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 22px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+        h3 { margin-top: 0; margin-bottom: 12px; font-size: 1.15rem; color: #1e293b; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 0.85rem; font-weight: 700; color: #475569; }
+        .form-group input { padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.92rem; }
+        .btn-submit { background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%; font-size: 0.95rem; }
+        .btn-submit:hover { background: #1d4ed8; }
 
-    .insights-box { margin-top: 24px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px 20px; }
-    .insights-box h4 { margin: 0 0 12px 0; font-size: 16px; color: #0f172a; }
-    .insights-box ol { margin: 0; padding-left: 20px; color: #334155; font-size: 14px; line-height: 1.8; }
-    .insights-box li { margin-bottom: 6px; }
+        .tag { background: #e0e7ff; color: #3730a3; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: inline-block; margin-right: 6px; margin-bottom: 6px; }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .btn-toggle { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 6px; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
+        .btn-toggle.active { background: #2563eb; color: white; border-color: #2563eb; }
+        .chart-box { position: relative; height: 350px; width: 100%; margin: 14px 0; }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 16px; }
-    .subcard { background: #f1f5f9; border-radius: 8px; padding: 16px; }
-    .subcard h4 { margin: 0 0 8px 0; color: #0f172a; }
-    .price-box { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 16px; border-radius: 8px; font-size: 18px; font-weight: bold; margin-bottom: 16px; }
-    ul { margin: 0; padding-left: 20px; }
-    li { margin-bottom: 6px; }
-    .no-trend-data { text-align: center; padding: 40px; color: #64748b; font-size: 15px; }
-  </style>
+        .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 14px; }
+        .insight-card { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 14px; border-radius: 4px; font-size: 0.92rem; line-height: 1.5; color: #1e40af; }
+        .insight-card.b2b { background: #f0fdf4; border-left-color: #16a34a; color: #166534; }
+
+        .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 900px) { .grid-2col { grid-template-columns: 1fr; } }
+        .news-item { border-bottom: 1px solid #f1f5f9; padding: 10px 0; }
+        .news-item:last-child { border-bottom: none; }
+        .comp-box { background: #fafafa; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 10px; font-size: 0.9rem; }
+    </style>
 </head>
 <body>
+
 <div class="container">
-  <div class="card">
-    <h2>🌍 글로벌 시장 및 Google Trends 분석</h2>
-    <form method="POST">
-      <div class="form-group">
-        <input type="text" name="product_name" placeholder="제품명 입력 (예: 약과, 김부각)" value="{{ result.product_name if result else '' }}" required>
-        <input type="text" name="country" placeholder="국가 입력 (예: 미국, 일본, 벨기에)" value="{{ result.country if result else '' }}" required>
-        
-        <select name="timeframe">
-          <option value="today 12-m" {% if timeframe == 'today 12-m' %}selected{% endif %}>최근 1년 (추천)</option>
-          <option value="today 3-y" {% if timeframe == 'today 3-y' %}selected{% endif %}>최근 3년 (성장세)</option>
-          <option value="today 5-y" {% if timeframe == 'today 5-y' %}selected{% endif %}>최근 5년 (장기)</option>
-          <option value="today 3-m" {% if timeframe == 'today 3-m' %}selected{% endif %}>최근 3개월 (단기)</option>
-        </select>
-
-        <button type="submit" class="submit-btn">분석 실행</button>
-      </div>
-    </form>
-  </div>
-
-  {% if result %}
-  <div class="card">
-    <div class="chart-header">
-      <h3 style="margin: 0;">📈 Google Trends 분석 (국가: {{ result.country }})</h3>
-      
-      <div class="mode-btn-group">
-        <button type="button" class="mode-btn active" id="btn-indep" onclick="switchMode('independent')">개별 트렌드 모드 (왜곡방지)</button>
-        <button type="button" class="mode-btn" id="btn-rel" onclick="switchMode('relative')">상대 비교 모드 (체급비교)</button>
-      </div>
+    <!-- 6대 명세 입력 카드 -->
+    <div class="card">
+        <h3>📋 수출 제품 6대 명세 입력 및 B2B 포지셔닝 분석</h3>
+        <form method="POST" action="/">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>출품 제품명 *</label>
+                    <input type="text" name="product_name" value="{{ product_name }}" required>
+                </div>
+                <div class="form-group">
+                    <label>진출 대상 국가 *</label>
+                    <input type="text" name="country" value="{{ country }}" required>
+                </div>
+                <div class="form-group">
+                    <label>주요 원재료 (핵심 베이스)</label>
+                    <input type="text" name="ingredients" value="{{ ingredients }}">
+                </div>
+                <div class="form-group">
+                    <label>목표 소매 가격대 (용량 명기)</label>
+                    <input type="text" name="target_price" value="{{ target_price }}">
+                </div>
+                <div class="form-group">
+                    <label>보유 인증 (선택)</label>
+                    <input type="text" name="certifications" value="{{ certifications }}">
+                </div>
+                <div class="form-group">
+                    <label>박람회 개최 예정 월</label>
+                    <input type="text" name="exhibition_month" value="{{ exhibition_month }}" placeholder="예: 10월">
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 14px;">
+                <label>제품 핵심 강점 및 특징 * (물리적 식감, 가공 방식 등)</label>
+                <input type="text" name="strengths" value="{{ strengths }}" required>
+            </div>
+            <button type="submit" class="btn-submit">실시간 트렌드 & B2B 소싱 사이클 분석</button>
+        </form>
     </div>
-    
-    <div class="keyword-badges">
-      <span style="line-height: 2; font-weight: 600;">선정된 현지 키워드:</span>
-      {% for item in result.keywords %}
-        <span class="badge">
-          # {{ item.keyword }} <span class="ko">({{ item.ko }})</span>
-        </span>
-      {% endfor %}
-    </div>
 
-    {% if result.selection_reason %}
-    <div class="reason-box">
-      <strong>💡 키워드 선정 전략 및 배경:</strong><br>
-      {{ result.selection_reason }}
-    </div>
+    {% if error %}
+        <div class="card" style="border-left: 4px solid #ef4444; color: #dc2626;">⚠️ {{ error }}</div>
     {% endif %}
 
-    {% if result.trend_data.dates | length > 0 %}
-      <div style="height: 380px; margin-top: 16px;">
-        <canvas id="trendChart"></canvas>
-      </div>
+    {% if result %}
+    <!-- Google Trends 시계열 & B2B 인사이트 -->
+    <div class="card">
+        <div class="chart-header">
+            <h3>📈 {{ result.country }} ({{ result.geo_code }}) Google Trends 시계열 분석</h3>
+            <div>
+                <button type="button" class="btn-toggle active" id="btnIndep" onclick="switchChartMode('independent')">개별 트렌드 (왜곡 방지)</button>
+                <button type="button" class="btn-toggle" id="btnRel" onclick="switchChartMode('relative')">상대 비교 (체급 비교)</button>
+            </div>
+        </div>
 
-      {% if result.trend_insights %}
-      <div class="insights-box">
-        <h4>📊 그래프 핵심 해석 및 비즈니스 시사점</h4>
-        <ol>
-          {% for insight in result.trend_insights %}
-            <li>{{ insight }}</li>
-          {% endfor %}
-        </ol>
-      </div>
-      {% endif %}
+        <div>
+            {% for kw in result.keywords %}
+                <span class="tag">🔍 {{ kw.keyword }} ({{ kw.ko }})</span>
+            {% endfor %}
+        </div>
 
-    {% else %}
-      <div class="no-trend-data">
-        해당 조건에 대한 구글 트렌드 검색 데이터가 충분하지 않습니다.
-      </div>
+        <div class="chart-box">
+            <canvas id="trendChart"></canvas>
+        </div>
+
+        <div class="insight-grid">
+            <div class="insight-card">
+                🗓️ <strong>소비자 피크 및 시즌성:</strong><br>{{ result.trend_insights[0] }}
+            </div>
+            <div class="insight-card">
+                🔗 <strong>카테고리 동조화 진단:</strong><br>{{ result.trend_insights[1] }}
+            </div>
+            <div class="insight-card b2b">
+                🎯 <strong>B2B 소싱 역산 발주 & 부스 전략:</strong><br>{{ result.trend_insights[2] }}
+            </div>
+        </div>
+    </div>
+
+    <!-- 하단 2열 그리드: Tavily 뉴스 vs 매대 경쟁사 -->
+    <div class="grid-2col">
+        <div class="card">
+            <h3>📰 현지 식문화 트렌드 뉴스 (Tavily)</h3>
+            <p style="font-size: 0.9rem; color: #475569;">💡 {{ result.tavily_data.overall_summary_ko }}</p>
+            {% for item in result.tavily_data.insights %}
+            <div class="news-item">
+                <strong style="font-size: 0.92rem; color: #1e293b;">{{ item.title }}</strong>
+                <p style="font-size: 0.85rem; color: #64748b; margin: 4px 0;">{{ item.summary }}</p>
+                <a href="{{ item.url }}" target="_blank" rel="noopener noreferrer" style="font-size: 0.8rem; color: #2563eb; text-decoration: none;">🔗 원문 확인</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="card">
+            <h3>🛒 현지 유통 매대 실존 경쟁사 (OpenAI)</h3>
+            <div style="background: #f8fafc; border-left: 3px solid #3b82f6; padding: 10px; border-radius: 4px; font-size: 0.85rem; color: #1e40af; margin-bottom: 12px;">
+                💡 <strong>평균 시장 가격대:</strong> {{ result.competitor_analysis.average_snack_price }}<br>
+                {{ result.competitor_analysis.market_summary }}
+            </div>
+            {% for comp in result.competitor_analysis.competitor_products %}
+            <div class="comp-box">
+                <strong>{{ comp.name }}</strong> ({{ comp.maker }})
+                <div style="font-size: 0.82rem; color: #475569; margin-top: 4px;">{{ comp.desc }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
     {% endif %}
-  </div>
-
-  <div class="card">
-    <h3>🏬 시장 분석 & 경쟁 현황</h3>
-    
-    <div class="price-box">
-      💰 현지 과자/스낵류 평균 가격대: {{ result.analysis.average_snack_price }}
-    </div>
-
-    <p><strong>시장 요약:</strong> {{ result.analysis.market_summary }}</p>
-
-    <div class="grid">
-      <div class="subcard">
-        <h4>🏢 주요 경쟁사</h4>
-        <ul>
-          {% for comp in result.analysis.competitors %}
-            <li>{{ comp }}</li>
-          {% endfor %}
-        </ul>
-      </div>
-
-      <div class="subcard">
-        <h4>🍪 대표 경쟁 제품</h4>
-        <ul>
-          {% for prod in result.analysis.competitor_products %}
-            <li><strong>{{ prod.name }}</strong> ({{ prod.maker }}): {{ prod.desc }}</li>
-          {% endfor %}
-        </ul>
-      </div>
-
-      <div class="subcard">
-        <h4>🔄 카테고리 유사 제품</h4>
-        <ul>
-          {% for sim in result.analysis.similar_products %}
-            <li><strong>{{ sim.name }}</strong>: {{ sim.desc }}</li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <script id="trend-data" type="application/json">
-    {{ result.trend_data | tojson | safe }}
-  </script>
-  <script id="keywords-data" type="application/json">
-    {{ result.keywords | tojson | safe }}
-  </script>
-
-  <script>
-    let myChart = null;
-    let currentMode = 'independent';
-
-    const rawTrendData = document.getElementById('trend-data').textContent;
-    const trendData = JSON.parse(rawTrendData);
-
-    const rawKeywordsData = document.getElementById('keywords-data').textContent;
-    const keywordsList = JSON.parse(rawKeywordsData);
-
-    const labelMap = {};
-    keywordsList.forEach(item => {
-      labelMap[item.keyword] = item.ko ? `${item.keyword} (${item.ko})` : item.keyword;
-    });
-
-    const colors = ['#2563eb', '#dc2626', '#16a34a'];
-
-    function renderChart(mode) {
-      if (!trendData.dates || trendData.dates.length === 0) return;
-
-      const seriesSource = (mode === 'independent') ? trendData.independent_series : trendData.relative_series;
-      const ctx = document.getElementById('trendChart').getContext('2d');
-
-      const datasets = Object.keys(seriesSource).map((kw, idx) => ({
-        label: labelMap[kw] || kw,
-        data: seriesSource[kw],
-        borderColor: colors[idx % colors.length],
-        backgroundColor: colors[idx % colors.length] + '15',
-        tension: 0.35,
-        borderWidth: 2,
-        pointRadius: 1,
-        pointHoverRadius: 5,
-        fill: false
-      }));
-
-      if (myChart) {
-        myChart.destroy();
-      }
-
-      myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: trendData.dates,
-          datasets: datasets
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            legend: { labels: { font: { size: 13 } } },
-            tooltip: {
-              callbacks: {
-                footer: function() {
-                  return mode === 'independent' ? '※ 각 키워드별 자체 최고점(100) 기준' : '※ 키워드 간 직접 상대비교 수치';
-                }
-              }
-            }
-          },
-          scales: {
-            x: { ticks: { maxTicksLimit: 12 } },
-            y: { 
-              beginAtZero: true, 
-              max: 100, 
-              title: { 
-                display: true, 
-                text: mode === 'independent' ? '개별 관심도 지수 (0-100 자체기준)' : '상대 검색 점유율 (0-100)' 
-              } 
-            }
-          }
-        }
-      });
-    }
-
-    function switchMode(mode) {
-      currentMode = mode;
-      document.getElementById('btn-indep').classList.toggle('active', mode === 'independent');
-      document.getElementById('btn-rel').classList.toggle('active', mode === 'relative');
-      renderChart(mode);
-    }
-
-    renderChart('independent');
-  </script>
-  {% endif %}
 </div>
+
+<!-- Chart.js 데이터 페이로드 및 뷰 스위칭 스크립트 -->
+<div id="chartPayload"
+     data-labels='{{ result.chart_labels_json if result else "[]" }}'
+     data-independent='{{ result.independent_datasets_json if result else "[]" }}'
+     data-relative='{{ result.relative_datasets_json if result else "[]" }}'
+     style="display: none;">
+</div>
+
+<script>
+    let chartInstance = null;
+    let labels = [];
+    let indepDatasets = [];
+    let relDatasets = [];
+    const colors = ['#2563EB', '#10B981', '#F59E0B', '#8B5CF6'];
+
+    function createDatasets(rawList) {
+        return rawList.map((ds, idx) => ({
+            label: ds.label,
+            data: ds.data,
+            borderColor: colors[idx % colors.length],
+            tension: 0.3,
+            borderWidth: 2.2,
+            pointRadius: 2,
+            fill: false
+        }));
+    }
+
+    function switchChartMode(mode) {
+        if (!chartInstance) return;
+        const btnIndep = document.getElementById("btnIndep");
+        const btnRel = document.getElementById("btnRel");
+
+        if (mode === 'independent') {
+            chartInstance.data.datasets = createDatasets(indepDatasets);
+            chartInstance.options.scales.y.title.text = '자체 정규화 관심도 (0~100)';
+            btnIndep.classList.add("active");
+            btnRel.classList.remove("active");
+        } else {
+            chartInstance.data.datasets = createDatasets(relDatasets);
+            chartInstance.options.scales.y.title.text = '상대 점유율 비교 (0~100)';
+            btnRel.classList.add("active");
+            btnIndep.classList.remove("active");
+        }
+        chartInstance.update();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const payload = document.getElementById("chartPayload");
+        if (!payload) return;
+
+        labels = JSON.parse(payload.dataset.labels || "[]");
+        indepDatasets = JSON.parse(payload.dataset.independent || "[]");
+        relDatasets = JSON.parse(payload.dataset.relative || "[]");
+
+        const ctx = document.getElementById("trendChart");
+        if (ctx && labels.length > 0 && indepDatasets.length > 0) {
+            chartInstance = new Chart(ctx.getContext("2d"), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: createDatasets(indepDatasets)
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { min: 0, max: 100, title: { display: true, text: '자체 정규화 관심도 (0~100)' } },
+                        x: { ticks: { maxTicksLimit: 12 } }
+                    }
+                }
+            });
+        }
+    });
+</script>
+
 </body>
 </html>

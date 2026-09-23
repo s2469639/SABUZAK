@@ -92,6 +92,14 @@ def expo_list_by_country(country):
     return render_template("dashboard/expo_list.html", **ctx)
 
 
+@bp.route("/partial/all")
+@login_required
+def expo_list_partial_all():
+    base_query = Exhibition.query.filter(Exhibition.is_active == 1)
+    ctx = _build_list_context(base_query, "전체 해외", "exhibition.expo_list_partial_all", {}, "")
+    return render_template("dashboard/_expo_list_partial.html", **ctx)
+
+
 @bp.route("/partial/<continent>")
 @login_required
 def expo_list_partial(continent):

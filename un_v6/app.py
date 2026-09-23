@@ -12,13 +12,12 @@
 """
 
 import math
+import re
 
 from flask import Flask, render_template, request
 
-import customs_trade_stats
 from env_setup import ensure_required_keys
 from un_comtrade import (
-    KOREAN_NAME_TO_ISO3,
     get_market_overview,
     get_market_research,
     get_multi_country_comparison,
@@ -27,26 +26,11 @@ from un_comtrade import (
 app = Flask(__name__)
 
 
-def _country_name_candidates(raw_country, iso3):
-    """관세청 API에 넘길 국가명 후보 목록을 만든다.
-    1) 사용자가 원래 입력한 문자열(대개 한글/영문 국가명이라 그대로 매칭될 가능성이 높음)
-    2) 그 나라의 ISO3와 같은 값을 가리키는 KOREAN_NAME_TO_ISO3의 한글 별칭들
-       (사용자가 "VNM"처럼 ISO3 코드로 입력해서 1)이 매칭 안 될 때의 보조 수단)"""
-    candidates = [raw_country]
-    for name, code in KOREAN_NAME_TO_ISO3.items():
-        if code == iso3 and any("가" <= ch <= "힣" for ch in name):
-            candidates.append(name)
-    return candidates
-
-
-def _fetch_customs_context(hscode, raw_country, iso3, force=False):
-    """관세청 공식 자료는 완전히 선택 기능이다 - 키가 없거나 API 호출이 실패해도
-    UN Comtrade 핵심 결과 화면은 그대로 보여줘야 하므로 예외를 여기서 다 삼킨다."""
-    try:
-        candidates = _country_name_candidates(raw_country, iso3)
-        return customs_trade_stats.get_customs_context(hscode, candidates, force=force)
-    except Exception as e:
-        return {"unavailable_reason": str(e)}
+def _clean_hscode(raw: str) -> str:
+    """입력창에 "1905.90"처럼 4자리 뒤에 구분자가 찍혀 보여도, 실제 조회에는
+    숫자만 필요하다(UN Comtrade는 순수 6자리 숫자 코드를 씀). 화면 표시용
+    구분자(., 공백 등 숫자가 아닌 문자)는 여기서 전부 제거하고 숫자만 남긴다."""
+    return re.sub(r"\D", "", raw or "")
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -58,11 +42,10 @@ def index():
     # 실행된다 - 링크 클릭만으로 유료/제한된 API 호출이 바로 나가지 않게 함.
     hscode = request.args.get("hscode", "").strip()
     country = request.args.get("country", "").strip()
-    customs = None
     force = False
 
     if request.method == "POST":
-        hscode = request.form.get("hscode", "").strip()
+        hscode = _clean_hscode(request.form.get("hscode", ""))
         country = request.form.get("country", "").strip()
         # "새로고침(캐시 무시)" 체크박스 - 예전에 한 번 조사했다가 "데이터
         # 없음"이 나온 조합을 30일 캐시가 그대로 물고 있는 경우가 있어서
@@ -71,7 +54,6 @@ def index():
         force = bool(request.form.get("force"))
         try:
             result = get_market_research(hscode, country, force=force)
-            customs = _fetch_customs_context(hscode, country, result["target_country"], force=force)
         except ValueError as e:
             error = str(e)
         except Exception as e:
@@ -79,7 +61,7 @@ def index():
 
     return render_template(
         "un_comtrade.html",
-        result=result, error=error, customs=customs,
+        result=result, error=error,
         hscode=hscode, country=country, force=force,
     )
 
@@ -194,11 +176,10 @@ def _svg_line_series(share_trend, width=560, height=180, pad_l=44, pad_r=16, pad
 @app.route("/matrix", methods=["GET", "POST"])
 def matrix():
     """여러 후보국을 한 번에 비교하는 종합 화면 (트라이빅 "품목별 유망시장"에 대응):
-    세계시장 교역순위, 주요국 점유율 추이, 한국 수출신고 추이, 유망시장
-    순위(버블차트), 성장률x한국점유율 매트릭스를 한 페이지에 모은다."""
+    세계시장 교역순위, 주요국 점유율 추이, 유망시장 순위(버블차트),
+    성장률x한국점유율 매트릭스를 한 페이지에 모은다."""
     result = None
     overview = None
-    customs = None
     error = None
     hscode = ""
     candidates_raw = ""
@@ -206,12 +187,11 @@ def matrix():
     scatter = []
     bubbles = []
     import_line = export_line = None
-    annual_customs = []
     threshold_x_pct = threshold_y_pct = 50
     force = False
 
     if request.method == "POST":
-        hscode = request.form.get("hscode", "").strip()
+        hscode = _clean_hscode(request.form.get("hscode", ""))
         candidates_raw = request.form.get("candidates", "").strip()
         top_n = int(request.form.get("top_n") or 10)
         force = bool(request.form.get("force"))  # 캐시 무시하고 새로 조사 (단일국가 화면과 동일한 이유)
@@ -237,17 +217,10 @@ def matrix():
             except Exception as e:
                 overview = {"unavailable_reason": str(e)}
 
-            # 한국 수출신고 연도별 추이도 마찬가지로 선택 기능 (관세청 키 없어도 무방)
-            try:
-                customs = customs_trade_stats.get_customs_context(hscode, None, months=60, force=force)
-                annual_customs = customs.get("annual_totals", [])
-            except Exception as e:
-                customs = {"unavailable_reason": str(e)}
-
     return render_template(
         "un_comtrade_matrix.html",
-        result=result, overview=overview, customs=customs, error=error,
-        scatter=scatter, bubbles=bubbles, annual_customs=annual_customs,
+        result=result, overview=overview, error=error,
+        scatter=scatter, bubbles=bubbles,
         import_line=import_line, export_line=export_line,
         threshold_x_pct=threshold_x_pct, threshold_y_pct=threshold_y_pct,
         hscode=hscode, candidates_raw=candidates_raw, top_n=top_n, force=force,

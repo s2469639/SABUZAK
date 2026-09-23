@@ -1,41 +1,29 @@
-"""
-raw_exhibitions.country(영문) -> country_ko(한글) 채우는 스크립트.
-
-pycountry(영문 국가명 -> ISO3166 alpha-2) + babel(alpha-2 -> 각 언어 국가명, ko 포함)
-조합으로 거의 모든 국가를 자동 변환한다. babel의 ko 로케일이 CLDR 데이터 기반이라
-"아르메니아", "코트디부아르"처럼 정확한 한글 표기가 나온다.
-
-그래도 못 찾는 특이 표기(예: 웹사이트마다 다른 국가명 철자)를 위해
-MANUAL_OVERRIDES에 예외만 최소로 추가해서 쓴다.
-
-사전 준비:
-    pip install pycountry babel
-
-사용법 (sabuzak/scripts/market 에서):
-    python country_name.py --db ../../instance/sabuzak.db
-"""
-
 import argparse
 import sqlite3
-
 import pycountry
 from babel import Locale
 
 KO = Locale("ko")
 
-# pycountry/babel로도 못 찾는 표기만 최소로 직접 매핑 (사이트마다 국가명 철자가 다를 때)
+# pycountry/babel로도 못 찾는 표기만 최소로 직접 매핑
 MANUAL_OVERRIDES = {
-    "Ivory Coast": "코트디부아르",
-    "Myanmar (Burma)": "미얀마",
-    "South Korea": "대한민국",
-    "North Korea": "북한",
-    "Russia": "러시아",
-    "Vietnam": "베트남",
-    "Laos": "라오스",
-    "Syria": "시리아",
     "Czech Republic": "체코",
-    "UAE": "아랍에미리트",
+    "Ivory Coast": "코트디부아르",
+    "Laos": "라오스",
+    "Moldova": "몰도바",
+    "Myanmar": "미얀마",
+    "Myanmar (Burma)": "미얀마",
+    "North Korea": "북한",
+    "Romania": "루마니아",
+    "Russia": "러시아",
+    "South Africa": "남아프리카 공화국",
+    "South Korea": "대한민국",
+    "Syria": "시리아",
     "Turkey": "튀르키예",
+    "UAE": "아랍에미리트",
+    "Ukraine": "우크라이나",
+    "Vietnam": "베트남",
+    "Western Sahara": "사하라 서부",
 }
 
 
@@ -106,7 +94,7 @@ def translate_countries(db_path):
         print(f"✨ 총 {update_count}건의 country_ko를 채웠습니다! (고유 국가 {len(cache)}개)")
         if unresolved:
             print(f"⚠️ 한글명을 못 찾아 영문 그대로 둔 국가 ({len(unresolved)}개): {sorted(unresolved)}")
-            print("   -> 위 목록은 MANUAL_OVERRIDES에 직접 추가해서 재실행하면 됩니다.")
+            print("    -> 위 목록은 MANUAL_OVERRIDES에 직접 추가해서 재실행하면 됩니다.")
     except Exception as e:
         print(f"⚠️ 에러 발생: {e}")
 
