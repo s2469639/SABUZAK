@@ -258,14 +258,45 @@ def fetch_regulations_for_country(
     return all_rows
 
 
-# 식품/농산물 수출과 관련 있을 법한 규정을 상위로 올리는 키워드
-# (app/services/hscode.py의 _FOOD_RELEVANCE_KEYWORDS와 같은 기준)
+# 식품/농산물 전반에 관련 있을 법한 규정 점수용 키워드 (관련 있다고 이미
+# 판정된 것들 사이에서 순위만 매길 때 씀 - 아래 _PRODUCT_SPECIFIC_KEYWORDS와
+# 달리 이것만으로는 "관련 있다"고 판정하지 않음. "food"/"import" 같은 너무
+# 넓은 단어라 이것만 기준으로 삼으면 아프리카돼지열병, 수산물 수입중단 같은
+# 완전히 무관한 규정까지 다 상위로 올라옴)
 _FOOD_RELEVANCE_KEYWORDS = [
     "food", "animal", "plant", "fish", "meat", "agricultur", "consumer",
     "biological", "sanitary", "phytosanitary", "veterinary", "poultry",
     "livestock", "seafood", "beverage", "packaging", "labell", "labeling",
     "import", "export", "custom",
 ]
+
+# 우리 품목(약과/유과 등 - HS 1905류: bread, biscuits, wafers, gingerbread 등)에
+# 실제로 관련 있다고 볼 수 있는 특화 키워드. hsCodes가 없는 규정(TRAINS
+# 데이터 대부분이 그렇다)은 이 키워드가 하나라도 있어야만 관련 있다고 본다.
+_PRODUCT_SPECIFIC_KEYWORDS = [
+    "bread", "biscuit", "wafer", "cracker", "gingerbread", "bakery",
+    "cookie", "cake", "confection", "pastry", "cereal", "wheat", "flour",
+    "baked", "snack food",
+]
+
+
+def _hs_code_overlaps_product(hs_codes_field) -> bool:
+    """응답의 hsCodes 필드가 우리 품목(SNACK_HS_CODES)과 겹치는지 확인."""
+    if not hs_codes_field:
+        return False
+    text = str(hs_codes_field)
+    return any(code in text for code in SNACK_HS_CODES)
+
+
+def is_product_relevant(reg: dict) -> bool:
+    """이 규정이 실제로 우리 품목(약과/유과류)과 관련 있는지 판단.
+    hsCodes가 우리 품목 코드와 겹치면 무조건 관련 있다고 본다. hsCodes가
+    없으면 제목/설명에 품목 특화 키워드가 있어야만 관련 있다고 본다 -
+    "food"/"import"처럼 너무 넓은 키워드만으로는 통과시키지 않는다."""
+    if _hs_code_overlaps_product(reg.get("hsCodes")):
+        return True
+    text = " ".join([reg.get("officialTitle") or "", reg.get("description") or ""]).lower()
+    return any(kw in text for kw in _PRODUCT_SPECIFIC_KEYWORDS)
 
 
 def _relevance_score(reg: dict) -> int:
@@ -277,9 +308,13 @@ def _relevance_score(reg: dict) -> int:
 
 
 def top_relevant_regulations(regulations: list, limit: int = 6) -> list:
-    """식품/농산물 관련도가 높은 순으로 상위 N개만 남긴다 (전체를 다 저장하면
-    화면도 지저분해지고 AI 요약 비용도 커지므로, 정말 중요한 것만 추림)."""
-    return sorted(regulations, key=_relevance_score, reverse=True)[:limit]
+    """우리 품목과 실제로 관련 있는 것만 남기고(is_product_relevant), 그중에서
+    식품/농산물 관련도가 높은 순으로 상위 N개만 남긴다 (전체를 다 저장하면
+    화면도 지저분해지고 AI 요약 비용도 커지므로, 정말 중요한 것만 추림).
+    국가와 무관하게 항상 이 기준으로 걸러지므로 어느 나라를 조회하든 동일하게
+    적용된다."""
+    relevant = [reg for reg in regulations if is_product_relevant(reg)]
+    return sorted(relevant, key=_relevance_score, reverse=True)[:limit]
 
 
 def summarize_regulation_ko(title: str, description: str) -> str:
