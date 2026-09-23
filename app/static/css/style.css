@@ -20,15 +20,9 @@ body {
 
 .sidebar {
   position: relative;
-<<<<<<< Updated upstream
   width: 240px;
   background: #fff;
   color: #222;
-=======
-  width: 220px;
-  background: #1f2a37;
-  color: #fff;
->>>>>>> Stashed changes
   padding: 24px 16px;
   display: flex;
   flex-direction: column;
@@ -71,8 +65,66 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 28px;
-  margin-top: 40px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  margin-top: 0;
+  border-bottom: 1px solid #ece5d8;
+}
+
+.sidebar-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #ece5d8;
+  cursor: pointer;
+  padding: 8px 0 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.sidebar-user-info:hover {
+  background: #f7f6f3;
+}
+
+.sidebar-user-avatar {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-user-avatar svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sidebar-user-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sidebar-user-name {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.sidebar-user-company {
+  display: block;
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 2px;
 }
 
 .brand-badge {
@@ -101,6 +153,11 @@ body {
 
 .sidebar-section {
   margin-bottom: 24px;
+}
+
+.sidebar-section:not(.sidebar-footer) {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ece5d8;
 }
 
 .sidebar-section-title {
@@ -141,22 +198,19 @@ body {
   font-weight: 600;
 }
 
-.sidebar-external-links a {
-  color: #ea580c;
+.sidebar .sidebar-external-links a:hover {
+  background: #fdf3ec;
 }
 
-.sidebar-external-links a:hover {
-  background: #fdf3ec;
+.external-link-arrow {
+  color: #ea580c;
 }
 
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
-<<<<<<< Updated upstream
   min-width: 0;
-=======
->>>>>>> Stashed changes
 }
 
 .content {
@@ -397,6 +451,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  margin-bottom: 18px;
+}
+
+.form-field:last-child {
+  margin-bottom: 0;
 }
 
 .form-field label {
@@ -624,7 +683,7 @@ body {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .expo-results-header h2 {
@@ -1044,25 +1103,6 @@ body {
 
 .tariff-regime-table tr.best-row {
   background: #f0fdf4;
-}
-
-.tariff-subitem-detail {
-  border: 1px solid #fde68a;
-  background: #fffbeb;
-  border-radius: 8px;
-  padding: 10px 14px;
-}
-
-.tariff-subitem-detail summary {
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  color: #92400e;
-}
-
-.tariff-subitem-detail .tariff-regime-table {
-  margin-top: 10px;
-  font-size: 12px;
 }
 
 .tariff-regime-table tr.best-row td {
@@ -1720,9 +1760,15 @@ body {
   gap: 16px;
   margin-bottom: 20px;
 }
-.dash-header h1 { font-size: 18px; font-weight: 600; margin: 0; color: #1a1a1a; }
-.dash-header .page-desc { margin: 4px 0 0; }
+.dash-header h1 { font-size: 24px; font-weight: 700; margin: 0; color: #1a1a1a; }
 .dash-header-actions { display: flex; align-items: center; gap: 8px; }
+
+.dash-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.dash-title-row .page-desc { margin: 0; }
 
 .sr-only {
   position: absolute;
@@ -1810,7 +1856,27 @@ body {
 .legend-chip.active[data-continent="아시아"] .legend-count { background: #c4a05a; }
 .legend-chip.active[data-continent="오세아니아"] .legend-count { background: #c07878; }
 
-/* ---- 시장 개요 / UN Comtrade (un_v6 포팅) ---- */
+/* ---- 아래는 이 디자인 스냅샷 이후 추가된 기능(HS코드 세부 관세, 시장 매트릭스)용
+   스타일이라 이 파일엔 없어서 그대로 옮겨왔다 ---- */
+
+.tariff-subitem-detail {
+  border: 1px solid #fde68a;
+  background: #fffbeb;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.tariff-subitem-detail summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #92400e;
+}
+.tariff-subitem-detail .tariff-regime-table {
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.dash-header .page-desc { margin: 4px 0 0; }
 
 .un-market-card + .un-market-card { margin-top: 16px; }
 .un-market-card-head {
@@ -1891,4 +1957,3 @@ body {
 .un-bubble-detail { position: absolute; display: none; background: #3c4043; color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.6; min-width: 190px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 5; pointer-events: none; }
 .un-bubble-detail strong { display: block; font-size: 13px; margin-bottom: 4px; }
 .un-bubble-detail a { color: #8ab4f8; pointer-events: auto; }
-
