@@ -542,3 +542,31 @@ def to_ntm_measure_rows(country_iso3: str, product_key: str, regulations: list, 
             "data_source": "UNCTAD TRAINS",
         })
     return rows
+
+
+# NtmMeasure 테이블에 이 (국가, 품목) 조합으로 저장된 행이 하나도 없으면
+# "아직 한 번도 조회 안 함"인지 "조회는 했는데 관련 규정이 진짜 0건"인지
+# 구분이 안 된다. 후자일 때는 이 마커 하나짜리 행을 대신 저장해서 구분한다
+# (app/services/hscode.py의 get_country_regulations가 이 마커를 인식해서
+# 빈 리스트로 처리 - 정적 예시 데이터로 폴백하지 않고 "규정 없음"을 그대로 보여줌).
+NO_MATCH_MARKER = "__NTM_NO_MATCH__"
+
+
+def no_match_row(country_iso3: str, product_key: str) -> dict:
+    """조회는 했지만 관련 규정이 하나도 없을 때 저장할 마커 행."""
+    return {
+        "reporter": country_iso3,
+        "partner": "KOR",
+        "product": product_key,
+        "measure_code": "",
+        "measure_section": "",
+        "measure_title": NO_MATCH_MARKER,
+        "measure_summary": "",
+        "legislation_title": NO_MATCH_MARKER,
+        "legislation_summary": "",
+        "implementation_authority": "",
+        "start_date": "",
+        "end_date": "",
+        "web_link": "",
+        "data_source": "UNCTAD TRAINS",
+    }
