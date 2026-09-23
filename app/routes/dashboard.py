@@ -35,7 +35,7 @@ def index():
 
     all_list_ctx = _build_list_context(
         Exhibition.query.filter(Exhibition.is_active == 1, Exhibition.id.notin_(dup_ids)),
-        "전체 해외",
+        "해외",
         "exhibition.expo_list_partial_all",
         {},
         "",

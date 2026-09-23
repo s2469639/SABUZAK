@@ -10,7 +10,13 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(function (html) {
         resultsBox.innerHTML = html;
         resultsBox.hidden = false;
-        resultsBox.scrollIntoView({ behavior: "smooth", block: "start" });
+        var card = document.querySelector(".dash-map-card");
+        if (card) {
+          var top = window.scrollY + card.getBoundingClientRect().bottom;
+          window.scrollTo({ top: top, behavior: "smooth" });
+        } else {
+          resultsBox.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
       });
   }
 

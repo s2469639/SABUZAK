@@ -133,7 +133,6 @@ def add_product():
         )
         db.session.add(product)
         db.session.commit()
-        flash(f"'{name}' 제품을 등록했습니다.", "success")
 
     return _next_redirect()
 
