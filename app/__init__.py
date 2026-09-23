@@ -3,10 +3,21 @@ from flask import Flask, redirect, url_for
 from app.extensions import db, login_manager
 
 
+def format_kdate(value):
+    """YYYYMMDD(int/str) -> '2026.09.22'. 값이 없거나 형식이 다르면 원본 그대로 반환."""
+    if not value:
+        return ""
+    s = str(value)
+    if len(s) != 8 or not s.isdigit():
+        return s
+    return f"{s[:4]}.{s[4:6]}.{s[6:8]}"
+
+
 def create_app(config_object="config.Config"):
     app = Flask(__name__)
     app.config.from_object(config_object)
     app.config.setdefault("SECRET_KEY", "dev-secret-key-change-me")
+    app.jinja_env.filters["kdate"] = format_kdate
 
     @app.route("/")
     def root():
