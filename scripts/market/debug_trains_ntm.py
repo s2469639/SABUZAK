@@ -13,7 +13,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(BASE_DIR))
 
 from app.services.hscode import resolve_country_iso  # noqa: E402
-from app.services.trains_client import fetch_regulations_for_country  # noqa: E402
+from app.services.trains_client import (  # noqa: E402
+    fetch_regulations_for_country,
+    top_relevant_regulations,
+)
+
+
+def _print_regs(regs):
+    for r in regs:
+        print("-" * 40)
+        for k in ("imposingCountryName", "officialTitle", "description", "hsCodes", "implementationDate", "agencies"):
+            if r.get(k):
+                print(f"  {k}: {r[k]}")
 
 
 def main():
@@ -29,13 +40,11 @@ def main():
 
     print(f"\nTRAINS 호출: country={iso3} (이 나라만 바로 조회)")
     regulations = fetch_regulations_for_country(iso3)
+    print(f"\n원본 수신 건수: {len(regulations)} (필터링 전)")
 
-    print(f"\n파싱된 규정 수: {len(regulations)}")
-    for r in regulations[:5]:
-        print("-" * 40)
-        for k in ("imposingCountryName", "officialTitle", "hsCodes", "implementationDate", "agencies"):
-            if r.get(k):
-                print(f"  {k}: {r[k]}")
+    filtered = top_relevant_regulations(regulations, limit=6)
+    print(f"\n우리 품목(약과/유과 HS1905류) 관련 필터링 후 상위 {len(filtered)}건:")
+    _print_regs(filtered)
 
 
 if __name__ == "__main__":
