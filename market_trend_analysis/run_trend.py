@@ -2,7 +2,6 @@ import os
 import hashlib
 from dotenv import load_dotenv
 
-# 상위 폴더(..)의 .env 로드
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 env_path = os.path.join(parent_dir, '.env')
 load_dotenv(dotenv_path=env_path)
@@ -55,8 +54,8 @@ def index():
         "exhibition_month": request.args.get('exhibition_month', '10월')
     }
 
-    # 캐시 키 뒤에 _v4를 붙여 이전 버전의 누락 캐시를 완전 격리
-    raw_key = f"{specs['product_name']}_{specs['country']}_{specs['exhibition_month']}_v4"
+    # tavily_v5 템플릿 적용으로 캐시 버전을 _v5로 승격
+    raw_key = f"{specs['product_name']}_{specs['country']}_{specs['exhibition_month']}_v5"
     cache_key = hashlib.md5(raw_key.encode()).hexdigest()
 
     cached_result = get_cache(cache_key)
@@ -67,18 +66,18 @@ def index():
     keywords = extract_keywords(specs)
     kw_list = [keywords["kw1"], keywords["kw2"], keywords["kw3"]]
 
-    # 2. 구글 트렌드 시계열 수집 (12m + 5y 듀얼 수집)
+    # 2. 구글 트렌드 듀얼 시계열 수집
     trend_data = fetch_google_trends(kw_list, specs["country"])
     country_code = COUNTRY_GEO_MAP.get(specs["country"], "GB")
     
-    # 3. B2B 납기 사이클 계산 엔진 (주간 단위인 12m 기준 실행)
+    # 3. B2B 납기 사이클 계산 엔진
     lead_time = calculate_lead_time(trend_data["12m"], keywords["kw1"], specs["exhibition_month"], country_code)
 
     # 4. 현지 매대 실존 경쟁사 분석
     competitors = analyze_competitors(specs, keywords)
 
-    # 5. 현지 식문화 트렌드 뉴스 수집 및 요약
-    news = fetch_local_news(specs["country"], keywords["kw3"])
+    # 5. tavily_v5 고정 템플릿 + 공공기관 뉴스 수집
+    news = fetch_local_news(specs["country"], keywords, specs["product_name"])
 
     response_payload = {
         "specs": specs,
@@ -89,7 +88,6 @@ def index():
         "news": news
     }
 
-    # 오류가 없을 때만 캐시에 안전하게 저장
     if not news.get("is_error"):
         set_cache(cache_key, response_payload)
 
