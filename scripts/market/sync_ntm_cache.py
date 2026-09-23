@@ -7,11 +7,12 @@ macmap.org는 Cloudflare로 막혀서(403 + JS challenge) requests로 접근 불
 포기했고, macmap이 원래 참조하는 원본 데이터 출처인 TRAINS Online으로 교체했다.
 로그인/세션쿠키 없이 호출 가능해서 macmap보다 오히려 쉽다.
 
-주의: TRAINS Online의 export-regulations는 실제로 테스트해보니 HS코드로
-필터링을 안 하고 그 나라의 전체 무역 규정 목록을 그대로 반환한다. 그래서 이
-스크립트도 국가당 딱 한 번만 호출하고(HS코드별로 안 쪼갬), 웹앱
-(app/services/hscode.py의 get_country_regulations)이 식품/농산물 관련도로
-걸러서 보여준다.
+주의: TRAINS의 현재 API(denormalisedMeasures)는 국가를 UNCTAD 내부 숫자
+ID로만 지정할 수 있어서(ISO코드 아님), 나라별로 따로 조회하는 대신
+**전세계를 한 번만 조회**하고 응답에 포함된 국가명 문자열로 우리 쪽에서
+나라별로 묶는다 (app.services.trains_client.group_measures_by_country).
+이후 웹앱(app/services/hscode.py의 get_country_regulations)이 식품/농산물
+관련도로 한 번 더 걸러서 보여준다.
 
 웹앱은 이 캐시 테이블만 읽고, TRAINS를 직접 호출하지 않는다 (박람회 상세
 페이지의 "지금 실제 데이터 가져오기" 버튼은 국가 1개만 즉시 조회하는 별도
@@ -28,7 +29,6 @@ macmap.org는 Cloudflare로 막혀서(403 + JS challenge) requests로 접근 불
 
 import argparse
 import sys
-import time
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -38,10 +38,11 @@ from app import create_app  # noqa: E402
 from app.extensions import db  # noqa: E402
 from app.models import Exhibition, NtmMeasure  # noqa: E402
 from app.services.hscode import resolve_country_iso  # noqa: E402
-from app.services.trains_client import fetch_regulations, to_ntm_measure_rows  # noqa: E402
-
-REQUEST_DELAY_SEC = 1  # 매너 크롤링 - 요청 간 최소 대기
-
+from app.services.trains_client import (  # noqa: E402
+    fetch_all_measures_affecting_korea,
+    group_measures_by_country,
+    to_ntm_measure_rows,
+)
 
 def _countries_from_exhibitions():
     """raw_exhibitions에 실제로 등록된 국가들을 ISO3로 변환한 목록."""
@@ -92,13 +93,25 @@ def main():
             return
 
         print(f"대상: {len(countries)}개국 (UNCTAD TRAINS Online)")
+
+        # 새 API는 국가를 UNCTAD 내부 숫자 ID로만 지정할 수 있어서, 나라별로
+        # 따로 조회하는 대신 전세계를 한 번만 조회하고 국가명으로 묶는다.
+        print("전세계 데이터 조회 중 (한 번만 호출, 페이지네이션 처리)...")
+        try:
+            all_rows = fetch_all_measures_affecting_korea()
+        except Exception as e:
+            print(f"전세계 조회 실패: {e}")
+            return
+        print(f"전세계 {len(all_rows)}건 수신, 국가별로 분류 중...")
+        grouped = group_measures_by_country(all_rows)
+
         total_rows = 0
         failed = 0
 
         for i, iso3 in enumerate(countries, 1):
             print(f"[{i}/{len(countries)}] country={iso3}")
             try:
-                regulations = fetch_regulations(iso3, [])
+                regulations = grouped.get(iso3, [])
                 rows = to_ntm_measure_rows(iso3, "ALL", regulations)
                 NtmMeasure.query.filter_by(reporter=iso3, product="ALL").delete()
                 for row in rows:
@@ -109,7 +122,6 @@ def main():
             except Exception as e:
                 print(f"  -> 실패: {e}")
                 failed += 1
-            time.sleep(REQUEST_DELAY_SEC)
 
         print(f"\n완료: 총 {total_rows}건 저장 / 실패 {failed}건 (대상 {len(countries)}개국 중)")
 

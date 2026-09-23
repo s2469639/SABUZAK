@@ -2,28 +2,50 @@
 UNCTAD TRAINS Online(trainsonline.unctad.org) 내부 API 클라이언트.
 
 macmap.org 대신 사용. macmap은 Cloudflare로 완전히 막혀서(403 + JS challenge)
-requests로는 접근 불가능해졌지만, TRAINS Online(macmap이 원래 참조하는 원본
-데이터 출처)은 별도 보호 없이 그대로 호출된다.
+requests로는 접근 불가능해졌다.
 
-브라우저 개발자도구로 확인한 실제 엔드포인트:
-    POST https://api-trains2.unctad.org/export-regulations
+2026-09 기준 실제로 확인된 엔드포인트(브라우저 개발자도구로 확인, "Detailed
+search" 화면 - 예전에 참고했던 export-regulations는 지금 404가 뜨는 걸 보면
+이미 없어진 것으로 보임):
+
+    POST https://api-trains2.unctad.org/denormalisedMeasures
     Content-Type: application/json
     {
-      "imposingCountries": ["SGP"],
-      "products": ["190590", ...],   # HS코드 문자열 그대로 (내부 ID 변환 불필요)
-      "exportTo": "csv",
+      "imposingCountries": [202],       # UNCTAD 내부 숫자 ID (ISO코드 아님!)
+      "allImposingCountries": false,
+      "affectedCountries": [117],       # 마찬가지로 내부 숫자 ID
+      "allAffectedCountries": false,
+      "products": [2451798, ...],       # 이것도 내부 숫자 ID (HS코드 아님!)
+      "allProducts": false,
+      "pageNumber": 1, "pageSize": 20,
       "columnsVisibility": {...},
-      "pageNumber": 1, "pageSize": 200
+      "exportTo": "excel"
     }
+    -> JSON 배열 응답 (Excel/CSV 아님). 필드명 그대로 사용 가능:
+       countryImposingNTMs(국가명 문자열), ntmCode, ntmDescription,
+       measureDescription, hsCode, regulationTitle, implementationDate,
+       issuingAgency, regulationFile, affectedCountriesNames, ...
 
-응답은 CSV 텍스트인데, 앞부분에 메타 안내 줄이 몇 줄 붙어있고 그 다음에
-진짜 헤더 행("Economies applying the regulation,...")이 나온다.
+문제: "imposingCountries"/"affectedCountries"/"products"는 ISO코드나
+HS코드가 아니라 UNCTAD 내부 전용 숫자 ID라서, 어떤 코드가 어느 나라/품목인지
+알아내려면 그 나라를 프론트엔드 드롭다운에서 직접 선택해봐야 한다. 그래서
+이 클라이언트는 나라 ID를 몰라도 되도록 **"allImposingCountries": true로
+전세계를 한 번에 조회한 뒤, 응답에 이미 문자열로 들어있는
+countryImposingNTMs 값으로 우리 쪽에서 국가를 매칭**하는 방식을 쓴다.
+"affectedCountries"(한국에 영향 주는 것만)만 미리 확인해둔 한국의 ID(117)로
+고정한다.
+
+주의: 이 방식은 한 번 호출로 전세계 규정을 다 받아오기 때문에(페이지네이션
+필요) 국가 하나만 볼 때도 다소 느릴 수 있다. 대신 국가 ID 매핑표를 유지할
+필요가 없다는 장점이 있다.
 """
 
-import csv
-import io
-
 import requests
+
+try:
+    import pycountry
+except ImportError:
+    pycountry = None
 
 BASE = "https://api-trains2.unctad.org"
 UA = (
@@ -31,115 +53,162 @@ UA = (
     "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 )
 
+# "Affected Markets"에서 "Korea, Republic of"를 선택했을 때 실제로 확인된
+# UNCTAD 내부 숫자 ID. (imposingCountries와 달리 이건 항상 한국 고정이라
+# 하나만 알면 됨.)
+KOREA_AFFECTED_COUNTRY_ID = 117
+
+HEADERS = {
+    "Accept": "application/json, text/plain, */*",
+    "Content-Type": "application/json",
+    "Origin": "https://trainsonline.unctad.org",
+    "Referer": "https://trainsonline.unctad.org/",
+    "User-Agent": UA,
+}
+
 COLUMNS_VISIBILITY = {
-    "imposingCountryName": True,
-    "officialTitle": True,
-    "officialTitleOriginal": False,
-    "implementationDate": True,
-    "repealDate": False,
-    "agencies": True,
-    "hsCodes": True,
-    "affectedProductsDesc": False,
-    "links": True,
-    "documentation": True,
-    "description": True,
-    "descriptionOriginal": False,
-    "source": False,
-    "publicationDate": False,
-    "publicationSymbol": False,
-    "symbol": False,
-    "ntmTypes": True,
+    "countryImposingNTMsVisible": True,
+    "affectedCountriesNamesVisible": True,
+    "ntmCodeVisible": True,
+    "ntmDescriptionVisible": True,
+    "measureDescriptionVisible": True,
+    "productDescriptionVisible": True,
+    "hsCodeVisible": True,
+    "issuingAgencyVisible": True,
+    "regulationTitleVisible": True,
+    "regulationSymbolVisible": False,
+    "implementationDateVisible": True,
+    "regulationFileVisible": True,
+    "regulationOfficialTitleOriginalVisible": False,
+    "measureDescriptionOriginalVisible": False,
+    "measureProductDescriptionOriginalVisible": False,
+    "supportingRegulationsVisible": False,
+    "measureObjectivesOriginalVisible": False,
+    "yearsOfDataCollectionVisible": False,
+    "repealDateVisible": True,
+    "objectiveCodesVisible": True,
 }
 
 
-def fetch_regulations_csv(country_iso3: str, hs_codes: list, page_size: int = 500) -> str:
-    """국가(ISO3) + HS코드 목록으로 규정 목록을 CSV 텍스트로 받는다."""
-    payload = {
-        "imposingCountries": [country_iso3],
+def _payload(page_number: int, page_size: int) -> dict:
+    return {
+        "imposingCountries": [],
+        "allImposingCountries": True,
         "internationalStandardsImposing": False,
-        "FromDate": None,
+        "affectedCountries": [KOREA_AFFECTED_COUNTRY_ID],
+        "allAffectedCountries": False,
+        "products": [],
+        "allProducts": True,
         "NTMType": None,
+        "ExcludeHorizontalMeasures": None,
+        "FromDate": None,
         "ToDate": None,
-        "columnsVisibility": COLUMNS_VISIBILITY,
-        "exportTo": "csv",
-        "pageNumber": 1,
+        "IsImportNtm": None,
+        "IsUnilateral": None,
+        "pageNumber": page_number,
         "pageSize": page_size,
-        "products": list(hs_codes),
+        "columnsVisibility": COLUMNS_VISIBILITY,
+        "exportTo": "excel",
     }
-    headers = {
-        "Accept": "application/json, text/plain, */*",
-        "Content-Type": "application/json",
-        "Origin": "https://trainsonline.unctad.org",
-        "Referer": "https://trainsonline.unctad.org/",
-        "User-Agent": UA,
-    }
-    resp = requests.post(f"{BASE}/export-regulations", json=payload, headers=headers, timeout=30)
-    resp.raise_for_status()
-    # utf-8-sig로 디코드: 응답 앞에 BOM(﻿)이 붙어 오면 헤더 행 매칭이
-    # 조용히 실패해서(아래 parse_regulations_csv) "0건 가져옴"으로만 보이고
-    # 원인을 알 수 없던 문제가 있었음.
-    return resp.content.decode("utf-8-sig")
 
 
-HEADER_MARKER = "economies applying the regulation"
+def fetch_all_measures_affecting_korea(page_size: int = 500, max_pages: int = 30) -> list:
+    """한국에 영향을 주는 전세계 비관세조치(NTM)를 전부 가져온다 (페이지네이션 처리).
 
-
-def parse_regulations_csv(csv_text: str) -> list:
-    """앞의 메타 안내 줄들을 건너뛰고, 진짜 헤더 행부터 DictReader로 파싱.
-
-    헤더 행을 못 찾으면(포맷이 바뀌었거나 예상 밖 응답) 예외를 던진다.
-    예전엔 조용히 빈 리스트를 반환해서, 호출부(sync_ntm)가 "0건 가져옴"을
-    성공으로 표시해버리는 바람에 실제로는 실패했는데 버튼이 아무것도 안
-    가져온 것처럼만 보이는 문제가 있었다."""
-    lines = csv_text.splitlines()
-    header_idx = None
-    for i, line in enumerate(lines):
-        # startswith 정확매칭 대신 대소문자 무시 + 부분포함으로 찾는다.
-        # (앞뒤 공백, 대소문자 차이, BOM 잔재 등에 안 깨지도록)
-        if HEADER_MARKER in line.strip().lower():
-            header_idx = i
-            break
-    if header_idx is None:
-        preview = csv_text[:300].replace("\n", " ")
-        raise ValueError(
-            f"TRAINS 응답에서 헤더 행을 찾지 못했습니다 (응답 형식이 바뀌었을 수 있음). "
-            f"응답 앞부분: {preview!r}"
+    국가 ID를 몰라도 되도록 전세계(allImposingCountries=true)를 조회하고,
+    각 행의 countryImposingNTMs(국가명 문자열)로 나중에 걸러서 쓴다.
+    응답 형식이 예상과 다르면(리스트가 아니면) 명확한 예외를 던진다."""
+    all_rows = []
+    for page in range(1, max_pages + 1):
+        resp = requests.post(
+            f"{BASE}/denormalisedMeasures",
+            json=_payload(page, page_size),
+            headers=HEADERS,
+            timeout=60,
         )
+        resp.raise_for_status()
+        try:
+            batch = resp.json()
+        except ValueError as exc:
+            preview = resp.text[:300]
+            raise ValueError(
+                f"TRAINS 응답이 JSON이 아닙니다 (형식이 또 바뀌었을 수 있음). "
+                f"응답 앞부분: {preview!r}"
+            ) from exc
 
-    reader = csv.DictReader(io.StringIO("\n".join(lines[header_idx:])))
-    return [
-        row
-        for row in reader
-        if row.get("Official title in English", "").strip() not in ("", "-")
-    ]
+        if not isinstance(batch, list):
+            raise ValueError(f"TRAINS 응답이 예상한 배열 형식이 아닙니다: {type(batch)}")
+
+        if not batch:
+            break
+        all_rows.extend(batch)
+        if len(batch) < page_size:
+            break
+    return all_rows
 
 
-def fetch_regulations(country_iso3: str, hs_codes: list, page_size: int = 500) -> list:
-    """국가+HS코드 -> 파싱된 규정 dict 리스트."""
-    csv_text = fetch_regulations_csv(country_iso3, hs_codes, page_size=page_size)
-    return parse_regulations_csv(csv_text)
+def _resolve_country_name(name: str):
+    """UNCTAD가 준 국가명 문자열(예: 'Singapore')을 ISO3로 변환.
+    app.services.hscode.resolve_country_iso와 동일한 규칙을 쓰되, 순환
+    import를 피하려 여기서 pycountry를 직접 부른다."""
+    if not name:
+        return None
+    if pycountry is None:
+        return None
+    try:
+        country = pycountry.countries.get(name=name.strip())
+        if country:
+            return country.alpha_3
+        matches = pycountry.countries.search_fuzzy(name.strip())
+        if matches:
+            return matches[0].alpha_3
+    except LookupError:
+        pass
+    return None
+
+
+def fetch_regulations_for_country(country_iso3: str, page_size: int = 500) -> list:
+    """전세계 조회 결과 중 country_iso3(예: 'SGP')에 해당하는 것만 걸러서 반환."""
+    all_rows = fetch_all_measures_affecting_korea(page_size=page_size)
+    matched = []
+    for row in all_rows:
+        row_iso3 = _resolve_country_name(row.get("countryImposingNTMs"))
+        if row_iso3 == country_iso3:
+            matched.append(row)
+    return matched
+
+
+def group_measures_by_country(all_rows: list) -> dict:
+    """fetch_all_measures_affecting_korea()로 받은 전세계 결과를 국가(ISO3)별로
+    묶는다. 여러 나라를 한 번에 캐싱할 때(sync_ntm_cache.py) 나라마다 다시
+    전세계 조회를 반복하지 않도록 쓴다. 국가명을 ISO3로 못 바꾼 행은 버린다."""
+    grouped = {}
+    for row in all_rows:
+        iso3 = _resolve_country_name(row.get("countryImposingNTMs"))
+        if not iso3:
+            continue
+        grouped.setdefault(iso3, []).append(row)
+    return grouped
 
 
 def to_ntm_measure_rows(country_iso3: str, product_key: str, regulations: list) -> list:
-    """파싱된 규정 dict 리스트 -> NtmMeasure(**row) 로 바로 넣을 수 있는 dict 리스트.
-    CSV 헤더 이름(Show/Hide Column(s)에서 켠 컬럼들 기준)을 우리 모델 컬럼에 매핑.
-    product_key는 실제 필터링이 안 되므로 보통 "ALL" 고정값을 넘긴다."""
+    """denormalisedMeasures 응답 dict 리스트 -> NtmMeasure(**row)에 바로 넣을 dict 리스트."""
     rows = []
     for reg in regulations:
         rows.append({
             "reporter": country_iso3,
             "partner": "KOR",
             "product": product_key,
-            "measure_code": "",
-            "measure_section": reg.get("NTM Types", ""),
-            "measure_title": reg.get("Official title in English", ""),
-            "measure_summary": reg.get("Regulation description in English", ""),
-            "legislation_title": reg.get("Official title in English", ""),
-            "legislation_summary": reg.get("Regulation description in English", ""),
-            "implementation_authority": reg.get("Agencies", ""),
-            "start_date": reg.get("Implementation date", ""),
-            "end_date": reg.get("Repeal Date", ""),
-            "web_link": reg.get("Documents") or reg.get("Links") or "",
+            "measure_code": reg.get("ntmCode") or "",
+            "measure_section": reg.get("ntmType") or "",
+            "measure_title": reg.get("regulationTitle") or reg.get("ntmDescription") or "",
+            "measure_summary": reg.get("measureDescription") or "",
+            "legislation_title": reg.get("regulationTitle") or "",
+            "legislation_summary": reg.get("measureDescription") or "",
+            "implementation_authority": reg.get("issuingAgency") or "",
+            "start_date": reg.get("implementationDate") or "",
+            "end_date": reg.get("repealDate") or "",
+            "web_link": "",  # regulationFile은 URL이 아니라 파일명이라 링크로 못 씀
             "data_source": "UNCTAD TRAINS",
         })
     return rows
