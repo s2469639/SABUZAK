@@ -29,15 +29,19 @@ search" 화면 - 예전에 참고했던 export-regulations는 지금 404가 뜨�
 문제: "imposingCountries"/"affectedCountries"/"products"는 ISO코드나
 HS코드가 아니라 UNCTAD 내부 전용 숫자 ID라서, 어떤 코드가 어느 나라/품목인지
 알아내려면 그 나라를 프론트엔드 드롭다운에서 직접 선택해봐야 한다. 그래서
-이 클라이언트는 나라 ID를 몰라도 되도록 **"allImposingCountries": true로
-전세계를 한 번에 조회한 뒤, 응답에 이미 문자열로 들어있는
-countryImposingNTMs 값으로 우리 쪽에서 국가를 매칭**하는 방식을 쓴다.
-"affectedCountries"(한국에 영향 주는 것만)만 미리 확인해둔 한국의 ID(117)로
-고정한다.
+이 클라이언트는 나라 ID를 몰라도 되도록 **"전체 국가 선택"을 브라우저에서
+직접 해보고 캡처한 실제 요청**을 그대로 흉내낸다: "allImposingCountries":
+true만 보내면 400이 나고, 실제로는 UNCTAD가 아는 모든 나라 ID를
+"imposingCountries" 배열에 통째로 채워서 보내야 한다 (ALL_IMPOSING_COUNTRY_IDS,
+아래 참고). 그 결과에서 응답에 이미 문자열로 들어있는 countryImposingNTMs
+값으로 우리 쪽에서 국가를 매칭한다.
 
-주의: 이 방식은 한 번 호출로 전세계 규정을 다 받아오기 때문에(페이지네이션
-필요) 국가 하나만 볼 때도 다소 느릴 수 있다. 대신 국가 ID 매핑표를 유지할
-필요가 없다는 장점이 있다.
+"affectedCountries"는 한국(117) + World(999, EU/World 같은 그룹 ID로 추정)로
+고정. "products"도 "전체 상품" 대신, 사부작 제품군(약과/유과 등)에 해당하는
+"Bread, gingerbread and the like, sweet biscuits..." 카테고리(HS 1905 계열)
+ID를 그대로 고정 필터로 쓴다 - 마침 이게 우리가 필요한 카테고리와 일치해서,
+어차피 국가 전체 규정 중 식품 관련만 추리던 예전 방식보다 오히려 더 정확한
+필터링이 된다.
 """
 
 import requests
@@ -55,8 +59,32 @@ UA = (
 
 # "Affected Markets"에서 "Korea, Republic of"를 선택했을 때 실제로 확인된
 # UNCTAD 내부 숫자 ID. (imposingCountries와 달리 이건 항상 한국 고정이라
-# 하나만 알면 됨.)
-KOREA_AFFECTED_COUNTRY_ID = 117
+# 하나만 알면 됨.) 999는 "Select All" 캡처 시 같이 딸려온 ID로, World/EU 같은
+# 그룹을 가리키는 것으로 추정 - 그대로 포함해서 흉내낸다.
+AFFECTED_COUNTRY_IDS = [117, 999]
+
+# "Economies applying the NTMs"에서 "Select All"을 눌렀을 때 실제로 전송된
+# 전체 국가(+그룹) ID 목록. allImposingCountries=true만 보내면 400이 나서,
+# "전체 선택"을 흉내내려면 이 목록을 그대로 같이 보내야 한다.
+ALL_IMPOSING_COUNTRY_IDS = [
+    1, 2, 4, 8, 10, 16, 11, 12, 9, 13, 14, 15, 17, 34, 18, 59, 21, 22, 23, 25,
+    30, 31, 242, 33, 38, 35, 36, 37, 42, 43, 44, 48, 49, 51, 53, 54, 55, 56,
+    57, 58, 110, 52, 60, 61, 63, 234, 64, 68, 215, 66, 279, 72, 73, 75, 80,
+    82, 81, 84, 85, 88, 90, 93, 94, 95, 99, 100, 101, 102, 103, 104, 107,
+    108, 109, 111, 112, 114, 113, 115, 87, 277, 118, 119, 120, 123, 121, 122,
+    124, 127, 128, 131, 132, 134, 135, 168, 137, 138, 139, 167, 142, 143,
+    145, 146, 32, 148, 149, 150, 151, 158, 159, 160, 161, 162, 233, 164, 147,
+    170, 169, 83, 171, 172, 173, 174, 175, 177, 178, 182, 184, 185, 186, 247,
+    197, 198, 199, 200, 202, 203, 205, 28, 207, 117, 209, 41, 213, 216, 217,
+    219, 239, 220, 180, 221, 223, 224, 226, 230, 227, 231, 225, 240, 243,
+    157, 245, 204, 249, 208, 999,
+]
+
+# "Products affected"에서 "Bread, gingerbread and the like, sweet biscuits..."
+# 카테고리(HS 1905 계열 - 약과/유과 등 사부작 제품군과 일치)를 선택했을 때
+# 실제로 전송된 UNCTAD 내부 상품 ID 목록. "전체 상품"이 아니라 이 카테고리로
+# 고정해서 쓴다 (오히려 우리 제품군에 딱 맞는 필터가 됨).
+SNACK_PRODUCT_IDS = [2451798, 2451799, 2451800, 2451802, 2451803, 2451804, 2451805]
 
 HEADERS = {
     "Accept": "application/json, text/plain, */*",
@@ -92,13 +120,13 @@ COLUMNS_VISIBILITY = {
 
 def _payload(page_number: int, page_size: int) -> dict:
     return {
-        "imposingCountries": [],
+        "imposingCountries": ALL_IMPOSING_COUNTRY_IDS,
         "allImposingCountries": True,
         "internationalStandardsImposing": False,
-        "affectedCountries": [KOREA_AFFECTED_COUNTRY_ID],
+        "affectedCountries": AFFECTED_COUNTRY_IDS,
         "allAffectedCountries": False,
-        "products": [],
-        "allProducts": True,
+        "products": SNACK_PRODUCT_IDS,
+        "allProducts": False,
         "NTMType": None,
         "ExcludeHorizontalMeasures": None,
         "FromDate": None,
