@@ -14,7 +14,7 @@
 </head>
 <body class="bg-slate-50 text-slate-900 p-6 min-h-screen font-sans">
 
-<!-- 💡 [가부작가부작...] 전체 화면 로딩 오버레이 -->
+<!-- [가부작가부작...] 전체 화면 로딩 오버레이 -->
 <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex flex-col items-center justify-center hidden text-white">
     <div class="animate-spin rounded-full h-14 w-14 border-4 border-white/20 border-t-blue-500 mb-4"></div>
     <div class="text-2xl font-black tracking-wider animate-pulse text-amber-300">가부작가부작...</div>
@@ -23,7 +23,6 @@
 
 <div class="max-w-7xl mx-auto space-y-6">
 
-    <!-- 페이지 헤더 -->
     <div class="flex items-center justify-between pb-4 border-b border-slate-200">
         <div>
             <h1 class="text-2xl font-bold tracking-tight text-slate-800">현지 시장 트렌드 및 수주 리드타임 진단</h1>
@@ -32,9 +31,8 @@
         <a href="/" class="text-sm px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 rounded-lg text-slate-700 font-medium transition">새로 분석하기</a>
     </div>
 
-    <!-- SECTION 1: Top Metric Bar (B2B 납기 사이클 계산 엔진) -->
+    <!-- SECTION 1: Top Metric Bar -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- 1. 패턴 판별 및 변동 요인 -->
         <div class="p-5 rounded-xl border flex flex-col justify-between {% if lead_time.pattern_code == 'SEASONAL' %}bg-amber-50/70 border-amber-200{% else %}bg-emerald-50/70 border-emerald-200{% endif %}">
             <div>
                 <span class="text-xs font-semibold tracking-wider text-slate-500 uppercase">수요 패턴 판별</span>
@@ -50,7 +48,6 @@
             </div>
         </div>
 
-        <!-- 2. 차기 집중 수요 시점 -->
         <div class="p-5 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
             <div>
                 <span class="text-xs font-semibold tracking-wider text-slate-500 uppercase">차기 집중 수요 시점</span>
@@ -64,7 +61,6 @@
             </div>
         </div>
 
-        <!-- 3. 권장 바이어 PO 시점 -->
         <div class="p-5 bg-white rounded-xl border border-emerald-300 shadow-sm flex flex-col justify-between bg-emerald-50/20">
             <div>
                 <span class="text-xs font-bold tracking-wider text-emerald-800 uppercase">권장 바이어 PO 시점</span>
@@ -102,7 +98,6 @@
                 </div>
             </div>
             
-            <!-- 기간 & 뷰 모드 컨트롤러 + info 툴팁 -->
             <div class="flex flex-wrap items-center gap-2">
                 <div class="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-50">
                     <button id="btn12m" onclick="setPeriod('12m')" class="px-3 py-1 text-xs font-semibold rounded-md bg-white text-blue-700 shadow-sm transition">최근 12개월</button>
@@ -128,8 +123,8 @@
                         <div class="pt-2 border-t border-slate-700">
                             <span class="font-bold text-blue-300">⚖️ 개별 모멘텀 vs 실제 점유율</span>
                             <p class="text-slate-300 mt-0.5 leading-snug">
-                                <b>개별 모멘텀:</b> 키워드별 최고점을 각각 100으로 잡아 체급과 무관하게 <b>고유 시즌성 곡선</b>을 복원합니다[cite: 1].<br>
-                                <b>실제 점유율:</b> 로컬 품목과 비교했을 때 <b>실제 검색 시장 내 체급 차이</b>를 확인합니다[cite: 1].
+                                <b>개별 모멘텀:</b> 키워드별 최고점을 각각 100으로 잡아 체급과 무관하게 <b>고유 시즌성 곡선</b>을 복원합니다.<br>
+                                <b>실제 점유율:</b> 로컬 품목과 비교했을 때 <b>실제 검색 시장 내 체급 차이</b>를 확인합니다.
                             </p>
                         </div>
                     </div>
@@ -137,7 +132,6 @@
             </div>
         </div>
 
-        <!-- 세로축 정렬 + 차트 -->
         <div class="relative flex items-center pt-2">
             <div class="relative has-tooltip flex items-center justify-center h-full pr-2">
                 <span class="cursor-help text-[11px] font-bold text-slate-500 hover:text-blue-600 transition select-none leading-tight text-center flex flex-col items-center">
@@ -161,13 +155,11 @@
             </div>
         </div>
 
-        <!-- B2B 소싱 타임라인 가이드 -->
         <div class="p-3.5 bg-blue-50/60 rounded-lg border border-blue-100 text-sm flex items-start gap-2 break-keep">
             <span class="text-blue-700 font-bold whitespace-nowrap">▶ 소싱 가이드:</span>
             <span class="text-slate-700 font-medium">{{ lead_time.timeline_guide }}</span>
         </div>
 
-        <!-- 하단 그래프 데이터 총평 -->
         <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
             <div class="flex items-center gap-2">
                 <span class="text-sm font-bold text-slate-800">📊 시계열 수요 패턴 및 데이터 해석 총평</span>
@@ -184,9 +176,8 @@
         </div>
     </div>
 
-    <!-- SECTION 3: 현지 매대 경쟁 구도 및 실시간 시장 동향 (5:5 분할 그리드) -->
+    <!-- SECTION 3: 현지 매대 경쟁 구도 및 실시간 시장 동향 -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- 좌측: 현지 매대 실존 경쟁사 -->
         <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
             <h2 class="text-lg font-bold text-slate-800">현지 매대 실존 경쟁사 및 벤치마크</h2>
             
@@ -222,14 +213,12 @@
             </div>
         </div>
 
-        <!-- 우측: 현지 식문화 트렌드 뉴스 (3색 뱃지 + 원문 발췌 + 토글 버튼) -->
         <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center justify-between">
                 <h2 class="text-lg font-bold text-slate-800">현지 유통 및 식문화 최신 동향</h2>
                 <span class="text-[11px] text-slate-400">보고서 홍보/SNS 배제 필터 적용</span>
             </div>
             
-            <!-- 실시간 요약문 -->
             <div class="p-4 bg-blue-50/70 rounded-xl border border-blue-100">
                 <span class="text-xs font-bold text-blue-800 uppercase tracking-wide">실시간 시장 핵심 요약</span>
                 <div class="text-sm text-slate-800 mt-1.5 leading-relaxed break-keep font-normal">
@@ -237,7 +226,6 @@
                 </div>
             </div>
 
-            <!-- 토글 버튼 -->
             <div class="pt-1">
                 <button type="button" onclick="toggleQuotes()" id="btnToggleQuotes" 
                         class="w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition flex items-center justify-center gap-2 border border-slate-200 shadow-sm">
@@ -246,11 +234,9 @@
                 </button>
             </div>
 
-            <!-- 토글로 열리는 원문 발췌 리스트 (선택지 A 형태) -->
             <div id="quotesContainer" class="hidden space-y-3 pt-2">
                 {% for q in news.quotes %}
                 <div class="p-3.5 bg-slate-50/80 rounded-lg border-l-4 border-l-blue-500 border border-slate-200 space-y-2">
-                    <!-- 3색 뱃지 라인 -->
                     <div class="flex items-center gap-1.5 flex-wrap">
                         <span class="px-2 py-0.5 text-[11px] font-medium rounded border 
                             {% if q.scope_type == 'product' %}bg-purple-50 text-purple-700 border-purple-200
@@ -273,17 +259,14 @@
                         {% endif %}
                     </div>
 
-                    <!-- 이탤릭 원문 발췌 -->
                     <div class="text-xs italic text-slate-800 font-serif leading-relaxed pl-1 break-keep">
                         “{{ q.quote }}”
                     </div>
 
-                    <!-- 한국어 번역 -->
                     <div class="text-xs text-slate-600 leading-relaxed pl-1 break-keep">
                         {{ q.translation }}
                     </div>
 
-                    <!-- 출처 메타데이터 (E번호 도메인 · 연도 · 원문 열기) -->
                     <div class="text-[11px] text-slate-400 pl-1 pt-1 flex items-center gap-1.5 border-t border-slate-200/60">
                         <span class="font-bold text-emerald-700">{{ q.id }}</span>
                         <span>{{ q.domain }} · {{ q.year }} ·</span>
@@ -301,18 +284,15 @@
 
 </div>
 
-<!-- Jinja2 이스케이프 방어용 JSON 데이터 블록 -->
 <script id="trend-data-json" type="application/json">
     {{ trend_data | tojson | safe }}
 </script>
 
 <script>
-    // 💡 폼 제출 및 페이지 이동 시 [가부작가부작...] 로딩 오버레이 띄우기
     window.addEventListener('beforeunload', function() {
         document.getElementById('loadingOverlay').classList.remove('hidden');
     });
 
-    // 💡 원문 발췌 토글 함수
     function toggleQuotes() {
         const container = document.getElementById('quotesContainer');
         const btn = document.getElementById('btnToggleQuotes');
