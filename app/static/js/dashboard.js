@@ -14,9 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  document.querySelectorAll(".continent-card").forEach(function (btn) {
+  document.querySelectorAll(".legend-chip").forEach(function (btn) {
     btn.addEventListener("click", function () {
-      document.querySelectorAll(".continent-card").forEach(function (b) {
+      document.querySelectorAll(".legend-chip").forEach(function (b) {
         b.classList.toggle("active", b === btn);
       });
       activeContinentBtn = btn;

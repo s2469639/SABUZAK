@@ -7,6 +7,7 @@ from app.extensions import db
 
 
 class User(db.Model, UserMixin):
+    __bind_key__ = "app_data"  # instance/app_data.db (로그인/유저 데이터 전용)
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -14,7 +15,14 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(255), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     company = db.Column(db.String(150))
+    position = db.Column(db.String(120))  # 바이어 메일 서명용 직급 (예: 해외영업 대리)
+    product_description = db.Column(db.Text)  # 바이어 메일 AI 생성에 쓰이는 제품/사업 설명
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # 바이어 메일 발송용 Gmail 연동 (본인 Gmail API로 팔로업 메일을 보내기 위한 것으로,
+    # 이메일/비밀번호 로그인과는 별개로 /buyers/gmail/connect 에서 선택적으로 연결한다)
+    google_email = db.Column(db.String(255))
+    google_refresh_token = db.Column(db.Text)
 
     def set_password(self, raw_password):
         self.password_hash = generate_password_hash(raw_password)
@@ -27,6 +35,7 @@ class User(db.Model, UserMixin):
 
 
 class Product(db.Model):
+    __bind_key__ = "app_data"  # instance/app_data.db (로그인/유저 데이터 전용)
     __tablename__ = "products"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -73,5 +82,151 @@ class Exhibition(db.Model):
         return f"<Exhibition {self.name}>"
 
 
-# ConceptDraft, ProposalDraft, Buyer 등 나머지 모델은
+class HsCodeMaster(db.Model):
+    """scripts/market/load_excel.py, make_db.py 로 관세청 HS부호 엑셀을 적재한
+    hs0code_master 테이블. 명시적 PK 컬럼이 없어 SQLite의 암시적 rowid를 PK로 사용."""
+
+    __bind_key__ = "hscode_data"  # instance/hscode.db (HS코드·관세 데이터 전용)
+    __tablename__ = "hs0code_master"
+
+    rowid = db.Column("rowid", db.Integer, primary_key=True)
+    hscode = db.Column(db.Text)
+    hsk_name = db.Column(db.Text)
+    name_ko = db.Column(db.Text)
+
+    def __repr__(self):
+        return f"<HsCodeMaster {self.hscode} {self.name_ko}>"
+
+
+class NtmMeasure(db.Model):
+    """macmap.org 의 ntm-measures API 결과를 캐싱하는 테이블.
+    scripts/market/sync_ntm_cache.py 가 배치로 채워넣고, 웹앱은 이 테이블만 읽는다
+    (macmap을 페이지 로드마다 직접 호출하지 않음)."""
+
+    __bind_key__ = "hscode_data"  # instance/hscode.db (HS코드·관세 데이터 전용)
+    __tablename__ = "ntm_measures"
+
+    id = db.Column(db.Integer, primary_key=True)
+    reporter = db.Column(db.String(10), nullable=False)  # 수입국 UN M49 코드
+    partner = db.Column(db.String(10), nullable=False)  # 수출국(한국=410)
+    product = db.Column(db.String(20), nullable=False)  # 조회에 사용한 HS 코드
+    measure_code = db.Column(db.Text)
+    measure_section = db.Column(db.Text)
+    measure_title = db.Column(db.Text)
+    measure_summary = db.Column(db.Text)
+    legislation_title = db.Column(db.Text)
+    legislation_summary = db.Column(db.Text)
+    implementation_authority = db.Column(db.Text)
+    start_date = db.Column(db.Text)
+    end_date = db.Column(db.Text)
+    web_link = db.Column(db.Text)
+    data_source = db.Column(db.Text)
+    fetched_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<NtmMeasure {self.reporter}/{self.product} {self.measure_title}>"
+
+
+class ConceptDraft(db.Model):
+    """부스 컨셉 기획 초안. '부스 컨셉 기획' 버튼을 누르면 박람회당 1개씩 생성되고,
+    사이드바 '작성 중인 박람회'에서 진행 상태를 확인/이어서 작성한다."""
+
+    __bind_key__ = "app_data"  # instance/app_data.db (유저 데이터 전용)
+    __tablename__ = "concept_drafts"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    exhibition_id = db.Column(db.Integer, nullable=False)  # raw_exhibitions.id (다른 DB라 FK 불가)
+    exhibition_name = db.Column(db.String(255))  # 목록 표시용 스냅샷 (다른 DB 조인 불가하므로 복제 저장)
+    exhibition_country = db.Column(db.String(100))
+    status = db.Column(db.String(20), default="concept", nullable=False)  # concept | proposal | done
+    theme = db.Column(db.Text)
+    slogan = db.Column(db.Text)
+    description = db.Column(db.Text)
+    selling_points = db.Column(db.Text)  # JSON: [{level, title, desc}, ...]
+    events = db.Column(db.Text)  # JSON: [{tag, title, desc, timing}, ...]
+    target_buyers = db.Column(db.Text)  # JSON: ["...", ...]
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = db.relationship("User", backref=db.backref("concept_drafts", lazy=True))
+
+    def __repr__(self):
+        return f"<ConceptDraft {self.exhibition_name} ({self.status})>"
+
+
+class EmailTemplate(db.Model):
+    """로그인한 사용자 본인에게만 귀속되는 바이어 팔로업 메일 템플릿. 사용자마다 버전 1~3을
+    따로 가지며, 그중 하나만 그 사용자의 발송에 쓰이는 활성(is_active) 버전이 된다."""
+
+    __bind_key__ = "app_data"  # instance/app_data.db (유저 데이터 전용)
+    __tablename__ = "email_templates"
+    __table_args__ = (db.UniqueConstraint("user_id", "version", name="uq_user_template_version"),)
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    version = db.Column(db.Integer, nullable=False)
+    label = db.Column(db.String(60))  # 예: 캐주얼 버전, 정중 버전
+    subject = db.Column(db.String(255))
+    body = db.Column(db.Text)
+    is_active = db.Column(db.Boolean, default=False, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = db.relationship("User", backref=db.backref("email_templates", lazy=True))
+
+    @property
+    def display_name(self):
+        return self.label or f"버전 {self.version}"
+
+
+class Contact(db.Model):
+    """박람회에서 만난 바이어 연락처."""
+
+    __bind_key__ = "app_data"  # instance/app_data.db (유저 데이터 전용)
+    __tablename__ = "buyer_contacts"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    exhibition_id = db.Column(db.Integer, nullable=False)  # raw_exhibitions.id (다른 DB라 FK 불가)
+    exhibition_name = db.Column(db.String(255))  # 목록 표시용 스냅샷 (다른 DB 조인 불가하므로 복제 저장)
+
+    name = db.Column(db.String(255), nullable=False)
+    company = db.Column(db.String(255))
+    position = db.Column(db.String(120))  # 예: 해외영업팀 대리
+    email = db.Column(db.String(255), nullable=False)
+    phone = db.Column(db.String(200))  # 여러 번호가 있으면 세미콜론으로 구분해 모두 저장
+    address = db.Column(db.String(255))
+    remarks = db.Column(db.Text)  # 자유 입력 비고
+    preferred_template_version = db.Column(db.Integer)  # 이 바이어에게 쓸 템플릿 버전 (미지정 시 발송용 버전 사용)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", backref=db.backref("buyer_contacts", lazy=True))
+    followup = db.relationship(
+        "FollowupEmail", backref="contact", uselist=False, cascade="all, delete-orphan"
+    )
+
+    def __repr__(self):
+        return f"<Contact {self.name} ({self.email})>"
+
+
+class FollowupEmail(db.Model):
+    __bind_key__ = "app_data"  # instance/app_data.db (유저 데이터 전용)
+    __tablename__ = "followup_emails"
+
+    id = db.Column(db.Integer, primary_key=True)
+    contact_id = db.Column(db.Integer, db.ForeignKey("buyer_contacts.id"), nullable=False)
+
+    subject = db.Column(db.String(255))
+    body = db.Column(db.Text)
+    status = db.Column(db.String(20), default="draft")  # draft / edited / sent / failed
+    template_version = db.Column(db.Integer)  # 이 내용이 어느 템플릿 버전에서 만들어졌는지
+    generated_at = db.Column(db.DateTime)
+    sent_at = db.Column(db.DateTime)
+    dismissed = db.Column(db.Boolean, default=False, nullable=False)  # "N일 경과" 알림을 확인 처리했는지
+    # "새 메일 작성"으로 새 초안을 만들어도 언제 마지막으로 발송했는지 기록은 그대로 남겨두기 위한 필드.
+    # sent_at/status는 지금 작성 중인 초안 상태를 나타내고, last_sent_at은 발송 이력을 나타낸다.
+    last_sent_at = db.Column(db.DateTime)
+
+
+# ProposalDraft 등 나머지 모델은
 # 각 기능 구현 시 이 파일에 이어서 추가합니다.

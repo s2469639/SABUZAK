@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>👤 내 정보</h2>
+
+{% if not current_user.company_name or not current_user.position %}
+<p class="callout-warning">⚠️ 회사명/직급을 아직 입력하지 않으셨습니다. 팔로업 메일 서명에 자동으로 들어가니 채워주세요.</p>
+{% endif %}
+
+<p class="meta">
+  여기 입력한 값은 팔로업 메일 템플릿에서 {% raw %}{{sender_name}}{% endraw %},
+  {% raw %}{{sender_company}}{% endraw %}, {% raw %}{{sender_position}}{% endraw %} 로 사용할 수 있습니다
+  (예: 메일 서명).
+</p>
+<form method="post" class="form" autocomplete="off">
+  <label>이름 <input name="name" required autocomplete="off" value="{{ current_user.name }}"></label>
+  <label>회사명 <input name="company_name" autocomplete="off" value="{{ current_user.company_name or '' }}"></label>
+  <label>직급 <input name="position" autocomplete="off" placeholder="예: 해외영업 대리" value="{{ current_user.position or '' }}"></label>
+  <div class="actions">
+    <button type="submit" class="btn">저장</button>
+    <a href="{{ url_for('contacts.list_contacts') }}" class="btn-secondary">메인 화면으로 돌아가기</a>
+  </div>
+</form>
+{% endblock %}

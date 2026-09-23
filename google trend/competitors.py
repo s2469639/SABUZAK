@@ -58,3 +58,5 @@ def analyze_market_competitors(product_name: str, country: str) -> dict:
         content = content.split("```")[1].split("```")[0].strip()
 
     return json.loads(content)
+
+# 최유진 바보

@@ -9,13 +9,40 @@
 <body>
   <div class="layout">
     <aside class="sidebar">
-      <h2 class="brand">사부작</h2>
+      <div class="brand-block">
+        <h2 class="brand">사부작</h2>
+        <p class="brand-sub">박람회 운영 대시보드</p>
+      </div>
+
       {% if current_user.is_authenticated %}
-        <nav>
-          <a href="{{ url_for('dashboard.index') }}">대시보드</a>
-          <a href="{{ url_for('mypage.index') }}">내 제품 관리</a>
-          <a href="{{ url_for('auth.logout') }}">로그아웃</a>
-        </nav>
+        <div class="sidebar-section">
+          <p class="sidebar-section-title">메뉴</p>
+          <nav>
+            <a href="{{ url_for('dashboard.index') }}"
+               class="{% if request.endpoint == 'dashboard.index' %}active{% endif %}">대시보드</a>
+            <a href="{{ url_for('drafts.index') }}"
+               class="{% if request.endpoint == 'drafts.index' %}active{% endif %}">작성 중인 박람회</a>
+            <a href="{{ url_for('mypage.index') }}"
+               class="{% if request.endpoint == 'mypage.index' %}active{% endif %}">내 제품 관리</a>
+            <a href="{{ url_for('contacts.list_contacts') }}"
+               class="{% if request.endpoint and (request.endpoint.startswith('contacts.') or request.endpoint.startswith('followup.') or request.endpoint.startswith('mail_template.') or request.endpoint.startswith('buyer_profile.')) %}active{% endif %}">바이어 메일 관리</a>
+          </nav>
+        </div>
+
+        <div class="sidebar-section">
+          <p class="sidebar-section-title">바로가기</p>
+          <nav>
+            <a href="https://www.gep.or.kr" target="_blank" rel="noopener">↗ KOTRA 한국관 단체 참가</a>
+            <a href="https://www.kati.net" target="_blank" rel="noopener">↗ 정부 수출 지원 사업</a>
+            <a href="https://www.exportvoucher.com" target="_blank" rel="noopener">↗ 중기부 수출바우처</a>
+          </nav>
+        </div>
+
+        <div class="sidebar-section sidebar-footer">
+          <nav>
+            <a href="{{ url_for('auth.logout') }}">로그아웃</a>
+          </nav>
+        </div>
       {% endif %}
     </aside>
 
@@ -27,6 +54,15 @@
       </header>
 
       <main class="content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul class="flash-list">
+              {% for category, message in messages %}
+                <li class="flash flash-{{ category }}">{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
       </main>
     </div>
@@ -34,5 +70,6 @@
 
   <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
   <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/mypage.js') }}"></script>
 </body>
 </html>
