@@ -9,6 +9,7 @@ from app.models import Exhibition, NtmMeasure, Product
 from app.routes.dashboard import CONTINENT_DB_VALUES
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
+from app.services import market_trend
 from app.services.trains_client import (
     fetch_regulations_for_country,
     to_ntm_measure_rows,
@@ -254,6 +255,38 @@ def _build_market_rows(expo, linked_products):
     return rows
 
 
+def _exhibition_month(expo):
+    """start_date(YYYYMMDD int) -> 'N월' (없으면 기본값 10월)."""
+    s = str(expo.start_date) if expo.start_date else ""
+    if len(s) == 8 and s.isdigit():
+        return f"{int(s[4:6])}월"
+    return "10월"
+
+
+def _default_trend_specs(expo, product):
+    return {
+        "product_name": product.name,
+        "country": expo.country_ko or expo.country or "",
+        "ingredients": product.ingredients or "",
+        "target_price": "",
+        "certifications": "",
+        "strengths": "",
+        "exhibition_month": _exhibition_month(expo),
+    }
+
+
+def _build_trend_rows(expo, linked_products):
+    """트렌드 조사 탭에 쓸 제품별 시장·트렌드 분석 현황. 네트워크 호출 없이
+    캐시만 읽는다 (실제 분석은 "지금 분석하기" 버튼 -> trend_research 라우트가
+    담당 - 시장 개요 탭과 동일한 패턴)."""
+    rows = []
+    for product in linked_products:
+        specs = _default_trend_specs(expo, product)
+        cached = market_trend.get_cached_analysis(specs)
+        rows.append({"product": product, "specs": specs, "result": cached})
+    return rows
+
+
 @bp.route("/detail/<int:expo_id>")
 @login_required
 def detail(expo_id):
@@ -271,6 +304,7 @@ def detail(expo_id):
 
     hscode_ctx = build_hscode_context(expo, linked_products) if has_linked_product else None
     market_rows = _build_market_rows(expo, linked_products) if has_linked_product else []
+    trend_rows = _build_trend_rows(expo, linked_products) if has_linked_product else []
 
     return render_template(
         "exhibition/detail.html",
@@ -279,7 +313,33 @@ def detail(expo_id):
         has_linked_product=has_linked_product,
         hscode_ctx=hscode_ctx,
         market_rows=market_rows,
+        trend_rows=trend_rows,
     )
+
+
+@bp.route("/detail/<int:expo_id>/trend-research/<int:product_id>", methods=["POST"])
+@login_required
+def trend_research(expo_id, product_id):
+    """market_trend_analysis/ 로직(구글 트렌드 + 리드타임 + 경쟁사 + 뉴스)을
+    이 제품 + 박람회 국가 기준으로 실행한다 (캐시 있으면 캐시, "새로 분석"
+    체크 시 강제 재실행)."""
+    expo = Exhibition.query.get_or_404(expo_id)
+    product = Product.query.filter_by(id=product_id, user_id=current_user.id).first_or_404()
+
+    specs = _default_trend_specs(expo, product)
+    specs["target_price"] = request.form.get("target_price", "").strip()
+    specs["certifications"] = request.form.get("certifications", "").strip()
+    specs["strengths"] = request.form.get("strengths", "").strip()
+    specs["exhibition_month"] = request.form.get("exhibition_month", "").strip() or specs["exhibition_month"]
+    force = bool(request.form.get("force"))
+
+    try:
+        market_trend.run_analysis(specs, force=force)
+        flash(f"{product.name} · {specs['country']} 시장·트렌드 분석을 가져왔습니다.", "success")
+    except Exception as e:
+        flash(f"시장·트렌드 분석 중 오류가 발생했습니다: {e}", "danger")
+
+    return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#trend")
 
 
 @bp.route("/detail/<int:expo_id>/market-research/<int:product_id>", methods=["POST"])

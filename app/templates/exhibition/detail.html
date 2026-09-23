@@ -94,10 +94,7 @@
     {% if not has_linked_product %}
       {% include "exhibition/_no_product_state.html" %}
     {% else %}
-    <div class="card">
-      <h2>트렌드 조사</h2>
-      <p class="placeholder-note">구글 트렌드, 경쟁사·가격, 관련 뉴스 요약은 추후 연동 예정입니다.</p>
-    </div>
+    {% include "exhibition/_tab_trend.html" %}
     {% endif %}
   </div>
 
