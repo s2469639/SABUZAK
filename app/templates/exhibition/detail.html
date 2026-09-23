@@ -86,10 +86,7 @@
     {% if not has_linked_product %}
       {% include "exhibition/_no_product_state.html" %}
     {% else %}
-    <div class="card">
-      <h2>시장 개요</h2>
-      <p class="placeholder-note">환율, YoY 성장률, 시장 인사이트 카드는 추후 연동 예정입니다.</p>
-    </div>
+    {% include "exhibition/_tab_market.html" %}
     {% endif %}
   </div>
 
@@ -162,6 +159,31 @@
         </table>
         {% else %}
         <p class="placeholder-note">이 국가·HS코드 조합의 협정관세 데이터가 없습니다 (해당 협정 미체결이거나 자료 미수록).</p>
+        {% endif %}
+
+        {% if row.has_range and row.subitems %}
+        <details class="tariff-subitem-detail">
+          <summary>⚠️ 등록하신 HS코드({{ row.product.hs_code }})가 세부 10자리 코드까지는 아니라서, 범위로 표시된 협정의 세부 품목별 실제 세율을 확인하세요</summary>
+          <table class="tariff-regime-table">
+            <thead>
+              <tr>
+                <th>세부 HS코드</th>
+                <th>품명</th>
+                {% for r in row.regimes %}<th>{{ r.regime }}</th>{% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in row.subitems %}
+              <tr>
+                <td>{{ item.code }}</td>
+                <td>{{ item.name_ko }}</td>
+                {% for rate in item.rates %}<td>{{ rate.display }}</td>{% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <p class="placeholder-note">정확한 세율을 받으려면 마이페이지에서 제품 HS코드를 위 표의 10자리 세부코드로 정확히 수정해 등록하세요.</p>
+        </details>
         {% endif %}
 
         {% if row.certs %}
