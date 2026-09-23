@@ -95,6 +95,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var editName = document.getElementById("edit-name");
     var editHsCode = document.getElementById("edit-hs_code");
     var editIngredients = document.getElementById("edit-ingredients");
+    var editTargetPrice = document.getElementById("edit-target_price");
+    var editCertifications = document.getElementById("edit-certifications");
+    var editStrengths = document.getElementById("edit-strengths");
 
     document.querySelectorAll("[data-edit-product]").forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -102,6 +105,9 @@ document.addEventListener("DOMContentLoaded", function () {
         editName.value = btn.dataset.editName;
         editHsCode.value = btn.dataset.editHscode;
         editIngredients.value = btn.dataset.editIngredients || "";
+        editTargetPrice.value = btn.dataset.editTargetPrice || "";
+        editCertifications.value = btn.dataset.editCertifications || "";
+        editStrengths.value = btn.dataset.editStrengths || "";
       });
     });
   }
