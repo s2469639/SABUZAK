@@ -4,4 +4,5 @@ __pycache__/
 instance/
 *.csv
 .venv/
-venv/
+venv/"__pycache__/" 
+"*.pyc" 
