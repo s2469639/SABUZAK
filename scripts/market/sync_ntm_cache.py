@@ -42,6 +42,7 @@ from app.services.trains_client import (  # noqa: E402
     fetch_all_measures_affecting_korea,
     group_measures_by_country,
     to_ntm_measure_rows,
+    top_relevant_regulations,
 )
 
 def _countries_from_exhibitions():
@@ -112,7 +113,8 @@ def main():
             print(f"[{i}/{len(countries)}] country={iso3}")
             try:
                 regulations = grouped.get(iso3, [])
-                rows = to_ntm_measure_rows(iso3, "ALL", regulations)
+                top6 = top_relevant_regulations(regulations, limit=6)
+                rows = to_ntm_measure_rows(iso3, "ALL", top6, summarize=True)
                 NtmMeasure.query.filter_by(reporter=iso3, product="ALL").delete()
                 for row in rows:
                     db.session.add(NtmMeasure(**row))

@@ -140,12 +140,16 @@ def _payload(page_number: int, page_size: int) -> dict:
     }
 
 
-def fetch_all_measures_affecting_korea(page_size: int = 500, max_pages: int = 30) -> list:
+def fetch_all_measures_affecting_korea(page_size: int = 20, max_pages: int = 100) -> list:
     """한국에 영향을 주는 전세계 비관세조치(NTM)를 전부 가져온다 (페이지네이션 처리).
 
     국가 ID를 몰라도 되도록 전세계(allImposingCountries=true)를 조회하고,
     각 행의 countryImposingNTMs(국가명 문자열)로 나중에 걸러서 쓴다.
-    응답 형식이 예상과 다르면(리스트가 아니면) 명확한 예외를 던진다."""
+    응답 형식이 예상과 다르면(리스트가 아니면) 명확한 예외를 던진다.
+
+    page_size 기본값 20: 실제로 500을 보내면 서버가 400 Bad Request로
+    거부하는 걸 확인함 (브라우저가 실제로 쓰는 값인 20으로 검증됨). 더 큰
+    값이 어디까지 허용되는지 확인 안 됐으니 함부로 올리지 말 것."""
     all_rows = []
     for page in range(1, max_pages + 1):
         resp = requests.post(
@@ -195,7 +199,7 @@ def _resolve_country_name(name: str):
     return None
 
 
-def fetch_regulations_for_country(country_iso3: str, page_size: int = 500) -> list:
+def fetch_regulations_for_country(country_iso3: str, page_size: int = 20) -> list:
     """전세계 조회 결과 중 country_iso3(예: 'SGP')에 해당하는 것만 걸러서 반환."""
     all_rows = fetch_all_measures_affecting_korea(page_size=page_size)
     matched = []
@@ -219,20 +223,82 @@ def group_measures_by_country(all_rows: list) -> dict:
     return grouped
 
 
-def to_ntm_measure_rows(country_iso3: str, product_key: str, regulations: list) -> list:
-    """denormalisedMeasures 응답 dict 리스트 -> NtmMeasure(**row)에 바로 넣을 dict 리스트."""
+# 식품/농산물 수출과 관련 있을 법한 규정을 상위로 올리는 키워드
+# (app/services/hscode.py의 _FOOD_RELEVANCE_KEYWORDS와 같은 기준)
+_FOOD_RELEVANCE_KEYWORDS = [
+    "food", "animal", "plant", "fish", "meat", "agricultur", "consumer",
+    "biological", "sanitary", "phytosanitary", "veterinary", "poultry",
+    "livestock", "seafood", "beverage", "packaging", "labell", "labeling",
+    "import", "export", "custom",
+]
+
+
+def _relevance_score(reg: dict) -> int:
+    text = " ".join([
+        reg.get("regulationTitle") or "",
+        reg.get("measureDescription") or "",
+        reg.get("ntmDescription") or "",
+    ]).lower()
+    return sum(1 for kw in _FOOD_RELEVANCE_KEYWORDS if kw in text)
+
+
+def top_relevant_regulations(regulations: list, limit: int = 6) -> list:
+    """식품/농산물 관련도가 높은 순으로 상위 N개만 남긴다 (전체를 다 저장하면
+    화면도 지저분해지고 AI 요약 비용도 커지므로, 정말 중요한 것만 추림)."""
+    return sorted(regulations, key=_relevance_score, reverse=True)[:limit]
+
+
+def summarize_regulation_ko(title: str, description: str) -> str:
+    """영문 규정 제목/설명을 한국 식품 수출 담당자가 바로 이해할 수 있게
+    한국어 1~2문장으로 요약. OpenAI 키가 없거나 호출이 실패하면 원문을
+    그냥 짧게 잘라서 대체한다 (기능이 완전히 멈추지 않도록)."""
+    try:
+        from app.services.openai_client import get_client
+
+        prompt = (
+            "다음은 어떤 나라가 수입 식품에 대해 시행 중인 법령/비관세조치(NTM) 설명입니다. "
+            "한국 식품 수출업체 담당자가 실무에서 바로 참고할 수 있도록, "
+            "핵심만 한국어 1~2문장으로 요약하세요. 다른 설명 없이 요약 문장만 출력하세요.\n\n"
+            f"제목: {title or '(제목 없음)'}\n"
+            f"설명: {(description or '')[:2000]}"
+        )
+        response = get_client().chat.completions.create(
+            model="gpt-4o-mini",
+            max_tokens=200,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        summary = (response.choices[0].message.content or "").strip()
+        if summary:
+            return summary
+    except Exception:
+        pass
+
+    # 폴백: 원문 앞부분만 잘라서라도 보여준다 (AI 요약 실패해도 완전히 비진 않게)
+    fallback = (description or title or "").strip()
+    return (fallback[:200] + "…") if len(fallback) > 200 else fallback
+
+
+def to_ntm_measure_rows(country_iso3: str, product_key: str, regulations: list, summarize: bool = True) -> list:
+    """denormalisedMeasures 응답 dict 리스트 -> NtmMeasure(**row)에 바로 넣을 dict 리스트.
+    summarize=True면 각 항목을 한국어 1~2문장으로 요약해서 저장한다 (호출부에서
+    이미 top_relevant_regulations로 최대 6개까지 추린 뒤에 넘기는 걸 권장 -
+    그래야 AI 요약 호출 횟수도 6번으로 제한됨)."""
     rows = []
     for reg in regulations:
+        title = reg.get("regulationTitle") or reg.get("ntmDescription") or ""
+        description = reg.get("measureDescription") or ""
+        summary_ko = summarize_regulation_ko(title, description) if summarize else description
+
         rows.append({
             "reporter": country_iso3,
             "partner": "KOR",
             "product": product_key,
             "measure_code": reg.get("ntmCode") or "",
             "measure_section": reg.get("ntmType") or "",
-            "measure_title": reg.get("regulationTitle") or reg.get("ntmDescription") or "",
-            "measure_summary": reg.get("measureDescription") or "",
-            "legislation_title": reg.get("regulationTitle") or "",
-            "legislation_summary": reg.get("measureDescription") or "",
+            "measure_title": title,
+            "measure_summary": summary_ko,
+            "legislation_title": title,
+            "legislation_summary": summary_ko,
             "implementation_authority": reg.get("issuingAgency") or "",
             "start_date": reg.get("implementationDate") or "",
             "end_date": reg.get("repealDate") or "",

@@ -7,7 +7,11 @@ from app.extensions import db
 from app.models import Exhibition, NtmMeasure, Product
 from app.routes.dashboard import CONTINENT_DB_VALUES
 from app.services.hscode import build_hscode_context, resolve_country_iso
-from app.services.trains_client import fetch_regulations_for_country, to_ntm_measure_rows
+from app.services.trains_client import (
+    fetch_regulations_for_country,
+    to_ntm_measure_rows,
+    top_relevant_regulations,
+)
 
 bp = Blueprint("exhibition", __name__, url_prefix="/exhibitions")
 
@@ -170,12 +174,13 @@ def sync_ntm(expo_id):
 
     try:
         regulations = fetch_regulations_for_country(country_iso)
-        rows = to_ntm_measure_rows(country_iso, "ALL", regulations)
+        top6 = top_relevant_regulations(regulations, limit=6)
+        rows = to_ntm_measure_rows(country_iso, "ALL", top6, summarize=True)
         NtmMeasure.query.filter_by(reporter=country_iso, product="ALL").delete()
         for row in rows:
             db.session.add(NtmMeasure(**row))
         db.session.commit()
-        flash(f"UNCTAD TRAINS에서 {len(rows)}건의 무역 규정 정보를 가져왔습니다.", "success")
+        flash(f"UNCTAD TRAINS에서 가장 관련도 높은 {len(rows)}건을 한국어 요약으로 가져왔습니다.", "success")
     except Exception as e:
         db.session.rollback()
         flash(f"TRAINS 조회 중 오류가 발생했습니다: {e}", "danger")
