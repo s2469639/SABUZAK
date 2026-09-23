@@ -82,16 +82,36 @@
   </div>
   <div class="mta-chart-wrap">
     <div class="mta-chart-toolbar">
-      <div class="mta-toggle-group" data-toggle-group="mta-period-{{ row.product.id }}">
-        <button type="button" class="active" data-period="12m">최근 12개월</button>
-        <button type="button" data-period="5y">최근 5년</button>
-      </div>
-      <div class="mta-toggle-group" data-toggle-group="mta-mode-{{ row.product.id }}">
-        <button type="button" class="active" data-mode="independent">개별 모멘텀</button>
-        <button type="button" data-mode="relative">실제 점유율</button>
+      <span id="mta-period-badge-{{ row.product.id }}" class="data-source-badge">최근 12개월 (주간 세밀 뷰)</span>
+      <div class="mta-chart-toolbar-controls">
+        <div class="mta-toggle-group" data-toggle-group="mta-period-{{ row.product.id }}">
+          <button type="button" class="active" data-period="12m">최근 12개월</button>
+          <button type="button" data-period="5y">최근 5년</button>
+        </div>
+        <div class="mta-toggle-group" data-toggle-group="mta-mode-{{ row.product.id }}">
+          <button type="button" class="active" data-mode="independent">개별 모멘텀</button>
+          <button type="button" data-mode="relative">실제 점유율</button>
+        </div>
+        <span class="mta-info-icon" tabindex="0">ⓘ
+          <span class="mta-tooltip-box">
+            <b>⏱ 최근 12개월 vs 최근 5년</b><br>
+            12개월: 주 단위로 피크 주차를 특정해 B2B 발주 리드타임 역산에 활용합니다.<br>
+            5년: 월 단위 추세로 일시적 유행이 아닌 메가 트렌드인지 검증합니다.<br><br>
+            <b>⚖️ 개별 모멘텀 vs 실제 점유율</b><br>
+            개별 모멘텀: 키워드별 최고점을 각각 100으로 잡아 고유 시즌성 곡선을 복원합니다.<br>
+            실제 점유율: 로컬 품목과 비교한 실제 검색 시장 내 체급 차이를 보여줍니다.
+          </span>
+        </span>
       </div>
     </div>
-    <canvas id="mta-chart-{{ row.product.id }}" height="220"></canvas>
+    <div class="mta-chart-canvas-wrap">
+      <span class="mta-axis-label" tabindex="0">상대 검색 강도<br><small>(0-100)</small> ⓘ
+        <span class="mta-tooltip-box mta-tooltip-box-left">
+          절대 클릭 수가 아니라, 조회 기간 내 가장 검색량이 많았던 시점을 100으로 두고 상대적 수요 변동을 환산한 지수입니다.
+        </span>
+      </span>
+      <canvas id="mta-chart-{{ row.product.id }}"></canvas>
+    </div>
   </div>
   <script id="mta-trend-data-{{ row.product.id }}" type="application/json">{{ result.trend_data | tojson | safe }}</script>
   <p class="placeholder-note">▶ 소싱 가이드: {{ lead_time.timeline_guide }}</p>
@@ -181,18 +201,25 @@
       type: 'line',
       data: { labels: (raw[period] || raw['12m']).dates || [], datasets: datasets() },
       options: {
-        responsive: true, interaction: { mode: 'index', intersect: false },
-        scales: { y: { beginAtZero: true, max: 100 } },
-        plugins: { legend: { position: 'top' } }
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          y: { beginAtZero: true, max: 100, ticks: { font: { size: 10 } } },
+          x: { ticks: { font: { size: 10 }, maxTicksLimit: period === '12m' ? 12 : 10 } }
+        },
+        plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } } }
       }
     });
 
     var group = document.querySelector('[data-toggle-group="mta-period-' + pid + '"]');
     var modeGroup = document.querySelector('[data-toggle-group="mta-mode-' + pid + '"]');
+    var badge = document.getElementById('mta-period-badge-' + pid);
     function refresh() {
       chart.data.labels = (raw[period] || raw['12m']).dates || [];
       chart.data.datasets = datasets();
+      chart.options.scales.x.ticks.maxTicksLimit = period === '12m' ? 12 : 10;
       chart.update();
+      if (badge) badge.textContent = period === '12m' ? '최근 12개월 (주간 세밀 뷰)' : '최근 5년 (월간 장기 추세)';
     }
     if (group) group.addEventListener('click', function (e) {
       var btn = e.target.closest('button[data-period]');
