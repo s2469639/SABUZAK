@@ -57,6 +57,10 @@ RETRY_BACKOFF_SEC = [2, 5, 10]
 # 서버가 Retry-After 헤더로 이보다 큰 값을 요구해도 이 이상은 기다리지 않는다
 # (큰 값을 그대로 따르면 로그 없이 오래 멈춰있는 것처럼 보임)
 MAX_RETRY_AFTER_SEC = 15
+# Retry-After가 이 값(초)을 넘으면 "잠깐 느린 것"이 아니라 IP가 장기간(보통
+# 몇 시간~하루) 차단된 것으로 보고, 재시도하지 말고 바로 명확한 에러로
+# 끝낸다. 계속 재시도하면 차단만 더 길어질 수 있음.
+LONG_BAN_THRESHOLD_SEC = 300
 
 # TRAINS는 국가를 내부 숫자 ID로만 지정할 수 있어서(ISO코드 매핑을 모름) 나라
 # 하나만 필요할 때도 어쩔 수 없이 전세계(allImposingCountries=True)를 페이지
@@ -230,11 +234,20 @@ def fetch_all_measures_affecting_korea(
             retry_after = resp.headers.get("Retry-After")
             if retry_after:
                 try:
-                    wait_sec = min(float(retry_after), MAX_RETRY_AFTER_SEC)
+                    retry_after_sec = float(retry_after)
+                except ValueError:
+                    retry_after_sec = None
+                if retry_after_sec is not None and retry_after_sec > LONG_BAN_THRESHOLD_SEC:
+                    raise RuntimeError(
+                        f"TRAINS가 이 IP를 장기간 차단한 것으로 보입니다 "
+                        f"(Retry-After={retry_after_sec:.0f}초 ≈ {retry_after_sec / 3600:.1f}시간). "
+                        f"단순 429 재시도로는 해결 안 되니, 시간이 지나거나 IP를 바꿔서 "
+                        f"다시 시도해야 합니다."
+                    )
+                if retry_after_sec is not None:
+                    wait_sec = min(retry_after_sec, MAX_RETRY_AFTER_SEC)
                     print(f"  [TRAINS] page {page} 429, Retry-After={retry_after}s -> {wait_sec}s 대기", flush=True)
                     time.sleep(wait_sec)
-                except ValueError:
-                    pass
         resp.raise_for_status()
         try:
             batch = resp.json()
