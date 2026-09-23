@@ -3,7 +3,7 @@
 .env 위치: 이 파일이 있는 폴더부터 상위 폴더로 올라가며 가장 가까운 .env를 사용한다.
     SABUZAK/
     ├── .env            <- 여기 있는 파일을 찾아서 사용
-    └── tavily_v3/
+    └── tavily_v5/
         └── env_setup.py
 
 주의: 이 모듈의 ensure_required_keys()는 input()/getpass()로 사용자 입력을 기다리므로,

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""박람회 준비 데스크 리서치 웹 화면 (v4).
+"""박람회 준비 데스크 리서치 웹 화면 (v5.0).
 
-실행: python app.py  ->  http://127.0.0.1:5050
+실행: python app.py  ->  http://127.0.0.1:5051
+(v3 서버가 5050을 쓰는 경우가 있어 5051을 사용)
 """
 
 from flask import Flask, render_template, request
@@ -9,6 +10,8 @@ from openai import AuthenticationError
 
 from env_setup import ensure_required_keys
 from research import run_research
+
+PORT = 5051
 
 app = Flask(__name__)
 
@@ -41,7 +44,4 @@ def index():
 
 if __name__ == "__main__":
     ensure_required_keys()
-    app.run(debug=True, port=5050)
-
-
-app.run(debug=True, port=5051)   # v4는 http://127.0.0.1:5051
+    app.run(debug=True, port=PORT)

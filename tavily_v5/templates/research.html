@@ -67,27 +67,43 @@
   table.src-list { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
   .src-list td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; word-break: break-all; }
   @media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+
+  .badges { margin: 4px 0 2px; }
+  .tag.scope-product { background: var(--evidence-bg); color: var(--evidence); }
+  .tag.scope-category { background: #EAF0F6; color: #2F5470; }
+  .tag.scope-kfood { background: #F1EAF6; color: #5A3A70; }
+  .tag.scope-general { background: var(--paper); color: var(--muted); border: 1px solid var(--line); }
+  .tag.market-country { background: var(--evidence-bg); color: var(--evidence); }
+  .tag.market-region { background: var(--warn-bg); color: var(--warn); }
+  .tag.public { background: #E8EEF9; color: #2D4A8A; }
+  .tag.stale, .tag.warn { background: var(--warn-bg); color: var(--warn); }
+  .diag { font-size: 12px; color: var(--muted); margin: 10px 0 0; }
+  .notice { margin: 8px 0 12px; }
+  details.dbg { margin-top: 8px; font-size: 13px; color: var(--muted); }
+  details.dbg summary { font-weight: 400; font-size: 13px; }
+  details.dbg li { margin: 2px 0; }
 </style>
 </head>
 <body>
 <main>
   <h1>박람회 준비 데스크 리서치</h1>
-  <p class="lead">제품과 국가를 입력하면 4가지 조사 질문에 대해 원문을 찾아 발췌하고, 원문에서 확인된 문장만으로 요약합니다.</p>
+  <p class="lead">제품과 국가를 입력하면 4가지 조사 질문에 대해 원문을 찾아 발췌하고, 원문에서 확인된 문장만으로 요약합니다.
+  발췌마다 무엇에 관한 문장인지(제품·제품군·한국 식품)와 어느 시장 자료인지(대상 국가·권역 참고)를 표시합니다.</p>
 
   <form method="post">
     <div class="row">
       <div><label for="product_name">제품명</label>
-        <input type="text" id="product_name" name="product_name" value="{{ form.product_name }}" placeholder="예: 김부각" required></div>
+        <input type="text" id="product_name" name="product_name" value="{{ form.product_name }}" placeholder="예: 김부각" maxlength="100" required></div>
       <div><label for="country">국가 (영문)</label>
-        <input type="text" id="country" name="country" value="{{ form.country }}" placeholder="예: Germany" required></div>
+        <input type="text" id="country" name="country" value="{{ form.country }}" placeholder="예: Germany" maxlength="100" required></div>
     </div>
     <details class="opt" {% if form.exhibition_name %}open{% endif %}>
       <summary>박람회 정보 (선택)</summary>
       <div class="row">
         <div><label for="exhibition_name">박람회명</label>
-          <input type="text" id="exhibition_name" name="exhibition_name" value="{{ form.exhibition_name }}" placeholder="예: ANUGA"></div>
+          <input type="text" id="exhibition_name" name="exhibition_name" value="{{ form.exhibition_name }}" placeholder="예: ANUGA" maxlength="100"></div>
         <div><label for="exhibition_website">공식 사이트</label>
-          <input type="text" id="exhibition_website" name="exhibition_website" value="{{ form.exhibition_website }}" placeholder="예: anuga.com"></div>
+          <input type="text" id="exhibition_website" name="exhibition_website" value="{{ form.exhibition_website }}" placeholder="예: anuga.com" maxlength="100"></div>
       </div>
     </details>
     <details class="opt" {% if form.strengths or form.ingredients or form.certifications or form.price_range %}open{% endif %}>
@@ -110,23 +126,26 @@
   {% if result %}
     {% set quotes = {} %}{% for q in result.quotes %}{% set _ = quotes.update({q.id: q}) %}{% endfor %}
     {% set sources = {} %}{% for s in result.sources %}{% set _ = sources.update({s.id: s}) %}{% endfor %}
+    {% set st = result.stats %}
 
     <div class="meta">
       <strong>[{{ result.country }}] {{ result.product_name }}{% if result.exhibition_name %} · {{ result.exhibition_name }}{% endif %}</strong>
-      조사 용어: {{ result.terms.selected|join(", ") }} /
-      {{ "캐시 결과" if result.from_cache else "새로 조사" }} ({{ result.fetched_at[:10] }})
+      제품 용어: {{ (result.terms.selected or ["확인된 용어 없음"])|join(", ") }} · 권역: {{ result.terms.region_ko or "미상" }} ·
+      {{ "캐시 결과" if result.from_cache else "새로 조사" }} ({{ result.fetched_at[:10] }}, {{ result.version }})
     </div>
     <p class="stats">
-      출처 {{ result.stats.sources_found }}건 중 {{ result.stats.sources_used }}건에서
-      원문 확인된 발췌 {{ result.stats.quotes_verified }}건을 사용했습니다.
-      원문에 없어 버린 발췌 {{ result.stats.quotes_rejected }}건, 대상 국가·박람회와 무관한 자료 {{ result.stats.unusable_sources }}건.
+      출처 {{ st.sources_found }}건에서 원문 확인된 발췌 {{ st.quotes_used }}건 사용 (대상 국가 {{ st.country_quotes }}, 권역 참고 {{ st.region_quotes }}).<br>
+      제외: 보고서 판매 사이트·SNS {{ st.excluded_source }}건 · 다른 시장 자료 {{ st.market_other }}건 ·
+      원문(본문)에 없는 발췌 {{ st.not_in_source }}건 · 제품·제품군과 무관한 발췌 {{ st.off_scope }}건.
+      {% if st.stale_quotes or st.translation_warnings %}<br>주의: 오래된 자료 발췌 {{ st.stale_quotes }}건 · 번역 숫자 불일치 {{ st.translation_warnings }}건.{% endif %}
     </p>
-    {% if not result.terms.is_verified %}<div class="notice">현지 자료에서 확인된 용어가 없어 넓은 용어로 조사했습니다. 결과가 적을 수 있습니다.</div>{% endif %}
+    {% if not result.terms.is_verified %}<div class="notice">{{ result.product_name }}을(를) 가리키는 용어가 검색 결과에서 확인되지 않았습니다. 제품 자체에 대한 자료는 적을 수 있습니다.</div>{% endif %}
 
     {% for c in result.cards %}
       <section class="card">
         <div class="qhead"><span class="qid">{{ c.qid }}</span><h2>{{ c.title }}</h2></div>
-        <p class="question">{{ c.question }} · 근거 발췌 {{ c.quote_ids|length }}건, 출처 {{ c.source_count }}곳</p>
+        <p class="question">{{ c.question }} · 근거 발췌 {{ c.quote_ids|length }}건 (대상 국가 {{ c.country_quotes }}), 출처 {{ c.source_count }}곳</p>
+        {% if c.notice %}<div class="notice">{{ c.notice }}</div>{% endif %}
 
         {% if c.conclusion %}
           <p class="conclusion"><span class="tag ai">AI 요약</span>{{ c.conclusion.text }} {{ refs(c.conclusion.quote_ids) }}</p>
@@ -134,7 +153,7 @@
         {% if c.points %}
           <ul class="points">{% for p in c.points %}<li>{{ p.text }} {{ refs(p.quote_ids) }}</li>{% endfor %}</ul>
         {% endif %}
-        {% if c.interpretation and c.points %}
+        {% if c.interpretation %}
           <div class="interp"><span class="tag ai">AI 해석</span>{{ c.interpretation }}</div>
         {% endif %}
         {% if c.gaps %}<p class="gap">확인 필요: {{ c.gaps }}</p>{% endif %}
@@ -144,12 +163,27 @@
           {% for qid in c.quote_ids %}
             {% set q = quotes[qid] %}{% set s = sources[q.source_ids[0]] %}
             <div class="quote" id="{{ qid }}">
+              <div class="badges">
+                <span class="tag scope-{{ q.scope }}">{{ q.scope_label }}</span>
+                <span class="tag market-{{ q.market }}">{{ q.market_label }}</span>
+                {%- if q.is_public_kr %}<span class="tag public">한국 공공기관</span>{% endif %}
+                {%- if q.is_stale %}<span class="tag stale">오래된 자료 ({{ q.year }})</span>{% endif %}
+                {%- if q.translation_warning %}<span class="tag warn">번역 확인 필요</span>{% endif %}
+              </div>
               <div class="orig">“{{ q.quote }}”</div>
               {% if q.translation_ko %}<div class="ko">{{ q.translation_ko }}</div>{% endif %}
-              <div class="src"><b>{{ qid }}</b>{{ s.domain }} · {{ s.published_date[:10] if s.published_date else "날짜 미상" }}{% if q.source_ids|length > 1 %} · 같은 문장 출처 {{ q.source_ids|length }}곳{% endif %}
+              <div class="src"><b>{{ qid }}</b>{{ s.domain }} · {{ q.year or "연도 미상" }}{% if q.source_ids|length > 1 %} · 같은 문장 출처 {{ q.source_ids|length }}곳{% endif %}
                 · <a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">원문 열기</a></div>
             </div>
           {% endfor %}
+        {% endif %}
+
+        {% set d = c.diagnostics %}
+        <p class="diag">검색 {{ d.searched or 0 }}건 · 보고서·SNS 제외 {{ d.excluded_source or 0 }}건 · 다른 시장 {{ d.market_other or 0 }}건 ·
+          원문에 없음 {{ d.not_in_source or 0 }}건 · 범위 밖 {{ d.off_scope or 0 }}건</p>
+        {% if c.dropped %}
+          <details class="dbg"><summary>검사에서 지운 요약 문장 {{ c.dropped|length }}건</summary>
+            <ul>{% for x in c.dropped %}<li>[{{ x.reason }}] {{ x.text }}</li>{% endfor %}</ul></details>
         {% endif %}
       </section>
     {% endfor %}
@@ -158,6 +192,7 @@
       {% set b = result.booth %}
       <section class="card booth">
         <div class="qhead"><h2>부스 기획 포인트</h2><span class="tag ai">AI 제안</span></div>
+        {% if not b.has_product_evidence %}<div class="notice">{{ result.product_name }} 자체에 대한 현지 근거 없이, 제품군·한국 식품 자료를 바탕으로 한 제안입니다.</div>{% endif %}
         <p class="message">{{ b.key_message }}</p>
         {% if b.reasons %}<h3>판단 근거</h3>
           <ul class="points">{% for x in b.reasons %}<li>{{ x.text }} {{ refs(x.quote_ids) }}</li>{% endfor %}</ul>{% endif %}
@@ -168,10 +203,14 @@
     {% endif %}
 
     <details class="opt">
-      <summary>검색한 전체 출처 {{ result.sources|length }}건</summary>
+      <summary>검색한 출처 {{ result.sources|length }}건 · 제외된 출처 {{ result.excluded_sources|length }}건</summary>
       <table class="src-list">
         {% for s in result.sources %}
-          <tr><td>{{ s.id + 1 }}</td><td>{{ s.title }}<br><a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">{{ s.url }}</a></td></tr>
+          <tr><td>{{ s.id + 1 }}</td><td>{{ {"country": "대상 국가", "region": "권역", "other": "다른 시장"}.get(s.market, "판정 없음") }}</td>
+            <td>{{ s.title }}<br><a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">{{ s.url }}</a></td></tr>
+        {% endfor %}
+        {% for e in result.excluded_sources %}
+          <tr><td>-</td><td>{{ e.reason }}</td><td><a href="{{ e.url }}" target="_blank" rel="noopener noreferrer">{{ e.url }}</a></td></tr>
         {% endfor %}
       </table>
     </details>
