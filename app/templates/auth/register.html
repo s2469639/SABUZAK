@@ -1,11 +1,15 @@
-{% extends "base.html" %}
+{% extends "auth_base.html" %}
 {% block title %}회원가입 | 사부작{% endblock %}
 
 {% block content %}
-<div class="auth-wrapper">
-  <h1>사부작 회원가입</h1>
+<div class="auth-card">
+  <div class="auth-logo">
+    <div class="auth-logo-badge">{% include "_logo_icon.html" %}</div>
+    <h1>사부작 회원가입</h1>
+    <p class="auth-logo-sub">박람회 운영 대시보드</p>
+  </div>
 
-  <form method="post" action="{{ url_for('auth.register') }}">
+  <form method="post" action="{{ url_for('auth.register') }}" class="auth-form">
     <label for="name">이름</label>
     <input type="text" id="name" name="name" value="{{ name or '' }}" required autofocus>
 
@@ -21,7 +25,7 @@
     <label for="password_confirm">비밀번호 확인</label>
     <input type="password" id="password_confirm" name="password_confirm" required>
 
-    <button type="submit">가입하기</button>
+    <button type="submit" class="btn-primary auth-submit">가입하기</button>
   </form>
 
   <p class="auth-switch">

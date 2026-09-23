@@ -7,7 +7,11 @@ from app.extensions import db
 from app.models import Exhibition, NtmMeasure, Product
 from app.routes.dashboard import CONTINENT_DB_VALUES
 from app.services.hscode import build_hscode_context, resolve_country_iso
-from app.services.trains_client import fetch_regulations, to_ntm_measure_rows
+from app.services.trains_client import (
+    fetch_regulations_for_country,
+    to_ntm_measure_rows,
+    top_relevant_regulations,
+)
 
 bp = Blueprint("exhibition", __name__, url_prefix="/exhibitions")
 
@@ -88,6 +92,14 @@ def expo_list_by_country(country):
     return render_template("dashboard/expo_list.html", **ctx)
 
 
+@bp.route("/partial/all")
+@login_required
+def expo_list_partial_all():
+    base_query = Exhibition.query.filter(Exhibition.is_active == 1)
+    ctx = _build_list_context(base_query, "전체 해외", "exhibition.expo_list_partial_all", {}, "")
+    return render_template("dashboard/_expo_list_partial.html", **ctx)
+
+
 @bp.route("/partial/<continent>")
 @login_required
 def expo_list_partial(continent):
@@ -151,10 +163,12 @@ def detail(expo_id):
 @login_required
 def sync_ntm(expo_id):
     """이 박람회 국가 하나에 대해 UNCTAD TRAINS Online을 그 자리에서 호출해
-    캐시(NtmMeasure)를 채운다. TRAINS Online의 export-regulations는 실제로는
-    HS코드로 필터링을 안 하고 국가 전체 규정 목록을 반환하기 때문에, HS코드별로
-    나눠 부를 필요 없이 국가당 한 번만 호출한다 (app/services/hscode.py의
-    get_country_regulations가 이후 식품 관련도로 걸러서 보여줌)."""
+    캐시(NtmMeasure)를 채운다. TRAINS의 새 API(denormalisedMeasures)는 국가를
+    UNCTAD 내부 숫자 ID로만 지정할 수 있어서, 전세계를 한 번에 조회한 뒤
+    응답에 포함된 국가명 문자열로 이 박람회 국가에 해당하는 것만 걸러낸다
+    (app/services/trains_client.fetch_regulations_for_country).
+    이후 app/services/hscode.py의 get_country_regulations가 식품 관련도로
+    한 번 더 걸러서 보여준다."""
     expo = Exhibition.query.get_or_404(expo_id)
     country_iso = resolve_country_iso(expo.country)
 
@@ -167,13 +181,14 @@ def sync_ntm(expo_id):
         return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#hscode")
 
     try:
-        regulations = fetch_regulations(country_iso, [])
-        rows = to_ntm_measure_rows(country_iso, "ALL", regulations)
+        regulations = fetch_regulations_for_country(country_iso)
+        top6 = top_relevant_regulations(regulations, limit=6)
+        rows = to_ntm_measure_rows(country_iso, "ALL", top6, summarize=True)
         NtmMeasure.query.filter_by(reporter=country_iso, product="ALL").delete()
         for row in rows:
             db.session.add(NtmMeasure(**row))
         db.session.commit()
-        flash(f"UNCTAD TRAINS에서 {len(rows)}건의 무역 규정 정보를 가져왔습니다.", "success")
+        flash(f"UNCTAD TRAINS에서 가장 관련도 높은 {len(rows)}건을 한국어 요약으로 가져왔습니다.", "success")
     except Exception as e:
         db.session.rollback()
         flash(f"TRAINS 조회 중 오류가 발생했습니다: {e}", "danger")

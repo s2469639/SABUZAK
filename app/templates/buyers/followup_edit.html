@@ -4,11 +4,16 @@
 {% block content %}
 {% include "buyers/_nav.html" %}
 
-<h1>{{ contact.name }}{% if contact.company %} ({{ contact.company }}){% endif %} 팔로업 메일</h1>
-<p class="page-desc">
-  받는 사람: {{ contact.email }} · 박람회: {{ contact.exhibition_name }}
-  {% if followup.template_version %} · {{ templates_by_version.get(followup.template_version).display_name if templates_by_version.get(followup.template_version) else '버전 ' ~ followup.template_version }} 기반{% endif %}
-</p>
+<div class="page-header">
+  <div>
+    <h1>{{ contact.name }}{% if contact.company %} ({{ contact.company }}){% endif %} 팔로업 메일</h1>
+    <p class="page-desc">
+      받는 사람: {{ contact.email }} · 박람회: {{ contact.exhibition_name }}
+      {% if followup.template_version %} · {{ templates_by_version.get(followup.template_version).display_name if templates_by_version.get(followup.template_version) else '버전 ' ~ followup.template_version }} 기반{% endif %}
+    </p>
+  </div>
+  <a href="{{ url_for('contacts.list_contacts') }}" class="btn-secondary">← 바이어 목록으로</a>
+</div>
 
 <div class="card">
 {% if followup.status != 'sent' %}
@@ -68,6 +73,4 @@
   {% if followup.sent_at %} · 발송시각: {{ followup.sent_at }}{% endif %}
 </p>
 </div>
-
-<p><a href="{{ url_for('contacts.list_contacts') }}" class="btn-secondary">← 바이어 목록으로</a></p>
 {% endblock %}

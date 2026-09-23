@@ -1,8 +1,10 @@
 """
 HS코드 & 수출 주의사항 탭용 서비스.
 
-관세율: scripts/market/tariff_advisor.py 의 협정별 관세율 프로필(MFN/FTA/RCEP)
-로직을 그대로 가져왔다 (정적 프로필, 주요국 외에는 추정치).
+관세율: app/services/tariff_lookup.py가 농림축산식품부 "농축산물 FTA
+협정세율 현황"(공공데이터포털) 실데이터를 HS코드+국가로 조회해준다.
+예전엔 사람이 손으로 입력한 고정표(TARIFF_PROFILES)를 썼는데, 존재하지
+않는 협정을 있는 것처럼 보여주는 오류가 있어서 실데이터로 교체했다.
 
 비관세장벽(NTM): UNCTAD TRAINS Online 내부 API(app/services/trains_client.py)에서
 가져온 실데이터를 쓴다. macmap.org는 Cloudflare로 완전히 막혀서 포기하고,
@@ -24,6 +26,7 @@ NtmMeasure.reporter 컬럼은 ISO3(예: "SGP")를 저장하고, product 컬럼�
 """
 
 from app.models import NtmMeasure
+from app.services import tariff_lookup
 
 try:
     import pycountry
@@ -63,22 +66,6 @@ COUNTRY_ISO_MAP = {
     "greece": "GRC", "denmark": "DNK", "norway": "NOR", "finland": "FIN",
     "chile": "CHL", "argentina": "ARG", "colombia": "COL", "peru": "PER",
 }
-
-# 국가별 협정 관세율 프로필 (tariff_advisor.py 그대로)
-TARIFF_PROFILES = {
-    "CHN": {"fta_name": "한-중 FTA", "mfn": 12.0, "fta": 0.0, "rcep": 5.0},
-    "USA": {"fta_name": "한-미 FTA (KORUS)", "mfn": 6.4, "fta": 0.0, "rcep": 6.4},
-    "VNM": {"fta_name": "한-베트남 FTA / RCEP", "mfn": 15.0, "fta": 0.0, "rcep": 5.0},
-    "JPN": {"fta_name": "RCEP / 양자 간 협정", "mfn": 8.0, "fta": 2.5, "rcep": 3.0},
-    "BRA": {"fta_name": "일반관세 (MERCOSUR 연계)", "mfn": 35.0, "fta": 32.0, "rcep": 35.0},
-    "MEX": {"fta_name": "일반관세 (FTA 미체결)", "mfn": 20.0, "fta": 20.0, "rcep": 20.0},
-    "DEU": {"fta_name": "한-EU FTA", "mfn": 14.2, "fta": 0.0, "rcep": 14.2},
-    "FRA": {"fta_name": "한-EU FTA", "mfn": 14.2, "fta": 0.0, "rcep": 14.2},
-    "AUS": {"fta_name": "한-호주 FTA", "mfn": 10.0, "fta": 0.0, "rcep": 4.0},
-    "SAU": {"fta_name": "한-사우디 일반 협정", "mfn": 15.0, "fta": 5.0, "rcep": 10.0},
-}
-
-DEFAULT_PROFILE = {"fta_name": "일반 협정 (추정치)", "mfn": 15.0, "fta": 5.0, "rcep": 10.0}
 
 # 국가별 수출 주의사항 카드 (필수/정보/주의)
 REGULATION_NOTES = {
@@ -188,20 +175,16 @@ def resolve_country_iso(country_name):
     return None
 
 
-def get_tariff_regimes(country_iso):
-    """국가별 협정 관세율 목록. [{regime, tariff_ave}, ...]"""
-    profile = TARIFF_PROFILES.get(country_iso, DEFAULT_PROFILE)
-    return [
-        {"regime": "MFN (기본세율)", "tariff_ave": profile["mfn"]},
-        {"regime": profile["fta_name"], "tariff_ave": profile["fta"]},
-        {"regime": "RCEP (역내)", "tariff_ave": profile["rcep"]},
-    ]
+def get_tariff_regimes(hs_code, country_iso):
+    """HS코드+국가별 실제 협정 관세율 목록. [{regime, tariff_ave, display}, ...].
+    app/services/tariff_lookup.py가 농림축산식품부 실데이터에서 찾아준다.
+    표에 없는 국가/HS코드 조합이면 빈 리스트를 반환한다."""
+    return tariff_lookup.get_tariff_regimes(hs_code, country_iso)
 
 
-def get_best_regime(country_iso):
-    """가장 유리한(최저) 관세 협정 하나."""
-    regimes = get_tariff_regimes(country_iso)
-    return min(regimes, key=lambda r: r["tariff_ave"])
+def get_best_regime(hs_code, country_iso):
+    """가장 유리한(최저) 관세 협정 하나. 데이터가 없으면 None."""
+    return tariff_lookup.get_best_regime(hs_code, country_iso)
 
 
 def _classify_ntm_level(measure):
@@ -270,27 +253,35 @@ def get_required_certs(country_iso, food_yn):
 
 
 def build_hscode_context(expo, products):
-    """detail.html의 HS코드 탭에 필요한 데이터 전부를 만들어서 반환."""
+    """detail.html의 HS코드 탭에 필요한 데이터 전부를 만들어서 반환.
+    관세율은 제품별 HS코드 + 수출국으로 실데이터 표에서 조회한다 (국가 하나에
+    고정된 값이 아니라 제품마다 다를 수 있음 - 예전엔 국가만 보고 모든 제품에
+    같은 값을 보여주는 버그가 있었다)."""
     country_iso = resolve_country_iso(expo.country)
-    is_estimated = country_iso not in TARIFF_PROFILES
+    has_country_data = tariff_lookup.has_country_data(country_iso) if country_iso else False
 
     product_rows = []
     for product in products:
-        regimes = get_tariff_regimes(country_iso)
-        best = min(regimes, key=lambda r: r["tariff_ave"])
+        regimes = get_tariff_regimes(product.hs_code, country_iso) if country_iso else []
+        best = None
+        numeric_regimes = [r for r in regimes if r["tariff_ave"] is not None]
+        if numeric_regimes:
+            best = min(numeric_regimes, key=lambda r: r["tariff_ave"])
         for r in regimes:
-            r["is_best"] = r is best
+            r["is_best"] = (r is best) if best else False
         product_rows.append({
             "product": product,
             "regimes": regimes,
             "best_regime": best,
+            "has_data": bool(regimes),
             "certs": get_required_certs(country_iso, expo.food_yn),
         })
 
-    # 등록된 제품들 전체에서 가장 유리한 관세 조합 하나 추천
+    # 등록된 제품들 전체에서 가장 유리한 관세 조합 하나 추천 (데이터 있는 것만 대상)
     overall_best = None
-    if product_rows:
-        overall_best = min(product_rows, key=lambda r: r["best_regime"]["tariff_ave"])
+    rows_with_best = [r for r in product_rows if r["best_regime"] is not None]
+    if rows_with_best:
+        overall_best = min(rows_with_best, key=lambda r: r["best_regime"]["tariff_ave"])
 
     # 국가 전체 규정 중 식품/농산물 관련도 높은 순 상위 N개 (TRAINS는 HS코드로
     # 필터링이 안 되고 국가 전체 목록을 반환하므로, 여기서 관련도를 매겨 추림)
@@ -298,7 +289,7 @@ def build_hscode_context(expo, products):
 
     return {
         "country_iso": country_iso,
-        "is_estimated": is_estimated,
+        "has_country_data": has_country_data,
         "product_rows": product_rows,
         "overall_best": overall_best,
         "regulation_notes": get_regulation_notes(country_iso, country_regulations),
