@@ -55,7 +55,7 @@ def index():
     }
 
     # tavily_v5 템플릿 적용으로 캐시 버전을 _v5로 승격
-    raw_key = f"{specs['product_name']}_{specs['country']}_{specs['exhibition_month']}_v5"
+    raw_key = f"{specs['product_name']}_{specs['country']}_{specs['exhibition_month']}_v6"
     cache_key = hashlib.md5(raw_key.encode()).hexdigest()
 
     cached_result = get_cache(cache_key)
@@ -71,7 +71,13 @@ def index():
     country_code = COUNTRY_GEO_MAP.get(specs["country"], "GB")
     
     # 3. B2B 납기 사이클 계산 엔진
-    lead_time = calculate_lead_time(trend_data["12m"], keywords["kw1"], specs["exhibition_month"], country_code)
+    lead_time = calculate_lead_time(
+        trend_data["12m"], 
+        keywords["kw1"], 
+        specs["exhibition_month"], 
+        country=specs["country"], 
+        product_name=specs["product_name"]
+    )
 
     # 4. 현지 매대 실존 경쟁사 분석
     competitors = analyze_competitors(specs, keywords)
