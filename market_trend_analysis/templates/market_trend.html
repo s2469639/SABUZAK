@@ -56,7 +56,7 @@
             </div>
         </div>
 
-        <!-- 3. 권장 바이어 PO 시점 (초록색 박스: 빈 값 방어 필터 적용) -->
+        <!-- 3. 권장 바이어 PO 시점 -->
         <div class="p-5 bg-white rounded-xl border border-emerald-300 shadow-sm flex flex-col justify-between bg-emerald-50/20">
             <div>
                 <span class="text-xs font-bold tracking-wider text-emerald-800 uppercase">권장 바이어 PO 시점</span>
@@ -94,7 +94,7 @@
                 </div>
             </div>
             
-            <!-- 우측 상단 컨트롤러 및 지표 info 호버 -->
+            <!-- 기간 & 뷰 모드 컨트롤러 + info 툴팁 -->
             <div class="flex flex-wrap items-center gap-2">
                 <div class="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-50">
                     <button id="btn12m" onclick="setPeriod('12m')" class="px-3 py-1 text-xs font-semibold rounded-md bg-white text-blue-700 shadow-sm transition">최근 12개월</button>
@@ -120,8 +120,8 @@
                         <div class="pt-2 border-t border-slate-700">
                             <span class="font-bold text-blue-300">⚖️ 개별 모멘텀 vs 실제 점유율</span>
                             <p class="text-slate-300 mt-0.5 leading-snug">
-                                <b>개별 모멘텀:</b> 키워드별 최고점을 각각 100으로 잡아 체급과 무관하게 <b>고유 시즌성 곡선</b>을 복원합니다[cite: 1].<br>
-                                <b>실제 점유율:</b> 로컬 품목과 비교했을 때 <b>실제 검색 시장 내 체급 차이</b>를 확인합니다[cite: 1].
+                                <b>개별 모멘텀:</b> 키워드별 최고점을 각각 100으로 잡아 체급과 무관하게 <b>고유 시즌성 곡선</b>을 복원합니다.<br>
+                                <b>실제 점유율:</b> 로컬 품목과 비교했을 때 <b>실제 검색 시장 내 체급 차이</b>를 확인합니다.
                             </p>
                         </div>
                     </div>
@@ -129,15 +129,23 @@
             </div>
         </div>
 
-        <!-- 세로축 좌측 배치 및 Hover 툴팁 영역 -->
+<!-- 세로축 좌측 배치 및 Hover 툴팁 영역 -->
         <div class="relative flex items-center pt-2">
-            <!-- 왼쪽 축에 붙은 세로 텍스트 -->
-            <div class="relative has-tooltip flex items-center justify-center h-full pr-1">
-                <span class="cursor-help text-[11px] font-semibold text-slate-400 hover:text-blue-600 tracking-tighter transition select-none flex items-center gap-1"
-                      style="writing-mode: vertical-rl; transform: rotate(180deg);">
-                    상대 검색 강도 (0-100) ⓘ
+            <div class="relative has-tooltip flex items-center justify-center h-full pr-2">
+                
+                <!-- 💡 여기를 교체 -->
+                <span class="cursor-help text-[11px] font-bold text-slate-500 hover:text-blue-600 transition select-none leading-tight text-center flex flex-col items-center">
+                    <span>상</span>
+                    <span>대</span>
+                    <span>검</span>
+                    <span>색</span>
+                    <span>강</span>
+                    <span>도</span>
+                    <span class="text-[9px] font-semibold text-slate-400 mt-1 scale-90 whitespace-nowrap">(0-100)</span>
+                    <span class="text-blue-500 text-xs mt-0.5">ⓘ</span>
                 </span>
-                <div class="tooltip-box absolute left-6 top-1/3 -translate-y-1/2 w-64 p-2.5 bg-slate-900 text-white text-xs rounded-lg shadow-xl z-50 break-keep">
+
+                <div class="tooltip-box absolute left-8 top-1/3 -translate-y-1/2 w-64 p-2.5 bg-slate-900 text-white text-xs rounded-lg shadow-xl z-50 break-keep">
                     <span class="font-bold text-blue-300">📊 세로축 (0~100)의 의미</span><br>
                     절대 클릭 수가 아닌, 조회 기간 내 가장 검색량이 많았던 시점을 <b>100</b>으로 두고 상대적 수요 변동을 환산한 지수입니다.
                 </div>
@@ -147,12 +155,6 @@
             <div class="h-72 w-full">
                 <canvas id="trendChart"></canvas>
             </div>
-        </div>
-
-        <!-- B2B 소싱 타임라인 주석 바 -->
-        <div class="p-3.5 bg-blue-50/60 rounded-lg border border-blue-100 text-sm flex items-start gap-2 break-keep">
-            <span class="text-blue-700 font-bold whitespace-nowrap">▶ 소싱 가이드:</span>
-            <span class="text-slate-700 font-medium">{{ lead_time.timeline_guide }}</span>
         </div>
 
         <!-- 하단 그래프 데이터 통합 해석 총평 -->
