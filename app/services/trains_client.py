@@ -44,14 +44,17 @@ ID를 그대로 고정 필터로 쓴다 - 마침 이게 우리가 필요한 카�
 필터링이 된다.
 """
 
+import json
 import threading
 import time
+from pathlib import Path
 from urllib.parse import quote
 
 import requests
 
-# 페이지 요청 사이 최소 대기 (매너 호출 - 너무 빨리 연달아 부르면 429 뜸)
-REQUEST_DELAY_SEC = 0.6
+# 페이지 요청 사이 최소 대기 (매너 호출 - 너무 빨리 연달아 부르면 429 뜸, 심하면
+# 장기 IP 차단까지 감. 0.6초는 너무 공격적이었던 것으로 보여 여유있게 늘림)
+REQUEST_DELAY_SEC = 2.0
 # 429(Too Many Requests) 받았을 때 재시도 대기 시간(초), 점점 늘어남
 RETRY_BACKOFF_SEC = [2, 5, 10]
 # 서버가 Retry-After 헤더로 이보다 큰 값을 요구해도 이 이상은 기다리지 않는다
@@ -293,24 +296,62 @@ def _resolve_country_name(name: str):
     return None
 
 
-# 전세계 조회 결과 캐시. sync_ntm 버튼을 여러 박람회(=여러 나라)에서 누를 때마다
-# 매번 전세계를 다시 긁으면 요청이 국가 수만큼 배로 늘어나 429를 유발하므로,
-# 한 번 긁은 결과를 CACHE_TTL_SEC 동안 재사용한다.
+# 전세계 조회 결과 캐시. sync_ntm 버튼을 여러 박람회(=여러 나라)에서 누를 때마다,
+# 또는 디버그 스크립트를 여러 번 재실행할 때마다 매번 전세계를 다시 긁으면
+# 짧은 시간에 요청이 몰려서 429/장기 IP 차단을 유발하므로, 한 번 긁은 결과를
+# CACHE_TTL_SEC 동안 재사용한다.
+#
+# 파일로도 저장하는 이유: 위쪽 _world_cache는 프로세스 메모리 캐시라서,
+# `python debug_trains_ntm.py`처럼 매번 새 파이썬 프로세스로 실행하는
+# 스크립트는 실행할 때마다 캐시가 초기화된 것과 같다 - 테스트로 여러 번
+# 재실행하면 그때마다 전세계 100페이지를 처음부터 다시 긁어서 실제로 IP
+# 차단을 유발한 적이 있다. 디스크에 저장해두면 프로세스가 바뀌어도
+# CACHE_TTL_SEC 안에는 네트워크 요청 없이 캐시를 재사용한다.
 CACHE_TTL_SEC = 6 * 60 * 60  # 6시간
+_CACHE_FILE = Path(__file__).resolve().parent.parent.parent / "instance" / "trains_world_cache.json"
 _cache_rows = None
 _cache_time = 0.0
 
 
+def _load_disk_cache():
+    if not _CACHE_FILE.exists():
+        return None, 0.0
+    try:
+        data = json.loads(_CACHE_FILE.read_text(encoding="utf-8"))
+        return data.get("rows"), data.get("fetched_at", 0.0)
+    except (ValueError, OSError):
+        return None, 0.0
+
+
+def _save_disk_cache(rows: list, fetched_at: float):
+    try:
+        _CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        _CACHE_FILE.write_text(
+            json.dumps({"rows": rows, "fetched_at": fetched_at}, ensure_ascii=False),
+            encoding="utf-8",
+        )
+    except OSError:
+        pass  # 캐싱 실패해도 기능 자체는 계속 동작해야 하므로 조용히 무시
+
+
 def fetch_all_measures_affecting_korea_cached(page_size: int = 20, max_pages: int = 100) -> list:
     """fetch_all_measures_affecting_korea()와 같지만, CACHE_TTL_SEC 이내 재호출 시
-    실제 HTTP 요청 없이 캐시된 결과를 그대로 반환한다."""
+    실제 HTTP 요청 없이 캐시된 결과를 그대로 반환한다 (메모리 -> 디스크 순으로 확인)."""
     global _cache_rows, _cache_time
     now = time.time()
     if _cache_rows is not None and (now - _cache_time) < CACHE_TTL_SEC:
         return _cache_rows
+
+    disk_rows, disk_time = _load_disk_cache()
+    if disk_rows is not None and (now - disk_time) < CACHE_TTL_SEC:
+        print(f"  [TRAINS] 디스크 캐시 사용 (마지막 수집: {now - disk_time:.0f}초 전, {len(disk_rows)}건)", flush=True)
+        _cache_rows, _cache_time = disk_rows, disk_time
+        return disk_rows
+
     rows = fetch_all_measures_affecting_korea(page_size=page_size, max_pages=max_pages)
     _cache_rows = rows
     _cache_time = now
+    _save_disk_cache(rows, now)
     return rows
 
 
