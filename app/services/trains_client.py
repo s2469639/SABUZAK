@@ -361,15 +361,80 @@ def _relevance_score(reg: dict) -> int:
     return sum(1 for kw in _FOOD_RELEVANCE_KEYWORDS if kw in text)
 
 
-def top_relevant_regulations(regulations: list, hs_code: str, limit: int = 6) -> list:
-    """이 제품(hs_code)과 실제로 관련 있는 것만 남기고(is_product_relevant),
-    그중에서 식품/농산물 관련도가 높은 순으로 상위 N개만 남긴다 (전체를 다
-    저장하면 화면도 지저분해지고 AI 요약 비용도 커지므로, 정말 중요한 것만
-    추림). 국가와 무관하게 항상 이 기준으로 걸러지므로 어느 나라를 조회하든
-    동일하게 적용된다."""
+def _llm_filter_relevant(product_name: str, candidates: list) -> list:
+    """hsCodes가 없어서 키워드로만 느슨하게 통과된 후보들을, LLM한테 제품명을
+    주고 진짜 관련 있는 것만 골라달라고 한다 (예: "비건만두"인데 "축산물 수출
+    라이선스"가 걸러지지 않는 문제 - "sanitary"/"livestock" 같은 키워드만으로는
+    이런 걸 구분 못 함). 건별로 부르면 비용/시간이 커지니 목록 하나를 통째로
+    주고 관련 있는 번호만 답하게 한다. OpenAI 키가 없거나 호출 실패하면
+    후보 목록을 그대로 돌려줘서(필터링 전 상태) 기능이 안 죽게 한다."""
+    if not candidates:
+        return candidates
+    try:
+        import re
+
+        from app.services.openai_client import get_client
+
+        listing = "\n".join(
+            f"{i}. {reg.get('officialTitle') or ''} - {(reg.get('description') or '')[:200]}"
+            for i, reg in enumerate(candidates)
+        )
+        prompt = (
+            f"다음은 어떤 나라의 수입 규제 공지 목록입니다. 이 중에서 한국 식품 "
+            f"'{product_name}' 수출과 실질적으로 관련 있는 항목의 번호만 콤마로 "
+            f"구분해서 답하세요 (예: 0,2,5). 두 가지 경우를 관련 있다고 판단하세요: "
+            f"(1) 특정 원재료/품목을 콕 집었는데 그게 '{product_name}'와 일치하는 경우, "
+            f"(2) 특정 품목을 콕 집지 않고 수입식품 전반에 공통 적용되는 규정(예: 수입식품 "
+            f"공통 부과금/통관 절차/표시 규정 등)인 경우. 반대로 축산물/수산물/화장품/의약품처럼 "
+            f"'{product_name}'와 원재료·품목이 명백히 다른 것을 콕 집은 규정만 관련 없다고 "
+            f"판단하세요. 관련 있는 게 하나도 없으면 빈 문자열만 출력하세요. 다른 설명 없이 "
+            f"번호만 출력하세요.\n\n{listing}"
+        )
+        response = get_client().chat.completions.create(
+            model="gpt-4o-mini",
+            max_tokens=200,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text = (response.choices[0].message.content or "").strip()
+        indices = {int(x) for x in re.findall(r"\d+", text)}
+        return [reg for i, reg in enumerate(candidates) if i in indices]
+    except Exception:
+        return candidates
+
+
+def top_relevant_regulations(regulations: list, hs_code: str, product_name: str = None, limit: int = 6) -> list:
+    """이 제품(hs_code)과 실제로 관련 있는 것만 남기고, 그중에서 식품/농산물
+    관련도가 높은 순으로 상위 N개만 남긴다 (전체를 다 저장하면 화면도
+    지저분해지고 AI 요약 비용도 커지므로, 정말 중요한 것만 추림).
+
+    hsCodes가 응답에 있어서 우리 제품 코드와 실제로 겹치는 건("확실한 매치")
+    무조건 남긴다. hsCodes가 없어서 키워드(_has_strong_food_signal)로만
+    느슨하게 통과된 건("애매한 매치")은, product_name이 주어지면 LLM에게
+    한 번 더 검증시켜서(_llm_filter_relevant) 진짜 무관한 걸 걸러낸다 -
+    이게 없으면 "비건만두"인데 "돼지열병"/"축산물 수출 라이선스" 같은 게
+    "sanitary"/"livestock" 키워드만으로 끼어드는 걸 못 막는다."""
     product_codes = _product_codes_for_query(hs_code)
-    relevant = [reg for reg in regulations if is_product_relevant(reg, product_codes)]
-    return sorted(relevant, key=_relevance_score, reverse=True)[:limit]
+
+    confirmed = []
+    soft = []
+    for reg in regulations:
+        if _is_placeholder_row(reg):
+            continue
+        if _hs_code_overlaps_product(reg.get("hsCodes"), product_codes):
+            confirmed.append(reg)
+        elif not reg.get("hsCodes") and _has_strong_food_signal(reg):
+            soft.append(reg)
+
+    soft.sort(key=_relevance_score, reverse=True)
+    # LLM에 통째로 넘기는 비용을 아끼려고, 어차피 최종 limit보다 훨씬 넉넉한
+    # 상위 후보만 검증시킨다 (넘치게 있어봤자 어차피 순위 밖이라 의미 없음).
+    soft_candidates = soft[: max(limit * 3, 15)]
+    if product_name and soft_candidates:
+        soft_candidates = _llm_filter_relevant(product_name, soft_candidates)
+
+    combined = confirmed + soft_candidates
+    combined.sort(key=_relevance_score, reverse=True)
+    return combined[:limit]
 
 
 def summarize_regulation_ko(title: str, description: str) -> str:

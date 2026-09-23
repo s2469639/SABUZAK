@@ -65,19 +65,20 @@ def _countries_from_exhibitions():
 
 
 def _hs_codes_from_products():
-    """체크되고 HS코드가 등록된 전체 유저의 제품 HS코드 목록(중복 제거)."""
-    codes = [
-        row[0]
-        for row in Product.query.filter(
-            Product.is_checked == True,  # noqa: E712
-            Product.hs_code.isnot(None),
-            Product.hs_code != "",
-        )
-        .with_entities(Product.hs_code)
-        .distinct()
-        .all()
-    ]
-    return sorted(set(codes))
+    """체크되고 HS코드가 등록된 전체 유저의 제품 HS코드 -> 제품명 매핑.
+    같은 HS코드를 여러 유저가 다른 이름으로 등록했을 수 있는데, LLM 관련도
+    검증(top_relevant_regulations의 product_name)에 하나만 필요하니 먼저
+    나온 이름을 대표로 쓴다."""
+    products = Product.query.filter(
+        Product.is_checked == True,  # noqa: E712
+        Product.hs_code.isnot(None),
+        Product.hs_code != "",
+    ).with_entities(Product.hs_code, Product.name).all()
+
+    hs_code_to_name = {}
+    for hs_code, name in products:
+        hs_code_to_name.setdefault(hs_code, name)
+    return hs_code_to_name
 
 
 def already_cached(reporter, hs_code):
@@ -97,7 +98,8 @@ def main():
     app = create_app()
     with app.app_context():
         countries = [c.upper() for c in importer_filter] if importer_filter else _countries_from_exhibitions()
-        hs_codes = _hs_codes_from_products()
+        hs_code_to_name = _hs_codes_from_products()
+        hs_codes = sorted(hs_code_to_name)
         if not countries or not hs_codes:
             print(f"대상을 찾지 못했습니다 (국가 {len(countries)}개, 제품 HS코드 {len(hs_codes)}개).")
             return
@@ -119,7 +121,9 @@ def main():
             print(f"[{i}/{len(pairs)}] country={iso3} hs_code={hs_code}")
             try:
                 regulations = fetch_regulations_for_country(iso3, hs_code)
-                top6 = top_relevant_regulations(regulations, hs_code, limit=6)
+                top6 = top_relevant_regulations(
+                    regulations, hs_code, product_name=hs_code_to_name.get(hs_code), limit=6
+                )
                 rows = to_ntm_measure_rows(iso3, hs_code, top6, summarize=True)
                 NtmMeasure.query.filter_by(reporter=iso3, product=hs_code).delete()
                 for row in rows:
