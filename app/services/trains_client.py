@@ -11,16 +11,16 @@ Response 탭으로 직접 확인함 - 예전에 이 파일이 쓰던 denormalise
     POST https://api-trains2.unctad.org/denormalisedRegulations
     Content-Type: application/json
     {
-      "imposingCountries": ["DEU"],         # ISO3 코드 그대로! (내부 숫자 ID 아님)
-      "allImposingCountries": false,
-      "products": [2451798, ...],           # 내부 숫자 ID (기존 SNACK_PRODUCT_IDS와 동일)
-      "productsHsCodes": ["1905", ...],      # 실제 HS 코드 문자열 (병행으로 같이 보냄)
-      "allProducts": false,
+      "imposingCountries": ["DEU"],          # ISO3 코드 그대로! (내부 숫자 ID 아님)
+      "internationalStandardsImposing": false,
+      "products": ["1905", "190531", ...],   # 실제 HS 코드 문자열 그 자체 (내부 ID 아님!)
       "NTMType": null, "FromDate": null, "ToDate": null,
       "pageNumber": 1, "pageSize": 20,
       "columnsVisibility": {...},
       "exportTo": "excel"
     }
+    ("View source"로 확인한 실제 payload에는 allImposingCountries/allProducts/
+    productsHsCodes 같은 필드가 없다 - 이런 값들을 같이 보내면 500 에러가 남.)
     -> JSON 배열 응답. 필드명: imposingCountryName, officialTitle,
        officialTitleOriginal, description, descriptionOriginal,
        implementationDate, repealDate, source, originalLanguageCode, symbol,
@@ -72,11 +72,10 @@ HEADERS = {
     "User-Agent": UA,
 }
 
-# "Products affected"에서 "Bread, gingerbread and the like, sweet biscuits..."
-# 카테고리(HS 1905 계열 - 약과/유과 등 사부작 제품군과 일치)를 선택했을 때
-# 실제로 전송된 UNCTAD 내부 상품 ID + 실제 HS코드. 둘 다 같이 보내는 게
-# 브라우저가 실제로 하는 방식이라 그대로 따름.
-SNACK_PRODUCT_IDS = [2451798, 2451799, 2451800, 2451802, 2451803, 2451804, 2451805]
+# "Products affected"에서 "Crispbread, Gingerbread..."(HS 1905 계열 - 약과/
+# 유과 등 사부작 제품군과 일치) 카테고리를 선택했을 때 실제로 전송된 값.
+# "View source"로 확인한 실제 payload에는 내부 숫자 ID가 아니라 이 HS코드
+# 문자열 리스트 자체가 "products" 키로 그대로 들어간다.
 SNACK_HS_CODES = ["1905", "190531", "190532", "190510", "190520", "190540", "190590"]
 
 COLUMNS_VISIBILITY = {
@@ -103,11 +102,8 @@ COLUMNS_VISIBILITY = {
 def _payload(country_iso3: str, page_number: int, page_size: int) -> dict:
     return {
         "imposingCountries": [country_iso3],
-        "allImposingCountries": False,
         "internationalStandardsImposing": False,
-        "products": SNACK_PRODUCT_IDS,
-        "productsHsCodes": SNACK_HS_CODES,
-        "allProducts": False,
+        "products": SNACK_HS_CODES,
         "NTMType": None,
         "FromDate": None,
         "ToDate": None,
