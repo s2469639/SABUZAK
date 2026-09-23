@@ -1,6 +1,6 @@
 import re
 
-from flask import Blueprint, jsonify, redirect, render_template, request, url_for
+from flask import Blueprint, flash, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from sqlalchemy.exc import OperationalError
 
@@ -72,16 +72,36 @@ def _validate_hs_code(hs_code):
     return True, ""
 
 
+# "next" 폼 필드로 넘어오는 값 -> 실제 리다이렉트할 엔드포인트.
+# 화이트리스트 방식으로만 매핑해서, 임의의 URL로 리다이렉트되는 걸 막는다.
+_NEXT_ENDPOINTS = {
+    "dashboard": "dashboard.index",
+    "mypage": "mypage.index",
+}
+
+
+def _next_redirect(default="mypage.index"):
+    endpoint = _NEXT_ENDPOINTS.get(request.form.get("next"), default)
+    return redirect(url_for(endpoint))
+
+
 @bp.route("/products", methods=["POST"])
 @login_required
 def add_product():
     name = request.form.get("name", "").strip()
     hs_code = request.form.get("hs_code", "").strip()
     ingredients = request.form.get("ingredients", "").strip()
+    next_param = request.form.get("next")
 
     if name and hs_code:
         is_valid, error = _validate_hs_code(hs_code)
         if not is_valid:
+            # 대시보드 모달에서 온 요청은 입력값을 그 자리에 다시 채워줄 방법이 없으니
+            # (전체 페이지 이동이라) flash로만 에러를 보여주고 원래 페이지로 돌려보낸다.
+            if next_param:
+                flash(error, "danger")
+                return _next_redirect()
+
             products = (
                 Product.query.filter_by(user_id=current_user.id)
                 .order_by(Product.created_at.desc())
@@ -104,6 +124,34 @@ def add_product():
         )
         db.session.add(product)
         db.session.commit()
+        flash(f"'{name}' 제품을 등록했습니다.", "success")
+
+    return _next_redirect()
+
+
+@bp.route("/products/<int:product_id>/edit", methods=["POST"])
+@login_required
+def edit_product(product_id):
+    product = Product.query.filter_by(id=product_id, user_id=current_user.id).first_or_404()
+
+    name = request.form.get("name", "").strip()
+    hs_code = request.form.get("hs_code", "").strip()
+    ingredients = request.form.get("ingredients", "").strip()
+
+    if not name or not hs_code:
+        flash("제품명과 HS코드는 필수입니다.", "danger")
+        return redirect(url_for("mypage.index"))
+
+    is_valid, error = _validate_hs_code(hs_code)
+    if not is_valid:
+        flash(error, "danger")
+        return redirect(url_for("mypage.index"))
+
+    product.name = name
+    product.hs_code = hs_code
+    product.ingredients = ingredients or None
+    db.session.commit()
+    flash(f"'{name}' 제품을 수정했습니다.", "success")
 
     return redirect(url_for("mypage.index"))
 

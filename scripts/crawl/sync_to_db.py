@@ -43,9 +43,14 @@ import requests
 
 # Windows 콘솔 기본 인코딩(cp949 등)은 é, ń 같은 문자를 못 담아서 박람회 이름을
 # print()하다가 UnicodeEncodeError로 스크립트 전체가 죽는 걸 막기 위해 강제로 UTF-8 사용.
+# line_buffering=True: 파일로 리다이렉트해도 줄 단위로 바로바로 flush되게 해서,
+# 오래 걸리는 --details 크롤링 중에도 진행 상황을 실시간으로 볼 수 있게 한다.
 if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+else:
+    sys.stdout.reconfigure(line_buffering=True)
+    sys.stderr.reconfigure(line_buffering=True)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tradefairdates_scraper as tfd
@@ -78,6 +83,7 @@ CREATE TABLE IF NOT EXISTS raw_exhibitions (
     website         TEXT,
     intro           TEXT,
     image_url       TEXT,
+    hero_image_url  TEXT,
     category        TEXT,
     continent       TEXT,
     food_yn         INTEGER,
@@ -100,7 +106,8 @@ CREATE TABLE IF NOT EXISTS raw_exhibitions (
 # 실수로 날리지 않도록 스키마 정의에는 포함해둔다.
 NEW_COLUMNS = [
     "id", "detail_url", "name", "start_date", "end_date", "country", "city", "venue",
-    "audience_note", "website", "intro", "image_url", "category", "continent", "food_yn",
+    "audience_note", "website", "intro", "image_url", "hero_image_url", "category",
+    "continent", "food_yn",
     "scale", "keywords", "intro_ko", "classified_at", "is_active", "last_updated_at",
     "country_ko", "organizer_email", "organizer_phone", "contact_synced_at",
 ]
@@ -163,6 +170,7 @@ def _old_row_to_new(old_cols, row):
         "website": pick("website", "웹사이트", default=""),
         "intro": pick("intro", "상세설명", default=""),
         "image_url": pick("image_url", default=None),
+        "hero_image_url": pick("hero_image_url", default=None),
         "category": pick("category", default=""),
         "continent": pick("continent", "대륙", default=None),
         "food_yn": pick("food_yn", default=None),
@@ -223,16 +231,18 @@ def init_db(conn):
             """
             INSERT INTO raw_exhibitions
                 (id, detail_url, name, start_date, end_date, country, city, venue,
-                 audience_note, website, intro, image_url, category, continent, food_yn,
+                 audience_note, website, intro, image_url, hero_image_url, category,
+                 continent, food_yn,
                  scale, keywords, intro_ko, classified_at, is_active, last_updated_at,
                  country_ko, organizer_email, organizer_phone, contact_synced_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 row.get("id"), new_row["detail_url"], new_row["name"], new_row["start_date"],
                 new_row["end_date"], new_row["country"], new_row["city"], new_row["venue"],
                 new_row["audience_note"], new_row["website"], new_row["intro"],
-                new_row["image_url"], new_row["category"], new_row["continent"],
+                new_row["image_url"], new_row["hero_image_url"], new_row["category"],
+                new_row["continent"],
                 new_row["food_yn"], new_row["scale"], new_row["keywords"], new_row["intro_ko"],
                 new_row["classified_at"], new_row["is_active"], new_row["last_updated_at"],
                 new_row["country_ko"], new_row["organizer_email"], new_row["organizer_phone"],
@@ -440,23 +450,48 @@ def main():
     conn = sqlite3.connect(args.db)
     init_db(conn)
 
-    rows, failed_labels = crawl_selected_sites(labels_urls, with_details=args.details)
-    new_count, updated_count, unchanged_count, seen_urls = sync_rows(conn, rows)
+    # 카테고리 하나씩 끝날 때마다 바로 DB에 커밋한다 (--details일 때 전체가 오래 걸리는데,
+    # 끝까지 기다렸다가 한 번에 저장하면 중간에 죽었을 때 아무것도 안 남고, 진행 상황도
+    # 전혀 안 보여서 카테고리 단위로 쪼갰다).
+    failed_labels = []
+    all_seen_urls = set()
+    seen_this_run = set()
+    total_new = total_updated = total_unchanged = 0
+
+    for i, (label, url) in enumerate(labels_urls, 1):
+        print(f"\n[{i}/{len(labels_urls)}] === {label} ===")
+        rows, failed = crawl_selected_sites([(label, url)], with_details=args.details)
+        failed_labels.extend(failed)
+
+        # 이전 카테고리에서 이미 본 박람회(같은 전시회가 여러 카테고리 목록에 겹쳐 나오는
+        # 경우)는 건너뛴다 — 먼저 분류된 카테고리를 그대로 유지.
+        fresh_rows = [r for r in rows if row_key(r) not in seen_this_run]
+        seen_this_run.update(row_key(r) for r in rows)
+
+        new_count, updated_count, unchanged_count, seen_urls = sync_rows(conn, fresh_rows)
+        all_seen_urls |= seen_urls
+        total_new += new_count
+        total_updated += updated_count
+        total_unchanged += unchanged_count
+        print(
+            f"  -> {label} 저장 완료: 신규 {new_count}건, 업데이트 {updated_count}건, "
+            f"변경없음 {unchanged_count}건"
+        )
 
     deactivated = 0
     if failed_labels:
         print(f"\n경고: 다음 카테고리는 크롤링 자체가 실패해서 비활성 처리에서 제외합니다: {failed_labels}")
     succeeded_labels = [label for label in labels if label not in failed_labels]
     if not args.no_deactivate and succeeded_labels:
-        deactivated = deactivate_missing(conn, succeeded_labels, seen_urls)
+        deactivated = deactivate_missing(conn, succeeded_labels, all_seen_urls)
 
     conn.close()
 
     print("\n=== 동기화 완료 ===")
     print(f"DB 파일: {args.db}")
-    print(f"신규 추가: {new_count}건")
-    print(f"내용 업데이트: {updated_count}건")
-    print(f"변경 없음: {unchanged_count}건")
+    print(f"신규 추가: {total_new}건")
+    print(f"내용 업데이트: {total_updated}건")
+    print(f"변경 없음: {total_unchanged}건")
     print(f"목록에서 사라져 비활성 처리: {deactivated}건")
 
 
