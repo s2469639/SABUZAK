@@ -80,6 +80,16 @@ TARIFF_PROFILES = {
 
 DEFAULT_PROFILE = {"fta_name": "일반 협정 (추정치)", "mfn": 15.0, "fta": 5.0, "rcep": 10.0}
 
+# RCEP(역내포괄적경제동반자협정) 실제 회원국만 RCEP 관세율을 보여준다.
+# 예전엔 국가와 무관하게 항상 RCEP 행을 보여줘서 미국·EU·멕시코·브라질·
+# 사우디처럼 RCEP 비회원국에도 RCEP 관세율이 잘못 표시되는 문제가 있었다.
+RCEP_MEMBERS = {
+    # ASEAN 10
+    "BRN", "KHM", "IDN", "LAO", "MYS", "MMR", "PHL", "SGP", "THA", "VNM",
+    # ASEAN 외 5개국
+    "AUS", "CHN", "JPN", "NZL", "KOR",
+}
+
 # 국가별 수출 주의사항 카드 (필수/정보/주의)
 REGULATION_NOTES = {
     "USA": [
@@ -189,13 +199,17 @@ def resolve_country_iso(country_name):
 
 
 def get_tariff_regimes(country_iso):
-    """국가별 협정 관세율 목록. [{regime, tariff_ave}, ...]"""
+    """국가별 협정 관세율 목록. [{regime, tariff_ave}, ...].
+    RCEP은 실제 회원국일 때만 포함한다 (비회원국에 RCEP 관세율을 잘못
+    표시하던 문제 수정)."""
     profile = TARIFF_PROFILES.get(country_iso, DEFAULT_PROFILE)
-    return [
+    regimes = [
         {"regime": "MFN (기본세율)", "tariff_ave": profile["mfn"]},
         {"regime": profile["fta_name"], "tariff_ave": profile["fta"]},
-        {"regime": "RCEP (역내)", "tariff_ave": profile["rcep"]},
     ]
+    if country_iso in RCEP_MEMBERS:
+        regimes.append({"regime": "RCEP (역내)", "tariff_ave": profile["rcep"]})
+    return regimes
 
 
 def get_best_regime(country_iso):

@@ -75,20 +75,36 @@ def fetch_regulations_csv(country_iso3: str, hs_codes: list, page_size: int = 50
     }
     resp = requests.post(f"{BASE}/export-regulations", json=payload, headers=headers, timeout=30)
     resp.raise_for_status()
-    resp.encoding = "utf-8"
-    return resp.text
+    # utf-8-sig로 디코드: 응답 앞에 BOM(﻿)이 붙어 오면 헤더 행 매칭이
+    # 조용히 실패해서(아래 parse_regulations_csv) "0건 가져옴"으로만 보이고
+    # 원인을 알 수 없던 문제가 있었음.
+    return resp.content.decode("utf-8-sig")
+
+
+HEADER_MARKER = "economies applying the regulation"
 
 
 def parse_regulations_csv(csv_text: str) -> list:
-    """앞의 메타 안내 줄들을 건너뛰고, 진짜 헤더 행부터 DictReader로 파싱."""
+    """앞의 메타 안내 줄들을 건너뛰고, 진짜 헤더 행부터 DictReader로 파싱.
+
+    헤더 행을 못 찾으면(포맷이 바뀌었거나 예상 밖 응답) 예외를 던진다.
+    예전엔 조용히 빈 리스트를 반환해서, 호출부(sync_ntm)가 "0건 가져옴"을
+    성공으로 표시해버리는 바람에 실제로는 실패했는데 버튼이 아무것도 안
+    가져온 것처럼만 보이는 문제가 있었다."""
     lines = csv_text.splitlines()
     header_idx = None
     for i, line in enumerate(lines):
-        if line.startswith("Economies applying the regulation"):
+        # startswith 정확매칭 대신 대소문자 무시 + 부분포함으로 찾는다.
+        # (앞뒤 공백, 대소문자 차이, BOM 잔재 등에 안 깨지도록)
+        if HEADER_MARKER in line.strip().lower():
             header_idx = i
             break
     if header_idx is None:
-        return []
+        preview = csv_text[:300].replace("\n", " ")
+        raise ValueError(
+            f"TRAINS 응답에서 헤더 행을 찾지 못했습니다 (응답 형식이 바뀌었을 수 있음). "
+            f"응답 앞부분: {preview!r}"
+        )
 
     reader = csv.DictReader(io.StringIO("\n".join(lines[header_idx:])))
     return [
