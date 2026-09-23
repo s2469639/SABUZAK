@@ -183,6 +183,24 @@
         </details>
         {% endif %}
 
+        <p class="placeholder-note">⚠️ 위 관세율은 농림축산식품부 "농축산물 FTA 협정세율 현황"(공공데이터포털) 자료를 기준으로 하며, 세부 품목별로 예외가 있을 수 있습니다. 실제 통관·수출 전 반드시 관세청 또는 관세사를 통해 최종 세율을 확인하세요.
+        {% if not hscode_ctx.has_country_data %}({{ expo.country_ko or expo.country }}은(는) 이 자료에 협정 정보가 없는 국가입니다 - 한국과 체결된 관세 협정이 없거나 자료에 미수록된 경우입니다.){% endif %}</p>
+
+        {% if wto_tariff_info %}
+        <p class="placeholder-note">
+          📊 참고(WTO 통계):
+          {% if wto_tariff_info.agricultural and wto_tariff_info.agricultural.is_eu_aggregate %}
+            {{ expo.country_ko or expo.country }}은(는) EU 회원국이라 개별 국가 통계가 없어 EU 전체 기준 —
+          {% else %}
+            {{ expo.country_ko or expo.country }}의
+          {% endif %}
+          MFN 평균 관세율 —
+          {% if wto_tariff_info.agricultural %}농산물 {{ wto_tariff_info.agricultural.value }}% ({{ wto_tariff_info.agricultural.year }}년){% endif %}
+          {% if wto_tariff_info.all_products %}{% if wto_tariff_info.agricultural %} · {% endif %}전체 품목 {{ wto_tariff_info.all_products.value }}% ({{ wto_tariff_info.all_products.year }}년){% endif %}
+          — 특정 품목이 아닌 국가(또는 EU) 전체 평균이니 위 표의 제품별 세율과 혼동하지 마세요.
+        </p>
+        {% endif %}
+
         {% if row.certs %}
         <div class="cert-badges">
           <span class="cert-label">필요 인증:</span>
@@ -227,24 +245,6 @@
       </div>
       {% endfor %}
     </div>
-
-    <p class="placeholder-note">⚠️ 위 관세율은 농림축산식품부 "농축산물 FTA 협정세율 현황"(공공데이터포털) 자료를 기준으로 하며, 세부 품목별로 예외가 있을 수 있습니다. 실제 통관·수출 전 반드시 관세청 또는 관세사를 통해 최종 세율을 확인하세요.
-    {% if not hscode_ctx.has_country_data %}({{ expo.country_ko or expo.country }}은(는) 이 자료에 협정 정보가 없는 국가입니다 - 한국과 체결된 관세 협정이 없거나 자료에 미수록된 경우입니다.){% endif %}</p>
-
-    {% if wto_tariff_info %}
-    <p class="placeholder-note">
-      📊 참고(WTO 통계):
-      {% if wto_tariff_info.agricultural and wto_tariff_info.agricultural.is_eu_aggregate %}
-        {{ expo.country_ko or expo.country }}은(는) EU 회원국이라 개별 국가 통계가 없어 EU 전체 기준 —
-      {% else %}
-        {{ expo.country_ko or expo.country }}의
-      {% endif %}
-      MFN 평균 관세율 —
-      {% if wto_tariff_info.agricultural %}농산물 {{ wto_tariff_info.agricultural.value }}% ({{ wto_tariff_info.agricultural.year }}년){% endif %}
-      {% if wto_tariff_info.all_products %}{% if wto_tariff_info.agricultural %} · {% endif %}전체 품목 {{ wto_tariff_info.all_products.value }}% ({{ wto_tariff_info.all_products.year }}년){% endif %}
-      — 특정 품목이 아닌 국가(또는 EU) 전체 평균이니 위 표의 제품별 세율과 혼동하지 마세요.
-    </p>
-    {% endif %}
     {% endif %}
   </div>
 </div>
