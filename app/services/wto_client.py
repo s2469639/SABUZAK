@@ -68,25 +68,20 @@ def _fetch_by_reporter_code(reporter_code: str, indicator: str):
         resp = requests.get(
             f"{BASE}/data",
             headers={"Ocp-Apim-Subscription-Key": WTO_API_KEY},
-            # head=M(machine-readable)을 안 주면 응답이 {"Dataset": [...]} 로
-            # 한 번 더 감싸지고 필드명도 Value/Year처럼 대문자로 시작하는
-            # "사람이 읽기 좋은" 형태로 온다 (실제로 확인함). M으로 명시해서
-            # 평평한 배열 + 소문자 camelCase 필드로 받는다.
-            params={
-                "i": indicator, "r": reporter_code, "ps": "default", "pc": "default",
-                "head": "M",
-            },
+            params={"i": indicator, "r": reporter_code, "ps": "default", "pc": "default"},
             timeout=10,
         )
         if resp.status_code == 200 and resp.content:
-            rows = resp.json()
-            # head=M이어도 혹시 몰라 {"Dataset": [...]} 래핑까지 방어적으로 처리
-            if isinstance(rows, dict):
-                rows = rows.get("Dataset", [])
+            body = resp.json()
+            # 실제 응답은 {"Dataset": [...]} 로 감싸져 있고, 필드명도
+            # Year/Value처럼 대문자로 시작하는 PascalCase로 온다 (head=H든 M이든
+            # 동일 - OpenAPI 스펙의 소문자 예시(year/value)는 실제 응답과 다름,
+            # 직접 호출해서 확인함).
+            rows = body.get("Dataset", []) if isinstance(body, dict) else body
             if isinstance(rows, list) and rows:
-                latest = max(rows, key=lambda r: r.get("year") or 0)
-                if latest.get("value") is not None:
-                    return {"value": latest["value"], "year": latest.get("year")}
+                latest = max(rows, key=lambda r: r.get("Year") or 0)
+                if latest.get("Value") is not None:
+                    return {"value": latest["Value"], "year": latest.get("Year")}
     except (requests.exceptions.RequestException, ValueError):
         pass
     return None
