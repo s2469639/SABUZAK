@@ -76,6 +76,13 @@ _WORLD_CACHE_TTL_SEC = 15 * 60
 _world_cache_lock = threading.Lock()
 _world_cache: dict = {"rows": None, "fetched_at": 0.0}
 
+# 전세계 훑기 도중(429/장기차단/네트워크 에러 등으로) 실패해도 그때까지 모은
+# 페이지는 버리지 않고 여기에 이어서 저장한다. 다음 호출은 처음부터가 아니라
+# 여기서 멈춘 다음 페이지부터 이어서 받는다. _PARTIAL_TTL_SEC이 지나면 너무
+# 오래된 진행상황이라 보고 그냥 처음부터 다시 시작한다.
+_PARTIAL_CACHE_FILE = Path(__file__).resolve().parent.parent.parent / "instance" / "trains_world_partial.json"
+_PARTIAL_TTL_SEC = 6 * 60 * 60  # 6시간
+
 try:
     import pycountry
 except ImportError:
@@ -170,6 +177,36 @@ def _payload(page_number: int, page_size: int) -> dict:
     }
 
 
+def _load_partial_progress():
+    if not _PARTIAL_CACHE_FILE.exists():
+        return [], 1
+    try:
+        data = json.loads(_PARTIAL_CACHE_FILE.read_text(encoding="utf-8"))
+    except (ValueError, OSError):
+        return [], 1
+    if (time.time() - data.get("fetched_at", 0.0)) >= _PARTIAL_TTL_SEC:
+        return [], 1
+    return data.get("rows", []), data.get("next_page", 1)
+
+
+def _save_partial_progress(rows: list, next_page: int):
+    try:
+        _PARTIAL_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        _PARTIAL_CACHE_FILE.write_text(
+            json.dumps({"rows": rows, "next_page": next_page, "fetched_at": time.time()}, ensure_ascii=False),
+            encoding="utf-8",
+        )
+    except OSError:
+        pass  # 진행상황 저장 실패해도 이번 페이지 데이터 자체는 메모리에 남아있으니 계속 진행
+
+
+def _clear_partial_progress():
+    try:
+        _PARTIAL_CACHE_FILE.unlink(missing_ok=True)
+    except OSError:
+        pass
+
+
 def fetch_all_measures_affecting_korea(
     page_size: int = 20, max_pages: int = 100, force_refresh: bool = False
 ) -> list:
@@ -200,12 +237,22 @@ def fetch_all_measures_affecting_korea(
         ):
             return _world_cache["rows"]
 
-    all_rows = []
-    for page in range(1, max_pages + 1):
-        if page > 1:
+    if force_refresh:
+        all_rows, start_page = [], 1
+    else:
+        all_rows, start_page = _load_partial_progress()
+        if start_page > 1:
+            print(
+                f"  [TRAINS] 이전에 중단된 지점부터 이어서 받음 "
+                f"(지금까지 {len(all_rows)}건, page {start_page}부터)",
+                flush=True,
+            )
+
+    for page in range(start_page, max_pages + 1):
+        if page > start_page:
             time.sleep(REQUEST_DELAY_SEC)
 
-        print(f"  [TRAINS] page {page} 요청 중...", flush=True)
+        print(f"  [TRAINS] page {page} 요청 중... (누적 {len(all_rows)}건)", flush=True)
 
         resp = None
         for attempt, backoff in enumerate([0] + RETRY_BACKOFF_SEC):
@@ -267,9 +314,11 @@ def fetch_all_measures_affecting_korea(
         if not batch:
             break
         all_rows.extend(batch)
+        _save_partial_progress(all_rows, page + 1)
         if len(batch) < page_size:
             break
 
+    _clear_partial_progress()  # 끝까지 다 돌았으니 이어서 받을 필요 없음
     with _world_cache_lock:
         _world_cache["rows"] = all_rows
         _world_cache["fetched_at"] = time.time()
