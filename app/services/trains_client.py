@@ -169,12 +169,113 @@ def _save_disk_cache(all_cache: dict):
         pass  # 캐싱 실패해도 기능 자체는 계속 동작해야 하므로 조용히 무시
 
 
+# EU는 식품 수입 규정을 개별 회원국이 아니라 EU 차원에서 통합 관리해서,
+# TRAINS에도 개별 회원국 이름으로는 더미 행만 잡히고 "European Union"으로
+# 조회해야 실제 데이터가 나온다 (실제로 확인함 - 네덜란드 개별조회는 더미
+# 1건, EU로는 데이터 있음. WTO 관세율 때와 같은 패턴). imposingCountries에
+# 실제로 쓰는 코드는 "EUN" (응답의 documentation 파일명이 "EUN_..."로
+# 시작하는 걸로 확인함 - TRAINS엔 WTO의 /reporters 같은 코드 조회
+# 엔드포인트가 없어서 이렇게 역추적함).
+EU_MEMBER_ISO3 = {
+    "AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST", "FIN", "FRA",
+    "DEU", "GRC", "HUN", "IRL", "ITA", "LVA", "LTU", "LUX", "MLT", "NLD",
+    "POL", "PRT", "ROU", "SVK", "SVN", "ESP", "SWE",
+}
+EU_TRAINS_CODE = "EUN"
+
+
+def _fetch_pages(reporter_code: str, product_codes: list, page_size: int, max_pages: int, log_key: str) -> list:
+    """실제로 페이지네이션 돌면서 TRAINS를 호출하는 부분. 캐싱은 호출부
+    (fetch_regulations_for_country)에서 처리하고, 여기는 순수하게 이
+    reporter_code로 데이터를 받아오는 것만 담당한다 (EU 폴백 때 같은
+    로직을 재사용하기 위해 분리함)."""
+    all_rows = []
+    total_count = None
+    for page in range(1, max_pages + 1):
+        if page > 1:
+            time.sleep(REQUEST_DELAY_SEC)
+
+        total_note = f"/{total_count}" if total_count is not None else ""
+        print(f"  [TRAINS] {log_key} page {page} 요청 중... (누적 {len(all_rows)}{total_note}건)", flush=True)
+
+        resp = None
+        for attempt, backoff in enumerate([0] + RETRY_BACKOFF_SEC):
+            if backoff:
+                time.sleep(backoff)
+            try:
+                # timeout=(연결 타임아웃, 응답 타임아웃) - 연결 자체가 막혀서
+                # 응답이 아예 안 오는 경우(방화벽 등)에도 10초 안에 실패로
+                # 끝나도록 분리.
+                resp = requests.post(
+                    ENDPOINT,
+                    json=_payload(reporter_code, product_codes, page, page_size),
+                    headers=HEADERS,
+                    timeout=(10, 60),
+                )
+            except requests.exceptions.RequestException as exc:
+                print(f"  [TRAINS] {log_key} page {page} 요청 실패: {exc}", flush=True)
+                raise
+            print(f"  [TRAINS] {log_key} page {page} 응답: {resp.status_code}", flush=True)
+            if resp.status_code != 429:
+                break
+            # 서버가 Retry-After로 대기시간을 알려주기도 하는데, 이 값을 그대로
+            # 믿고 sleep하면 서버가 큰 값(몇십초~그 이상)을 줄 경우 아무 로그도
+            # 없이 통째로 멈춰버린 것처럼 보인다. 그래서 상한(MAX_RETRY_AFTER_SEC)을
+            # 씌우고, 대기 전에 몇 초 기다리는지 꼭 출력한다.
+            retry_after = resp.headers.get("Retry-After")
+            if retry_after:
+                try:
+                    retry_after_sec = float(retry_after)
+                except ValueError:
+                    retry_after_sec = None
+                if retry_after_sec is not None and retry_after_sec > LONG_BAN_THRESHOLD_SEC:
+                    raise RuntimeError(
+                        f"TRAINS가 이 IP를 장기간 차단한 것으로 보입니다 "
+                        f"(Retry-After={retry_after_sec:.0f}초 ≈ {retry_after_sec / 3600:.1f}시간). "
+                        f"단순 429 재시도로는 해결 안 되니, 시간이 지나거나 IP를 바꿔서 "
+                        f"다시 시도해야 합니다."
+                    )
+                if retry_after_sec is not None:
+                    wait_sec = min(retry_after_sec, MAX_RETRY_AFTER_SEC)
+                    print(f"  [TRAINS] {log_key} page {page} 429, Retry-After={retry_after}s -> {wait_sec}s 대기", flush=True)
+                    time.sleep(wait_sec)
+        resp.raise_for_status()
+
+        if total_count is None:
+            header_total = resp.headers.get("X-Total-Count")
+            if header_total and header_total.isdigit():
+                total_count = int(header_total)
+
+        try:
+            batch = resp.json()
+        except ValueError as exc:
+            preview = resp.text[:300]
+            raise ValueError(
+                f"TRAINS 응답이 JSON이 아닙니다 (형식이 또 바뀌었을 수 있음). "
+                f"응답 앞부분: {preview!r}"
+            ) from exc
+
+        if not isinstance(batch, list):
+            raise ValueError(f"TRAINS 응답이 예상한 배열 형식이 아닙니다: {type(batch)}")
+
+        if not batch:
+            break
+        all_rows.extend(batch)
+        if len(batch) < page_size or (total_count is not None and len(all_rows) >= total_count):
+            break
+
+    return all_rows
+
+
 def fetch_regulations_for_country(
     country_iso3: str, hs_code: str, page_size: int = 20, max_pages: int = 5, force_refresh: bool = False
 ) -> list:
     """UNCTAD TRAINS에서 country_iso3(예: 'DEU')가 이 제품의 hs_code(마이페이지에
     등록된 실제 HS코드, 예: "1905.90")에 대해 부과 중인 규정을 직접 조회한다
     (해당 국가만 콕 집어서 조회 - 전세계를 다 긁을 필요 없음).
+
+    EU 회원국은 개별 국가로 조회하면 더미 행만 나오는 경우가 많아, 그럴 때
+    EU 코드(EUN)로 한 번 더 시도한다 (위 EU_MEMBER_ISO3 참고).
 
     최종적으로 쓰는 건 top_relevant_regulations()로 추린 상위 6건뿐이지만,
     관련도 필터링이 고를 수 있는 후보가 너무 적으면 걸러낼 게 없어서
@@ -205,80 +306,15 @@ def fetch_regulations_for_country(
             _memory_cache[cache_key] = entry
             return entry["rows"]
 
-    all_rows = []
-    total_count = None
-    for page in range(1, max_pages + 1):
-        if page > 1:
-            time.sleep(REQUEST_DELAY_SEC)
+    all_rows = _fetch_pages(country_iso3, product_codes, page_size, max_pages, cache_key)
 
-        total_note = f"/{total_count}" if total_count is not None else ""
-        print(f"  [TRAINS] {cache_key} page {page} 요청 중... (누적 {len(all_rows)}{total_note}건)", flush=True)
-
-        resp = None
-        for attempt, backoff in enumerate([0] + RETRY_BACKOFF_SEC):
-            if backoff:
-                time.sleep(backoff)
-            try:
-                # timeout=(연결 타임아웃, 응답 타임아웃) - 연결 자체가 막혀서
-                # 응답이 아예 안 오는 경우(방화벽 등)에도 10초 안에 실패로
-                # 끝나도록 분리.
-                resp = requests.post(
-                    ENDPOINT,
-                    json=_payload(country_iso3, product_codes, page, page_size),
-                    headers=HEADERS,
-                    timeout=(10, 60),
-                )
-            except requests.exceptions.RequestException as exc:
-                print(f"  [TRAINS] {cache_key} page {page} 요청 실패: {exc}", flush=True)
-                raise
-            print(f"  [TRAINS] {cache_key} page {page} 응답: {resp.status_code}", flush=True)
-            if resp.status_code != 429:
-                break
-            # 서버가 Retry-After로 대기시간을 알려주기도 하는데, 이 값을 그대로
-            # 믿고 sleep하면 서버가 큰 값(몇십초~그 이상)을 줄 경우 아무 로그도
-            # 없이 통째로 멈춰버린 것처럼 보인다. 그래서 상한(MAX_RETRY_AFTER_SEC)을
-            # 씌우고, 대기 전에 몇 초 기다리는지 꼭 출력한다.
-            retry_after = resp.headers.get("Retry-After")
-            if retry_after:
-                try:
-                    retry_after_sec = float(retry_after)
-                except ValueError:
-                    retry_after_sec = None
-                if retry_after_sec is not None and retry_after_sec > LONG_BAN_THRESHOLD_SEC:
-                    raise RuntimeError(
-                        f"TRAINS가 이 IP를 장기간 차단한 것으로 보입니다 "
-                        f"(Retry-After={retry_after_sec:.0f}초 ≈ {retry_after_sec / 3600:.1f}시간). "
-                        f"단순 429 재시도로는 해결 안 되니, 시간이 지나거나 IP를 바꿔서 "
-                        f"다시 시도해야 합니다."
-                    )
-                if retry_after_sec is not None:
-                    wait_sec = min(retry_after_sec, MAX_RETRY_AFTER_SEC)
-                    print(f"  [TRAINS] {cache_key} page {page} 429, Retry-After={retry_after}s -> {wait_sec}s 대기", flush=True)
-                    time.sleep(wait_sec)
-        resp.raise_for_status()
-
-        if total_count is None:
-            header_total = resp.headers.get("X-Total-Count")
-            if header_total and header_total.isdigit():
-                total_count = int(header_total)
-
-        try:
-            batch = resp.json()
-        except ValueError as exc:
-            preview = resp.text[:300]
-            raise ValueError(
-                f"TRAINS 응답이 JSON이 아닙니다 (형식이 또 바뀌었을 수 있음). "
-                f"응답 앞부분: {preview!r}"
-            ) from exc
-
-        if not isinstance(batch, list):
-            raise ValueError(f"TRAINS 응답이 예상한 배열 형식이 아닙니다: {type(batch)}")
-
-        if not batch:
-            break
-        all_rows.extend(batch)
-        if len(batch) < page_size or (total_count is not None and len(all_rows) >= total_count):
-            break
+    real_rows = [r for r in all_rows if not _is_placeholder_row(r)]
+    if not real_rows and country_iso3 in EU_MEMBER_ISO3:
+        eu_log_key = f"{cache_key}(EU 폴백)"
+        print(f"  [TRAINS] {cache_key} 개별 조회에 실데이터 없음 -> EU 코드로 재시도", flush=True)
+        eu_rows = _fetch_pages(EU_TRAINS_CODE, product_codes, page_size, max_pages, eu_log_key)
+        if any(not _is_placeholder_row(r) for r in eu_rows):
+            all_rows = eu_rows
 
     now = time.time()
     _memory_cache[cache_key] = {"rows": all_rows, "fetched_at": now}
@@ -506,3 +542,31 @@ def to_ntm_measure_rows(country_iso3: str, product_key: str, regulations: list, 
             "data_source": "UNCTAD TRAINS",
         })
     return rows
+
+
+# NtmMeasure 테이블에 이 (국가, 품목) 조합으로 저장된 행이 하나도 없으면
+# "아직 한 번도 조회 안 함"인지 "조회는 했는데 관련 규정이 진짜 0건"인지
+# 구분이 안 된다. 후자일 때는 이 마커 하나짜리 행을 대신 저장해서 구분한다
+# (app/services/hscode.py의 get_country_regulations가 이 마커를 인식해서
+# 빈 리스트로 처리 - 정적 예시 데이터로 폴백하지 않고 "규정 없음"을 그대로 보여줌).
+NO_MATCH_MARKER = "__NTM_NO_MATCH__"
+
+
+def no_match_row(country_iso3: str, product_key: str) -> dict:
+    """조회는 했지만 관련 규정이 하나도 없을 때 저장할 마커 행."""
+    return {
+        "reporter": country_iso3,
+        "partner": "KOR",
+        "product": product_key,
+        "measure_code": "",
+        "measure_section": "",
+        "measure_title": NO_MATCH_MARKER,
+        "measure_summary": "",
+        "legislation_title": NO_MATCH_MARKER,
+        "legislation_summary": "",
+        "implementation_authority": "",
+        "start_date": "",
+        "end_date": "",
+        "web_link": "",
+        "data_source": "UNCTAD TRAINS",
+    }

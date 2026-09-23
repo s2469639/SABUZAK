@@ -228,6 +228,9 @@
             </button>
           </form>
         </div>
+        {% if row.regulation_no_match %}
+        <p class="placeholder-note">해당 부분에 해당되는 파일이 없습니다. ({{ row.product.name }} · {{ expo.country_ko or expo.country }} 관련 UNCTAD TRAINS 규정을 조회했지만 관련 항목을 찾지 못했습니다.)</p>
+        {% else %}
         <p class="placeholder-note">⚠️ 이 목록은 {{ row.product.name }} 품목만 콕 집은 게 아니라, {{ expo.country_ko or expo.country }}의 식품·농산물 수입 관련 규정 중 관련도가 높은 순으로 보여주는 참고자료입니다 (UNCTAD TRAINS 원본 데이터에 세부 HS코드가 태깅 안 된 경우가 많아 완전히 이 품목 전용으로만 걸러내기 어렵습니다).</p>
         <div class="regulation-list">
           {% for note in row.regulation_notes %}
@@ -242,6 +245,7 @@
           </div>
           {% endfor %}
         </div>
+        {% endif %}
       </div>
       {% endfor %}
     </div>

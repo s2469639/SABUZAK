@@ -40,6 +40,7 @@ from app.models import Exhibition, NtmMeasure, Product  # noqa: E402
 from app.services.hscode import resolve_country_iso  # noqa: E402
 from app.services.trains_client import (  # noqa: E402
     fetch_regulations_for_country,
+    no_match_row,
     to_ntm_measure_rows,
     top_relevant_regulations,
 )
@@ -126,8 +127,13 @@ def main():
                 )
                 rows = to_ntm_measure_rows(iso3, hs_code, top6, summarize=True)
                 NtmMeasure.query.filter_by(reporter=iso3, product=hs_code).delete()
-                for row in rows:
-                    db.session.add(NtmMeasure(**row))
+                if rows:
+                    for row in rows:
+                        db.session.add(NtmMeasure(**row))
+                else:
+                    # 진짜 0건이어도 조회는 했다는 걸 표시 (안 그러면 웹앱이
+                    # "아직 조회 안 함"으로 착각해서 정적 예시 데이터로 폴백함)
+                    db.session.add(NtmMeasure(**no_match_row(iso3, hs_code)))
                 db.session.commit()
                 total_rows += len(rows)
                 print(f"  -> {len(rows)}건 저장")

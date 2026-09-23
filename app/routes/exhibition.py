@@ -14,6 +14,7 @@ from app.services.wto_client import get_country_tariff_averages
 from app.services import market_trend
 from app.services.trains_client import (
     fetch_regulations_for_country,
+    no_match_row,
     to_ntm_measure_rows,
     top_relevant_regulations,
 )
@@ -507,8 +508,14 @@ def sync_ntm(expo_id, product_id):
         top6 = top_relevant_regulations(regulations, product.hs_code, product_name=product.name, limit=6)
         rows = to_ntm_measure_rows(country_iso, product.hs_code, top6, summarize=True)
         NtmMeasure.query.filter_by(reporter=country_iso, product=product.hs_code).delete()
-        for row in rows:
-            db.session.add(NtmMeasure(**row))
+        if rows:
+            for row in rows:
+                db.session.add(NtmMeasure(**row))
+        else:
+            # 관련 규정이 진짜 0건이어도 "조회는 했다"는 걸 표시해둬야, 다음에
+            # 페이지 들어왔을 때 "아직 한 번도 안 조회함"으로 착각해서 정적
+            # 예시 데이터로 잘못 폴백하지 않는다.
+            db.session.add(NtmMeasure(**no_match_row(country_iso, product.hs_code)))
         db.session.commit()
         flash(f"'{product.name}' 관련 식품·농산물 수입규정 참고자료 {len(rows)}건을 한국어 요약으로 가져왔습니다.", "success")
     except Exception as e:

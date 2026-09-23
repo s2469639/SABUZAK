@@ -27,6 +27,7 @@ NtmMeasure.reporter 컬럼은 ISO3(예: "SGP")를 저장하고, product 컬럼�
 
 from app.models import NtmMeasure
 from app.services import tariff_lookup
+from app.services import trains_client
 
 try:
     import pycountry
@@ -232,9 +233,18 @@ def classify_regulation_strictness(notes):
 def get_country_regulations(country_iso, hs_code, limit=6):
     """NTM 캐시(NtmMeasure)에서 국가(ISO3) + 이 제품의 hs_code로 조회했던
     규정만 가져와, 식품/농산물 관련도가 높은 순으로 정렬해 상위 N개만
-    반환한다. 캐시가 비어있으면 빈 리스트(호출부에서 정적 기본값 폴백)."""
+    반환한다.
+
+    반환값으로 세 가지 상태를 구분한다:
+    - None: 이 조합으로 아직 한 번도 TRAINS를 조회한 적이 없음
+      (호출부에서 정적 예시 데이터로 폴백해야 함)
+    - [] (빈 리스트): 조회는 했는데 관련 규정이 진짜 0건이었음
+      (trains_client.NO_MATCH_MARKER 마커 행으로 구분 - 폴백하면 안 되고
+      "규정 없음"을 그대로 보여줘야 함)
+    - [...]: 실제 규정 목록
+    """
     if not country_iso or not hs_code:
-        return []
+        return None
 
     measures = (
         NtmMeasure.query.filter(NtmMeasure.reporter == country_iso, NtmMeasure.product == hs_code)
@@ -242,6 +252,9 @@ def get_country_regulations(country_iso, hs_code, limit=6):
         .all()
     )
     if not measures:
+        return None
+
+    if len(measures) == 1 and measures[0].measure_title == trains_client.NO_MATCH_MARKER:
         return []
 
     measures.sort(key=_relevance_score, reverse=True)
@@ -295,9 +308,13 @@ def build_hscode_context(expo, products):
             if (country_iso and has_range) else []
         )
         # 이 제품의 hs_code로 캐시된 규정만 가져온다 (제품마다 HS코드가 다르므로
-        # 국가 전체가 아니라 제품별로 따로 조회/표시함)
+        # 국가 전체가 아니라 제품별로 따로 조회/표시함). None=아직 조회 안 함,
+        # []=조회했는데 진짜 0건, [...]=실제 규정 목록 - 세 상태를 구분해야
+        # "아직 안 눌러봄"과 "눌러봤는데 없음"을 다르게 보여줄 수 있다.
         product_regulations = get_country_regulations(country_iso, product.hs_code)
-        regulation_notes = get_regulation_notes(country_iso, product_regulations)
+        is_synced = product_regulations is not None
+        no_match_after_sync = is_synced and not product_regulations
+        regulation_notes = product_regulations if is_synced else get_regulation_notes(country_iso, None)
 
         product_rows.append({
             "product": product,
@@ -308,7 +325,8 @@ def build_hscode_context(expo, products):
             "subitems": subitems,
             "certs": get_required_certs(country_iso, expo.food_yn),
             "regulation_notes": regulation_notes,
-            "regulation_notes_is_live": bool(product_regulations),
+            "regulation_notes_is_live": is_synced,
+            "regulation_no_match": no_match_after_sync,
             # 실데이터일 때만 계산 (정적 예시 데이터 기준으로는 나라별 까다로움을
             # 판단할 수 없으므로)
             "regulation_strictness": classify_regulation_strictness(product_regulations) if product_regulations else None,
