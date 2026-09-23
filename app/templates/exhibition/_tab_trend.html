@@ -1,0 +1,207 @@
+{# 트렌드 조사 탭: market_trend_analysis/ 폴더(구글 트렌드 + B2B 리드타임 +
+   현지 경쟁사 + 현지 뉴스 분석)의 로직을 그대로 호출한 결과를, 시장 개요
+   탭(_tab_market.html)과 동일한 "제품별 카드 + 지금 분석하기" 패턴으로
+   보여준다. 원본 market_trend_analysis/ 폴더 파일은 수정하지 않았다. #}
+{% for row in trend_rows %}
+<div class="card mta-card">
+  <div class="un-market-card-head">
+    <div>
+      <span class="hs-tag">{{ row.product.name }}</span>
+      <span class="page-desc">→ {{ row.specs.country }} · 박람회 개최월 {{ row.specs.exhibition_month }}</span>
+    </div>
+  </div>
+
+  <form method="post" action="{{ url_for('exhibition.trend_research', expo_id=expo.id, product_id=row.product.id) }}" class="mta-form">
+    <div class="mta-form-grid">
+      <div>
+        <span class="un-field-label">목표 소매 가격대/단위중량</span>
+        <input type="text" name="target_price" placeholder="예: 4.99 GBP / 350g" value="{{ row.specs.target_price }}">
+      </div>
+      <div>
+        <span class="un-field-label">보유 인증</span>
+        <input type="text" name="certifications" placeholder="예: 비건, 코셔, HACCP" value="{{ row.specs.certifications }}">
+      </div>
+      <div>
+        <span class="un-field-label">식감/가공 메커니즘</span>
+        <input type="text" name="strengths" placeholder="예: 얇고 쫄깃한 만두피, 버섯 채즙" value="{{ row.specs.strengths }}">
+      </div>
+      <div>
+        <span class="un-field-label">박람회 개최월</span>
+        <input type="text" name="exhibition_month" value="{{ row.specs.exhibition_month }}">
+      </div>
+    </div>
+    {% if row.result %}
+    <label class="checkbox-inline">
+      <input type="checkbox" name="force" value="1"> 캐시 무시하고 새로 분석
+    </label>
+    {% endif %}
+    <button type="submit" class="btn-secondary">{{ '다시 분석하기' if row.result else '지금 분석하기' }}</button>
+  </form>
+
+  {% if not row.result %}
+  <p class="placeholder-note">아직 분석한 적 없습니다. 필요하면 위 값을 채우고 "지금 분석하기"를 눌러주세요 (구글 트렌드 + AI 분석, 몇 초~수십 초 걸릴 수 있어요).</p>
+  {% else %}
+  {% set result = row.result %}
+  {% set keywords = result.keywords %}
+  {% set lead_time = result.lead_time %}
+  {% set competitors = result.competitors %}
+  {% set news = result.news %}
+
+  <div class="mta-metric-grid">
+    <div class="mta-metric-box {{ 'mta-seasonal' if lead_time.pattern_code == 'SEASONAL' else 'mta-stable' }}">
+      <span class="un-field-label">수요 패턴 판별</span>
+      <div class="mta-metric-value">{{ lead_time.pattern_type }}</div>
+      <p class="placeholder-note">피크 배율: 평균 대비 {{ lead_time.peak_ratio }}배</p>
+      <p class="mta-metric-note">💡 변동 요인: {{ lead_time.season_driver }}</p>
+    </div>
+    <div class="mta-metric-box">
+      <span class="un-field-label">차기 집중 수요 시점</span>
+      <div class="mta-metric-value">{{ lead_time.next_peak }}</div>
+      <p class="placeholder-note">과거 시계열 데이터 기반 연도 자동 승격 반영</p>
+    </div>
+    <div class="mta-metric-box mta-po">
+      <span class="un-field-label">권장 바이어 PO 시점</span>
+      <div class="mta-metric-value">{{ lead_time.recommended_po }}</div>
+      <p class="mta-metric-note">📌 {{ lead_time.po_strategy_title | default("매대 선점 필수 골든타임") }}</p>
+      <p class="placeholder-note">{{ lead_time.po_strategy_desc | default("상담 후 생산·통관·해상운송(4~6주)을 고려할 때 지금 발주해야 차기 피크 시즌 매대 진열이 가능합니다.") }}</p>
+    </div>
+  </div>
+
+  <h3 class="section-label">① 정량 검색 수요 시계열 분석</h3>
+  <div class="mta-kw-tags">
+    <span class="badge-food">① {{ keywords.kw1 }} <span class="page-desc">(현지 실질 검색어)</span></span>
+    <span class="badge-nonfood">② {{ keywords.kw2 }} <span class="page-desc">(직속 카테고리)</span></span>
+    <span class="badge-nonfood">③ {{ keywords.kw3 }} <span class="page-desc">(로컬 대체재)</span></span>
+  </div>
+  <div class="mta-chart-wrap">
+    <div class="mta-chart-toolbar">
+      <div class="mta-toggle-group" data-toggle-group="mta-period-{{ row.product.id }}">
+        <button type="button" class="active" data-period="12m">최근 12개월</button>
+        <button type="button" data-period="5y">최근 5년</button>
+      </div>
+      <div class="mta-toggle-group" data-toggle-group="mta-mode-{{ row.product.id }}">
+        <button type="button" class="active" data-mode="independent">개별 모멘텀</button>
+        <button type="button" data-mode="relative">실제 점유율</button>
+      </div>
+    </div>
+    <canvas id="mta-chart-{{ row.product.id }}" height="220"></canvas>
+  </div>
+  <script id="mta-trend-data-{{ row.product.id }}" type="application/json">{{ result.trend_data | tojson | safe }}</script>
+  <p class="placeholder-note">▶ 소싱 가이드: {{ lead_time.timeline_guide }}</p>
+
+  <div class="mta-grid-2">
+    <div>
+      <h3 class="section-label">② 현지 매대 실존 경쟁사 및 벤치마크</h3>
+      {% for comp in competitors.competitors %}
+      <div class="mta-comp-row">
+        <div class="un-market-card-head">
+          <strong>{{ comp.brand }}</strong>
+          <span class="data-source-badge">{{ comp.price }}</span>
+        </div>
+        <p class="page-desc">{{ comp.product }}</p>
+        <p class="placeholder-note">{{ comp.feature }}</p>
+      </div>
+      {% endfor %}
+      {% if competitors.substitute %}
+      <div class="mta-comp-row">
+        <span class="un-field-label">동등 식감 로컬 대체재</span>
+        <div class="un-market-card-head">
+          <strong>{{ competitors.substitute.name }}</strong>
+          <span class="data-source-badge">{{ competitors.substitute.price }}</span>
+        </div>
+        <p class="placeholder-note">{{ competitors.substitute.texture_match }}</p>
+      </div>
+      {% endif %}
+      {% if competitors.benchmarks %}
+      <ul class="mta-bm-list">
+        {% for bm in competitors.benchmarks %}
+        <li>{{ bm }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+
+    <div>
+      <h3 class="section-label">③ 현지 유통 및 식문화 최신 동향</h3>
+      <div class="mta-news-summary">{{ news.summary | safe }}</div>
+      {% if news.quotes %}
+      <details class="mta-quotes">
+        <summary>🔍 현지 동향 및 원문 발췌 보러가기 (총 {{ news.quotes | length }}건)</summary>
+        {% for q in news.quotes %}
+        <div class="mta-quote-row">
+          <div class="mta-kw-tags">
+            <span class="data-source-badge">{{ q.scope_badge }}</span>
+            <span class="data-source-badge">{{ q.market_badge }}</span>
+            {% if q.is_public %}<span class="data-source-badge live">한국 공공기관</span>{% endif %}
+          </div>
+          <p class="mta-quote-text">"{{ q.quote }}"</p>
+          <p class="placeholder-note">{{ q.translation }}</p>
+          <p class="placeholder-note">{{ q.id }} · {{ q.domain }} · {{ q.year }} · <a href="{{ q.url }}" target="_blank">원문 열기</a></p>
+        </div>
+        {% endfor %}
+      </details>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endfor %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function () {
+  var colors = ['#f59e0b', '#10b981', '#2563eb'];
+  {% for row in trend_rows if row.result %}
+  (function () {
+    var pid = {{ row.product.id }};
+    var raw = JSON.parse(document.getElementById('mta-trend-data-' + pid).textContent);
+    var period = '12m', mode = 'independent';
+
+    function datasets() {
+      var periodObj = raw[period] || raw['12m'];
+      var data = periodObj[mode] || {};
+      return Object.keys(data).map(function (k, i) {
+        return {
+          label: k, data: data[k],
+          borderColor: colors[i % colors.length], backgroundColor: 'transparent',
+          borderWidth: 2, tension: 0.25, pointRadius: period === '12m' ? 2 : 1
+        };
+      });
+    }
+
+    var ctx = document.getElementById('mta-chart-' + pid).getContext('2d');
+    var chart = new Chart(ctx, {
+      type: 'line',
+      data: { labels: (raw[period] || raw['12m']).dates || [], datasets: datasets() },
+      options: {
+        responsive: true, interaction: { mode: 'index', intersect: false },
+        scales: { y: { beginAtZero: true, max: 100 } },
+        plugins: { legend: { position: 'top' } }
+      }
+    });
+
+    var group = document.querySelector('[data-toggle-group="mta-period-' + pid + '"]');
+    var modeGroup = document.querySelector('[data-toggle-group="mta-mode-' + pid + '"]');
+    function refresh() {
+      chart.data.labels = (raw[period] || raw['12m']).dates || [];
+      chart.data.datasets = datasets();
+      chart.update();
+    }
+    if (group) group.addEventListener('click', function (e) {
+      var btn = e.target.closest('button[data-period]');
+      if (!btn) return;
+      period = btn.dataset.period;
+      group.querySelectorAll('button').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      refresh();
+    });
+    if (modeGroup) modeGroup.addEventListener('click', function (e) {
+      var btn = e.target.closest('button[data-mode]');
+      if (!btn) return;
+      mode = btn.dataset.mode;
+      modeGroup.querySelectorAll('button').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      refresh();
+    });
+  })();
+  {% endfor %}
+})();
+</script>
