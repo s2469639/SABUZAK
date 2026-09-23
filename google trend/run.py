@@ -92,3 +92,4 @@ if __name__ == "__main__":
     debug_mode = os.getenv("FLASK_DEBUG", "0") == "1"
     logger.info("🚀 서버 가동: http://127.0.0.1:%d", port)
     app.run(debug=debug_mode, port=port)
+    #최유진 바보

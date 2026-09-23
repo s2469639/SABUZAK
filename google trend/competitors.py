@@ -53,3 +53,4 @@ def analyze_market_competitors(product_name: str, country: str, target_price: st
             "average_snack_price": "정보 없음",
             "market_summary": "경쟁사 데이터를 불러오지 못했습니다.",
         }
+    #최유진 바보
