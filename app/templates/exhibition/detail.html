@@ -194,7 +194,7 @@
 
         <div class="section-label-row">
           <h4 class="section-label">
-            수출 주의사항 <span class="section-label-sub">({{ row.product.name }} · {{ row.product.hs_code }} 관련도 순)</span>
+            수출 주의사항 <span class="section-label-sub">({{ row.product.name }} 관련 식품·농산물 수입규정 참고 · {{ expo.country_ko or expo.country }})</span>
             {% if row.regulation_notes_is_live %}
               <span class="data-source-badge live">UNCTAD TRAINS 실데이터</span>
             {% else %}
@@ -207,6 +207,7 @@
             </button>
           </form>
         </div>
+        <p class="placeholder-note">⚠️ 이 목록은 {{ row.product.name }} 품목만 콕 집은 게 아니라, {{ expo.country_ko or expo.country }}의 식품·농산물 수입 관련 규정 중 관련도가 높은 순으로 보여주는 참고자료입니다 (UNCTAD TRAINS 원본 데이터에 세부 HS코드가 태깅 안 된 경우가 많아 완전히 이 품목 전용으로만 걸러내기 어렵습니다).</p>
         <div class="regulation-list">
           {% for note in row.regulation_notes %}
           <div class="regulation-card level-{{ note.level }}">

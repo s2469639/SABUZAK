@@ -505,7 +505,7 @@ def sync_ntm(expo_id, product_id):
         for row in rows:
             db.session.add(NtmMeasure(**row))
         db.session.commit()
-        flash(f"'{product.name}' 관련 UNCTAD TRAINS 규정 {len(rows)}건을 한국어 요약으로 가져왔습니다.", "success")
+        flash(f"'{product.name}' 관련 식품·농산물 수입규정 참고자료 {len(rows)}건을 한국어 요약으로 가져왔습니다.", "success")
     except Exception as e:
         db.session.rollback()
         flash(f"TRAINS 조회 중 오류가 발생했습니다: {e}", "danger")

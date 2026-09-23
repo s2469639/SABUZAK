@@ -336,12 +336,14 @@ def _is_placeholder_row(reg: dict) -> bool:
 
 
 def is_product_relevant(reg: dict, product_codes: list) -> bool:
-    """이 규정이 실제로 이 제품(product_codes)과 관련 있는지 판단.
+    """이 규정이 이 제품(product_codes)과 관련 있어 보이는지 판단.
     hsCodes가 있는데 우리 코드와 안 겹치면 다른 품목 규정이라고 보고 제외한다.
-    hsCodes가 없는 규정(TRAINS 데이터 대부분이 그렇다)은 특정 품목까지는 알
-    수 없으니, 최소한 식품/농산물과 관련은 있어야 한다는 기준(_relevance_score)만
-    적용한다 - 등록 제품마다 품목이 다 달라서 미리 정해둔 키워드 목록으로는
-    일반화할 수 없기 때문."""
+    hsCodes가 없는 규정(TRAINS 원본 데이터 대부분이 그렇다 - 중국 등 국가별
+    관세청 공지는 특정 HS코드 없이 국가 전체 공지로만 등록된 경우가 많음)은
+    특정 품목까지는 구분할 수 없으므로, 최소한 식품/농산물과 관련은 있어야
+    한다는 느슨한 기준(_has_strong_food_signal)만 적용한다. 즉 hsCodes가 없는
+    쪽은 "이 품목 전용"이 아니라 "그 나라의 식품·농산물 수입 규정 중 참고할
+    만한 것" 정도의 느슨한 관련도이니, 화면에도 그렇게 표시해야 한다."""
     if _is_placeholder_row(reg):
         return False
     if _hs_code_overlaps_product(reg.get("hsCodes"), product_codes):
