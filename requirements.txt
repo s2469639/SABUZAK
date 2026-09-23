@@ -10,5 +10,8 @@ python-docx
 weasyprint
 googletrans
 pytrends
-tavily-python
-flask-login
+pycountry
+babel
+google-auth
+google-auth-oauthlib
+cryptography
