@@ -170,16 +170,16 @@ def _save_disk_cache(all_cache: dict):
 
 
 def fetch_regulations_for_country(
-    country_iso3: str, hs_code: str, page_size: int = 20, max_pages: int = 2, force_refresh: bool = False
+    country_iso3: str, hs_code: str, page_size: int = 20, max_pages: int = 3, force_refresh: bool = False
 ) -> list:
     """UNCTAD TRAINS에서 country_iso3(예: 'DEU')가 이 제품의 hs_code(마이페이지에
     등록된 실제 HS코드, 예: "1905.90")에 대해 부과 중인 규정을 직접 조회한다
     (해당 국가만 콕 집어서 조회 - 전세계를 다 긁을 필요 없음).
 
-    최종적으로 쓰는 건 top_relevant_regulations()로 추린 상위 6건뿐이라,
-    끝까지 다 받을 필요가 없다. max_pages 기본값을 2(최대 40건)로 낮춰서
-    요청 자체를 적게 보낸다 - 그래도 6건 추리기엔 충분하고, 429/차단 위험도
-    그만큼 줄어든다. 정말 다 필요하면 max_pages를 늘려서 호출하면 된다.
+    최종적으로 쓰는 건 top_relevant_regulations()로 추린 상위 6건뿐이지만,
+    관련도 필터링이 고를 수 있는 후보가 너무 적으면 걸러낼 게 없어서
+    무관한 것까지 올라올 수 있다. max_pages 기본값 3(최대 60건)이면 후보가
+    넉넉해서 필터링이 더 잘 추릴 수 있다.
 
     페이지마다 REQUEST_DELAY_SEC만큼 쉬고, 429를 받으면 잠깐 대기 후
     재시도한다. Retry-After가 비정상적으로 크면(장기 IP 차단) 재시도 없이
@@ -299,6 +299,23 @@ _FOOD_RELEVANCE_KEYWORDS = [
     "import", "export", "custom",
 ]
 
+# 위 목록 중 "food"/"animal"/"plant"류처럼 실제로 식품·농산물임을 강하게
+# 시사하는 키워드만 추림. "import"/"export"/"custom"/"consumer"/"packaging"/
+# "labell(ing)"은 화장품·의류 등 다른 품목 규정에도 흔해서 이것만으로는
+# 통과시키지 않는다 (hsCodes가 없는 규정을 거를 때 이 강한 키워드가 최소
+# 하나는 있어야 관련 있다고 본다).
+_STRONG_FOOD_KEYWORDS = [
+    "food", "animal", "plant", "fish", "meat", "agricultur", "biological",
+    "sanitary", "phytosanitary", "veterinary", "poultry", "livestock",
+    "seafood", "beverage",
+]
+
+
+def _has_strong_food_signal(reg: dict) -> bool:
+    text = " ".join([reg.get("officialTitle") or "", reg.get("description") or ""]).lower()
+    return any(kw in text for kw in _STRONG_FOOD_KEYWORDS)
+
+
 def _hs_code_overlaps_product(hs_codes_field, product_codes: list) -> bool:
     """응답의 hsCodes 필드가 조회에 쓴 product_codes(등록된 제품의 실제
     HS코드 기준)와 겹치는지 확인."""
@@ -319,7 +336,7 @@ def is_product_relevant(reg: dict, product_codes: list) -> bool:
         return True
     if reg.get("hsCodes"):
         return False
-    return _relevance_score(reg) > 0
+    return _has_strong_food_signal(reg)
 
 
 def _relevance_score(reg: dict) -> int:
