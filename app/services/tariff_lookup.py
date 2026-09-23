@@ -219,19 +219,54 @@ def get_tariff_regimes(hs_code: str, country_iso3: str):
             continue
 
         unique_displays = set(displays)
-        if len(unique_displays) == 1:
+        is_range = len(unique_displays) > 1
+        if not is_range:
             display = displays[0]
         elif values and len(set(values)) == 1:
             display = f"{values[0]}%"
+            is_range = False
         elif values:
             display = f"{min(values)}~{max(values)}% (세부품목별 상이)"
         else:
             display = "값 혼재 (세부품목별 상이)"
 
         tariff_ave = min(values) if values else None
-        regimes.append({"regime": regime_name, "tariff_ave": tariff_ave, "display": display})
+        regimes.append({
+            "regime": regime_name,
+            "tariff_ave": tariff_ave,
+            "display": display,
+            "is_range": is_range,
+        })
 
     return regimes
+
+
+def get_subitem_breakdown(hs_code: str, country_iso3: str):
+    """등록된 HS코드가 6~8자리라서 여러 10자리 세부품목에 걸칠 때, 그
+    세부품목 각각의 코드/품명/실제 세율을 보여주기 위한 상세 목록.
+    (범위 표시("0~5%")가 왜 나왔는지 사용자가 직접 확인할 수 있게 함)"""
+    matched_rows = find_matching_rows(hs_code)
+    if len(matched_rows) <= 1:
+        return []
+
+    columns = _country_columns(country_iso3)
+    if not columns:
+        return []
+
+    items = []
+    for row in matched_rows:
+        rates = []
+        for col_idx, regime_name in columns:
+            if col_idx >= len(row):
+                continue
+            _, disp = _parse_cell(row[col_idx])
+            rates.append({"regime": regime_name, "display": disp})
+        items.append({
+            "code": row[1].strip() if len(row) > 1 else "",
+            "name_ko": row[2].strip() if len(row) > 2 else "",
+            "rates": rates,
+        })
+    return items
 
 
 def get_best_regime(hs_code: str, country_iso3: str):

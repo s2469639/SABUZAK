@@ -269,11 +269,18 @@ def build_hscode_context(expo, products):
             best = min(numeric_regimes, key=lambda r: r["tariff_ave"])
         for r in regimes:
             r["is_best"] = (r is best) if best else False
+        has_range = any(r.get("is_range") for r in regimes)
+        subitems = (
+            tariff_lookup.get_subitem_breakdown(product.hs_code, country_iso)
+            if (country_iso and has_range) else []
+        )
         product_rows.append({
             "product": product,
             "regimes": regimes,
             "best_regime": best,
             "has_data": bool(regimes),
+            "has_range": has_range,
+            "subitems": subitems,
             "certs": get_required_certs(country_iso, expo.food_yn),
         })
 
