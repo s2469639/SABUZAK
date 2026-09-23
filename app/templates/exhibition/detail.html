@@ -159,7 +159,7 @@
         {% endif %}
 
         {% if row.has_range and row.subitems %}
-        <details class="tariff-subitem-detail">
+        <details class="tariff-subitem-detail" open>
           <summary>⚠️ 등록하신 HS코드({{ row.product.hs_code }})가 세부 10자리 코드까지는 아니라서, 범위로 표시된 협정의 세부 품목별 실제 세율을 확인하세요</summary>
           <table class="tariff-regime-table">
             <thead>
