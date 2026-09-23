@@ -21,7 +21,14 @@ BASE = "https://api.wto.org/timeseries/v1"
 
 
 def call(path: str, key: str, params: dict):
-    headers = {"Ocp-Apim-Subscription-Key": key}
+    # 터미널에 키를 복사/붙여넣기할 때 보이지 않는 유니코드 문자(스마트따옴표,
+    # zero-width space 등)가 같이 딸려 들어오는 경우가 있는데, 그러면 HTTP
+    # 헤더 인코딩(latin-1)에서 그대로 터진다. 순수 ASCII만 남기고, 뭐가
+    # 걸러졌는지도 보여준다.
+    clean_key = key.encode("ascii", "ignore").decode("ascii").strip()
+    if clean_key != key:
+        print(f"!! 키에 ASCII가 아닌 문자가 섞여 있어서 제거함. 원본: {key!r} -> 정리: {clean_key!r}")
+    headers = {"Ocp-Apim-Subscription-Key": clean_key}
     resp = requests.get(f"{BASE}/{path}", headers=headers, params=params, timeout=30)
     print(f"GET {resp.url}")
     print(f"status: {resp.status_code}")
