@@ -17,6 +17,11 @@ import time
 
 import requests
 
+try:
+    import pycountry
+except ImportError:
+    pycountry = None
+
 WTO_API_KEY = os.environ.get("WTO_API_KEY")
 
 BASE = "https://api.wto.org/timeseries/v1"
@@ -31,6 +36,20 @@ _CACHE_TTL_SEC = 24 * 60 * 60  # 하루 1번이면 충분 (연 단위 통계라 
 _cache: dict = {}  # {(country_iso3, indicator): (value_dict_or_None, fetched_at)}
 
 
+def _to_wto_reporter_code(country_iso3: str):
+    """WTO는 국가를 ISO3(알파벳)가 아니라 UN M49 숫자 코드로 받는다
+    (예: 스페인 ESP -> "724", /reporters 엔드포인트로 실제 확인함). 이 숫자
+    코드는 ISO 3166-1 numeric과 동일해서, pycountry의 country.numeric으로
+    별도 API 호출 없이 바로 변환 가능하다."""
+    if pycountry is None:
+        return None
+    try:
+        country = pycountry.countries.get(alpha_3=country_iso3)
+        return country.numeric if country else None
+    except LookupError:
+        return None
+
+
 def _fetch_latest(country_iso3: str, indicator: str):
     """이 지표의 이 나라 최신 연도 값 하나를 가져온다. 실패/데이터 없음 -> None."""
     cache_key = (country_iso3, indicator)
@@ -38,12 +57,17 @@ def _fetch_latest(country_iso3: str, indicator: str):
     if cached and (time.time() - cached[1]) < _CACHE_TTL_SEC:
         return cached[0]
 
+    reporter_code = _to_wto_reporter_code(country_iso3)
+    if not reporter_code:
+        _cache[cache_key] = (None, time.time())
+        return None
+
     result = None
     try:
         resp = requests.get(
             f"{BASE}/data",
             headers={"Ocp-Apim-Subscription-Key": WTO_API_KEY},
-            params={"i": indicator, "r": country_iso3, "ps": "default", "pc": "default"},
+            params={"i": indicator, "r": reporter_code, "ps": "default", "pc": "default"},
             timeout=10,
         )
         if resp.status_code == 200:
