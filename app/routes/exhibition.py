@@ -475,16 +475,18 @@ def market_matrix():
     )
 
 
-@bp.route("/detail/<int:expo_id>/sync-ntm", methods=["POST"])
+@bp.route("/detail/<int:expo_id>/sync-ntm/<int:product_id>", methods=["POST"])
 @login_required
-def sync_ntm(expo_id):
-    """이 박람회 국가 하나에 대해 UNCTAD TRAINS Online을 그 자리에서 호출해
-    캐시(NtmMeasure)를 채운다. TRAINS API(denormalisedRegulations)는
-    imposingCountries에 ISO3 코드를 그대로 받기 때문에 이 나라만 콕 집어서
-    바로 조회한다 (app/services/trains_client.fetch_regulations_for_country).
-    이후 app/services/hscode.py의 get_country_regulations가 식품 관련도로
-    한 번 더 걸러서 보여준다."""
+def sync_ntm(expo_id, product_id):
+    """이 박람회 국가 + 이 제품(product_id) 조합에 대해 UNCTAD TRAINS Online을
+    그 자리에서 호출해 캐시(NtmMeasure)를 채운다. TRAINS API
+    (denormalisedRegulations)는 imposingCountries에 ISO3 코드를, products에
+    실제 HS코드를 그대로 받기 때문에 이 나라+제품만 콕 집어서 바로 조회한다
+    (app/services/trains_client.fetch_regulations_for_country). 이후
+    app/services/hscode.py의 get_country_regulations가 이 조합으로 캐시된
+    것만 걸러서 보여준다."""
     expo = Exhibition.query.get_or_404(expo_id)
+    product = Product.query.filter_by(id=product_id, user_id=current_user.id).first_or_404()
     country_iso = resolve_country_iso(expo.country)
 
     if not country_iso:
@@ -496,14 +498,14 @@ def sync_ntm(expo_id):
         return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#hscode")
 
     try:
-        regulations = fetch_regulations_for_country(country_iso)
-        top6 = top_relevant_regulations(regulations, limit=6)
-        rows = to_ntm_measure_rows(country_iso, "ALL", top6, summarize=True)
-        NtmMeasure.query.filter_by(reporter=country_iso, product="ALL").delete()
+        regulations = fetch_regulations_for_country(country_iso, product.hs_code)
+        top6 = top_relevant_regulations(regulations, product.hs_code, limit=6)
+        rows = to_ntm_measure_rows(country_iso, product.hs_code, top6, summarize=True)
+        NtmMeasure.query.filter_by(reporter=country_iso, product=product.hs_code).delete()
         for row in rows:
             db.session.add(NtmMeasure(**row))
         db.session.commit()
-        flash(f"UNCTAD TRAINS에서 가장 관련도 높은 {len(rows)}건을 한국어 요약으로 가져왔습니다.", "success")
+        flash(f"'{product.name}' 관련 UNCTAD TRAINS 규정 {len(rows)}건을 한국어 요약으로 가져왔습니다.", "success")
     except Exception as e:
         db.session.rollback()
         flash(f"TRAINS 조회 중 오류가 발생했습니다: {e}", "danger")

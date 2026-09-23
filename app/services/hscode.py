@@ -208,16 +208,15 @@ def _relevance_score(measure):
     return sum(1 for kw in _FOOD_RELEVANCE_KEYWORDS if kw in text)
 
 
-def get_country_regulations(country_iso, limit=6):
-    """NTM 캐시(NtmMeasure)에서 국가(ISO3) 전체 규정을 가져와, 식품/농산물
-    관련도가 높은 순으로 정렬해 상위 N개만 반환한다. TRAINS Online이 HS코드
-    단위로는 필터링을 안 해주기 때문에(국가 전체 목록을 항상 반환) 여기서
-    직접 관련도를 매긴다. 캐시가 비어있으면 빈 리스트(호출부에서 정적 기본값 폴백)."""
-    if not country_iso:
+def get_country_regulations(country_iso, hs_code, limit=6):
+    """NTM 캐시(NtmMeasure)에서 국가(ISO3) + 이 제품의 hs_code로 조회했던
+    규정만 가져와, 식품/농산물 관련도가 높은 순으로 정렬해 상위 N개만
+    반환한다. 캐시가 비어있으면 빈 리스트(호출부에서 정적 기본값 폴백)."""
+    if not country_iso or not hs_code:
         return []
 
     measures = (
-        NtmMeasure.query.filter(NtmMeasure.reporter == country_iso)
+        NtmMeasure.query.filter(NtmMeasure.reporter == country_iso, NtmMeasure.product == hs_code)
         .order_by(NtmMeasure.fetched_at.desc())
         .all()
     )
@@ -274,6 +273,10 @@ def build_hscode_context(expo, products):
             tariff_lookup.get_subitem_breakdown(product.hs_code, country_iso)
             if (country_iso and has_range) else []
         )
+        # 이 제품의 hs_code로 캐시된 규정만 가져온다 (제품마다 HS코드가 다르므로
+        # 국가 전체가 아니라 제품별로 따로 조회/표시함)
+        product_regulations = get_country_regulations(country_iso, product.hs_code)
+
         product_rows.append({
             "product": product,
             "regimes": regimes,
@@ -282,6 +285,8 @@ def build_hscode_context(expo, products):
             "has_range": has_range,
             "subitems": subitems,
             "certs": get_required_certs(country_iso, expo.food_yn),
+            "regulation_notes": get_regulation_notes(country_iso, product_regulations),
+            "regulation_notes_is_live": bool(product_regulations),
         })
 
     # 등록된 제품들 전체에서 가장 유리한 관세 조합 하나 추천 (데이터 있는 것만 대상)
@@ -290,15 +295,9 @@ def build_hscode_context(expo, products):
     if rows_with_best:
         overall_best = min(rows_with_best, key=lambda r: r["best_regime"]["tariff_ave"])
 
-    # 국가 전체 규정 중 식품/농산물 관련도 높은 순 상위 N개 (TRAINS는 HS코드로
-    # 필터링이 안 되고 국가 전체 목록을 반환하므로, 여기서 관련도를 매겨 추림)
-    country_regulations = get_country_regulations(country_iso)
-
     return {
         "country_iso": country_iso,
         "has_country_data": has_country_data,
         "product_rows": product_rows,
         "overall_best": overall_best,
-        "regulation_notes": get_regulation_notes(country_iso, country_regulations),
-        "regulation_notes_is_live": bool(country_regulations),
     }

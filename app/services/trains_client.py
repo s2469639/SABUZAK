@@ -72,11 +72,32 @@ HEADERS = {
     "User-Agent": UA,
 }
 
-# "Products affected"에서 "Crispbread, Gingerbread..."(HS 1905 계열 - 약과/
-# 유과 등 사부작 제품군과 일치) 카테고리를 선택했을 때 실제로 전송된 값.
-# "View source"로 확인한 실제 payload에는 내부 숫자 ID가 아니라 이 HS코드
-# 문자열 리스트 자체가 "products" 키로 그대로 들어간다.
-SNACK_HS_CODES = ["1905", "190531", "190532", "190510", "190520", "190540", "190590"]
+# "Products affected"에 실제로 전송되는 값은 내부 숫자 ID가 아니라 HS코드
+# 문자열 리스트 자체 ("products" 키로 그대로 들어감). 우리는 등록된 제품마다
+# HS코드가 다르므로 이 상수는 하드코딩된 특정 카테고리가 아니라, hs_code
+# 하나를 받아서 후보 코드 목록(원본 그대로 + 4자리 챕터 단위)을 만드는
+# 함수로 대체한다 - 챕터 단위도 같이 보내는 이유는 TRAINS 데이터의
+# hsCodes 태깅이 느슨해서, 정확히 같은 세부코드보다 넓게(챕터 단위로) 걸어야
+# 관련 규정을 놓치지 않기 때문.
+DEFAULT_DEBUG_HS_CODES = ["1905", "190531", "190532", "190510", "190520", "190540", "190590"]
+
+
+def normalize_hs_code(hs_code: str) -> str:
+    """등록된 HS코드(예: "1905.90", "19 05 90")에서 숫자만 남긴다."""
+    return "".join(ch for ch in (hs_code or "") if ch.isdigit())
+
+
+def _product_codes_for_query(hs_code: str) -> list:
+    """제품의 HS코드로 TRAINS "products" 필터에 넣을 후보 코드 목록을 만든다.
+    원본 코드 그대로 + 4자리(챕터) 단위를 같이 보낸다 (챕터 단위까지 넣어야
+    TRAINS의 느슨한 품목 태깅에서 관련 규정을 놓치지 않음)."""
+    digits = normalize_hs_code(hs_code)
+    if not digits:
+        return DEFAULT_DEBUG_HS_CODES
+    codes = [digits]
+    if len(digits) > 4:
+        codes.append(digits[:4])
+    return codes
 
 COLUMNS_VISIBILITY = {
     "imposingCountryName": True,
@@ -99,11 +120,11 @@ COLUMNS_VISIBILITY = {
 }
 
 
-def _payload(country_iso3: str, page_number: int, page_size: int) -> dict:
+def _payload(country_iso3: str, product_codes: list, page_number: int, page_size: int) -> dict:
     return {
         "imposingCountries": [country_iso3],
         "internationalStandardsImposing": False,
-        "products": SNACK_HS_CODES,
+        "products": product_codes,
         "NTMType": None,
         "FromDate": None,
         "ToDate": None,
@@ -114,15 +135,21 @@ def _payload(country_iso3: str, page_number: int, page_size: int) -> dict:
     }
 
 
-# 나라별 조회 결과 캐시(메모리 + 디스크). 박람회 상세페이지에서 여러 나라를
-# 연달아 조회하거나, 디버그 스크립트를 여러 번 재실행해도 CACHE_TTL_SEC
-# 안에는 같은 나라를 다시 네트워크로 긁지 않는다. 디스크에도 저장하는 이유는
-# `python debug_trains_ntm.py`처럼 매번 새 프로세스로 실행하는 스크립트는
-# 메모리 캐시만으로는 재실행할 때마다 초기화된 것과 같기 때문 - 이걸 몰라서
-# 테스트로 반복 실행하다가 실제로 장기 IP 차단을 당한 적이 있다.
+# (나라, 제품 HS코드)별 조회 결과 캐시(메모리 + 디스크). 등록된 제품마다
+# HS코드가 다르므로 캐시 키도 나라만이 아니라 "나라:HS코드"로 나눈다.
+# 박람회 상세페이지에서 여러 제품/나라를 연달아 조회하거나, 디버그 스크립트를
+# 여러 번 재실행해도 CACHE_TTL_SEC 안에는 같은 조합을 다시 네트워크로 긁지
+# 않는다. 디스크에도 저장하는 이유는 `python debug_trains_ntm.py`처럼 매번
+# 새 프로세스로 실행하는 스크립트는 메모리 캐시만으로는 재실행할 때마다
+# 초기화된 것과 같기 때문 - 이걸 몰라서 테스트로 반복 실행하다가 실제로
+# 장기 IP 차단을 당한 적이 있다.
 CACHE_TTL_SEC = 6 * 60 * 60  # 6시간
 _CACHE_FILE = Path(__file__).resolve().parent.parent.parent / "instance" / "trains_country_cache.json"
-_memory_cache: dict = {}  # {iso3: {"rows": [...], "fetched_at": ts}}
+_memory_cache: dict = {}  # {"iso3:hs코드": {"rows": [...], "fetched_at": ts}}
+
+
+def _cache_key(country_iso3: str, hs_code: str) -> str:
+    return f"{country_iso3}:{normalize_hs_code(hs_code) or 'DEFAULT'}"
 
 
 def _load_disk_cache() -> dict:
@@ -143,11 +170,11 @@ def _save_disk_cache(all_cache: dict):
 
 
 def fetch_regulations_for_country(
-    country_iso3: str, page_size: int = 20, max_pages: int = 2, force_refresh: bool = False
+    country_iso3: str, hs_code: str, page_size: int = 20, max_pages: int = 2, force_refresh: bool = False
 ) -> list:
-    """UNCTAD TRAINS에서 country_iso3(예: 'DEU')가 사부작 제품군(HS 1905류)에
-    대해 부과 중인 규정을 직접 조회한다 (해당 국가만 콕 집어서 조회 - 예전처럼
-    전세계를 다 긁을 필요 없음).
+    """UNCTAD TRAINS에서 country_iso3(예: 'DEU')가 이 제품의 hs_code(마이페이지에
+    등록된 실제 HS코드, 예: "1905.90")에 대해 부과 중인 규정을 직접 조회한다
+    (해당 국가만 콕 집어서 조회 - 전세계를 다 긁을 필요 없음).
 
     최종적으로 쓰는 건 top_relevant_regulations()로 추린 상위 6건뿐이라,
     끝까지 다 받을 필요가 없다. max_pages 기본값을 2(최대 40건)로 낮춰서
@@ -158,21 +185,23 @@ def fetch_regulations_for_country(
     재시도한다. Retry-After가 비정상적으로 크면(장기 IP 차단) 재시도 없이
     바로 에러로 끝낸다."""
     now = time.time()
+    cache_key = _cache_key(country_iso3, hs_code)
+    product_codes = _product_codes_for_query(hs_code)
 
     if not force_refresh:
-        cached = _memory_cache.get(country_iso3)
+        cached = _memory_cache.get(cache_key)
         if cached and (now - cached["fetched_at"]) < CACHE_TTL_SEC:
             return cached["rows"]
 
         disk_cache = _load_disk_cache()
-        entry = disk_cache.get(country_iso3)
+        entry = disk_cache.get(cache_key)
         if entry and (now - entry.get("fetched_at", 0.0)) < CACHE_TTL_SEC:
             print(
-                f"  [TRAINS] {country_iso3} 디스크 캐시 사용 "
+                f"  [TRAINS] {cache_key} 디스크 캐시 사용 "
                 f"(마지막 수집: {now - entry['fetched_at']:.0f}초 전, {len(entry['rows'])}건)",
                 flush=True,
             )
-            _memory_cache[country_iso3] = entry
+            _memory_cache[cache_key] = entry
             return entry["rows"]
 
     all_rows = []
@@ -182,7 +211,7 @@ def fetch_regulations_for_country(
             time.sleep(REQUEST_DELAY_SEC)
 
         total_note = f"/{total_count}" if total_count is not None else ""
-        print(f"  [TRAINS] {country_iso3} page {page} 요청 중... (누적 {len(all_rows)}{total_note}건)", flush=True)
+        print(f"  [TRAINS] {cache_key} page {page} 요청 중... (누적 {len(all_rows)}{total_note}건)", flush=True)
 
         resp = None
         for attempt, backoff in enumerate([0] + RETRY_BACKOFF_SEC):
@@ -194,14 +223,14 @@ def fetch_regulations_for_country(
                 # 끝나도록 분리.
                 resp = requests.post(
                     ENDPOINT,
-                    json=_payload(country_iso3, page, page_size),
+                    json=_payload(country_iso3, product_codes, page, page_size),
                     headers=HEADERS,
                     timeout=(10, 60),
                 )
             except requests.exceptions.RequestException as exc:
-                print(f"  [TRAINS] {country_iso3} page {page} 요청 실패: {exc}", flush=True)
+                print(f"  [TRAINS] {cache_key} page {page} 요청 실패: {exc}", flush=True)
                 raise
-            print(f"  [TRAINS] {country_iso3} page {page} 응답: {resp.status_code}", flush=True)
+            print(f"  [TRAINS] {cache_key} page {page} 응답: {resp.status_code}", flush=True)
             if resp.status_code != 429:
                 break
             # 서버가 Retry-After로 대기시간을 알려주기도 하는데, 이 값을 그대로
@@ -223,7 +252,7 @@ def fetch_regulations_for_country(
                     )
                 if retry_after_sec is not None:
                     wait_sec = min(retry_after_sec, MAX_RETRY_AFTER_SEC)
-                    print(f"  [TRAINS] {country_iso3} page {page} 429, Retry-After={retry_after}s -> {wait_sec}s 대기", flush=True)
+                    print(f"  [TRAINS] {cache_key} page {page} 429, Retry-After={retry_after}s -> {wait_sec}s 대기", flush=True)
                     time.sleep(wait_sec)
         resp.raise_for_status()
 
@@ -251,9 +280,9 @@ def fetch_regulations_for_country(
             break
 
     now = time.time()
-    _memory_cache[country_iso3] = {"rows": all_rows, "fetched_at": now}
+    _memory_cache[cache_key] = {"rows": all_rows, "fetched_at": now}
     disk_cache = _load_disk_cache()
-    disk_cache[country_iso3] = {"rows": all_rows, "fetched_at": now}
+    disk_cache[cache_key] = {"rows": all_rows, "fetched_at": now}
     _save_disk_cache(disk_cache)
     return all_rows
 
@@ -270,33 +299,27 @@ _FOOD_RELEVANCE_KEYWORDS = [
     "import", "export", "custom",
 ]
 
-# 우리 품목(약과/유과 등 - HS 1905류: bread, biscuits, wafers, gingerbread 등)에
-# 실제로 관련 있다고 볼 수 있는 특화 키워드. hsCodes가 없는 규정(TRAINS
-# 데이터 대부분이 그렇다)은 이 키워드가 하나라도 있어야만 관련 있다고 본다.
-_PRODUCT_SPECIFIC_KEYWORDS = [
-    "bread", "biscuit", "wafer", "cracker", "gingerbread", "bakery",
-    "cookie", "cake", "confection", "pastry", "cereal", "wheat", "flour",
-    "baked", "snack food",
-]
-
-
-def _hs_code_overlaps_product(hs_codes_field) -> bool:
-    """응답의 hsCodes 필드가 우리 품목(SNACK_HS_CODES)과 겹치는지 확인."""
+def _hs_code_overlaps_product(hs_codes_field, product_codes: list) -> bool:
+    """응답의 hsCodes 필드가 조회에 쓴 product_codes(등록된 제품의 실제
+    HS코드 기준)와 겹치는지 확인."""
     if not hs_codes_field:
         return False
     text = str(hs_codes_field)
-    return any(code in text for code in SNACK_HS_CODES)
+    return any(code in text for code in product_codes)
 
 
-def is_product_relevant(reg: dict) -> bool:
-    """이 규정이 실제로 우리 품목(약과/유과류)과 관련 있는지 판단.
-    hsCodes가 우리 품목 코드와 겹치면 무조건 관련 있다고 본다. hsCodes가
-    없으면 제목/설명에 품목 특화 키워드가 있어야만 관련 있다고 본다 -
-    "food"/"import"처럼 너무 넓은 키워드만으로는 통과시키지 않는다."""
-    if _hs_code_overlaps_product(reg.get("hsCodes")):
+def is_product_relevant(reg: dict, product_codes: list) -> bool:
+    """이 규정이 실제로 이 제품(product_codes)과 관련 있는지 판단.
+    hsCodes가 있는데 우리 코드와 안 겹치면 다른 품목 규정이라고 보고 제외한다.
+    hsCodes가 없는 규정(TRAINS 데이터 대부분이 그렇다)은 특정 품목까지는 알
+    수 없으니, 최소한 식품/농산물과 관련은 있어야 한다는 기준(_relevance_score)만
+    적용한다 - 등록 제품마다 품목이 다 달라서 미리 정해둔 키워드 목록으로는
+    일반화할 수 없기 때문."""
+    if _hs_code_overlaps_product(reg.get("hsCodes"), product_codes):
         return True
-    text = " ".join([reg.get("officialTitle") or "", reg.get("description") or ""]).lower()
-    return any(kw in text for kw in _PRODUCT_SPECIFIC_KEYWORDS)
+    if reg.get("hsCodes"):
+        return False
+    return _relevance_score(reg) > 0
 
 
 def _relevance_score(reg: dict) -> int:
@@ -307,13 +330,14 @@ def _relevance_score(reg: dict) -> int:
     return sum(1 for kw in _FOOD_RELEVANCE_KEYWORDS if kw in text)
 
 
-def top_relevant_regulations(regulations: list, limit: int = 6) -> list:
-    """우리 품목과 실제로 관련 있는 것만 남기고(is_product_relevant), 그중에서
-    식품/농산물 관련도가 높은 순으로 상위 N개만 남긴다 (전체를 다 저장하면
-    화면도 지저분해지고 AI 요약 비용도 커지므로, 정말 중요한 것만 추림).
-    국가와 무관하게 항상 이 기준으로 걸러지므로 어느 나라를 조회하든 동일하게
-    적용된다."""
-    relevant = [reg for reg in regulations if is_product_relevant(reg)]
+def top_relevant_regulations(regulations: list, hs_code: str, limit: int = 6) -> list:
+    """이 제품(hs_code)과 실제로 관련 있는 것만 남기고(is_product_relevant),
+    그중에서 식품/농산물 관련도가 높은 순으로 상위 N개만 남긴다 (전체를 다
+    저장하면 화면도 지저분해지고 AI 요약 비용도 커지므로, 정말 중요한 것만
+    추림). 국가와 무관하게 항상 이 기준으로 걸러지므로 어느 나라를 조회하든
+    동일하게 적용된다."""
+    product_codes = _product_codes_for_query(hs_code)
+    relevant = [reg for reg in regulations if is_product_relevant(reg, product_codes)]
     return sorted(relevant, key=_relevance_score, reverse=True)[:limit]
 
 
