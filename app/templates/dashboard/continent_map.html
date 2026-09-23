@@ -2,32 +2,78 @@
 {% block title %}대시보드 | 사부작{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="dash-header">
   <div>
-    <h1>박람회 대시보드</h1>
-    <p class="page-desc">권역을 선택하면 아래에 해당 권역의 박람회 목록이 펼쳐집니다 (지도는 추후 추가 예정)</p>
+    <h1>박람회 운영 대시보드</h1>
+    <p class="page-desc">지도에서 권역을 클릭하거나 국가를 선택해 박람회 목록을 확인하세요</p>
+  </div>
+  <div class="dash-header-actions">
+    <div class="dash-country-select">
+      <label for="country-select" class="sr-only">국가로 바로 찾기</label>
+      <select id="country-select" onchange="if (this.value) { window.location.href = this.value; }">
+        <option value="">국가 선택...</option>
+        {% for country in countries %}
+        <option value="{{ url_for('exhibition.expo_list_by_country', country=country) }}">{{ country }}</option>
+        {% endfor %}
+      </select>
+    </div>
   </div>
 </div>
 
-<div class="country-select-bar">
-  <label for="country-select">국가로 바로 찾기</label>
-  <select id="country-select" onchange="if (this.value) { window.location.href = this.value; }">
-    <option value="">국가 선택...</option>
-    {% for country in countries %}
-    <option value="{{ url_for('exhibition.expo_list_by_country', country=country) }}">{{ country }}</option>
-    {% endfor %}
-  </select>
-</div>
+<div class="dash-map-card">
+  <div id="world-map" class="world-map"></div>
 
-<div class="continent-grid">
-  {% for continent in continents %}
-  <button type="button" class="continent-card" data-continent="{{ continent }}"
-          data-url="{{ url_for('exhibition.expo_list_partial', continent=continent) }}">
-    <span class="continent-name">{{ continent }}</span>
-    <span class="continent-count">{{ counts.get(continent, 0) }}개 박람회</span>
-  </button>
-  {% endfor %}
+  <div class="world-map-legend">
+    {% for continent in continents %}
+    <button type="button" class="legend-chip" data-continent="{{ continent }}"
+            data-url="{{ url_for('exhibition.expo_list_partial', continent=continent) }}">
+      <span class="legend-dot" data-legend-dot="{{ continent }}"></span>
+      <span>{{ continent }}</span>
+      <span class="legend-count">{{ counts.get(continent, 0) }}</span>
+    </button>
+    {% endfor %}
+  </div>
 </div>
 
 <div id="continent-results" class="continent-results-wrap" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-geo-projection@4/dist/d3-geo-projection.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="{{ url_for('static', filename='js/worldmap.js') }}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var mapEl = document.getElementById("world-map");
+    if (!mapEl || !window.SabuzakWorldMap) return;
+
+    // 범례 칩 색상 점 채우기
+    document.querySelectorAll("[data-legend-dot]").forEach(function (el) {
+      var koLabel = el.getAttribute("data-legend-dot");
+      var enId = Object.keys(window.SabuzakWorldMap.CONTINENT_KO).find(function (k) {
+        return window.SabuzakWorldMap.CONTINENT_KO[k] === koLabel;
+      });
+      if (enId) el.style.background = window.SabuzakWorldMap.CONTINENT_COLOR[enId];
+    });
+
+    window.SabuzakWorldMap.render(mapEl, {
+      dataUrl: "{{ url_for('static', filename='data/countries-110m.json') }}",
+      onSelect: function (continentEn, koLabel) {
+        // 클릭된 대륙과 매칭되는 범례 칩을 클릭 → dashboard.js가 필터링/active 토글 처리
+        var chip = document.querySelector('.legend-chip[data-continent="' + koLabel + '"]');
+        if (chip) chip.click();
+      },
+    });
+
+    // 범례 칩을 직접 클릭했을 때도 지도의 강조 상태를 같이 맞춘다
+    document.querySelectorAll(".legend-chip").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        var koLabel = chip.dataset.continent;
+        var enId = Object.keys(window.SabuzakWorldMap.CONTINENT_KO).find(function (k) {
+          return window.SabuzakWorldMap.CONTINENT_KO[k] === koLabel;
+        });
+        if (enId && mapEl._worldMapSetActive) mapEl._worldMapSetActive(enId);
+      });
+    });
+  });
+</script>
 {% endblock %}

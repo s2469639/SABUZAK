@@ -1429,3 +1429,100 @@ body {
   max-width: 640px;
 }
 .scan-bar input[type="file"] { flex: 1; font-size: 13px; }
+
+/* ---- 대시보드 (사부작 디자인 확정본 포팅) ---- */
+
+.dash-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.dash-header h1 { font-size: 18px; font-weight: 600; margin: 0; color: #1a1a1a; }
+.dash-header .page-desc { margin: 4px 0 0; }
+.dash-header-actions { display: flex; align-items: center; gap: 8px; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.dash-country-select select {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 3px;
+  background: #F06A1A;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.dash-map-card {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #ebe8e2;
+}
+
+.world-map {
+  padding: 4px 8px;
+  background: transparent;
+}
+.world-map svg { width: 100%; height: auto; display: block; }
+
+.world-map-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px 20px;
+  flex-wrap: wrap;
+  background: #fff;
+  border-top: 1px solid #ebe8e2;
+}
+
+.legend-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+  font-family: inherit;
+}
+.legend-chip:hover { opacity: 0.7; }
+.legend-chip.active { font-weight: 700; }
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #ccc;
+}
+
+.legend-count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  background: #eee;
+  color: #888;
+  border-radius: 10px;
+  padding: 0 5px;
+  line-height: 14px;
+}
+.legend-chip.active .legend-count {
+  color: #fff;
+}
+.legend-chip.active[data-continent="아메리카"] .legend-count { background: #5cb88b; }
+.legend-chip.active[data-continent="유럽"] .legend-count { background: #6b8ec4; }
+.legend-chip.active[data-continent="중동·아프리카"] .legend-count { background: #9b6ec2; }
+.legend-chip.active[data-continent="아시아"] .legend-count { background: #c4a05a; }
+.legend-chip.active[data-continent="오세아니아"] .legend-count { background: #c07878; }
