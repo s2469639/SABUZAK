@@ -124,6 +124,47 @@
   summary { cursor: pointer; color: var(--muted); font-size: 13px; }
   details ul { margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: 12.5px; }
   pre { white-space: pre-wrap; word-break: break-word; font-size: 12px; color: var(--muted); max-height: 480px; overflow: auto; }
+
+  /* v2: 선택 입력 */
+  details.optional { margin-top: 14px; padding: 0; background: transparent; border: 0; }
+  details.optional summary { font-size: 13px; color: var(--accent); margin-bottom: 10px; }
+  .hint { color: var(--muted); font-size: 12px; margin: 0 0 10px; }
+
+  /* v2: 근거 뱃지 */
+  .ev { font-size: 10.5px; border-radius: 4px; padding: 0 5px; white-space: nowrap; }
+  .ev.measured { background: rgba(62,207,142,.12); color: var(--green); }
+  .ev.probe { background: rgba(91,141,239,.15); color: #b9cdfa; }
+  .ev.search_verified { background: rgba(62,207,142,.12); color: var(--green); }
+  .ev.user { background: rgba(167,139,250,.15); color: #d4c6ff; }
+  .ev.ai, .ev.estimated { background: var(--amber-bg); color: var(--amber); }
+  .badge.rising { background: rgba(255,255,255,.06); color: var(--text); font-weight: 600; }
+
+  /* v2: 빈 분류 한 줄 */
+  .empty-row { margin-top: 10px; color: var(--muted); font-size: 12.5px; }
+  .empty-row b { color: var(--text); font-weight: 600; }
+
+  /* v2: 경쟁 제품 검색량 막대 */
+  .comp-title { font-size: 12px; color: var(--muted); margin: 4px 0 2px; }
+  .comp-bars { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .comp-bars li { font-size: 12px; }
+  .comp-row { display: flex; justify-content: space-between; gap: 8px; }
+  .comp-row span:last-child { font-variant-numeric: tabular-nums; color: var(--text); white-space: nowrap; }
+  .bar { height: 6px; border-radius: 3px; background: var(--panel-2); margin-top: 3px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+
+  /* v2: USP / 부스 */
+  td.price { white-space: nowrap; }
+  td .sub { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .refs { display: flex; gap: 4px; flex-wrap: wrap; margin-top: auto; padding-top: 8px; border-top: 1px solid var(--line); }
+  .bullets { margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+  .bullets li span { display: block; color: var(--muted); font-size: 12px; }
+  .bullets b { font-weight: 600; }
+  .blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .block { background: var(--panel-2); border-radius: 8px; padding: 8px; font-size: 12px; }
+  .block strong { display: block; font-size: 14px; color: var(--text); }
+  .block span { color: var(--muted); display: block; }
+  .checklist { margin: 0; padding-left: 16px; font-size: 12.5px; color: var(--muted); }
+  .checklist b { color: var(--text); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -140,6 +181,17 @@
       <div><label for="certifications">보유 인증</label><input type="text" id="certifications" name="certifications" value="{{ form.certifications }}" placeholder="예: HACCP, 비건"></div>
       <div><label for="price">가격대</label><input type="text" id="price" name="price" value="{{ form.price }}" placeholder="예: 200g 소매가 6~7달러"></div>
     </div>
+    <details class="optional" {% if form.shelf_life or form.pack_format or form.moq_price or form.channel or form.known_competitors %}open{% endif %}>
+      <summary>바이어 피칭용 추가 정보 (선택)</summary>
+      <p class="hint">유통기한·포장·MOQ·유통채널 중 하나라도 입력하면 바이어 피칭 월을 만듭니다. 피칭 월의 숫자는 여기 입력한 값만 사용합니다.</p>
+      <div class="form-grid">
+        <div><label for="shelf_life">유통기한</label><input type="text" id="shelf_life" name="shelf_life" value="{{ form.shelf_life }}" placeholder="예: 상온 12개월"></div>
+        <div><label for="pack_format">포장 단위·형태</label><input type="text" id="pack_format" name="pack_format" value="{{ form.pack_format }}" placeholder="예: 개별 포장 30g × 10입, 스탠드 파우치"></div>
+        <div><label for="moq_price">MOQ·납품가</label><input type="text" id="moq_price" name="moq_price" value="{{ form.moq_price }}" placeholder="예: MOQ 1,000박스, FOB 3.2달러"></div>
+        <div><label for="channel">타깃 유통채널</label><input type="text" id="channel" name="channel" value="{{ form.channel }}" placeholder="예: 아시안 마트, 아마존"></div>
+        <div><label for="known_competitors">알고 있는 경쟁 제품·가격</label><input type="text" id="known_competitors" name="known_competitors" value="{{ form.known_competitors }}" placeholder="예: Nescafé 3in1 30개입 8달러"></div>
+      </div>
+    </details>
     <div class="form-actions">
       <button type="submit" id="submit-btn">분석 실행</button>
       <label class="check"><input type="checkbox" name="force" {% if force %}checked{% endif %}> 캐시 무시하고 새로 조회</label>
@@ -169,21 +221,20 @@
   <section id="s1">
     <div class="sec-head">
       <h2>1. 연관 검색어 기반 시장 트렌드 4단계 클러스터링</h2>
-      <span class="note">
-        시드: {% for s in meta.seed_keywords %}{{ s.keyword }}{% if not loop.last %}, {% endif %}{% endfor %}
-        · 배지 = 전년 동기 대비 증감률 (최근 13주)
-      </span>
+      <span class="note">배지: 작년 같은 기간 대비 검색량 변화</span>
     </div>
+    {% set perception_has_comp = result.competitor_search | length > 0 %}
     <div class="cards">
       {% for key in cluster_keys %}
       {% set c = result.trend_analysis[key] %}
+      {% if c.keywords or (key == 'category_perception' and perception_has_comp) %}
       <article class="card">
         <div class="card-top">
           <span class="card-label">{{ cluster_meta[key].label }}</span>
           {% if c.tag %}<span class="card-tag">{{ c.tag }}</span>{% endif %}
         </div>
         <h3>{{ cluster_meta[key].title_ko }}</h3>
-        <p class="desc">{{ c.summary }}</p>
+        {% if c.summary %}<p class="desc">{{ c.summary }}</p>{% endif %}
         {% if c.keywords %}
         <ul class="kw-list">
           {% for kw in c.keywords %}
@@ -192,98 +243,171 @@
               <div class="kw-orig">{{ kw.keyword }}</div>
               {% if kw.ko %}<div class="kw-ko">{{ kw.ko }}</div>{% endif %}
               <div class="kw-flags">
+                <span class="ev {{ kw.evidence }}">{{ evidence_labels[kw.evidence] }}</span>
                 {% if kw.stage %}<span class="flag stage">{{ funnel_stages[kw.stage] }}</span>{% endif %}
-                {% if kw.is_breakout %}<span class="flag hot">급등</span>
-                {% elif kw.rising_value is not none and not kw.is_estimated %}<span class="flag">급상승 +{{ kw.rising_value }}%</span>{% endif %}
-                {% if kw.level != 'seed' and kw.level != 'estimated' %}<span class="flag">{{ '글로벌' if kw.level == 'global' else '상위 카테고리' }}</span>{% endif %}
+                {% if kw.is_breakout %}<span class="flag hot">급등</span>{% endif %}
+                {% if kw.kind == 'topic' %}<span class="flag">연관 주제{% if kw.topic_type %} · {{ kw.topic_type }}{% endif %}</span>{% endif %}
+                {% if kw.level == 'global' %}<span class="flag">글로벌</span>{% endif %}
               </div>
             </div>
-            {% if kw.yoy_status == 'estimated' %}
-              <span class="badge na">AI 추정</span>
-            {% elif kw.yoy_pct is none %}
-              <span class="badge na">데이터 부족</span>
-            {% elif kw.yoy_pct > 0 %}
-              <span class="badge up">+{{ kw.yoy_pct }}%</span>
-            {% elif kw.yoy_pct < 0 %}
-              <span class="badge down">{{ kw.yoy_pct }}%</span>
-            {% else %}
-              <span class="badge flat">0%</span>
+            {% if kw.badge and kw.badge.kind == 'yoy' %}
+              <span class="badge {{ 'up' if kw.badge.pct > 0 else ('down' if kw.badge.pct < 0 else 'flat') }}">{{ '+' if kw.badge.pct > 0 }}{{ kw.badge.pct }}%</span>
+            {% elif kw.badge and kw.badge.kind == 'rising' %}
+              <span class="badge rising" title="Google 급상승 검색어 증가율">급상승 +{{ kw.badge.pct }}%</span>
             {% endif %}
           </li>
           {% endfor %}
         </ul>
-        {% else %}
-        <p class="empty">이 분류에 해당하는 검색 신호가 없습니다.</p>
+        {% endif %}
+        {% if key == 'category_perception' and perception_has_comp %}
+        <div class="comp-title">경쟁 제품 검색량 (우리 제품 = 1)</div>
+        <ul class="comp-bars">
+          {% for comp in result.competitor_search %}
+          <li>
+            <div class="comp-row"><span>{{ comp.name }}</span><span>{% if comp.anchor_zero %}우리 제품보다 훨씬 큼{% else %}×{{ comp.vs_anchor }}{% endif %}</span></div>
+            <div class="bar"><i style="width: {{ comp.bar_pct }}%"></i></div>
+          </li>
+          {% endfor %}
+        </ul>
         {% endif %}
         {% if c.insight %}<div class="insight">{{ c.insight }}</div>{% endif %}
       </article>
+      {% endif %}
       {% endfor %}
     </div>
+    {% set empty_labels = [] %}
+    {% for key in cluster_keys %}
+      {% if not result.trend_analysis[key].keywords and not (key == 'category_perception' and perception_has_comp) %}
+        {% set _ = empty_labels.append(cluster_meta[key].short_ko) %}
+      {% endif %}
+    {% endfor %}
+    {% if empty_labels %}
+    <p class="empty-row">검색 신호가 확인되지 않은 분류: <b>{{ empty_labels | join(', ') }}</b></p>
+    {% endif %}
   </section>
 
   <!-- 2. USP 매트릭스 -->
   <section id="s2">
     <div class="sec-head">
       <h2>2. 연관어 결합 기반 경쟁사/대체재 차별화(USP) 매트릭스</h2>
-      <span class="note">차별점은 입력한 제품 스펙만 근거로 작성 · 헤드라인은 {{ meta.buyer_language }}</span>
     </div>
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>경쟁 품목 / 대체재</th><th>현지 소비자의 한계</th><th>우리 제품의 차별점 (USP)</th><th>바이어 피칭 헤드라인</th></tr>
+          <tr><th>경쟁 제품</th><th>현지 가격</th><th>소비자 불만</th><th>우리의 해결 (USP)</th><th>바이어 헤드라인</th></tr>
         </thead>
         <tbody>
           {% for row in result.usp_matrix %}
           <tr>
-            <td class="target"><b>{{ row.target }}</b><span>{{ row.target_ko }}</span></td>
-            <td class="weak">{{ row.weakness_ko }}</td>
+            <td class="target">
+              <b>{{ row.target }}</b><span>{{ row.target_ko }}</span>
+              <div class="evidence"><span class="ev {{ row.target_evidence }}">{{ evidence_labels[row.target_evidence] }}{% if row.target_evidence == 'search_verified' and row.vs_anchor %} ×{{ row.vs_anchor }}{% endif %}</span></div>
+            </td>
+            <td class="price">
+              {{ row.price_local or '—' }}
+              {% if row.price_local %}<div class="evidence"><span class="ev {{ row.price_evidence }}">{{ evidence_labels[row.price_evidence] }}</span></div>{% endif %}
+            </td>
+            <td class="weak">{{ row.consumer_pain_ko }}</td>
             <td class="usp">
-              {{ row.our_usp_ko }}
+              {{ row.our_fix_ko }}
               {% if row.evidence %}<div class="evidence">{% for e in row.evidence %}<span class="flag">근거: {{ e }}</span>{% endfor %}</div>{% endif %}
               {% if row.unsupported_certs %}<div class="cert-warn">⚠ 입력하지 않은 인증 언급: {{ row.unsupported_certs | join(', ') }}. 사용 전 확인하세요.</div>{% endif %}
             </td>
             <td class="pitch"><em>“{{ row.pitch_headline }}”</em><span class="ko">{{ row.pitch_headline_ko }}</span></td>
           </tr>
           {% else %}
-          <tr><td colspan="4" class="empty">USP를 생성하지 못했습니다.</td></tr>
+          <tr><td colspan="5" class="empty">비교할 경쟁 제품을 찾지 못했습니다. ‘알고 있는 경쟁 제품’을 입력하면 정확도가 올라갑니다.</td></tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
+    {% if result.usp_matrix | selectattr('price_evidence', 'equalto', 'ai') | list %}
+    <p class="empty-row">‘AI 참고’ 가격은 AI 학습 시점 기준 추정이므로 박람회 전 현지 매대에서 확인하세요.</p>
+    {% endif %}
   </section>
 
   <!-- 3. 부스 컨셉 -->
+  {% set booth = result.booth_concept %}
   <section id="s3">
     <div class="sec-head">
       <h2>3. 데이터 기반 박람회 부스 컨셉 및 세일즈 피치 솔루션</h2>
-      <span class="note">오프라인 전시 부스 기획 & 인포그래픽 월 제안</span>
     </div>
-    {% set booth_labels = {
-      'headline_slogan': '메인 비주얼 & 슬로건',
-      'sampling_strategy': '비교 체험 (SAMPLING)',
-      'pitching_wall': '바이어 피칭 월 (WALL)',
-      'packaging_display': '패키징 / 진열 가이드'} %}
     <div class="cards booth">
-      {% for key, label in booth_labels.items() %}
-      {% set b = result.booth_concept[key] %}
+      {% set b = booth.headline_slogan %}
       <article class="card">
-        <span class="card-label">{{ label }}</span>
+        <span class="card-label">메인 비주얼 & 슬로건</span>
         <h3>{{ b.title }}</h3>
         {% if b.title_ko %}<div class="title-ko">{{ b.title_ko }}</div>{% endif %}
         {% if b.slogan %}<div class="slogan">“{{ b.slogan }}”<span class="ko">{{ b.slogan_ko }}</span></div>{% endif %}
-        <p class="desc">{{ b.description_ko }}</p>
+        <ul class="bullets">
+          {% if b.sub_copy %}<li><b>보조 문구</b> {{ b.sub_copy }}<span>{{ b.sub_copy_ko }}</span></li>{% endif %}
+          {% if b.key_visual_ko %}<li><b>키 비주얼</b> {{ b.key_visual_ko }}</li>{% endif %}
+        </ul>
+        {% if b.refs %}<div class="refs">{% for r in b.refs %}<span class="flag">{{ r }}</span>{% endfor %}</div>{% endif %}
       </article>
-      {% endfor %}
+
+      {% set b = booth.sampling_strategy %}
+      <article class="card">
+        <span class="card-label">비교 체험 (SAMPLING)</span>
+        <h3>{{ b.title }}</h3>
+        {% if b.title_ko %}<div class="title-ko">{{ b.title_ko }}</div>{% endif %}
+        <ul class="bullets">
+          {% if b.compare_with %}<li><b>비교 대상</b> {{ b.compare_with }}</li>{% endif %}
+          {% if b.serving_ko %}<li><b>제공 형태</b> {{ b.serving_ko }}</li>{% endif %}
+          {% if b.staff_line %}<li><b>안내 멘트</b> “{{ b.staff_line }}”<span>{{ b.staff_line_ko }}</span></li>{% endif %}
+          {% if b.collect_ko %}<li><b>받아낼 것</b> {{ b.collect_ko }}</li>{% endif %}
+        </ul>
+        {% if b.refs %}<div class="refs">{% for r in b.refs %}<span class="flag">{{ r }}</span>{% endfor %}</div>{% endif %}
+      </article>
+
+      <article class="card">
+        <span class="card-label">바이어 피칭 월 (WALL)</span>
+        {% if booth.pitching_wall %}
+        {% set b = booth.pitching_wall %}
+        <h3>{{ b.title }}</h3>
+        {% if b.title_ko %}<div class="title-ko">{{ b.title_ko }}</div>{% endif %}
+        <div class="blocks">
+          {% for blk in b.blocks %}
+          <div class="block"><strong>{{ blk.value }}</strong>{{ blk.headline }}<span>{{ blk.headline_ko }} · 입력: {{ blk.source_label }}</span></div>
+          {% endfor %}
+        </div>
+        {% if b.refs %}<div class="refs">{% for r in b.refs %}<span class="flag">{{ r }}</span>{% endfor %}</div>{% endif %}
+        {% else %}
+        <h3>추가 정보를 입력하면 제공됩니다</h3>
+        <p class="desc">위 ‘바이어 피칭용 추가 정보’(유통기한·포장·MOQ·유통채널)를 입력하면, 입력값만으로 피칭 월을 구성합니다.</p>
+        {% endif %}
+        {% if result.buyer_checkpoints %}
+        <div class="comp-title">이 시장 바이어가 주로 확인하는 것 <span class="ev ai">AI 참고</span></div>
+        <ul class="checklist">
+          {% for cp in result.buyer_checkpoints %}<li><b>{{ cp.item }}</b> — {{ cp.why }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+      </article>
+
+      {% set b = booth.packaging_display %}
+      <article class="card">
+        <span class="card-label">패키징 / 진열 가이드</span>
+        <h3>{{ b.title }}</h3>
+        {% if b.title_ko %}<div class="title-ko">{{ b.title_ko }}</div>{% endif %}
+        <ul class="bullets">
+          {% for line in b.layout_ko %}<li>{{ line }}</li>{% endfor %}
+          {% if b.pop_copy %}<li><b>POP 문구</b> “{{ b.pop_copy }}”<span>{{ b.pop_copy_ko }}</span></li>{% endif %}
+        </ul>
+        {% if b.refs %}<div class="refs">{% for r in b.refs %}<span class="flag">{{ r }}</span>{% endfor %}</div>{% endif %}
+      </article>
     </div>
   </section>
 
   <details>
     <summary>수집 과정 · 제외된 검색어 ({{ result.excluded_keywords | length }}개)</summary>
     <ul>
+      <li>시드 검색어: {% for s in meta.seed_keywords %}{{ s.keyword }}{% if not loop.last %}, {% endif %}{% endfor %}
+        {% if meta.category_keywords %} / 카테고리: {% for s in meta.category_keywords %}{{ s.keyword }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</li>
       {% for a in meta.collection_attempts %}
-      <li>{{ a.level }} @ {{ a.geo }}: {{ a.keywords | join(', ') }} → {{ a.count }}건{% if a.error %} (오류: {{ a.error[:120] }}){% endif %}</li>
+      <li>{{ a.level }} @ {{ a.geo }} ({{ a.timeframe }}): {{ a.keywords | join(', ') }} → {{ a.count }}건{% if a.error %} (오류: {{ a.error[:120] }}){% endif %}</li>
       {% endfor %}
-      <li>분석 대상 검색어 풀: {{ meta.keyword_pool_size }}개 · 증감률 기준: {{ meta.yoy_basis_ko }}</li>
+      <li>분석 대상 검색어 풀: {{ meta.keyword_pool_size }}개 · 탐색 검색어: 후보 {{ meta.probe_candidates }}개 중 {{ meta.probe_verified }}개 검색량 확인</li>
+      <li>증감 배지 기준: 최근 13주 평균 vs 1년 전 같은 13주 평균 (Google 트렌드 주간 지수) · 검색량 비교 기준: {{ meta.anchor_keyword }}</li>
       {% for ex in result.excluded_keywords %}
       <li>제외: {{ ex.keyword }}{% if ex.reason %} — {{ ex.reason }}{% endif %}</li>
       {% endfor %}
@@ -299,7 +423,7 @@
   document.getElementById("analyze-form").addEventListener("submit", function () {
     var btn = document.getElementById("submit-btn");
     btn.disabled = true;
-    btn.textContent = "분석 중… (1~2분 소요)";
+    btn.textContent = "분석 중… (2~3분 소요)";
   });
 </script>
 </body>

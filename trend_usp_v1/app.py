@@ -14,14 +14,22 @@ import os
 from flask import Flask, render_template, request
 
 from env_setup import ensure_required_keys
-from trend_usp import CLUSTER_KEYS, CLUSTER_META, FUNNEL_STAGES_KO, PipelineError, run_trend_usp
+from trend_usp import (
+    CLUSTER_KEYS,
+    CLUSTER_META,
+    EVIDENCE_LABELS_KO,
+    FUNNEL_STAGES_KO,
+    PRODUCT_FIELDS,
+    PipelineError,
+    run_trend_usp,
+)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("sabuzak.trend_usp.app")
 
 app = Flask(__name__)
 
-FORM_FIELDS = ["name", "country", "strengths", "ingredients", "certifications", "price"]
+FORM_FIELDS = PRODUCT_FIELDS + ["country"]
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -52,6 +60,7 @@ def index():
         cluster_keys=CLUSTER_KEYS,
         cluster_meta=CLUSTER_META,
         funnel_stages=FUNNEL_STAGES_KO,
+        evidence_labels=EVIDENCE_LABELS_KO,
     )
 
 
