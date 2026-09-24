@@ -1,0 +1,326 @@
+{% macro refs(ids) %}{% for i in ids %}<a class="ref" href="#{{ i }}">{{ i }}</a>{% endfor %}{% endmacro %}
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>박람회 준비 데스크 리서치</title>
+<style>
+  :root {
+    --paper: #F6F7F4; --surface: #FFFFFF; --ink: #1C2320; --muted: #5E6A64; --line: #D9DED8;
+    --laver: #1E3A2F; --evidence: #2F6B4F; --evidence-bg: #E6F0EA;
+    --ai: #7A5A12; --ai-bg: #F7F0DE; --warn: #9B3B2E; --warn-bg: #F7E4E0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); line-height: 1.6; font-size: 15px;
+         font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
+  h1 { font-size: 26px; margin: 0 0 6px; color: var(--laver); letter-spacing: -0.02em; }
+  h2 { font-size: 19px; margin: 0; color: var(--laver); }
+  h3 { font-size: 14px; margin: 16px 0 6px; color: var(--muted); }
+  .lead { margin: 0 0 24px; color: var(--muted); }
+  a { color: var(--evidence); }
+  a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--evidence); outline-offset: 2px; }
+
+  form { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+  input[type=text] { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; font: inherit; background: var(--paper); }
+  details.opt { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+  summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+  details.opt .row { margin-top: 12px; }
+  .hint { font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+  .actions { display: flex; align-items: center; gap: 16px; margin-top: 18px; }
+  button { background: var(--laver); color: #fff; border: 0; border-radius: 6px; padding: 11px 22px; font: inherit; font-weight: 600; cursor: pointer; }
+  .check { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; margin: 0; }
+  .error, .notice { margin-top: 16px; padding: 12px 16px; border-radius: 8px; background: var(--warn-bg); color: var(--warn); font-size: 14px; }
+
+  .meta { margin: 32px 0 8px; font-size: 13px; color: var(--muted); }
+  .meta strong { display: block; font-size: 20px; color: var(--ink); }
+
+  /* 질문 카드: 결론(AI 요약) -> 사실 -> AI 해석 -> 근거 발췌 */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; margin-top: 18px; }
+  .qhead { display: flex; gap: 12px; align-items: baseline; }
+  .qid { font-weight: 700; color: var(--evidence); }
+  .question { color: var(--muted); font-size: 14px; margin: 2px 0 14px; }
+  .conclusion { font-size: 17px; font-weight: 700; line-height: 1.45; margin: 0 0 10px; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 4px; margin-right: 6px; vertical-align: 2px; }
+  .tag.ai { background: var(--ai-bg); color: var(--ai); }
+  .tag.src { background: var(--evidence-bg); color: var(--evidence); }
+  ul.points { margin: 0; padding-left: 20px; }
+  ul.points li { margin: 4px 0; }
+  .interp { background: var(--ai-bg); border-radius: 6px; padding: 10px 12px; margin-top: 12px; font-size: 14px; }
+  .gap { font-size: 14px; color: var(--warn); margin-top: 10px; }
+  .ref { font-size: 12px; text-decoration: none; background: var(--evidence-bg); color: var(--evidence); padding: 1px 6px; border-radius: 4px; margin-left: 3px; }
+
+  .quote { border-left: 3px solid var(--evidence); padding: 6px 0 6px 12px; margin: 10px 0; scroll-margin-top: 20px; }
+  .quote:target { background: var(--evidence-bg); }
+  .quote .orig { font-style: italic; }
+  .quote .ko { color: var(--muted); font-size: 14px; }
+  .quote .src { font-size: 12px; color: var(--muted); word-break: break-all; }
+  .quote .src b { color: var(--evidence); font-style: normal; margin-right: 6px; }
+
+  .booth { border-left: 4px solid var(--ai); }
+  .message { font-size: 19px; font-weight: 700; color: var(--laver); margin: 10px 0 12px; line-height: 1.4; }
+
+  .stats { font-size: 13px; color: var(--muted); }
+  table.src-list { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  .src-list td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; word-break: break-all; }
+  @media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+
+  .badges { margin: 4px 0 2px; }
+  .tag.scope-product { background: var(--evidence-bg); color: var(--evidence); }
+  .tag.scope-category { background: #EAF0F6; color: #2F5470; }
+  .tag.scope-kfood { background: #F1EAF6; color: #5A3A70; }
+  .tag.scope-general { background: var(--paper); color: var(--muted); border: 1px solid var(--line); }
+  .tag.market-country { background: var(--evidence-bg); color: var(--evidence); }
+  .tag.market-region { background: var(--warn-bg); color: var(--warn); }
+  .tag.public { background: #E8EEF9; color: #2D4A8A; }
+  .tag.stale, .tag.warn { background: var(--warn-bg); color: var(--warn); }
+  .diag { font-size: 12px; color: var(--muted); margin: 10px 0 0; }
+  .notice { margin: 8px 0 12px; }
+  details.dbg { margin-top: 8px; font-size: 13px; color: var(--muted); }
+  details.dbg summary { font-weight: 400; font-size: 13px; }
+  details.dbg li { margin: 2px 0; }
+
+  /* v7: 부스 컨셉 기획안 */
+  .booth .persona { font-size: 12px; color: var(--muted); margin: 4px 0 10px; }
+  .booth .summary { background: var(--ai-bg); border-radius: 8px; padding: 12px 14px; font-weight: 600; margin: 8px 0; }
+  .booth .positioning { font-size: 14px; margin: 10px 0 4px; }
+  .booth-sec { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 14px; }
+  .booth-sec.risk .sec-title { color: var(--warn); }
+  .sec-title { font-size: 16px; color: var(--laver); margin: 0 0 6px; }
+  .sec-title small { font-weight: 400; color: var(--muted); font-size: 12px; }
+  .lead-line { margin: 4px 0; font-size: 14px; }
+  .lead-line .ko { color: var(--muted); }
+  blockquote.slogan { margin: 6px 0; padding: 8px 12px; border-left: 3px solid var(--ai); background: var(--paper); font-weight: 700; }
+  blockquote.slogan.sub { font-weight: 600; font-size: 14px; }
+  blockquote.slogan .ko { display: block; font-weight: 400; color: var(--muted); font-size: 13px; }
+  ol.zones { margin: 6px 0; padding-left: 20px; font-size: 14px; }
+  .tag.company { background: #F1EAF6; color: #5A3A70; margin-left: 3px; }
+  .tag.idea { background: var(--paper); color: var(--muted); border: 1px solid var(--line); margin-left: 3px; }
+
+  /* v6: 주요 사이트 / 일반 웹 */
+  .tag.tier-main { background: #E4EEF7; color: #1F4E79; }
+  .tag.tier-open { background: var(--paper); color: var(--muted); border: 1px solid var(--line); }
+  .search-box { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+                margin: 0 0 12px; font-size: 13px; }
+  .search-box b { color: var(--ink); }
+  .search-box ul { margin: 4px 0 0; padding-left: 18px; }
+  .aspects { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .aspect { font-size: 12px; border-radius: 4px; padding: 1px 7px; border: 1px solid var(--line); background: var(--surface); }
+  .aspect.ok { background: var(--evidence-bg); color: var(--evidence); border-color: transparent; }
+  .aspect.essential { font-weight: 700; }
+  .site-groups { font-size: 13px; color: var(--muted); margin: 6px 0 0; }
+  .site-groups b { color: var(--ink); }
+</style>
+</head>
+<body>
+<main>
+  <h1>박람회 준비 데스크 리서치 <small style="font-size:14px;color:var(--muted)">v7 · 주요 사이트 우선 + 부스 컨셉 기획</small></h1>
+  <p class="lead">제품과 국가를 입력하면 먼저 그 나라의 주요 사이트(언론·업계지·유통몰·공공)에서 찾고, 자료가 부족한 질문만 일반 웹으로 넓혀 찾습니다.
+  4가지 조사 질문에 대해 원문을 발췌하고, 원문에서 확인된 문장만으로 요약합니다.
+  발췌마다 무엇에 관한 문장인지(제품·제품군·한국 식품)와 어느 시장 자료인지(대상 국가·권역 참고)를 표시합니다.</p>
+
+  <form method="post">
+    <div class="row">
+      <div><label for="product_name">제품명</label>
+        <input type="text" id="product_name" name="product_name" value="{{ form.product_name }}" placeholder="예: 김부각" maxlength="100" required></div>
+      <div><label for="country">국가 (영문)</label>
+        <input type="text" id="country" name="country" value="{{ form.country }}" placeholder="예: Germany" maxlength="100" required></div>
+    </div>
+    <details class="opt" {% if form.exhibition_name %}open{% endif %}>
+      <summary>박람회 정보 (선택)</summary>
+      <div class="row">
+        <div><label for="exhibition_name">박람회명</label>
+          <input type="text" id="exhibition_name" name="exhibition_name" value="{{ form.exhibition_name }}" placeholder="예: ANUGA" maxlength="100"></div>
+        <div><label for="exhibition_website">공식 사이트</label>
+          <input type="text" id="exhibition_website" name="exhibition_website" value="{{ form.exhibition_website }}" placeholder="예: anuga.com" maxlength="100"></div>
+      </div>
+    </details>
+    <details class="opt" {% if form.strengths or form.ingredients or form.certifications or form.price_range %}open{% endif %}>
+      <summary>우리 제품 정보 (선택, 부스 메시지에 사용)</summary>
+      <div class="row">
+        <div><label for="strengths">강점</label><input type="text" id="strengths" name="strengths" value="{{ form.strengths }}" placeholder="예: 찹쌀 코팅 수작업"></div>
+        <div><label for="ingredients">원료</label><input type="text" id="ingredients" name="ingredients" value="{{ form.ingredients }}" placeholder="예: 국산 김, 찹쌀"></div>
+        <div><label for="certifications">인증</label><input type="text" id="certifications" name="certifications" value="{{ form.certifications }}" placeholder="예: HACCP"></div>
+        <div><label for="price_range">가격대</label><input type="text" id="price_range" name="price_range" value="{{ form.price_range }}" placeholder="예: 50g 4~5달러"></div>
+      </div>
+    </details>
+    <div class="actions">
+      <button type="submit">조사하기</button>
+      <label class="check"><input type="checkbox" name="force" value="1"> 캐시 무시하고 새로 조사</label>
+    </div>
+  </form>
+
+  {% if error %}<div class="error">⚠️ {{ error }}</div>{% endif %}
+
+  {% if result %}
+    {% set quotes = {} %}{% for q in result.quotes %}{% set _ = quotes.update({q.id: q}) %}{% endfor %}
+    {% set sources = {} %}{% for s in result.sources %}{% set _ = sources.update({s.id: s}) %}{% endfor %}
+    {% set st = result.stats %}
+
+    <div class="meta">
+      <strong>[{{ result.country }}] {{ result.product_name }}{% if result.exhibition_name %} · {{ result.exhibition_name }}{% endif %}</strong>
+      제품 용어: {{ (result.terms.selected or ["확인된 용어 없음"])|join(", ") }} · 권역: {{ result.terms.region_ko or "미상" }} ·
+      {{ "캐시 결과" if result.from_cache else "새로 조사" }} ({{ result.fetched_at[:10] }}, {{ result.version }})
+    </div>
+    <p class="stats">
+      출처 {{ st.sources_found }}건에서 원문 확인된 발췌 {{ st.quotes_used }}건 사용 (대상 국가 {{ st.country_quotes }}, 권역 참고 {{ st.region_quotes }}).<br>
+      제외: 보고서 판매 사이트·SNS {{ st.excluded_source }}건 · 다른 시장 자료 {{ st.market_other }}건 ·
+      원문(본문)에 없는 발췌 {{ st.not_in_source }}건 · 제품·제품군과 무관한 발췌 {{ st.off_scope }}건.
+      {% if st.stale_quotes or st.translation_warnings %}<br>주의: 오래된 자료 발췌 {{ st.stale_quotes }}건 · 번역 숫자 불일치 {{ st.translation_warnings }}건.{% endif %}
+    </p>
+    {% set sp = result.site_profile %}
+    <p class="stats">
+      <b>검색 범위</b> · 주요 사이트에서 발췌 {{ st.main_quotes }}건 (출처 {{ st.main_sources }}곳) ·
+      일반 웹에서 발췌 {{ st.open_quotes }}건 (출처 {{ st.open_sources }}곳)
+      {% if st.fallback_questions %} · 일반 웹으로 넓힌 질문: {{ st.fallback_questions|join(", ") }}{% else %} · 모든 질문을 주요 사이트만으로 답함{% endif %}
+    </p>
+    <details class="opt">
+      <summary>이 국가의 주요 사이트 ({{ {"curated": "사전 등록 목록", "cache": "AI 제안·검증 목록(저장본)", "ai": "AI 제안·검증 목록", "none": "목록 없음"}[sp.source] }}{% if sp.source == "curated" and not sp.reviewed %}, 팀 검수 전{% endif %})</summary>
+      {% for g, ds in sp.groups.items() %}{% if ds %}<p class="site-groups"><b>{{ {"media": "언론·생활 매체", "trade": "식품 업계지", "retail": "유통·온라인몰", "public": "정부·공공"}[g] }}</b> {{ ds|join(", ") }}</p>{% endif %}{% endfor %}
+      {% if sp.dropped %}<p class="site-groups"><b>검증에서 뺀 도메인</b> {% for d in sp.dropped %}{{ d.domain }}({{ d.reason }}){% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+    </details>
+    {% if not result.terms.is_verified %}<div class="notice">{{ result.product_name }}을(를) 가리키는 용어가 검색 결과에서 확인되지 않았습니다. 제품 자체에 대한 자료는 적을 수 있습니다.</div>{% endif %}
+
+    {% for c in result.cards %}
+      <section class="card">
+        <div class="qhead"><span class="qid">{{ c.qid }}</span><h2>{{ c.title }}</h2></div>
+        <p class="question">{{ c.question }} · 근거 발췌 {{ c.quote_ids|length }}건 (대상 국가 {{ c.country_quotes }}), 출처 {{ c.source_count }}곳</p>
+        {% set sr = c.search %}
+        <div class="search-box">
+          {% if sr.used %}
+            <b>주요 사이트 자료가 부족해 일반 웹까지 검색</b> ({{ "코드 기준" if sr.stage == "code" else "AI 체크리스트 판정" }})
+            <ul>{% for r in sr.reasons %}<li>{{ r }}</li>{% endfor %}</ul>
+            {% if sr.followup_queries %}보강 검색: {{ sr.followup_queries|join(" / ") }}{% endif %}
+          {% else %}
+            <b>주요 사이트 자료만으로 충분</b> (코드 최소 기준 + AI 체크리스트 통과)
+          {% endif %}
+          <div class="aspects">
+            {% for a in c.criteria %}
+              <span class="aspect {% if a.label_ko in sr.covered %}ok{% endif %} {% if a.essential %}essential{% endif %}">{% if a.label_ko in sr.covered %}✓{% else %}·{% endif %} {{ a.label_ko }}{% if a.essential %} (필수){% endif %}</span>
+            {% endfor %}
+          </div>
+          <div class="site-groups">최종 근거: 주요 사이트 {{ c.main_quotes }}건 · 일반 웹 {{ c.open_quotes }}건 · 체크리스트 ✓는 1차(주요 사이트) 판정 기준</div>
+        </div>
+        {% if c.notice %}<div class="notice">{{ c.notice }}</div>{% endif %}
+
+        {% if c.conclusion %}
+          <p class="conclusion"><span class="tag ai">AI 요약</span>{{ c.conclusion.text }} {{ refs(c.conclusion.quote_ids) }}</p>
+        {% endif %}
+        {% if c.points %}
+          <ul class="points">{% for p in c.points %}<li>{{ p.text }} {{ refs(p.quote_ids) }}</li>{% endfor %}</ul>
+        {% endif %}
+        {% if c.interpretation %}
+          <div class="interp"><span class="tag ai">AI 해석</span>{{ c.interpretation }}</div>
+        {% endif %}
+        {% if c.gaps %}<p class="gap">확인 필요: {{ c.gaps }}</p>{% endif %}
+
+        {% if c.quote_ids %}
+          <h3><span class="tag src">원문 발췌</span>원문과 글자 그대로 대조를 통과한 문장</h3>
+          {% for qid in c.quote_ids %}
+            {% set q = quotes[qid] %}{% set s = sources[q.source_ids[0]] %}
+            <div class="quote" id="{{ qid }}">
+              <div class="badges">
+                <span class="tag scope-{{ q.scope }}">{{ q.scope_label }}</span>
+                <span class="tag market-{{ q.market }}">{{ q.market_label }}</span>
+                <span class="tag tier-{{ q.tier }}">{{ q.tier_label }}</span>
+                {%- if q.is_public_kr %}<span class="tag public">한국 공공기관</span>{% endif %}
+                {%- if q.is_stale %}<span class="tag stale">오래된 자료 ({{ q.year }})</span>{% endif %}
+                {%- if q.translation_warning %}<span class="tag warn">번역 확인 필요</span>{% endif %}
+              </div>
+              <div class="orig">“{{ q.quote }}”</div>
+              {% if q.translation_ko %}<div class="ko">{{ q.translation_ko }}</div>{% endif %}
+              <div class="src"><b>{{ qid }}</b>{{ s.domain }} · {{ q.year or "연도 미상" }}{% if q.source_ids|length > 1 %} · 같은 문장 출처 {{ q.source_ids|length }}곳{% endif %}
+                · <a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">원문 열기</a></div>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        {% set d = c.diagnostics %}
+        <p class="diag">검색 {{ d.searched or 0 }}건 · 보고서·SNS 제외 {{ d.excluded_source or 0 }}건 · 다른 시장 {{ d.market_other or 0 }}건 ·
+          원문에 없음 {{ d.not_in_source or 0 }}건 · 범위 밖 {{ d.off_scope or 0 }}건</p>
+        {% if c.dropped %}
+          <details class="dbg"><summary>검사에서 지운 요약 문장 {{ c.dropped|length }}건</summary>
+            <ul>{% for x in c.dropped %}<li>[{{ x.reason }}] {{ x.text }}</li>{% endfor %}</ul></details>
+        {% endif %}
+      </section>
+    {% endfor %}
+
+    {% if result.booth %}
+      {% set b = result.booth %}
+      {% macro basis(x) -%}
+        {%- for i in x.quote_ids %}<a class="ref" href="#{{ i }}">{{ i }}</a>{% endfor -%}
+        {%- for c in x.company %}<span class="tag company">기업: {{ c }}</span>{% endfor -%}
+        {%- if x.is_idea %}<span class="tag idea">기획 제안</span>{% endif -%}
+      {%- endmacro %}
+      <section class="card booth">
+        <div class="qhead"><h2>부스 컨셉 기획안</h2>
+          <span class="tag ai">{{ "기획자 초안 → 바이어 검토 → 수정" if b.mode == "B" else "기획자 1회 생성" }}</span></div>
+        <p class="persona">기획: {{ b.planner_persona }}</p>
+        {% if not b.has_product_evidence %}<div class="notice">{{ result.product_name }} 자체에 대한 현지 자료 없이, 제품군·한국 식품 자료를 바탕으로 한 기획입니다.</div>{% endif %}
+        {% if b.summary %}<div class="summary"><span class="tag ai">요약</span>{{ b.summary }}</div>{% endif %}
+        {% if b.positioning.target_buyer or b.positioning.core_message %}
+          <p class="positioning"><b>타깃 바이어</b> {{ b.positioning.target_buyer }}<br><b>핵심 메시지</b> {{ b.positioning.core_message }}</p>
+        {% endif %}
+
+        {% set titles = {"main_visual": ("1. 메인 비주얼", "Main Visual"), "slogan": ("2. 슬로건", "Slogan"),
+                         "signature_pairing": ("3. 시그니처 페어링", "Signature Pairing"), "demonstration": ("4. 시연", "Live Demonstration"),
+                         "packaging": ("5. 패키징", "Packaging Guide"), "merchandising": ("6. 진열 가이드", "Merchandising Guide")} %}
+        {% for key, t in titles.items() %}
+          {% set sec = b.sections[key] %}
+          <div class="booth-sec">
+            <h3 class="sec-title">{{ t[0] }} <small>{{ t[1] }}</small></h3>
+            {% if sec.concept_en %}<p class="lead-line"><b>컨셉</b> “{{ sec.concept_en }}”{% if sec.concept_ko %} <span class="ko">({{ sec.concept_ko }})</span>{% endif %}</p>{% endif %}
+            {% if sec.main_en %}<blockquote class="slogan">“{{ sec.main_en }}”<span class="ko">{{ sec.main_ko }}</span></blockquote>{% endif %}
+            {% if sec.sub_en %}<blockquote class="slogan sub">“{{ sec.sub_en }}”<span class="ko">{{ sec.sub_ko }}</span></blockquote>{% endif %}
+            {% if sec.item %}<p class="lead-line"><b>페어링 아이템</b> {{ sec.item }}</p>{% endif %}
+            {% if sec.intent %}<p class="lead-line"><b>기획 의도</b> {{ sec.intent }}</p>{% endif %}
+            {% if sec.title %}<p class="lead-line"><b>시연 내용</b> {{ sec.title }}</p>{% endif %}
+            {% if sec.direction %}<p class="lead-line"><b>디자인 방향</b> {{ sec.direction }}</p>{% endif %}
+            {% if sec.zones %}
+              <ol class="zones">{% for z in sec.zones %}<li><b>{{ z.name }}</b>{% if z.position %} ({{ z.position }}){% endif %}: {{ z.purpose }} {{ basis(z) }}</li>{% endfor %}</ol>
+            {% endif %}
+            {% if sec.bullets %}<ul class="points">{% for x in sec.bullets %}<li>{{ x.text }} {{ basis(x) }}</li>{% endfor %}</ul>{% endif %}
+            {% if sec.key_message %}<p class="lead-line"><b>핵심 메시지 노출</b> {{ sec.key_message }}</p>{% endif %}
+          </div>
+        {% endfor %}
+
+        {% if b.risks %}
+          <div class="booth-sec risk"><h3 class="sec-title">확인할 점</h3>
+            <ul class="points">{% for x in b.risks %}<li>{{ x.text }} {{ basis(x) }}</li>{% endfor %}</ul></div>
+        {% endif %}
+        {% if b.questions %}
+          <div class="booth-sec"><h3 class="sec-title">기업에 확인하고 싶은 것</h3>
+            <ul class="points">{% for q in b.questions %}<li>{{ q }}</li>{% endfor %}</ul></div>
+        {% endif %}
+        {% if b.review.comments %}
+          <details class="dbg"><summary>바이어 검토 의견 {{ b.review.comments|length }}건{% if b.applied %} · 반영 {{ b.applied|length }}건{% endif %}</summary>
+            <p class="persona">검토: {{ b.reviewer_persona }}</p>
+            {% if b.review.overall %}<p><b>총평</b> {{ b.review.overall }}</p>{% endif %}
+            <ul>{% for c in b.review.comments %}<li>[{{ c.section }}] {{ c.issue }} → {{ c.suggestion }}</li>{% endfor %}</ul>
+            {% if b.applied %}<p><b>최종안에 반영</b></p><ul>{% for x in b.applied %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}
+          </details>
+        {% endif %}
+        {% if not b.has_profile %}<p class="hint">우리 제품 정보(강점·원료·인증·가격대)를 입력하면 차별화 근거가 기획에 반영됩니다.</p>{% endif %}
+        <p class="hint">근거 표시: 발췌 번호(E) = 조사 원문 · 기업 = 입력한 제품 정보 · 기획 제안 = 조사 근거 없이 기획자가 낸 아이디어</p>
+      </section>
+    {% endif %}
+
+    <details class="opt">
+      <summary>검색한 출처 {{ result.sources|length }}건 · 제외된 출처 {{ result.excluded_sources|length }}건</summary>
+      <table class="src-list">
+        {% for s in result.sources %}
+          <tr><td>{{ s.id + 1 }}</td><td>{{ {"country": "대상 국가", "region": "권역", "other": "다른 시장"}.get(s.market, "판정 없음") }}<br>{{ {"main": "주요 사이트", "open": "일반 웹"}.get(s.tier, "") }}</td>
+            <td>{{ s.title }}<br><a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">{{ s.url }}</a></td></tr>
+        {% endfor %}
+        {% for e in result.excluded_sources %}
+          <tr><td>-</td><td>{{ e.reason }}</td><td><a href="{{ e.url }}" target="_blank" rel="noopener noreferrer">{{ e.url }}</a></td></tr>
+        {% endfor %}
+      </table>
+    </details>
+  {% endif %}
+</main>
+</body>
+</html>
