@@ -32,8 +32,11 @@ from constants.country_profiles import (
     RELIABILITY_LABELS_KO,
     RELIABILITY_NOTES_KO,
 )
+from http_compat import SAFE_HEADERS, apply_brotli_workaround
 
 logger = logging.getLogger("sabuzak.trend_usp")
+
+apply_brotli_workaround()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CACHE_DIR = os.path.join(BASE_DIR, ".cache")
@@ -88,7 +91,8 @@ def _get_openai_client():
         api_key = os.getenv("OPENAI_API_KEY") or os.getenv("LLM_API_KEY")
         if not api_key:
             raise PipelineError("OPENAI_API_KEY가 설정되어 있지 않습니다.")
-        _openai_client = OpenAI(api_key=api_key, timeout=60, max_retries=2)
+        # br 압축을 요청하지 않아 예전 brotli가 설치된 PC에서도 동작 (http_compat.py 참고)
+        _openai_client = OpenAI(api_key=api_key, timeout=60, max_retries=2, default_headers=SAFE_HEADERS)
     return _openai_client
 
 
@@ -160,7 +164,8 @@ class TrendsClient:
     def _client(self):
         if self._pytrends is None:
             from pytrends.request import TrendReq
-            self._pytrends = TrendReq(hl=self.hl, tz=0, timeout=(10, 25))
+            self._pytrends = TrendReq(hl=self.hl, tz=0, timeout=(10, 25),
+                                     requests_args={"headers": dict(SAFE_HEADERS)})
         return self._pytrends
 
     def _throttle(self):

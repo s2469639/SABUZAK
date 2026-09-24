@@ -3,3 +3,4 @@ python-dotenv
 openai
 pytrends
 pandas
+brotli>=1.2.0
