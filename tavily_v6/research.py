@@ -50,6 +50,10 @@ from tavily import TavilyClient
 
 from constants.main_sites import COUNTRY_ALIASES, GROUP_LABELS, MAIN_SITES, QUESTION_GROUPS
 from env_setup import ENV_PATH, load_env
+from http_compat import SAFE_HEADERS, apply_brotli_workaround
+
+# 예전 brotli(<1.2.0)가 깔린 PC에서 OpenAI·Tavily 응답 해제가 실패하지 않도록 br 압축 요청을 끈다
+apply_brotli_workaround()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_DB_PATH = os.path.join(BASE_DIR, "research_cache.db")
@@ -219,7 +223,7 @@ def get_clients():
         raise RuntimeError(f"OPENAI_API_KEY가 설정되어 있지 않습니다 ({ENV_PATH} 확인).")
     if not tavily_key:
         raise RuntimeError(f"TAVILY_API_KEY가 설정되어 있지 않습니다 ({ENV_PATH} 확인).")
-    return OpenAI(api_key=openai_key), TavilyClient(api_key=tavily_key)
+    return OpenAI(api_key=openai_key, default_headers=SAFE_HEADERS), TavilyClient(api_key=tavily_key)
 
 
 def _hash(obj):
