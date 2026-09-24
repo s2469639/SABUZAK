@@ -1,0 +1,53 @@
+{# 여러 화면 조각(대시보드, ⑥ 국가 상세)에서 함께 쓰는 매크로 #}
+{# 막대 차트: rows 목록에서 label_attr(국가/연도)과 value_attr(금액)을 읽어 그린다 #}
+{% macro bar_chart(rows, label_attr, value_attr, highlight_first=true) %}
+  {% set vals = rows | map(attribute=value_attr) | select | list %}
+  {% set vmax = (vals | max) if vals else 0 %}
+  <div class="bars">
+    {% for k in [100, 50, 0] %}
+      <div class="bars-gridline" style="bottom: calc({{ k }}% * 0.92);"><span>{{ (vmax * k / 100) | usd_short }}</span></div>
+    {% endfor %}
+    <div class="bars-cols">
+      {% for r in rows %}
+        {% set v = r[value_attr] or 0 %}
+        {% set lbl = r[label_attr] ~ '' %}
+        {% set is_kor = ('Korea' in lbl) or lbl == 'KOR' %}
+        <div class="bar-col" title="{{ lbl }}: ${{ '{:,.0f}'.format(v) }}">
+          <span class="bar-val">{{ v | usd_short }}</span>
+          <div class="bar{% if is_kor %} kor{% elif r.may_be_incomplete %} partial{% elif (not highlight_first) or loop.first %} top{% endif %}"
+               style="height: {{ (v / vmax * 92) if vmax else 0 }}%;"></div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="bars-labels">
+    {% for r in rows %}
+      {% set lbl = r[label_attr] ~ '' %}
+      <span class="{{ 'kor' if ('Korea' in lbl or lbl == 'KOR') else '' }}" title="{{ lbl }}">{{ lbl }}{% if r.may_be_incomplete %}*{% endif %}</span>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{# 금액 표시: None = 데이터 없음(N/A), 0 = 기록 없음($0) 을 구분 #}
+{% macro money(v) %}{% if v is none %}N/A{% elif v == 0 %}$0{% else %}{{ v | usd_short }}{% endif %}{% endmacro %}
+
+{# 가로 막대 차트 (① 세계시장 교역 순위) #}
+{% macro hbar_chart(rows) %}
+  {% set vals = rows | map(attribute='value_usd') | select | list %}
+  {% set vmax = (vals | max) if vals else 0 %}
+  <div class="hbars">
+    {% for r in rows %}
+      {% set lbl = r.country ~ '' %}
+      {% set is_kor = 'Korea' in lbl %}
+      <div class="hbar-row{% if is_kor %} kor{% elif loop.first %} top{% endif %}" title="{{ lbl }}: ${{ '{:,.0f}'.format(r.value_usd) }}">
+        <span class="hbar-rank">{{ loop.index }}</span>
+        <span class="hbar-name">{{ lbl }}</span>
+        <span class="hbar-track"><span class="hbar-fill" style="display:block; width: {{ (r.value_usd / vmax * 100) if vmax else 0 }}%;"></span></span>
+        <span class="hbar-val">{{ r.value_usd | usd_short }}</span>
+      </div>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{# 전년 대비 증감률: +는 초록, -는 빨강, 값 없으면 - #}
+{% macro yoy(v) %}{% if v is none %}<span class="sub-num" style="display:inline">-</span>{% elif v >= 0 %}<span class="yoy up">▲ {{ v }}%</span>{% else %}<span class="yoy down">▼ {{ v | abs }}%</span>{% endif %}{% endmacro %}

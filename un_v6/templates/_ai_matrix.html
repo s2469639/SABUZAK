@@ -1,0 +1,31 @@
+{# ⑤ 비교 분석 AI 박스. matrix_ai_pending이면 자리만 만들고, 화면이 /ai/matrix로 따로 불러온다 #}
+{% if result.ai_summary %}
+  {% set ai = result.ai_summary %}
+  <div class="ai-box">
+    {% if ai.key_findings %}
+      <div><span class="ai-label">핵심 사실</span>
+        <ul class="ai-list">{% for f in ai.key_findings %}<li>{{ f }}</li>{% endfor %}</ul>
+      </div>
+    {% endif %}
+    <div><span class="ai-label">우선 공략 후보</span>
+      <ul class="ai-list">
+        {% for m in ai.top_priority_markets or [] %}<li><strong>{{ m.label }}</strong> — {{ m.reason }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% if ai.watch_markets %}
+      <div><span class="ai-label">지켜볼 시장</span>
+        <ul class="ai-list">{% for m in ai.watch_markets %}<li><strong>{{ m.label }}</strong> — {{ m.reason }}</li>{% endfor %}</ul>
+      </div>
+    {% endif %}
+    <div><span class="ai-label">종합 전략</span>{{ ai.overall_strategy }}</div>
+  </div>
+{% elif matrix_ai_pending %}
+  <div class="ai-box ai-loading" data-ai-src="/ai/matrix">
+    <span class="spinner" aria-hidden="true"></span> AI가 비교 결과를 분석하고 있습니다… (보통 10~30초, 위 수치는 먼저 보셔도 됩니다)
+  </div>
+{% else %}
+  <div class="ai-box empty">AI 해석 생성에 실패했습니다 (위 원본 수치는 그대로 유효합니다).
+    {% if result.ai_error %}<div class="ai-error">원인: {{ result.ai_error }}</div>{% endif %}
+    <button type="button" class="btn-link ai-retry" data-ai-retry="/ai/matrix">다시 시도</button>
+  </div>
+{% endif %}
