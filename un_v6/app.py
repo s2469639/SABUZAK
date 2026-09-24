@@ -402,14 +402,14 @@ def _parse_form(form):
     }
 
 
-def _load_comparison(f, include_ai=False):
+def _load_comparison(f, include_ai=False, retry_customs=False):
     """③④⑤ 비교 분석. 결과 전체가 캐시되므로 두 번째부터는 즉시 돌아온다."""
     if f["top_n"] == 0 and not f["candidate_list"]:
         return None, "비교 국가 수가 0이면 관심 국가를 1개 이상 입력해주세요."
     try:
         result = get_multi_country_comparison(
             f["hscode"], f["candidate_list"] or None, top_n=f["top_n"],
-            force=f["force"], include_ai=include_ai,
+            force=f["force"], include_ai=include_ai, retry_customs=retry_customs,
         )
         return result, None
     except ValueError as e:
@@ -498,8 +498,14 @@ def index():
         ctx.update(hscode=f["hscode"], candidates_raw=f["candidates_raw"], top_n=f["top_n"],
                    country=f["country"], force=f["force"])
 
+        if not re.fullmatch(r"\d{6}", f["hscode"]):
+            ctx["matrix_error"] = "HS코드는 6자리 숫자로 입력해주세요 (예: 1905.90)."
+            return render_template("un_comtrade_dashboard.html", **ctx)
+
         # 1) 비교 분석 (AI 해석은 나중에 따로)
-        result, err = _load_comparison(f, include_ai=False)
+        # 관세청 조회가 일시적으로 실패했던 나라는 "통합분석"을 누를 때만 다시 시도한다
+        # (탭 전환 때마다 재시도하면 관세청 장애 중에 탭이 느려지므로)
+        result, err = _load_comparison(f, include_ai=False, retry_customs=True)
         ctx["result"], ctx["matrix_error"] = result, err
         if result:
             ctx["matrix"] = _build_matrix(result["candidates"], result["thresholds"])

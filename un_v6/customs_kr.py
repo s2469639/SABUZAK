@@ -18,8 +18,8 @@ API: https://apis.data.go.kr/1220000/nitemtrade/getNitemtradeList
 import json
 import os
 import sqlite3
-import time
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 
 import requests
@@ -103,10 +103,22 @@ def _fetch_period(key, hscode, iso2, start_yymm, end_yymm):
     )
     resp.raise_for_status()
     root = ET.fromstring(resp.content)
+    # 공공데이터포털 게이트웨이 오류(인증키 미등록, 호출 한도 초과 등)는 형식이 달라서
+    # resultCode 없이 returnReasonCode/returnAuthMsg로 온다. 이걸 놓치면 "수출 $0"으로
+    # 잘못 보이므로 반드시 오류로 처리한다.
+    gw_code = (root.findtext(".//returnReasonCode") or "").strip()
+    if gw_code and gw_code != "00":
+        msg = (root.findtext(".//returnAuthMsg") or root.findtext(".//errMsg") or "").strip()
+        raise RuntimeError(f"공공데이터포털 오류 {gw_code}: {msg}")
     code = (root.findtext(".//resultCode") or "").strip()
+    msg = (root.findtext(".//resultMsg") or "").strip()
+    if code in ("03",) or "NODATA" in msg.upper():
+        # 해당 기간 수출입 실적이 없음 = 0 (오류가 아님)
+        return {"export_usd": 0.0, "import_usd": 0.0, "months": []}
     if code and code != "00":
-        msg = (root.findtext(".//resultMsg") or "").strip()
         raise RuntimeError(f"관세청 API 오류 {code}: {msg}")
+    if not code and root.find(".//item") is None:
+        raise RuntimeError("관세청 API 응답 형식을 알 수 없습니다: " + resp.text[:120])
 
     total_row = None
     exp_sum = imp_sum = 0.0
@@ -126,19 +138,23 @@ def _fetch_period(key, hscode, iso2, start_yymm, end_yymm):
     return {"export_usd": export_usd, "import_usd": import_usd, "months": sorted(months)}
 
 
-def _cached_period(conn, key, hscode, iso2, start_yymm, end_yymm, ttl_days, force):
-    period_key = f"{start_yymm}-{end_yymm}"
-    if not force:
-        row = conn.execute(
-            "SELECT result_json, fetched_at FROM customs_kr_cache "
-            "WHERE hscode=? AND iso2=? AND period_key=?",
-            (hscode, iso2, period_key),
-        ).fetchone()
-        if row:
-            fetched = datetime.fromisoformat(row[1])
-            if datetime.now(timezone.utc) - fetched <= timedelta(days=ttl_days):
-                return json.loads(row[0])
-    data = _fetch_period(key, hscode, iso2, start_yymm, end_yymm)
+def _read_cache(conn, hscode, iso2, period_key, ttl_days):
+    row = conn.execute(
+        "SELECT result_json, fetched_at FROM customs_kr_cache "
+        "WHERE hscode=? AND iso2=? AND period_key=?",
+        (hscode, iso2, period_key),
+    ).fetchone()
+    if not row:
+        return None
+    fetched = datetime.fromisoformat(row[1])
+    if fetched.tzinfo is None:
+        fetched = fetched.replace(tzinfo=timezone.utc)
+    if datetime.now(timezone.utc) - fetched > timedelta(days=ttl_days):
+        return None
+    return json.loads(row[0])
+
+
+def _write_cache(conn, hscode, iso2, period_key, data):
     conn.execute(
         """
         INSERT INTO customs_kr_cache (hscode, iso2, period_key, result_json, fetched_at)
@@ -150,8 +166,27 @@ def _cached_period(conn, key, hscode, iso2, start_yymm, end_yymm, ttl_days, forc
          datetime.now(timezone.utc).isoformat()),
     )
     conn.commit()
-    time.sleep(0.15)  # 초당 호출 제한(에러코드 23) 예방
-    return data
+
+
+def _fetch_many(conn, key, hscode, iso2, periods, force):
+    """periods: [(start_yymm, end_yymm, ttl_days)] -> {(start, end): data}.
+    캐시에 없는 기간만 API로 받는다. 연도마다 1번씩 호출해야 해서(조회기간 1년 이내 제한)
+    순서대로 부르면 느리므로, 최대 3개를 동시에 받는다 (초당 호출 제한을 넘지 않는 수준)."""
+    out, missing = {}, []
+    for start, end, ttl in periods:
+        cached = None if force else _read_cache(conn, hscode, iso2, f"{start}-{end}", ttl)
+        if cached is not None:
+            out[(start, end)] = cached
+        else:
+            missing.append((start, end))
+    if missing:
+        with ThreadPoolExecutor(max_workers=3) as pool:
+            futures = {pool.submit(_fetch_period, key, hscode, iso2, st, en): (st, en) for st, en in missing}
+            for fut, (st, en) in futures.items():
+                data = fut.result()  # 하나라도 실패하면 예외 -> 호출한 쪽에서 "조회 실패"로 처리
+                out[(st, en)] = data
+                _write_cache(conn, hscode, iso2, f"{st}-{en}", data)
+    return out
 
 
 def get_korea_exports(hscode, iso3, years, *, include_ytd=False, force=False, db_path=None):
@@ -174,27 +209,25 @@ def get_korea_exports(hscode, iso3, years, *, include_ytd=False, force=False, db
     _ensure_schema(conn)
     now = datetime.now(KST)
     try:
-        by_year = []
-        for y in sorted(set(years)):
-            if y >= now.year:
-                continue  # 올해는 ytd로 따로 처리
-            # 지난해는 정정 신고가 반영될 수 있어 7일, 그 이전 연도는 90일 캐시
-            ttl = 7 if y == now.year - 1 else 90
-            data = _cached_period(conn, key, hscode, iso2, f"{y}01", f"{y}12", ttl, force)
-            by_year.append({"year": y, "export_usd": data["export_usd"]})
+        full_years = [y for y in sorted(set(years)) if y < now.year]  # 올해는 ytd로 따로 처리
+        # 지난해는 정정 신고가 반영될 수 있어 7일, 그 이전 연도는 90일 캐시
+        periods = [(f"{y}01", f"{y}12", 7 if y == now.year - 1 else 90) for y in full_years]
+
+        # 관세청은 매월 15일경 전월 자료를 반영 -> 15일 이전이면 전전월까지만 확정
+        last_month = (now.month - 1 if now.day >= 15 else now.month - 2) if include_ytd else 0
+        if last_month >= 1:
+            periods.append((f"{now.year}01", f"{now.year}{last_month:02d}", 3))
+            # 전년 같은 기간(1월~같은 달)과 비교해야 "올해 흐름"을 판단할 수 있다
+            periods.append((f"{now.year - 1}01", f"{now.year - 1}{last_month:02d}", 7))
+
+        got = _fetch_many(conn, key, hscode, iso2, periods, force)
+        by_year = [{"year": y, "export_usd": got[(f"{y}01", f"{y}12")]["export_usd"]} for y in full_years]
 
         ytd = None
-        if include_ytd and now.month > 1:
-            # 관세청은 매월 15일경 전월 자료를 반영 -> 15일 이전이면 전전월까지만 확정
-            last_month = now.month - 1 if now.day >= 15 else now.month - 2
-            if last_month >= 1:
-                data = _cached_period(
-                    conn, key, hscode, iso2, f"{now.year}01", f"{now.year}{last_month:02d}", 3, force,
-                )
-                # 전년 같은 기간(1월~같은 달)과 비교해야 "올해 흐름"을 판단할 수 있다
-                prev = _cached_period(
-                    conn, key, hscode, iso2, f"{now.year - 1}01", f"{now.year - 1}{last_month:02d}", 7, force,
-                )
+        if last_month >= 1:
+            if True:
+                data = got[(f"{now.year}01", f"{now.year}{last_month:02d}")]
+                prev = got[(f"{now.year - 1}01", f"{now.year - 1}{last_month:02d}")]
                 prev_usd = prev["export_usd"]
                 ytd = {
                     "year": now.year, "months": last_month, "export_usd": data["export_usd"],

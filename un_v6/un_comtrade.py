@@ -504,7 +504,7 @@ def get_competitiveness(
 
     try:
         korea_codes = set(candidate_reporter_codes("KOR", proxy_url=proxy_url))
-    except ValueError:
+    except Exception:
         korea_codes = set()
     suppliers = _supplier_table(
         df, value_col, country_code_col, label_col, iso_col, total, korea_codes, TOP_SUPPLIERS_N,
@@ -1001,6 +1001,14 @@ def get_market_research(
             # 다음에 같은 나라를 열 때 UN Comtrade를 다시 부르지 않는다.
             _save_cache(conn, hscode, cache_key, result)
 
+        else:
+            # 관세청 값은 자체 캐시(과거 연도 90일, 지난해 7일, 올해 누계 3일)를 따로 갖고 있어서
+            # 매번 다시 읽어도 빠르다. 이렇게 해야 (1) 일시적인 관세청 오류가 30일 동안
+            # 굳어지지 않고 (2) 올해 누계가 최신으로 유지된다.
+            fresh = get_korea_exports(hscode, customs_iso3, years, include_ytd=True)
+            if fresh.get("available") or not (result.get("korea_exports_customs") or {}).get("available"):
+                result["korea_exports_customs"] = fresh
+
         result["derived"] = derive_detail_metrics(result)
 
         # AI 해석: 아직 없으면 만든다 (include_ai=False면 화면이 나중에 따로 요청)
@@ -1303,6 +1311,7 @@ def get_multi_country_comparison(
     force: bool = False,
     proxy_url: str | None = None,
     include_ai: bool = True,
+    retry_customs: bool = True,
 ) -> dict:
     """공개 인터페이스: 후보국 여러 개를 "성장률 x 한국 점유율" 매트릭스
     위에서 한 번에 비교한다 (KOTRA TriBig류 전문 무역조사기관 방식).
@@ -1362,6 +1371,9 @@ def get_multi_country_comparison(
             )
             _save_result_cache(conn, hscode, result_key, result)
 
+        elif retry_customs and _retry_failed_customs(hscode, result):
+            _save_result_cache(conn, hscode, result_key, result)
+
         if include_ai and not result.get("ai_summary"):
             openai_client, _ = get_config()
             ai_summary, ai_error = interpret_matrix_with_llm(
@@ -1376,6 +1388,21 @@ def get_multi_country_comparison(
         return result
     finally:
         conn.close()
+
+
+def _retry_failed_customs(hscode, result):
+    """저장된 비교 결과 중 관세청 조회가 "일시적으로" 실패했던 나라만 다시 조회한다.
+    (키가 없거나 국가코드 매핑이 없는 경우는 다시 해도 같으므로 건너뜀) 바뀐 게 있으면 True."""
+    changed = False
+    for c in result.get("candidates", []):
+        note = c.get("customs_note") or ""
+        if c.get("korea_export_customs_usd") is None and "조회 실패" in note and c.get("data_year"):
+            fresh = get_korea_exports(hscode, c.get("iso3"), [c["data_year"]])
+            if fresh.get("available") and fresh.get("by_year"):
+                c["korea_export_customs_usd"] = fresh["by_year"][0]["export_usd"]
+                c["customs_note"] = None
+                changed = True
+    return changed
 
 
 def _compute_comparison(conn, hscode, candidate_countries, top_n, years, years_key, ranking_year,
@@ -1421,7 +1448,7 @@ def _compute_comparison(conn, hscode, candidate_countries, top_n, years, years_k
                 continue
             try:
                 codes = set(candidate_reporter_codes(iso3, proxy_url=proxy_url))
-            except ValueError:
+            except Exception:  # 국가코드 표를 못 받아도 이름(ISO3)으로만 중복 확인하고 계속 진행
                 codes = set()
             existing = next(
                 (t for t in targets
