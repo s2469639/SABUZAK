@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 from flask import Flask, redirect, url_for
 from sqlalchemy import inspect, text
 
@@ -12,6 +14,48 @@ def format_kdate(value):
     if len(s) != 8 or not s.isdigit():
         return s
     return f"{s[:4]}.{s[4:6]}.{s[6:8]}"
+
+
+def usd_short(value):
+    """차트 눈금/막대 위에 쓸 짧은 금액 표기 (예: 7,829,826,046 -> $7.8B).
+    un_v6/app.py의 usd_short 필터 그대로."""
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return "N/A"
+    a = abs(v)
+    for div, suffix in ((1e12, "T"), (1e9, "B"), (1e6, "M"), (1e3, "K")):
+        if a >= div:
+            return f"${v / div:,.1f}{suffix}"
+    return f"${v:,.0f}"
+
+
+def pct(value):
+    """점유율 표시. 1% 미만은 소수점을 더 보여주고, 아주 작으면 '<0.01%'로 표시해
+    "0.0%(없음)"와 "조금 있음"이 구분되게 한다. un_v6/app.py의 pct 필터 그대로."""
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return "N/A"
+    if v == 0:
+        return "0%"
+    a = abs(v)
+    if a < 0.01:
+        return "<0.01%"
+    if a < 1:
+        return f"{v:.2f}%"
+    return f"{v:.1f}%"
+
+
+def kst(value):
+    """ISO 시각(UTC) -> '2026-09-23 20:36 (한국시간)'. un_v6/app.py의 kst 필터 그대로."""
+    try:
+        dt = datetime.fromisoformat(str(value))
+    except (TypeError, ValueError):
+        return value
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone(timedelta(hours=9))).strftime("%Y-%m-%d %H:%M (한국시간)")
 
 
 def _sync_missing_columns(db):
@@ -45,6 +89,9 @@ def create_app(config_object="config.Config"):
     app.config.from_object(config_object)
     app.config.setdefault("SECRET_KEY", "dev-secret-key-change-me")
     app.jinja_env.filters["kdate"] = format_kdate
+    app.jinja_env.filters["usd_short"] = usd_short
+    app.jinja_env.filters["pct"] = pct
+    app.jinja_env.filters["kst"] = kst
 
     @app.route("/")
     def root():

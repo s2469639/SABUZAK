@@ -890,6 +890,77 @@ body {
   margin-left: 8px;
 }
 
+.badge-scale {
+  background: #e0e7ff;
+  color: #3730a3;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+}
+
+.badge-audience {
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+}
+
+/* 필터바 체크박스 그룹(규모/참관대상) + 규모 기준 설명 아이콘 */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+  border-left: 1px solid #e5e7eb;
+}
+
+.checkbox-group-label {
+  font-size: 13px;
+  color: #6b7280;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.info-icon {
+  position: relative;
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #c9cfd8;
+  border-radius: 3px;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b7280;
+  cursor: help;
+  font-style: italic;
+  font-family: Georgia, serif;
+}
+
+.info-icon-pop {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 22px;
+  width: 280px;
+  background: #3d4553;
+  color: #fff;
+  font: 400 12px/1.6 "Noto Sans KR", -apple-system, sans-serif;
+  font-style: normal;
+  padding: 10px 12px;
+  border-radius: 4px;
+  z-index: 30;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.info-icon:hover .info-icon-pop,
+.info-icon:focus .info-icon-pop {
+  display: block;
+}
+
 .empty-state {
   color: #9ca3af;
   padding: 40px 0;
@@ -1978,6 +2049,16 @@ body {
 .un-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 8px; }
 .un-table th, .un-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; }
 .un-table th { color: #888; font-weight: 600; }
+.un-table tr.un-korea-row td { color: #1f9e6e; font-weight: 700; background: #e9faf3; }
+
+.un-chart-unit { font-size: 12px; color: #888; margin-bottom: 4px; }
+.un-bars { display: flex; align-items: flex-end; gap: 6px; height: 150px; border-bottom: 1px solid #ddd; padding: 0 2px; }
+.un-bar-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+.un-bar-val { font-size: 10px; color: #666; margin-bottom: 3px; white-space: nowrap; }
+.un-bar { width: 70%; max-width: 34px; border-radius: 3px 3px 0 0; background: linear-gradient(180deg, #1a73e8, #8ab4f8); min-height: 2px; }
+.un-bar-partial { background: repeating-linear-gradient(45deg, #8ab4f8, #8ab4f8 4px, #cfe0fb 4px, #cfe0fb 8px); }
+.un-bars-labels { display: flex; gap: 6px; padding: 6px 2px 0; }
+.un-bars-labels span { flex: 1; min-width: 0; text-align: center; font-size: 11px; color: #666; }
 
 .un-cagr { font-size: 14px; font-weight: 700; }
 .un-cagr.up { color: #188038; }

@@ -132,7 +132,7 @@
           <strong>{{ row.product.hs_code }}</strong>
         </div>
 
-        {% if row.has_data %}
+        {% if row.has_data or row.mfn_rate %}
         <table class="tariff-regime-table">
           <thead>
             <tr>
@@ -141,6 +141,14 @@
             </tr>
           </thead>
           <tbody>
+            {% if row.mfn_rate %}
+            <tr class="mfn-row">
+              <td>MFN(기본세율)</td>
+              <td class="tariff-rate-cell {% if row.mfn_rate.tariff_ave == 0 %}zero{% endif %}">
+                {{ row.mfn_rate.display }}
+              </td>
+            </tr>
+            {% endif %}
             {% for regime in row.regimes %}
             <tr class="{% if regime.is_best %}best-row{% endif %}">
               <td>
@@ -155,18 +163,18 @@
           </tbody>
         </table>
         {% else %}
-        <p class="placeholder-note">이 국가·HS코드 조합의 협정관세 데이터가 없습니다 (해당 협정 미체결이거나 자료 미수록).</p>
+        <p class="placeholder-note">이 국가·HS코드 조합의 관세 데이터가 없습니다 (해당 협정 미체결이거나 자료 미수록).</p>
         {% endif %}
 
         {% if row.has_range and row.subitems %}
         <details class="tariff-subitem-detail" open>
-          <summary>⚠️ 등록하신 HS코드({{ row.product.hs_code }})가 세부 10자리 코드까지는 아니라서, 범위로 표시된 협정의 세부 품목별 실제 세율을 확인하세요</summary>
+          <summary>⚠️ 등록하신 HS코드({{ row.product.hs_code }})가 세부 10자리 코드까지는 아니라서, 범위로 표시된 세율의 세부 품목별 실제 세율을 확인하세요</summary>
           <table class="tariff-regime-table">
             <thead>
               <tr>
                 <th>세부 HS코드</th>
                 <th>품명</th>
-                {% for r in row.regimes %}<th>{{ r.regime }}</th>{% endfor %}
+                {% if row.subitems %}{% for rate in row.subitems[0].rates %}<th>{{ rate.regime }}</th>{% endfor %}{% endif %}
               </tr>
             </thead>
             <tbody>
@@ -183,23 +191,29 @@
         </details>
         {% endif %}
 
-        <p class="placeholder-note">⚠️ 위 관세율은 농림축산식품부 "농축산물 FTA 협정세율 현황"(공공데이터포털) 자료를 기준으로 하며, 세부 품목별로 예외가 있을 수 있습니다. 실제 통관·수출 전 반드시 관세청 또는 관세사를 통해 최종 세율을 확인하세요.
-        {% if not hscode_ctx.has_country_data %}({{ expo.country_ko or expo.country }}은(는) 이 자료에 협정 정보가 없는 국가입니다 - 한국과 체결된 관세 협정이 없거나 자료에 미수록된 경우입니다.){% endif %}</p>
-
-        {% if wto_tariff_info %}
-        <p class="placeholder-note">
-          📊 참고(WTO 통계):
-          {% if wto_tariff_info.agricultural and wto_tariff_info.agricultural.is_eu_aggregate %}
-            {{ expo.country_ko or expo.country }}은(는) EU 회원국이라 개별 국가 통계가 없어 EU 전체 기준 —
-          {% else %}
-            {{ expo.country_ko or expo.country }}의
-          {% endif %}
-          MFN 평균 관세율 —
-          {% if wto_tariff_info.agricultural %}농산물 {{ wto_tariff_info.agricultural.value }}% ({{ wto_tariff_info.agricultural.year }}년){% endif %}
-          {% if wto_tariff_info.all_products %}{% if wto_tariff_info.agricultural %} · {% endif %}전체 품목 {{ wto_tariff_info.all_products.value }}% ({{ wto_tariff_info.all_products.year }}년){% endif %}
-          — 특정 품목이 아닌 국가(또는 EU) 전체 평균이니 위 표의 제품별 세율과 혼동하지 마세요.
-        </p>
-        {% endif %}
+        <span class="info-icon" tabindex="0">i
+          <span class="info-icon-pop">
+            ⚠️ 위 관세율은 두 자료를 함께 씁니다 — FTA/RCEP 협정세율은 농림축산식품부
+            "농축산물 FTA 협정세율 현황"(공공데이터포털), MFN(기본세율)은
+            {{ expo.country_ko or expo.country }} 관세청이 공개한 관세율표 원본을
+            기준으로 합니다. 세부 품목별로 예외가 있을 수 있으니, 실제 통관·수출 전
+            반드시 관세청 또는 관세사를 통해 최종 세율을 확인하세요.
+            {% if not hscode_ctx.has_country_data and not row.mfn_rate %}({{ expo.country_ko or expo.country }}은(는) 이 자료들에 관세 정보가 없는 국가입니다 - 한국과 체결된 관세 협정이 없거나 자료에 미수록된 경우입니다.){% endif %}
+            {% if wto_tariff_info and not row.mfn_rate %}
+            <br><br>
+            📊 참고(WTO 통계):
+            {% if wto_tariff_info.agricultural and wto_tariff_info.agricultural.is_eu_aggregate %}
+              {{ expo.country_ko or expo.country }}은(는) EU 회원국이라 개별 국가 통계가 없어 EU 전체 기준 —
+            {% else %}
+              {{ expo.country_ko or expo.country }}의
+            {% endif %}
+            MFN 평균 관세율 —
+            {% if wto_tariff_info.agricultural %}농산물 {{ wto_tariff_info.agricultural.value }}% ({{ wto_tariff_info.agricultural.year }}년){% endif %}
+            {% if wto_tariff_info.all_products %}{% if wto_tariff_info.agricultural %} · {% endif %}전체 품목 {{ wto_tariff_info.all_products.value }}% ({{ wto_tariff_info.all_products.year }}년){% endif %}
+            — 특정 품목이 아닌 국가(또는 EU) 전체 평균이니 위 표의 제품별 세율과 혼동하지 마세요.
+            {% endif %}
+          </span>
+        </span> <span class="placeholder-note" style="display:inline;">관세율 출처·주의사항</span>
 
         {% if row.certs %}
         <div class="cert-badges">
@@ -220,6 +234,15 @@
             {% endif %}
             {% if row.regulation_strictness %}
               <span class="strictness-badge strictness-{{ row.regulation_strictness }}">규제 강도: {{ row.regulation_strictness }}</span>
+              <span class="info-icon" tabindex="0">i
+                <span class="info-icon-pop">
+                  아래 목록(최대 6건) 중 "필수"(등록·인증·금지 등 반드시 지켜야 하는 항목)와
+                  "주의"(라벨링·검역 등 확인이 필요한 항목) 개수로 판정합니다.<br><br>
+                  <strong>주의요함</strong>: 필수 2건 이상<br>
+                  <strong>보통</strong>: 필수 1건 또는 주의 2건 이상<br>
+                  <strong>낮음</strong>: 그 외
+                </span>
+              </span>
             {% endif %}
           </h4>
           <form method="post" class="btn-loading-form" action="{{ url_for('exhibition.sync_ntm', expo_id=expo.id, product_id=row.product.id) }}">
@@ -231,7 +254,13 @@
         {% if row.regulation_no_match %}
         <p class="placeholder-note">해당 부분에 해당되는 파일이 없습니다. ({{ row.product.name }} · {{ expo.country_ko or expo.country }} 관련 UNCTAD TRAINS 규정을 조회했지만 관련 항목을 찾지 못했습니다.)</p>
         {% else %}
-        <p class="placeholder-note">⚠️ 이 목록은 {{ row.product.name }} 품목만 콕 집은 게 아니라, {{ expo.country_ko or expo.country }}의 식품·농산물 수입 관련 규정 중 관련도가 높은 순으로 보여주는 참고자료입니다 (UNCTAD TRAINS 원본 데이터에 세부 HS코드가 태깅 안 된 경우가 많아 완전히 이 품목 전용으로만 걸러내기 어렵습니다).</p>
+        <p class="placeholder-note">
+          <span class="info-icon" tabindex="0">i
+            <span class="info-icon-pop">
+              ⚠️ 이 목록은 {{ row.product.name }} 품목만 콕 집은 게 아니라, {{ expo.country_ko or expo.country }}의 식품·농산물 수입 관련 규정 중 관련도가 높은 순으로 보여주는 참고자료입니다 (UNCTAD TRAINS 원본 데이터에 세부 HS코드가 태깅 안 된 경우가 많아 완전히 이 품목 전용으로만 걸러내기 어렵습니다).
+            </span>
+          </span> 이 목록에 대한 안내
+        </p>
         <div class="regulation-list">
           {% for note in row.regulation_notes %}
           <div class="regulation-card level-{{ note.level }}">

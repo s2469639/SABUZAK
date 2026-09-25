@@ -85,6 +85,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (dateFromInput && dateFromInput.value) params.set("date_from", dateFromInput.value);
     if (dateToInput && dateToInput.value) params.set("date_to", dateToInput.value);
 
+    form.querySelectorAll('input[name="scale"]:checked').forEach(function (cb) {
+      params.append("scale", cb.value);
+    });
+    form.querySelectorAll('input[name="audience_type"]:checked').forEach(function (cb) {
+      params.append("audience_type", cb.value);
+    });
+
     var currentTag = "";
     var activeTagBtn = box.querySelector(".keyword-filter-tag.active");
     if (activeTagBtn) currentTag = activeTagBtn.dataset.keywordTag;

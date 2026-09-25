@@ -34,6 +34,7 @@
       {% endif %}
     </div>
     <div class="action-buttons">
+      <a class="btn-chip" href="{{ url_for('exhibition.market_matrix', hscode=product.hs_code) }}">유망시장 조사</a>
       <button type="button" class="btn-chip" data-modal-open="edit-product-modal" data-edit-product
               data-edit-url="{{ url_for('mypage.edit_product', product_id=product.id) }}"
               data-edit-name="{{ product.name }}"
