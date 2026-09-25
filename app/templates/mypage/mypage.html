@@ -21,7 +21,9 @@
     </form>
     <div class="product-info">
       <strong>{{ product.name }}</strong>
+      {% if product.brand %}<span class="hs-tag">{{ product.brand }}</span>{% endif %}
       <span class="hs-tag">{{ product.hs_code }}</span>
+      {% if product.product_form %}<span class="hs-tag">{{ product.product_form }}</span>{% endif %}
       {% if product.ingredients %}
         <p class="ingredients">{{ product.ingredients }}</p>
       {% endif %}
@@ -39,6 +41,8 @@
               data-edit-url="{{ url_for('mypage.edit_product', product_id=product.id) }}"
               data-edit-name="{{ product.name }}"
               data-edit-hscode="{{ product.hs_code }}"
+              data-edit-brand="{{ product.brand or '' }}"
+              data-edit-product-form="{{ product.product_form or '' }}"
               data-edit-ingredients="{{ product.ingredients or '' }}"
               data-edit-target-price="{{ product.target_price or '' }}"
               data-edit-certifications="{{ product.certifications or '' }}"
@@ -75,15 +79,28 @@
       </div>
     </div>
 
+    <div class="form-row">
+      <div class="form-field">
+        <label for="brand">브랜드명</label>
+        <input type="text" id="brand" name="brand" placeholder="예: 사부작푸드"
+               value="{{ form_brand or '' }}">
+      </div>
+      <div class="form-field">
+        <label for="product_form">제품 형태</label>
+        <input type="text" id="product_form" name="product_form" placeholder="예: 냉동, 분말, 병조림"
+               value="{{ form_product_form or '' }}">
+      </div>
+    </div>
+
     <div class="form-field">
-      <label for="ingredients">성분표</label>
+      <label for="ingredients">원재료</label>
       <textarea id="ingredients" name="ingredients" rows="3" placeholder="예: 밀가루, 꿀, 참기름, 계피...">{{ form_ingredients or '' }}</textarea>
     </div>
 
-    <p class="page-desc">아래 3개 항목은 박람회 상세 페이지의 "트렌드 조사" 탭에서 시장·트렌드 분석 시 자동으로 사용됩니다.</p>
+    <p class="page-desc">아래 항목은 박람회 상세 페이지의 "트렌드 조사" 탭에서 시장·트렌드 분석 시 자동으로 사용됩니다.</p>
     <div class="form-row">
       <div class="form-field">
-        <label for="target_price">목표 소매 가격대/단위중량</label>
+        <label for="target_price">가격 (목표 소매 가격대/단위중량)</label>
         <input type="text" id="target_price" name="target_price" placeholder="예: 4.99 GBP / 350g"
                value="{{ form_target_price or '' }}">
       </div>
@@ -94,13 +111,29 @@
       </div>
     </div>
     <div class="form-field">
-      <label for="strengths">식감/가공 메커니즘</label>
+      <label for="strengths">제품 강점</label>
       <textarea id="strengths" name="strengths" rows="2" placeholder="예: 얇고 쫄깃한 만두피, 버섯 채즙으로 육즙 모사">{{ form_strengths or '' }}</textarea>
     </div>
 
     <div class="form-actions">
       <a href="{{ url_for('mypage.index') }}" class="btn-secondary">취소</a>
       <button type="submit" class="btn-primary">저장</button>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <h2>엑셀로 여러 제품 한번에 등록</h2>
+  <p class="page-desc">
+    엑셀 첫 행에 제품명, HS코드, 브랜드명, 제품 형태, 원재료, 보유 인증, 가격, 제품 강점 컬럼명을 넣고
+    행마다 제품 하나씩 채워서 올리면 한번에 등록됩니다. (제품명, HS코드는 필수)
+  </p>
+  <form method="post" action="{{ url_for('mypage.bulk_upload_products') }}" enctype="multipart/form-data" class="form-row">
+    <div class="form-field">
+      <input type="file" name="bulk_file" accept=".xlsx,.xlsm" required>
+    </div>
+    <div class="form-actions" style="margin:0;">
+      <button type="submit" class="btn-primary">엑셀 업로드</button>
     </div>
   </form>
 </div>
@@ -126,14 +159,25 @@
         </div>
       </div>
 
+      <div class="form-row">
+        <div class="form-field">
+          <label for="edit-brand">브랜드명</label>
+          <input type="text" id="edit-brand" name="brand" placeholder="예: 사부작푸드">
+        </div>
+        <div class="form-field">
+          <label for="edit-product_form">제품 형태</label>
+          <input type="text" id="edit-product_form" name="product_form" placeholder="예: 냉동, 분말, 병조림">
+        </div>
+      </div>
+
       <div class="form-field">
-        <label for="edit-ingredients">성분표</label>
+        <label for="edit-ingredients">원재료</label>
         <textarea id="edit-ingredients" name="ingredients" rows="3" placeholder="예: 밀가루, 꿀, 참기름, 계피..."></textarea>
       </div>
 
       <div class="form-row">
         <div class="form-field">
-          <label for="edit-target_price">목표 소매 가격대/단위중량</label>
+          <label for="edit-target_price">가격 (목표 소매 가격대/단위중량)</label>
           <input type="text" id="edit-target_price" name="target_price" placeholder="예: 4.99 GBP / 350g">
         </div>
         <div class="form-field">
@@ -142,7 +186,7 @@
         </div>
       </div>
       <div class="form-field">
-        <label for="edit-strengths">식감/가공 메커니즘</label>
+        <label for="edit-strengths">제품 강점</label>
         <textarea id="edit-strengths" name="strengths" rows="2" placeholder="예: 얇고 쫄깃한 만두피, 버섯 채즙으로 육즙 모사"></textarea>
       </div>
 

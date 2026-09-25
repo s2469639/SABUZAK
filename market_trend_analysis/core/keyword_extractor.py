@@ -10,6 +10,8 @@ def extract_keywords(specs: dict) -> dict:
 
 [제품 명세]
 - 제품명: {specs['product_name']}
+- 브랜드명: {specs.get('brand', '')}
+- 제품 형태: {specs.get('product_form', '')}
 - 타깃 국가: {specs['country']}
 - 원재료: {specs['ingredients']}
 - 목표 가격/중량: {specs['target_price']}

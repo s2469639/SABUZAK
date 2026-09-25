@@ -454,6 +454,8 @@ def _default_trend_specs(expo, product):
     return {
         "product_name": product.name,
         "country": expo.country_ko or expo.country or "",
+        "brand": product.brand or "",
+        "product_form": product.product_form or "",
         "ingredients": product.ingredients or "",
         "target_price": product.target_price or "",
         "certifications": product.certifications or "",
