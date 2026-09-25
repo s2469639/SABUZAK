@@ -8,7 +8,7 @@ from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.models import Exhibition, NtmMeasure, Product
-from app.routes.dashboard import CONTINENT_DB_VALUES, is_pipeline_running
+from app.routes.dashboard import CONTINENT_DB_VALUES, is_pipeline_running, pop_pipeline_banner
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
 from app.services.exchange import get_exchange_info
@@ -399,7 +399,10 @@ def expo_list(continent):
     ctx = _build_list_context(
         base_query, continent, "exhibition.expo_list", {"continent": continent}, continent
     )
-    return render_template("dashboard/expo_list.html", pipeline_running=is_pipeline_running(), **ctx)
+    return render_template(
+        "dashboard/expo_list.html", pipeline_running=is_pipeline_running(),
+        pipeline_banner=pop_pipeline_banner(), **ctx
+    )
 
 
 @bp.route("/country/<country>")
@@ -414,7 +417,10 @@ def expo_list_by_country(country):
     ctx = _build_list_context(
         base_query, country, "exhibition.expo_list_by_country", {"country": country}, ""
     )
-    return render_template("dashboard/expo_list.html", pipeline_running=is_pipeline_running(), **ctx)
+    return render_template(
+        "dashboard/expo_list.html", pipeline_running=is_pipeline_running(),
+        pipeline_banner=pop_pipeline_banner(), **ctx
+    )
 
 
 @bp.route("/partial/all")

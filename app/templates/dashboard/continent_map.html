@@ -2,6 +2,9 @@
 {% block title %}대시보드 | FairMate{% endblock %}
 
 {% block content %}
+{% if pipeline_banner %}
+<ul class="flash-list"><li class="flash flash-success">{{ pipeline_banner }}</li></ul>
+{% endif %}
 <div class="dash-header">
   <div class="dash-title-row">
     <h1>대륙별 박람회 현황</h1>

@@ -26,6 +26,8 @@
 """
 
 import argparse
+import json
+import re
 import subprocess
 import sys
 from datetime import datetime
@@ -34,6 +36,24 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 DB_PATH = BASE_DIR / "instance" / "sabuzak.db"  # 실제로 앱이 읽는 DB (scripts/crawl/sync_to_db.py의 기본 경로와 다르니 항상 명시)
 LOG_DIR = BASE_DIR / "instance" / "logs"
+RESULT_PATH = LOG_DIR / "last_result.json"
+
+# sync_to_db.py가 마지막에 찍는 "신규 추가: N건" 같은 줄에서 숫자만 뽑는다
+# (웹 화면에 "업데이트 완료! (신규 추가: N건 / ...)" 배너로 보여주기 위함).
+_CRAWL_SUMMARY_RE = {
+    "new": re.compile(r"신규 추가:\s*(\d+)건"),
+    "updated": re.compile(r"내용 업데이트:\s*(\d+)건"),
+    "unchanged": re.compile(r"변경 없음:\s*(\d+)건"),
+}
+
+
+def _parse_crawl_summary(stdout):
+    counts = {}
+    for key, pattern in _CRAWL_SUMMARY_RE.items():
+        m = pattern.search(stdout or "")
+        if m:
+            counts[key] = int(m.group(1))
+    return counts
 
 STEPS = [
     ("크롤링 (신규/변경 박람회 + 이미지)", [sys.executable, str(BASE_DIR / "scripts/crawl/sync_to_db.py"), "--db", str(DB_PATH)]),
@@ -55,6 +75,7 @@ def run_pipeline(skip_crawl=False):
 
     steps = STEPS[1:] if skip_crawl else STEPS
     failed_steps = []
+    crawl_summary = None
 
     with open(log_path, "w", encoding="utf-8") as f:
         _log(f, f"=== 주간 박람회 갱신 파이프라인 시작: {datetime.now().isoformat()} ===")
@@ -70,6 +91,8 @@ def run_pipeline(skip_crawl=False):
                 if result.stdout:
                     f.write(result.stdout)
                     print(result.stdout, end="")
+                    if i == 1 and not skip_crawl:
+                        crawl_summary = _parse_crawl_summary(result.stdout)
                 if result.returncode != 0:
                     _log(f, f"  -> 실패 (종료코드 {result.returncode})")
                     if result.stderr:
@@ -87,6 +110,16 @@ def run_pipeline(skip_crawl=False):
             _log(f, f"실패한 단계 {len(failed_steps)}개: {', '.join(failed_steps)}")
         else:
             _log(f, "전체 단계 정상 완료")
+
+    RESULT_PATH.write_text(
+        json.dumps({
+            "finished_at": datetime.now().isoformat(),
+            "ok": not failed_steps,
+            "failed_steps": failed_steps,
+            "crawl_summary": crawl_summary,  # {"new":.., "updated":.., "unchanged":..} 또는 None(크롤링 생략/실패)
+        }, ensure_ascii=False),
+        encoding="utf-8",
+    )
 
     return log_path, failed_steps
 
