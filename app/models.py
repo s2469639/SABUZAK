@@ -189,6 +189,7 @@ class ConceptDraft(db.Model):
     events = db.Column(db.Text)  # JSON: [{id, tag, title, schedule, description}, ...]
     target_buyers = db.Column(db.Text)  # JSON: ["...", ...]
     image_prompt = db.Column(db.Text)  # 3D 렌더링용 완성형 영문 프롬프트
+    image_path = db.Column(db.Text)  # 생성된 이미지의 static 상대경로 (예: generated/concept/12.png)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -269,6 +270,33 @@ class FollowupEmail(db.Model):
     # "새 메일 작성"으로 새 초안을 만들어도 언제 마지막으로 발송했는지 기록은 그대로 남겨두기 위한 필드.
     # sent_at/status는 지금 작성 중인 초안 상태를 나타내고, last_sent_at은 발송 이력을 나타낸다.
     last_sent_at = db.Column(db.DateTime)
+
+
+class FollowupAttachment(db.Model):
+    """팔로업 메일에 첨부한 파일. 실제 파일은 instance/attachments/<followup_id>/ 아래에
+    (웹으로 직접 접근 불가한 위치) 저장하고, 여기엔 원본 파일명과 저장된 이름만 기록한다."""
+
+    __bind_key__ = "app_data"  # instance/app_data.db (유저 데이터 전용)
+    __tablename__ = "followup_attachments"
+
+    id = db.Column(db.Integer, primary_key=True)
+    followup_id = db.Column(db.Integer, db.ForeignKey("followup_emails.id"), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)  # 원본 파일명 (한글 가능, 메일에 이 이름으로 첨부)
+    stored_name = db.Column(db.String(100), nullable=False)  # 디스크에 저장된 이름 (uuid)
+    content_type = db.Column(db.String(150))
+    size = db.Column(db.Integer, nullable=False, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    followup = db.relationship(
+        "FollowupEmail",
+        backref=db.backref("attachments", cascade="all, delete-orphan", order_by="FollowupAttachment.id"),
+    )
+
+    @property
+    def size_label(self):
+        if self.size >= 1024 * 1024:
+            return f"{self.size / (1024 * 1024):.1f}MB"
+        return f"{max(1, round(self.size / 1024))}KB"
 
 
 # ProposalDraft 등 나머지 모델은
