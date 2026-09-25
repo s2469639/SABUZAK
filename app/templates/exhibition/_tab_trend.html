@@ -5,11 +5,7 @@
    (v15 내부 구조를 다시 짜지 않아도 로딩 화면도 이 박스 안에서 그대로 돎). #}
 <div class="tariff-card-list">
   {% for row in trend_rows %}
-  <div class="tariff-card tariff-card-stacked">
-    <div class="tariff-card-title">
-      <span class="hs-tag">{{ row.product.name }}</span>
-      <strong>{{ expo.country_ko or expo.country }}</strong>
-    </div>
+  <div class="tariff-card tariff-card-stacked tariff-card-frame">
     {% if not (row.prefill.price and row.prefill.certifications and row.prefill.strengths) %}
     <p class="placeholder-note">
       ⚠️ 목표 가격대·보유 인증·제품 강점 정보가 일부 비어있으면 분석 품질이 떨어질 수 있어요.
