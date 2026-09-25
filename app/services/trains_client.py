@@ -390,12 +390,33 @@ def is_product_relevant(reg: dict, product_codes: list) -> bool:
     return _has_strong_food_signal(reg)
 
 
+# TRAINS의 NTM 카테고리(MAST 분류) 중 식품 수출에 가장 직접적으로 영향을
+# 주는 3개. A=위생·식물위생(SPS), B=기술장벽(TBT), P=수출조치. ntmTypes
+# 필드가 채워진 나라(아르헨티나 등 - 브라우저에서 직접 확인함, 다만 중국/
+# 호주처럼 대부분 안 채워진 나라도 많음)는 이 값으로 가산점을 줘서 순위를
+# 올린다. 강제 필터로는 안 쓴다 - ntmTypes가 안 채워진 나라(더 흔함)는
+# 이 필터를 걸면 결과가 통째로 0건이 될 위험이 있고, "Imported Food
+# Charges"처럼 A/B/P가 아니어도 유용한 규정(수입식품 공통 부과금)까지
+# 같이 잘려나가기 때문.
+HIGH_VALUE_NTM_TYPES = {"A", "B", "P"}
+
+
+def _ntm_type_code(reg: dict) -> str:
+    """ntmTypes 필드는 "A - Sanitary and phytosanitary measures" 같은
+    형식으로 오므로, 맨 앞 분류 코드 한 글자만 뽑아낸다."""
+    ntm_types = (reg.get("ntmTypes") or "").strip()
+    return ntm_types[0].upper() if ntm_types else ""
+
+
 def _relevance_score(reg: dict) -> int:
     text = " ".join([
         reg.get("officialTitle") or "",
         reg.get("description") or "",
     ]).lower()
-    return sum(1 for kw in _FOOD_RELEVANCE_KEYWORDS if kw in text)
+    score = sum(1 for kw in _FOOD_RELEVANCE_KEYWORDS if kw in text)
+    if _ntm_type_code(reg) in HIGH_VALUE_NTM_TYPES:
+        score += 3  # 카테고리 태깅이 확실한 규정을 우선순위로 올림
+    return score
 
 
 def _llm_filter_relevant(product_name: str, candidates: list) -> list:
