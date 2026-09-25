@@ -34,6 +34,7 @@ DEFAULT_MODEL = "gpt-4o-mini"
 CACHE_TTL_DAYS = 30
 DEFAULT_COMPETITORS = ["KOR", "CHN", "JPN", "USA"]
 HSCODE_RE = re.compile(r"^\d{6}$")  # Comtrade는 국제 공통 6자리 HS코드를 씀
+TOP_SUPPLIERS_N = 10  # 타깃국 수입시장의 "실제 상위 공급국" 몇 개국까지 보여줄지
 
 # 한국의 주요 교역 상대국 위주로 채운 참고 매핑 (Korean/English -> ISO3).
 # 여기 없는 국가는 3자리 ISO3 코드(예: VNM, PER)를 직접 입력하면 된다.
@@ -140,6 +141,55 @@ def _find_column_optional(df, candidates):
         return None
 
 
+def _clean_text(value):
+    """DataFrame 셀 값을 문자열로. 비어 있거나 NaN이면 None."""
+    if value is None or value != value:  # value != value 는 NaN 판정
+        return None
+    text = str(value).strip()
+    return text or None
+
+
+def _round_share(share):
+    """점유율 반올림. 소수점 넷째 자리까지 보관 (화면에서는 크기에 맞게 줄여서 표시)."""
+    return round(share, 4) if share is not None else None
+
+
+def _supplier_table(df, value_col, code_col, label_col, iso_col, total, korea_codes, top_n):
+    """타깃국 수입시장의 "실제" 공급국 순위표를 만든다 (트라이빅 "수입지역 순위").
+    모든 공급국을 금액순으로 정렬하고, 한국의 실제 순위도 함께 계산한다."""
+    cols = [code_col, value_col] + [c for c in (label_col, iso_col) if c]
+    rows = df[cols].dropna(subset=[code_col, value_col]).copy()
+    rows[code_col] = rows[code_col].astype(str)
+    rows = rows[(rows[code_col] != "0") & (rows[value_col] > 0)]
+    rows = rows.drop_duplicates(subset=[code_col], keep="first")
+    rows = rows.sort_values(value_col, ascending=False)
+
+    ranked = []
+    for rank, (_, row) in enumerate(rows.iterrows(), 1):
+        value = float(row[value_col])
+        code = row[code_col]
+        label = _clean_text(row[label_col]) if label_col else None
+        iso3 = _clean_text(row[iso_col]) if iso_col else None
+        label = label or code
+        ranked.append({
+            "rank": rank,
+            "label": label,
+            "iso3": iso3,
+            "code": code,
+            "import_value_usd": value,
+            "share_pct": _round_share(value / total * 100) if total else None,
+            "is_korea": code in korea_codes or iso3 == "KOR",
+        })
+
+    korea = next((r for r in ranked if r["is_korea"]), None)
+    return {
+        "top_suppliers": ranked[:top_n],
+        "korea_supplier": korea,
+        "korea_rank": korea["rank"] if korea else None,
+        "supplier_ranked_count": len(ranked),
+    }
+
+
 def get_global_import_ranking(subscription_key, hscode, year, top_n=10, proxy_url=None):
     """[1단계] 이 HS코드를 전 세계에서 가장 많이 수입하는 나라 순위."""
     df = comtradeapicall.getFinalData(
@@ -224,6 +274,8 @@ def get_competitiveness(
         return {
             "total_import_usd": None, "breakdown": [], "year": year, "item_desc": None,
             "supplier_country_count": None, "is_mirror_estimate": False,
+            "top_suppliers": [], "korea_supplier": None, "korea_rank": None,
+            "supplier_ranked_count": 0,
         }
 
     value_col = _find_column(df, ["primaryValue"], "수입액")
@@ -232,11 +284,15 @@ def get_competitiveness(
 
     if not is_mirror:
         country_code_col = _find_column(df, ["partnerCode"], "파트너국 코드")
+        label_col = _find_column_optional(df, ["partnerDesc"])
+        iso_col = _find_column_optional(df, ["partnerISO"])
         world_rows = df[df[country_code_col].astype(str) == "0"]
         total = float(world_rows[value_col].iloc[0]) if not world_rows.empty else None
         other_rows = df[df[country_code_col].astype(str) != "0"][value_col].dropna()
     else:
         country_code_col = _find_column(df, ["reporterCode"], "보고국 코드")
+        label_col = _find_column_optional(df, ["reporterDesc"])
+        iso_col = _find_column_optional(df, ["reporterISO"])
         clean_values = df[value_col].dropna()
         total = float(clean_values.sum()) if not clean_values.empty else None
         other_rows = clean_values
@@ -255,13 +311,22 @@ def get_competitiveness(
         breakdown.append({
             "country_iso3": iso3,
             "import_value_usd": value,
-            "share_pct": round(share, 1) if share is not None else None,
+            "share_pct": _round_share(share),
         })
-
     breakdown.sort(key=lambda x: x["import_value_usd"], reverse=True)
+
+    try:
+        korea_codes = set(candidate_reporter_codes("KOR", proxy_url=proxy_url))
+    except ValueError:
+        korea_codes = set()
+    suppliers = _supplier_table(
+        df, value_col, country_code_col, label_col, iso_col, total, korea_codes, TOP_SUPPLIERS_N,
+    )
+
     return {
         "total_import_usd": total, "breakdown": breakdown, "year": year, "item_desc": item_desc,
         "supplier_country_count": supplier_country_count, "is_mirror_estimate": is_mirror,
+        **suppliers,
     }
 
 

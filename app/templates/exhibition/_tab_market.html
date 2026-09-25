@@ -75,17 +75,50 @@
     {% if result.competitiveness.is_mirror_estimate %}
     <p class="placeholder-note">🪞 상대국 보고 기반 추정치 - {{ result.target_country }}이(가) 직접 보고한 공식 수치가 없어서, 전세계 각국이 "{{ result.target_country }}에 수출했다"고 보고한 값을 합산한 추정치입니다.</p>
     {% endif %}
-    <p class="page-desc">{{ result.competitiveness.year }}년 전체 수입액: <strong>${{ "{:,.0f}".format(result.competitiveness.total_import_usd) }}</strong></p>
+    <p class="page-desc">
+      {{ result.competitiveness.year }}년 전체 수입액: <strong>${{ "{:,.0f}".format(result.competitiveness.total_import_usd) }}</strong>
+      {% if result.competitiveness.supplier_country_count %} · 공급국 {{ result.competitiveness.supplier_country_count }}개국{% endif %}
+    </p>
+    {% if result.competitiveness.top_suppliers %}
+    <p class="page-desc">{{ result.target_country }}의 수입지역 순위 ({{ result.competitiveness.year }}년)</p>
     <table class="un-table">
-      <tr><th>국가</th><th>수입액(USD)</th><th>점유율</th></tr>
-      {% for b in result.competitiveness.breakdown %}
+      <tr><th>순위</th><th>수입지역</th><th>수입금액(USD)</th><th>비중</th></tr>
+      {% if result.competitiveness.korea_supplier %}
+      <tr class="un-korea-row">
+        <td>{{ result.competitiveness.korea_supplier.rank }}</td>
+        <td>한국 ({{ result.competitiveness.korea_supplier.label }})</td>
+        <td>${{ "{:,.0f}".format(result.competitiveness.korea_supplier.import_value_usd) }}</td>
+        <td>{% if result.competitiveness.korea_supplier.share_pct is not none %}{{ result.competitiveness.korea_supplier.share_pct | round(1) }}%{% else %}N/A{% endif %}</td>
+      </tr>
+      {% else %}
+      <tr class="un-korea-row"><td>-</td><td>한국</td><td colspan="2">이 시장으로의 한국산 수입 기록 없음</td></tr>
+      {% endif %}
+      {% for sup in result.competitiveness.top_suppliers if not sup.is_korea %}
       <tr>
-        <td>{{ b.country_iso3 }}</td>
-        <td>${{ "{:,.0f}".format(b.import_value_usd) }}</td>
-        <td>{% if b.share_pct is not none %}{{ b.share_pct }}%{% else %}N/A{% endif %}</td>
+        <td>{{ sup.rank }}</td>
+        <td>{{ sup.label }}</td>
+        <td>${{ "{:,.0f}".format(sup.import_value_usd) }}</td>
+        <td>{% if sup.share_pct is not none %}{{ sup.share_pct | round(1) }}%{% else %}N/A{% endif %}</td>
       </tr>
       {% endfor %}
     </table>
+    {% if result.competitiveness.supplier_ranked_count and result.competitiveness.supplier_ranked_count > result.competitiveness.top_suppliers | length %}
+    <p class="placeholder-note">상위 {{ result.competitiveness.top_suppliers | length }}개국만 표시 (전체 {{ result.competitiveness.supplier_ranked_count }}개국)</p>
+    {% endif %}
+    {% else %}
+    {# 예전 캐시 결과: 미리 정해둔 비교국(KOR/CHN/JPN/USA)만 있음 - 순위가 아님 #}
+    <p class="placeholder-note">이 결과는 예전 방식으로 저장된 캐시라 실제 수입지역 순위가 아니라 고정 비교국만 보여줍니다. "캐시 무시하고 새로 조사"로 다시 조회하면 실제 상위 공급국 순위가 나옵니다.</p>
+    <table class="un-table">
+      <tr><th>비교국</th><th>수입액(USD)</th><th>점유율</th></tr>
+      {% for b in result.competitiveness.breakdown %}
+      <tr class="{{ 'un-korea-row' if b.country_iso3 == 'KOR' else '' }}">
+        <td>{{ b.country_iso3 }}</td>
+        <td>${{ "{:,.0f}".format(b.import_value_usd) }}</td>
+        <td>{% if b.share_pct is not none %}{{ b.share_pct | round(1) }}%{% else %}N/A{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
   {% else %}
   <p class="placeholder-note">데이터 없음</p>
   {% endif %}

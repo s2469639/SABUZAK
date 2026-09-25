@@ -1978,6 +1978,7 @@ body {
 .un-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 8px; }
 .un-table th, .un-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; }
 .un-table th { color: #888; font-weight: 600; }
+.un-table tr.un-korea-row td { color: #1f9e6e; font-weight: 700; background: #e9faf3; }
 
 .un-cagr { font-size: 14px; font-weight: 700; }
 .un-cagr.up { color: #188038; }

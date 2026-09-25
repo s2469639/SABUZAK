@@ -453,11 +453,15 @@ def market_matrix():
     threshold_x_pct = threshold_y_pct = 50
     force = False
 
-    if request.method == "POST":
-        hscode = re.sub(r"\D", "", request.form.get("hscode", ""))
-        candidates_raw = request.form.get("candidates", "").strip()
-        top_n = int(request.form.get("top_n") or 10)
-        force = bool(request.form.get("force"))
+    # GET + hscode(예: 마이페이지 제품 "상세보기" 버튼)로 들어와도 바로
+    # 분석 결과가 보이도록, POST 폼 제출과 동일하게 처리한다.
+    should_run = request.method == "POST" or bool(request.args.get("hscode"))
+    if should_run:
+        values = request.form if request.method == "POST" else request.args
+        hscode = re.sub(r"\D", "", values.get("hscode", ""))
+        candidates_raw = values.get("candidates", "").strip()
+        top_n = int(values.get("top_n") or 10)
+        force = bool(values.get("force"))
         candidate_list = [c.strip() for c in candidates_raw.split(",") if c.strip()] or None
         try:
             result = un_comtrade.get_multi_country_comparison(hscode, candidate_list, top_n=top_n, force=force)
