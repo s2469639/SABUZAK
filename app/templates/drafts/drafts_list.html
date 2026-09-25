@@ -21,7 +21,7 @@
     <div class="draft-row-actions">
       {% set trend = trend_by_expo.get(draft.id) %}
       {% if trend %}
-      <a href="/trend/{{ trend.job_id }}" class="hs-tag" title="트렌드 조사 결과 보기">📊 {{ trend.summary }}</a>
+      <a href="/trend/{{ trend.job_id }}" class="btn-chip">트렌드 분석</a>
       {% endif %}
       <a href="{{ url_for('concept.detail', draft_id=draft.id) }}" class="btn-secondary">이어서 작성</a>
       <form method="post" action="{{ url_for('drafts.delete', draft_id=draft.id) }}">
