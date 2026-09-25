@@ -183,6 +183,29 @@ EU_MEMBER_ISO3 = {
 }
 EU_TRAINS_CODE = "EUN"
 
+# TRAINS의 "Data Availability" 표(사용자가 직접 UNCTAD 사이트에서 다운받아
+# 확인해준 CSV)에 실제로 등록된 리포터(=규정을 낸 적 있는 국가/경제권)
+# 135개 ISO3 목록. 이 표에 개별 EU 회원국은 하나도 없고 "European Union"
+# (코드 918, ISO "EUN")만 있어서, 위 EU 폴백이 맞다는 것도 이걸로 검증됨.
+# 이 목록에 없는 나라는 TRAINS에 애초에 데이터가 없다는 뜻이라, 네트워크
+# 요청 자체를 보내지 않고 바로 "규정 없음"으로 처리한다 (헛수고 방지).
+TRAINS_REPORTER_ISO3 = {
+    "AFG", "ALB", "DZA", "ATG", "ARG", "ARM", "AUS", "AZE", "BHS", "BHR",
+    "BGD", "BRB", "BLR", "BEN", "BOL", "BIH", "BWA", "BRA", "BRN", "BFA",
+    "BDI", "CPV", "KHM", "CMR", "CAN", "TCD", "CHL", "CHN", "HKG", "COL",
+    "COM", "COG", "COK", "CRI", "CUB", "CIV", "COD", "DMA", "ECU", "EGY",
+    "SLV", "ETH", "FJI", "GAB", "GMB", "GEO", "GHA", "GRD", "GTM", "GIN",
+    "GUY", "HND", "ISL", "IND", "IDN", "ISR", "JAM", "JPN", "JOR", "KAZ",
+    "KEN", "SWZ", "KIR", "KOR", "XKX", "KWT", "KGZ", "LAO", "LBN", "LSO",
+    "LBR", "MWI", "MYS", "MLI", "MHL", "MRT", "MUS", "MEX", "FSM", "MNE",
+    "MAR", "MOZ", "MMR", "NAM", "NRU", "NPL", "NZL", "NIC", "NER", "NGA",
+    "NIU", "MKD", "NOR", "OMN", "PAK", "PLW", "PAN", "PNG", "PRY", "PER",
+    "PHL", "QAT", "MDA", "TUR", "RUS", "RWA", "WSM", "SAU", "SEN", "SRB",
+    "SYC", "SGP", "SLB", "ZAF", "LKA", "PSE", "SUR", "CHE", "TJK", "THA",
+    "TLS", "TGO", "TON", "TTO", "TUN", "TUV", "UGA", "ARE", "GBR", "TZA",
+    "USA", "URY", "VUT", "VEN", "VNM", "ZMB", "ZWE",
+}
+
 
 def _fetch_pages(reporter_code: str, product_codes: list, page_size: int, max_pages: int, log_key: str) -> list:
     """실제로 페이지네이션 돌면서 TRAINS를 호출하는 부분. 캐싱은 호출부
@@ -306,15 +329,19 @@ def fetch_regulations_for_country(
             _memory_cache[cache_key] = entry
             return entry["rows"]
 
-    all_rows = _fetch_pages(country_iso3, product_codes, page_size, max_pages, cache_key)
-
-    real_rows = [r for r in all_rows if not _is_placeholder_row(r)]
-    if not real_rows and country_iso3 in EU_MEMBER_ISO3:
-        eu_log_key = f"{cache_key}(EU 폴백)"
-        print(f"  [TRAINS] {cache_key} 개별 조회에 실데이터 없음 -> EU 코드로 재시도", flush=True)
-        eu_rows = _fetch_pages(EU_TRAINS_CODE, product_codes, page_size, max_pages, eu_log_key)
-        if any(not _is_placeholder_row(r) for r in eu_rows):
-            all_rows = eu_rows
+    if country_iso3 in EU_MEMBER_ISO3:
+        # EU 회원국은 개별 국가로 조회해봤자 늘 더미 행뿐이라는 게 이미
+        # 확인됐으니(TRAINS_REPORTER_ISO3 목록에 개별 회원국이 아예 없음),
+        # 헛수고하지 않고 바로 EU 코드로 조회한다.
+        print(f"  [TRAINS] {cache_key} EU 회원국 -> EU 코드(EUN)로 바로 조회", flush=True)
+        all_rows = _fetch_pages(EU_TRAINS_CODE, product_codes, page_size, max_pages, f"{cache_key}(EU)")
+    elif country_iso3 not in TRAINS_REPORTER_ISO3:
+        # TRAINS Data Availability 표에 아예 없는 나라 - 요청해봤자 더미
+        # 행만 올 게 뻔하니 네트워크 요청 자체를 생략한다.
+        print(f"  [TRAINS] {cache_key} TRAINS에 등록된 적 없는 리포터라 요청 생략", flush=True)
+        all_rows = []
+    else:
+        all_rows = _fetch_pages(country_iso3, product_codes, page_size, max_pages, cache_key)
 
     now = time.time()
     _memory_cache[cache_key] = {"rows": all_rows, "fetched_at": now}
