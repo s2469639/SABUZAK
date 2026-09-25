@@ -28,6 +28,8 @@ from datetime import datetime, timedelta, timezone
 import comtradeapicall
 from openai import OpenAI
 
+from app.services import kr_customs
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DEFAULT_DB_PATH = os.path.join(BASE_DIR, "instance", "un_comtrade_cache.db")
 DEFAULT_MODEL = "gpt-4o-mini"
@@ -589,6 +591,13 @@ def get_market_research(
             traceback.print_exc()
             raise
 
+        # 관세청(한국 -> 이 나라) 실제 수출 통계. UN Comtrade 실패와 별개로
+        # 다루고, 키가 없거나 호출이 실패해도 나머지 결과는 그대로 저장한다.
+        try:
+            kr_export_trend = kr_customs.get_kr_export_trend(hscode, target_iso3, years)
+        except Exception:
+            kr_export_trend = {"available": False, "reason": "관세청 자료를 불러오지 못했습니다.", "by_year": []}
+
         result = {
             "hscode": hscode,
             "target_country": target_iso3,
@@ -597,6 +606,7 @@ def get_market_research(
             "global_import_ranking": ranking,
             "competitiveness": competitiveness,
             "growth_trend": growth,
+            "kr_export_trend": kr_export_trend,
             "ai_insight": ai_insight,
             "fetched_at": datetime.now(timezone.utc).isoformat(),
             "from_cache": False,
