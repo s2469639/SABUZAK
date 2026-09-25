@@ -33,6 +33,19 @@ _CSV_PATH = os.path.join(
     os.path.dirname(__file__), "..", "..", "scripts", "market", "농축산물_FTA_협정세율_2026.csv"
 )
 
+# 국가별 관세청 관세율표에서 뽑은 MFN(최혜국/기본) 관세율 - scripts/market/
+# build_mfn_rates.py 로 생성. 위 FTA CSV는 협정세율만 있고 MFN 기준값이
+# 없어서, "협정 미체결시 원래 얼마인지" 비교 기준으로 별도로 둔다.
+_MFN_CSV_PATH = os.path.join(
+    os.path.dirname(__file__), "..", "..", "scripts", "market", "mfn_base_rates.csv"
+)
+
+_EU_MEMBERS = {
+    "DEU", "FRA", "ITA", "ESP", "NLD", "BEL", "AUT", "PRT", "GRC", "SWE",
+    "DNK", "FIN", "POL", "CZE", "IRL", "HUN", "ROU", "BGR", "HRV", "SVK",
+    "SVN", "LTU", "LVA", "EST", "CYP", "MLT", "LUX",
+}
+
 # CSV 컬럼 순서(0-indexed, 번호/HSK/한글품명/영문품명 다음부터).
 # 표 헤더 텍스트가 줄바꿈 때문에 공백이 들쭉날쭉해서 이름 매칭 대신 위치로 잡는다.
 _COL_CHL = 4
@@ -280,3 +293,109 @@ def has_country_data(country_iso3: str) -> bool:
     """이 국가에 대한 협정세율 컬럼이 표에 있는지 (브라질/멕시코/사우디처럼
     아예 없는 나라와 구분하기 위함)."""
     return bool(_country_columns(country_iso3))
+
+
+def _mfn_country_key(country_iso3: str) -> str:
+    """EU 회원국은 MFN CSV에 개별 국가로 안 들어있고 'EEC'(EU 전체) 한
+    묶음으로만 있다 (관세율표 자체가 EU 공동관세이기 때문)."""
+    if country_iso3 in _EU_MEMBERS:
+        return "EEC"
+    return country_iso3
+
+
+def _parse_mfn_cell(raw: str):
+    """MFN CSV의 원문 세율 텍스트(이미 '%'/단위가 붙어있는 원본 그대로) ->
+    (숫자값 또는 None, 화면표시용 문자열). 'Free'는 무관세 0%로,
+    '8% + 21 GBP / 100 kg' 같은 복합세율은 앞의 %만 숫자로 쓰고 원문을
+    그대로 보여준다(단순 % 비교가 부정확할 수 있어 최적관세 추천에선
+    복합세율 여부와 무관하게 그대로 노출만 함)."""
+    text = (raw or "").strip()
+    if not text:
+        return None, None
+    if text.lower() == "free":
+        return 0.0, "무관세 (Free)"
+    m = _VALUE_RE.match(text)
+    if m:
+        return float(m.group(1)), text
+    return None, text
+
+
+@lru_cache(maxsize=1)
+def _load_mfn_rows():
+    """MFN CSV를 한 번만 읽어 국가키 -> {HS코드(숫자만): (품명, 세율원문)} 로 캐싱."""
+    data = {}
+    if not os.path.exists(_MFN_CSV_PATH):
+        return data
+    with open(_MFN_CSV_PATH, encoding="utf-8") as f:
+        reader = csv.reader(f)
+        next(reader, None)  # header
+        for row in reader:
+            if len(row) < 4:
+                continue
+            country, hs_code, name_ko, rate_display = row[0], row[1], row[2], row[3]
+            digits = re.sub(r"\D", "", hs_code or "")
+            if not digits:
+                continue
+            data.setdefault(country, {})[digits] = (name_ko, rate_display)
+    return data
+
+
+def find_mfn_rows(hs_code: str, country_iso3: str):
+    """등록된 HS코드(자릿수 상관없이) -> 그 나라 MFN표에서 그 코드로
+    시작하는 모든 세부품목 (HS코드, 품명, 세율원문) 리스트."""
+    digits = re.sub(r"\D", "", hs_code or "")
+    if not digits:
+        return []
+    country_data = _load_mfn_rows().get(_mfn_country_key(country_iso3), {})
+    if digits in country_data:
+        name_ko, rate = country_data[digits]
+        return [(digits, name_ko, rate)]
+    return [
+        (code, name_ko, rate)
+        for code, (name_ko, rate) in country_data.items()
+        if code.startswith(digits)
+    ]
+
+
+def get_mfn_rate(hs_code: str, country_iso3: str):
+    """HS코드 + 국가(ISO3) -> {"tariff_ave", "display", "is_range"} 또는
+    None(그 나라 관세율표 자체가 없거나 이 HS코드가 없는 경우)."""
+    matched = find_mfn_rows(hs_code, country_iso3)
+    if not matched:
+        return None
+
+    values = []
+    displays = []
+    for _, _, rate in matched:
+        num, disp = _parse_mfn_cell(rate)
+        if disp is None:
+            continue
+        displays.append(disp)
+        if num is not None:
+            values.append(num)
+
+    if not displays:
+        return None
+
+    unique_displays = set(displays)
+    is_range = len(unique_displays) > 1
+    if not is_range:
+        display = displays[0]
+    elif values and len(set(values)) == 1:
+        display = f"{values[0]}%"
+        is_range = False
+    elif values:
+        display = f"{min(values)}~{max(values)}% (세부품목별 상이)"
+    else:
+        display = "값 혼재 (세부품목별 상이)"
+
+    return {
+        "tariff_ave": min(values) if values else None,
+        "display": display,
+        "is_range": is_range,
+    }
+
+
+def has_mfn_data(country_iso3: str) -> bool:
+    """이 국가의 관세청 원본 관세율표가 MFN CSV에 있는지."""
+    return bool(_load_mfn_rows().get(_mfn_country_key(country_iso3)))

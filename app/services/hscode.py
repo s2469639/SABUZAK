@@ -291,7 +291,10 @@ def build_hscode_context(expo, products):
     고정된 값이 아니라 제품마다 다를 수 있음 - 예전엔 국가만 보고 모든 제품에
     같은 값을 보여주는 버그가 있었다)."""
     country_iso = resolve_country_iso(expo.country)
-    has_country_data = tariff_lookup.has_country_data(country_iso) if country_iso else False
+    has_country_data = (
+        (tariff_lookup.has_country_data(country_iso) or tariff_lookup.has_mfn_data(country_iso))
+        if country_iso else False
+    )
 
     product_rows = []
     for product in products:
@@ -303,6 +306,9 @@ def build_hscode_context(expo, products):
         for r in regimes:
             r["is_best"] = (r is best) if best else False
         has_range = any(r.get("is_range") for r in regimes)
+        mfn_rate = (
+            tariff_lookup.get_mfn_rate(product.hs_code, country_iso) if country_iso else None
+        )
         subitems = (
             tariff_lookup.get_subitem_breakdown(product.hs_code, country_iso)
             if (country_iso and has_range) else []
@@ -323,6 +329,7 @@ def build_hscode_context(expo, products):
             "has_data": bool(regimes),
             "has_range": has_range,
             "subitems": subitems,
+            "mfn_rate": mfn_rate,
             "certs": get_required_certs(country_iso, expo.food_yn),
             "regulation_notes": regulation_notes,
             "regulation_notes_is_live": is_synced,
