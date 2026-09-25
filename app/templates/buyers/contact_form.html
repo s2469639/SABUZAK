@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}바이어 등록 | 사부작{% endblock %}
+{% block title %}바이어 등록 | FairMate{% endblock %}
 
 {% block content %}
 {% include "buyers/_nav.html" %}
@@ -24,36 +24,56 @@
 </form>
 {% endif %}
 
-<form method="post" class="form" autocomplete="off">
-  <div class="form-field">
-    <label for="exhibition_id">박람회</label>
-    <select id="exhibition_id" name="exhibition_id" required>
-      <option value="" disabled {{ 'selected' if not contact else '' }}>선택하세요</option>
-      {% for e in exhibitions %}
-      <option value="{{ e.id }}" {{ 'selected' if contact and contact.exhibition_id == e.id else '' }}>{{ e.name }}</option>
-      {% endfor %}
-    </select>
+<form method="post" class="form contact-form" autocomplete="off">
+  <div class="form-row">
+    <div class="form-field">
+      <label for="exhibition_id">박람회</label>
+      <select id="exhibition_id" name="exhibition_id" required>
+        <option value="" disabled {{ 'selected' if not contact else '' }}>선택하세요</option>
+        {% for e in exhibitions %}
+        <option value="{{ e.id }}" {{ 'selected' if contact and contact.exhibition_id == e.id else '' }}>{{ e.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="preferred_template_version">메일 템플릿 버전</label>
+      <select id="preferred_template_version" name="preferred_template_version">
+        {% for t in template_versions %}
+        <option value="{{ t.version }}"
+          {{ 'selected' if (contact and contact.preferred_template_version == t.version) or (not contact and t.is_active) else '' }}>
+          {{ t.display_name }}{% if t.is_active %} (현재 발송용){% endif %}{% if not t.body %} (미작성){% endif %}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
   </div>
-  <div class="form-field">
-    <label for="name">바이어 이름</label>
-    <input id="name" name="name" required autocomplete="off" value="{{ contact.name if contact else (prefill.name if prefill else '') }}">
+
+  <div class="form-row row-name-company-position">
+    <div class="form-field">
+      <label for="name">바이어 이름</label>
+      <input id="name" name="name" required autocomplete="off" value="{{ contact.name if contact else (prefill.name if prefill else '') }}">
+    </div>
+    <div class="form-field">
+      <label for="company">바이어 회사명</label>
+      <input id="company" name="company" autocomplete="off" placeholder="상대방 회사명" value="{{ contact.company if contact else (prefill.company if prefill else '') }}">
+    </div>
+    <div class="form-field">
+      <label for="position">바이어 직급</label>
+      <input id="position" name="position" autocomplete="off" placeholder="예: 해외영업팀 대리" value="{{ contact.position if contact else (prefill.position if prefill else '') }}">
+    </div>
   </div>
-  <div class="form-field">
-    <label for="company">바이어 회사명</label>
-    <input id="company" name="company" autocomplete="off" placeholder="상대방 회사명" value="{{ contact.company if contact else (prefill.company if prefill else '') }}">
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="email">바이어 이메일</label>
+      <input id="email" type="email" name="email" required autocomplete="off" value="{{ contact.email if contact else (prefill.email if prefill else '') }}">
+    </div>
+    <div class="form-field">
+      <label for="phone">바이어 전화번호</label>
+      <input id="phone" name="phone" autocomplete="off" value="{{ contact.phone if contact else (prefill.phone if prefill else '') }}">
+    </div>
   </div>
-  <div class="form-field">
-    <label for="position">바이어 직급</label>
-    <input id="position" name="position" autocomplete="off" placeholder="예: 해외영업팀 대리" value="{{ contact.position if contact else (prefill.position if prefill else '') }}">
-  </div>
-  <div class="form-field">
-    <label for="email">바이어 이메일</label>
-    <input id="email" type="email" name="email" required autocomplete="off" value="{{ contact.email if contact else (prefill.email if prefill else '') }}">
-  </div>
-  <div class="form-field">
-    <label for="phone">바이어 전화번호</label>
-    <input id="phone" name="phone" autocomplete="off" value="{{ contact.phone if contact else (prefill.phone if prefill else '') }}">
-  </div>
+
   <div class="form-field">
     <label for="address">바이어 주소</label>
     <input id="address" name="address" autocomplete="off" value="{{ contact.address if contact else (prefill.address if prefill else '') }}">
@@ -62,17 +82,7 @@
     <label for="remarks">비고</label>
     <textarea id="remarks" name="remarks" rows="3" placeholder="기타 메모">{{ contact.remarks if contact else '' }}</textarea>
   </div>
-  <div class="form-field">
-    <label for="preferred_template_version">메일 템플릿 버전</label>
-    <select id="preferred_template_version" name="preferred_template_version">
-      {% for t in template_versions %}
-      <option value="{{ t.version }}"
-        {{ 'selected' if (contact and contact.preferred_template_version == t.version) or (not contact and t.is_active) else '' }}>
-        {{ t.display_name }}{% if t.is_active %} (현재 발송용){% endif %}{% if not t.body %} (미작성){% endif %}
-      </option>
-      {% endfor %}
-    </select>
-  </div>
+
   <div class="form-actions">
     <a href="{{ url_for('contacts.list_contacts') }}" class="btn-secondary">취소</a>
     <button type="submit" class="btn-primary">저장</button>

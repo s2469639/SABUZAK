@@ -270,5 +270,32 @@ class FollowupEmail(db.Model):
     last_sent_at = db.Column(db.DateTime)
 
 
+class FollowupAttachment(db.Model):
+    """팔로업 메일에 첨부한 파일. 실제 파일은 instance/attachments/<followup_id>/ 아래에
+    (웹으로 직접 접근 불가한 위치) 저장하고, 여기엔 원본 파일명과 저장된 이름만 기록한다."""
+
+    __bind_key__ = "app_data"  # instance/app_data.db (유저 데이터 전용)
+    __tablename__ = "followup_attachments"
+
+    id = db.Column(db.Integer, primary_key=True)
+    followup_id = db.Column(db.Integer, db.ForeignKey("followup_emails.id"), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)  # 원본 파일명 (한글 가능, 메일에 이 이름으로 첨부)
+    stored_name = db.Column(db.String(100), nullable=False)  # 디스크에 저장된 이름 (uuid)
+    content_type = db.Column(db.String(150))
+    size = db.Column(db.Integer, nullable=False, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    followup = db.relationship(
+        "FollowupEmail",
+        backref=db.backref("attachments", cascade="all, delete-orphan", order_by="FollowupAttachment.id"),
+    )
+
+    @property
+    def size_label(self):
+        if self.size >= 1024 * 1024:
+            return f"{self.size / (1024 * 1024):.1f}MB"
+        return f"{max(1, round(self.size / 1024))}KB"
+
+
 # ProposalDraft 등 나머지 모델은
 # 각 기능 구현 시 이 파일에 이어서 추가합니다.

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}품목별 유망시장 | 사부작{% endblock %}
+{% block title %}품목별 유망시장 | FairMate{% endblock %}
 
 {% block content %}
 {# un_v6/templates/un_comtrade_dashboard.html의 ①~⑤(세계시장 현황·유망시장
@@ -13,7 +13,7 @@
 <div class="page-header">
   <div>
     <h1>품목별 유망시장</h1>
-    <p class="page-desc">UN Comtrade 통계로 분석한 해외 유망시장 추천정보 (KOTRA TriBig "품목별 유망시장"과 같은 구조)</p>
+    <p class="page-desc">UN Comtrade 통계로 분석한 해외 유망시장 추천정보 (KOTRA TriBig "품목별 유망시장"과 같은 구조).</p>
   </div>
   <a href="{{ url_for('mypage.index') }}" class="btn-secondary">← 내 제품 관리로</a>
 </div>
@@ -94,7 +94,7 @@
           <div class="flow-panel hidden" data-flow-panel="ranking" data-flow="export">
             {{ hbar_chart(overview.export_ranking) }}
           </div>
-          <div class="source">UN Comtrade 기준 · 막대에 마우스를 올리면 정확한 금액이 보입니다</div>
+          <div class="source">UN Comtrade 기준 · 막대에 마우스를 올리면 정확한 금액이 보입니다.</div>
         {% else %}
           <div class="empty">데이터 없음</div>
         {% endif %}
