@@ -295,7 +295,12 @@ def booth_payload(stage):
         "merchandising": {"zones": [{"name": "Hero Zone", "position": "중앙", "purpose": "대표 제품", "basis": ["R1"]},
                                    {"name": "", "position": "우측", "purpose": "이름 없는 존은 버림"}],
                           "bullets": [{"text": "눈높이 진열", "basis": []}]},
-        "visitor_flow": {"3s": "No Sticky Fingers 문구", "30s": "커피와 한입 시식", "3min": "원페이저 상담"},
+        "key_actions": ["흰 장갑 시식으로 끈적임 없음 증명", "커피 페어링 바 운영", "케이스 단가표로 상담 전환"],
+        "visitor_flow": {"3s": {"headline": "흰 장갑 백월로 시선 고정", "goal": "통로 방문객 멈추기",
+                                "visitor": ["5m 밖에서 No Sticky Fingers 문구가 보임"], "staff": ["눈 마주치면 샘플 권유"],
+                                "props": ["흰 장갑", "꿀 방울 백월"], "message": "손에 안 묻는 꿀과자"},
+                         "30s": "커피와 한입 시식",      # 예전 형식(문장 하나)도 받아야 함
+                         "3min": {"headline": "원페이저 상담", "staff": "케이스 단가·MOQ 안내"}},
         "kpis": ["바이어 명함 80장", "샘플 요청 20건"],
         "risks": [{"text": "화기 사용 허가 확인", "basis": []}],
         "questions": ["유통기한은 몇 개월인가요?"],

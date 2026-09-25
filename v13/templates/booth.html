@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block title %}부스 컨셉 기획 · 페어메이트{% endblock %}
+{% block start_url %}/api/booth/start{% endblock %}
+{% block kind %}booth{% endblock %}
+{% block result_base %}/booth/{% endblock %}
+{% block body_attrs %}{% if running %} data-running-job="{{ job_id }}"{% endif %}{% endblock %}
+{% block loading_sub %}부스 컨셉을 기획하고 있어요. 보통 2~4분 걸려요.{% endblock %}
+
+{% macro basis(x) -%}
+  <span class="evi">
+  {%- for i in x.quote_ids %}<button class="ref" type="button" data-tab="memo" data-target="{{ i }}" aria-label="{{ i }} 조사 메모 보기">{{ i }}</button>{% endfor -%}
+  {%- for c in x.company %}<span class="ev company">기업: {{ c }}</span>{% endfor -%}
+  {%- if x.is_idea %}<span class="ev idea">기획 제안</span>{% endif -%}
+  </span>
+{%- endmacro %}
+
+{% block content %}
+  {% set inp = data.inputs if data else form %}
+  <div class="page-head">
+    <div>
+      <a class="back-link" href="/">← 트렌드 조사</a>
+      <h1 style="margin-top:6px">부스 컨셉 기획</h1>
+      {% if inp.name %}<p class="desc">{{ inp.name }} · {{ inp.country }}{% if inp.exhibition_name %} · {{ inp.exhibition_name }}{% endif %}</p>{% endif %}
+    </div>
+    {% if data and data.booth %}
+      <div class="booth-tools">
+        <label class="switch"><input type="checkbox" id="ev-toggle"><span class="track"></span>근거 표시</label>
+        <button class="btn-more" type="button" data-tab="memo">조사 메모 {{ data.booth.research.notes|length }}건</button>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if not data and not running %}
+    {% set form_action = "/booth" %}{% set submit_label = "부스 컨셉 기획하기" %}
+    {% include "_form.html" %}
+  {% endif %}
+
+  {% if data %}
+  {% set b = data.booth %}
+  {% if b %}
+    {% set br = b.brief %}
+    {% set sec = b.sections %}
+    {% set check_ns = (inp.name ~ "|" ~ inp.country ~ "|" ~ br.big_idea.line_en)|urlencode %}
+
+    {# ---------------- Executive Summary ---------------- #}
+    <div class="block-title">Executive Summary</div>
+    <div class="hero">
+      <div>
+        <div class="k">BIG IDEA</div>
+        <div class="big">“{{ br.big_idea.line_en or sec.slogan.main_en }}”{{ basis(br.big_idea) }}</div>
+        {% if br.big_idea.line_ko %}<div class="ko">{{ br.big_idea.line_ko }}</div>{% endif %}
+        {% if b.summary %}<div class="summary">{{ b.summary }}</div>{% endif %}
+        {% if sec.slogan.main_en %}<div class="slogan"><b>🗣 {{ sec.slogan.main_en }}</b>{% if sec.slogan.main_ko %}<span>{{ sec.slogan.main_ko }}</span>{% endif %}</div>{% endif %}
+        {% if br.target_buyers or b.positioning.core_message %}
+          <div class="buyers">
+            {% if br.target_buyers %}<span class="tag-label">타깃 바이어</span> {% for t in br.target_buyers %}{{ t.priority or loop.index }}순위 {{ t.type }}{% if not loop.last %} · {% endif %}{% endfor %}<br>{% endif %}
+            {% if b.positioning.core_message %}<span class="tag-label">핵심 메시지</span> {{ b.positioning.core_message }}{% endif %}
+          </div>
+        {% endif %}
+      </div>
+      <div>
+        {% set actions = b.key_actions or ([sec.demonstration.title, sec.signature_pairing.item, sec.main_visual.concept_ko]|select|list) %}
+        {% if actions %}
+          <div class="k" style="margin-bottom:8px">KEY ACTIONS</div>
+          <ul class="key-actions">{% for a in actions[:3] %}<li><span class="n">{{ loop.index }}</span><span>{{ a }}</span></li>{% endfor %}</ul>
+        {% endif %}
+        {% if b.kpis %}<div class="k" style="margin-top:12px">KPI</div><div class="kpi-row">{% for k in b.kpis %}<span>🎯 {{ k }}</span>{% endfor %}</div>{% endif %}
+      </div>
+    </div>
+
+    {# ---------------- 전략 근거 ---------------- #}
+    {% if br.insights %}
+      <div class="block-title">전략 근거 (Fact → Insight → Implication)</div>
+      {% for i in br.insights %}
+      <div class="chain">
+        <div class="box"><div class="t">FACT</div>{{ i.fact }}{{ basis(i) }}</div><div class="arr" aria-hidden="true">→</div>
+        <div class="box"><div class="t">INSIGHT</div>{{ i.insight }}</div><div class="arr" aria-hidden="true">→</div>
+        <div class="box do"><div class="t">IMPLICATION</div>{{ i.implication }}</div>
+      </div>
+      {% endfor %}
+    {% endif %}
+
+    {# ---------------- Execution Plan ---------------- #}
+    {% set plan = [("main_visual", "메인 비주얼"), ("slogan", "슬로건"), ("signature_pairing", "시그니처 페어링"),
+                   ("demonstration", "시연"), ("packaging", "패키징"), ("merchandising", "진열")] %}
+    <div class="block-title">Execution Plan</div>
+    <div class="tabcard" data-tabset>
+      <div class="ptabs" role="tablist">
+        {% for key, ko in plan %}<button class="ptab" type="button" role="tab" data-panel="plan-{{ key }}" aria-selected="{{ 'true' if loop.first else 'false' }}">{{ ko }}</button>{% endfor %}
+      </div>
+      {% for key, ko in plan %}
+      {% set s = sec[key] %}
+      <div class="ppanel" id="plan-{{ key }}" role="tabpanel" {% if not loop.first %}hidden{% endif %}>
+        {% if key == "main_visual" %}
+          <div class="head">{{ ('“' ~ s.concept_en ~ '”') if s.concept_en else ko }}</div>{% if s.concept_ko %}<div class="head-ko">{{ s.concept_ko }}</div>{% endif %}
+        {% elif key == "slogan" %}
+          <div class="head">{{ ('“' ~ s.main_en ~ '”') if s.main_en else ko }}</div>{% if s.main_ko %}<div class="head-ko">{{ s.main_ko }}</div>{% endif %}
+          {% if s.sub_en %}<div class="meta-line"><span class="tag-label">서브 카피</span> “{{ s.sub_en }}” {% if s.sub_ko %}<span class="muted">{{ s.sub_ko }}</span>{% endif %}</div>{% endif %}
+        {% elif key == "signature_pairing" %}
+          <div class="head">{{ s.item or ko }}</div>
+          {% if s.intent %}<div class="meta-line"><span class="tag-label">기획 의도</span> {{ s.intent }}</div>{% endif %}
+        {% elif key == "demonstration" %}
+          <div class="head">{{ s.title or ko }}</div>
+        {% elif key == "packaging" %}
+          <div class="head">{{ s.direction or ko }}</div>
+        {% else %}
+          <div class="head">{{ (s.zones|length ~ "개 존 구성") if s.zones else ko }}</div>
+          {% for z in s.zones %}<div class="meta-line"><span class="tag-label">{{ loop.index }}. {{ z.name }}</span>{% if z.position %} ({{ z.position }}){% endif %} {{ z.purpose }}{{ basis(z) }}</div>{% endfor %}
+        {% endif %}
+        {% if s.bullets %}<ul class="points">{% for x in s.bullets %}<li>{{ x.text }}{{ basis(x) }}</li>{% endfor %}</ul>{% endif %}
+        {% if s.key_message %}<div class="jmsg">{{ s.key_message }}</div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    {# ---------------- Visitor Journey ---------------- #}
+    {% set vf = b.visitor_flow %}
+    {% set stages = [("3s", "3초", "통로에서 멈춤"), ("30s", "30초", "시식·시연"), ("3min", "3분", "상담 테이블")] %}
+    {% if vf["3s"].headline or vf["30s"].headline or vf["3min"].headline %}
+      <div class="block-title">Visitor Journey</div>
+      <div class="tabcard" data-tabset>
+        <div class="ptabs" role="tablist">
+          {% for k, t, sub in stages %}<button class="ptab" type="button" role="tab" data-panel="journey-{{ k }}" aria-selected="{{ 'true' if loop.first else 'false' }}">{{ t }} · {{ sub }}</button>{% endfor %}
+        </div>
+        {% for k, t, sub in stages %}
+        {% set st = vf[k] %}
+        <div class="ppanel" id="journey-{{ k }}" role="tabpanel" {% if not loop.first %}hidden{% endif %}>
+          <div class="head">{{ st.headline or (t ~ " · " ~ sub) }}</div>
+          {% if st.goal %}<span class="goal">목표 · {{ st.goal }}</span>{% endif %}
+          {% if st.visitor or st.staff or st.props %}
+          <div class="journey-grid">
+            {% for label, items in [("방문객 경험", st.visitor), ("직원 행동", st.staff), ("소품·연출", st.props)] %}{% if items %}
+            <div class="jbox"><div class="t">{{ label }}</div><ul>{% for x in items %}<li>{{ x }}</li>{% endfor %}</ul></div>
+            {% endif %}{% endfor %}
+          </div>
+          {% endif %}
+          {% if st.message %}<div class="jmsg">“{{ st.message }}”</div>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {# ---------------- 체크리스트 ---------------- #}
+    {% if b.risks or b.questions %}
+    <div class="card-grid" style="margin-top:24px">
+      {% if b.risks %}<div class="card"><div class="card-header" style="color:var(--red)">운영 리스크 점검</div>
+        <ul class="checklist">{% for x in b.risks %}<li><label><input type="checkbox" data-check-key="fm-{{ check_ns }}-risk-{{ loop.index }}"><span>{{ x.text }}{{ basis(x) }}</span></label></li>{% endfor %}</ul></div>{% endif %}
+      {% if b.questions %}<div class="card"><div class="card-header" style="color:var(--amber)">추가 확인 요청 사항</div>
+        <ul class="checklist">{% for q in b.questions %}<li><label><input type="checkbox" data-check-key="fm-{{ check_ns }}-q-{{ loop.index }}"><span>{{ q }}</span></label></li>{% endfor %}</ul></div>{% endif %}
+    </div>
+    {% endif %}
+  {% else %}
+    <div class="empty-panel" style="margin-top:20px">부스 컨셉을 만들지 못했어요. {{ data.booth_error or "" }}
+      <a href="/booth?{{ {'name': inp.name, 'country': inp.country, 'exhibition_name': inp.exhibition_name, 'strengths': inp.strengths, 'ingredients': inp.ingredients, 'certifications': inp.certifications, 'price': inp.price}|urlencode }}">다시 시도하기 →</a></div>
+  {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block drawer %}
+{% if data and data.booth %}
+{% set rs = data.booth.research %}
+<div class="overlay" id="overlay" title="눌러서 닫기"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="drawer-title" role="dialog">
+  <div class="drawer-head">
+    <div class="drawer-top"><h2 id="drawer-title">조사 메모</h2><button class="btn-close" type="button" id="drawer-close" aria-label="닫기">✕</button></div>
+    <div class="tabs" role="tablist"><button class="tab" type="button" role="tab" data-tab="memo" data-title="조사 메모" aria-selected="true">조사 메모 ({{ rs.notes|length }})</button></div>
+  </div>
+  <div class="drawer-body">
+    <section class="tab-panel" role="tabpanel" data-panel="memo">
+      <p class="muted" style="margin-bottom:10px">부스 기획을 위해 따로 조사한 메모입니다.{% if rs.method == "knowledge" %} (웹 검색 없이 AI 지식으로 정리){% endif %}</p>
+      {% for n in rs.notes %}
+      <article class="article" id="art-{{ n.id }}">
+        <div class="badges"><span class="chip violet">{{ n.id }}</span><span class="chip">{{ n.topic_label }}</span>
+          <span class="chip {{ 'green' if n.source_status == '웹 출처' else ('amber' if n.source_status == '출처 미확인' else '') }}">{{ n.source_status }}</span></div>
+        <div class="ko" style="margin-top:6px">{{ n.text }}</div>
+        <div class="src">{% if n.source_url %}<a href="{{ n.source_url }}" target="_blank" rel="noopener noreferrer">{{ n.source_title or n.source_url }} ↗</a>{% else %}출처 없음{% endif %}</div>
+      </article>
+      {% else %}
+      <p class="muted">조사 메모가 없습니다.</p>
+      {% endfor %}
+    </section>
+  </div>
+</aside>
+{% endif %}
+{% endblock %}
