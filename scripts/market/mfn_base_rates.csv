@@ -56276,6 +56276,1532 @@ ISR,24041990003,OTHER,6%
 ISR,24049100001,For oral application,4%
 ISR,24049200009,For transdermalapplication,0%
 ISR,24049900004,Other,0%
+ZAF,010121001,- - 순종종 번식동물,free
+ZAF,010129002,- - 기타,free
+ZAF,010130006,- 엉덩이,free
+ZAF,010190007,- 기타,free
+ZAF,010221005,- - 순종종 번식동물,free
+ZAF,010229006,- - 기타,free
+ZAF,010231005,- - 순종종 번식동물,free
+ZAF,010239000,- - 기타,free
+ZAF,010290000,- 기타,free
+ZAF,010310008,- 순종종 번식동물,free
+ZAF,010391000,- - 중량이 50킬로그램 미만인 것,free
+ZAF,010392007,- - 질량이 50kg 이상인 경우,free
+ZAF,010410001,- 양,free
+ZAF,010420006,- 염소,free
+ZAF,010511001,- - Gallus domesticus 종의 가금류,free
+ZAF,010512008,- - 칠면조,free
+ZAF,010513004,- - 오리,free
+ZAF,010514000,- - 거위,free
+ZAF,010515007,- - 기니 닭,free
+ZAF,010594007,- - Gallus domesticus 종의 가금류,free
+ZAF,010599009,- - 기타,free
+ZAF,010611005,- - 영장류,free
+ZAF,010612001,"- - 고래, 돌고래 및 돌고래목(고래목의 포유류); 해우 및 듀공(바다소목의 포유류); 물개, 바다사자 및 바다코끼리(물고기아목의 포유류)",free
+ZAF,010613008,- - 낙타 및 기타 낙타류(Camelidae),free
+ZAF,010614004,- - 토끼와 산토끼,free
+ZAF,010619006,- - 기타,free
+ZAF,010620003,- 파충류(뱀과 거북이 포함),free
+ZAF,010631004,- - 맹금류,free
+ZAF,010632000,- - 앵무류[패럿류(parrots)ㆍ패러키트류(parakeets)ㆍ금강앵무류ㆍ유황앵무류를 포함한다],free
+ZAF,010633104,- - - 타조,free
+ZAF,010633902,- - - 기타,free
+ZAF,010639005,- - 기타,free
+ZAF,010641009,- - 꿀벌,free
+ZAF,010649009,- - 기타,free
+ZAF,010690005,- 기타,free
+ZAF,020110002,- 사체 및 반사체,40% or 240c/kg
+ZAF,020120104,- - 와규소고기,40% or 240c/kg
+ZAF,020120902,- - 기타,40% or 240c/kg
+ZAF,020130109,- - 와규소고기,40% or 240c/kg
+ZAF,020130907,- - 기타,40% or 240c/kg
+ZAF,020210006,- 사체 및 반사체,40% or 240c/kg
+ZAF,020220108,- - 와규소고기,40% or 240c/kg
+ZAF,020220906,- - 기타,40% or 240c/kg
+ZAF,020230102,- - 와규소고기,40% or 240c/kg
+ZAF,020230900,- - 기타,40% or 240c/kg
+ZAF,020311006,- - 사체 및 반사체,15% or 130c/kg
+ZAF,020312002,"- - 뼈가 있는 햄, 어깨 및 그 부위",15% or 130c/kg
+ZAF,020319104,- - - 갈비뼈,free
+ZAF,020319902,- - - 기타,15% or 130c/kg
+ZAF,020321000,- - 도체(屠體)와 이분도체(二分屠體),15% or 130c/kg
+ZAF,020322007,"- - 뼈가 있는 햄, 어깨 및 그 부위",15% or 130c/kg
+ZAF,020329109,- - - 갈비뼈,free
+ZAF,020329907,- - - 기타,15% or 130c/kg
+ZAF,020410003,"- 양고기 사체 및 반 사체, 신선 또는 냉장",40% or 200c/kg
+ZAF,020421004,- - 사체 및 반사체,40% or 200c/kg
+ZAF,020422000,- - 그 밖의 것으로서 뼈째로 절단한 것,40% or 200c/kg
+ZAF,020423007,- - 뼈없음,40% or 200c/kg
+ZAF,020430002,"- 양고기 사체 및 반 사체, 냉동",40% or 200c/kg
+ZAF,020441003,- - 사체 및 반사체,40% or 200c/kg
+ZAF,020442002,- - 뼈가 있는 기타 절단,40% or 200c/kg
+ZAF,020443006,- - 뼈없음,40% or 200c/kg
+ZAF,020450001,- 염소고기,40% or 200c/kg
+ZAF,020500002,"말, 당나귀, 노새 또는 엉금엉덩이 고기(신선, 냉장 또는 냉동)",free
+ZAF,020610108,- - 간,22% or 240c/kg
+ZAF,020610906,- - 기타,free
+ZAF,020621001,- - 혀,free
+ZAF,020622008,- - 간,30% or 130c/kg
+ZAF,020629002,- - 기타,free
+ZAF,020630002,"- 돼지고기, 신선 또는 냉장",free
+ZAF,020641000,- - 간,30% or 130c/kg
+ZAF,020649001,- - 기타,free
+ZAF,020680002,"- 기타, 신선하거나 냉장",free
+ZAF,020690007,"- 기타, 냉동",free
+ZAF,020711000,- - 절단하지 않은 육(신선한 것이나 냉장한 것으로 한정한다),free
+ZAF,020712104,- - - 기계적으로 뼈를 제거한 고기,free
+ZAF,020712201,"- - - 모든 부위(예: 허벅지, 날개, 다리, 가슴살)가 제거된 시체(목과 내장 제외)",31%
+ZAF,020712902,- - - 기타,82%
+ZAF,020713003,- - 신선하거나 냉장한 절단 및 내장,free
+ZAF,020714115,- - - - 가슴,42%
+ZAF,020714131,- - - - 허벅지,42%
+ZAF,020714158,- - - - 기타,42%
+ZAF,020714212,- - - - 간,30%
+ZAF,020714239,- - - - 피트,30%
+ZAF,020714255,- - - - 머리,30%
+ZAF,020714298,- - - - 기타,30%
+ZAF,020714913,- - - - 새 한 마리를 반으로 자르다,62%
+ZAF,020714938,- - - - 다리 부분,62%
+ZAF,020714956,- - - - 날개,62%
+ZAF,020714964,- - - - 가슴,62%
+ZAF,020714972,- - - - 허벅지,62%
+ZAF,020714980,- - - - 드럼스틱,62%
+ZAF,020714999,- - - - 기타,62%
+ZAF,020724004,"- - 조각으로 자르지 않은 것, 신선한 것 또는 냉장한 것",free
+ZAF,020725000,- - 절단하지 않은 육(냉동한 것으로 한정한다),free
+ZAF,020726007,- - 신선하거나 냉장한 절단 및 내장,free
+ZAF,020727003,- - 냉동된 부위 및 내장,free
+ZAF,020741004,"- - 조각으로 자르지 않은 것, 신선한 것 또는 냉장한 것",free
+ZAF,020742000,- - 절단하지 않은 육(냉동한 것으로 한정한다),free
+ZAF,020743007,"- - 지방간, 신선하거나 냉장",free
+ZAF,020744003,"- - 기타, 신선 또는 냉장",free
+ZAF,020745009,"- - 기타, 냉동",free
+ZAF,020751009,"- - 조각으로 자르지 않은 것, 신선한 것 또는 냉장한 것",free
+ZAF,020752005,- - 조각으로 자르지 않고 냉동,free
+ZAF,020753001,"- - 지방간, 신선하거나 냉장",free
+ZAF,020754008,"- - 기타, 신선 또는 냉장",free
+ZAF,020755004,"- - 기타, 냉동",free
+ZAF,020760007,- 기니 닭의,free
+ZAF,020810008,- 토끼 또는 산토끼의,free
+ZAF,020830007,- 영장류의,8c/kg
+ZAF,020840109,- - 고래의,8c/kg
+ZAF,020840907,- - 기타,8c/kg
+ZAF,020850006,- 파충류(뱀과 거북이 포함),8c/kg
+ZAF,020860000,- 낙타와 그 밖의 낙타과[카멜리대(Camelidae)과]의 것,free
+ZAF,020890101,- - 타조의,free
+ZAF,020890905,- - 기타,free
+ZAF,020910001,- 돼지의,8c/kg
+ZAF,020990008,- 기타,8c/kg
+ZAF,021011008,"- - 뼈가 있는 햄, 어깨 및 그 부위",15% or 130c/kg
+ZAF,021012004,- - 배 (줄무늬)와 그 부위,15% or 130c/kg
+ZAF,021019009,- - 기타,15% or 130c/kg
+ZAF,021020111,- - - 스위스에서 수입,40% or 240c/kg
+ZAF,021020125,- - - 기타,40% or 240c/kg
+ZAF,021020901,- - 기타,40% or 240c/kg
+ZAF,021091004,- - 영장류의,40% or 240c/kg
+ZAF,021092000,"- - 고래ㆍ돌고래ㆍ쇠돌고래(고래목의 포유동물), 매너티ㆍ듀공(바다소목의 포유동물), 물개ㆍ바다사자ㆍ바다코끼리(기각아목의 포유동물)의 것",40% or 240c/kg
+ZAF,021093007,- - 파충류(뱀과 거북이 포함),40% or 240c/kg
+ZAF,021099056,- - - 타조의,40% or 240c/kg
+ZAF,021099110,- - - - 스위스에서 수입,40% or 240c/kg
+ZAF,021099129,- - - - 기타,40% or 240c/kg
+ZAF,021099900,- - - 기타,40% or 240c/kg
+ZAF,030111000,- - 민물의 것,free
+ZAF,030119001,- - 기타,free
+ZAF,030191007,"- - 송어(Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache 및 Oncorhynchus chrysogaster)",free
+ZAF,030192003,- - 뱀장어(Anguilla spp.),free
+ZAF,030193000,- - 잉어[사이프리너스(Cyprinus)속·카라시우스(Carassius)속·크테노파린고돈 이델루스(Ctenopharyngodon idellus)·하이포프탈미크티스(Hypophthalmichthys)속·시리누스(Cirrhinus)속·마일로파린고돈 피세우스(Mylopharyngodon piceus)·카틀라 카틀라(Catla catla)·라베오(Labeo)속·오스테오킬루스 하셀티(Osteochilus hasselti)·렙토바르부스 호에베니(Leptobarbus hoeveni)·메갈로브라마(Megalobrama)속],free
+ZAF,030194006,"- - 대서양 및 태평양 참다랑어(Thunnus thynnus, Thunnus orientalis)",free
+ZAF,030195002,- - 남방참다랑어(Thunnus maccoyii),free
+ZAF,030199008,- - 기타,free
+ZAF,030211004,"- - 송어(Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache 및 Oncorhynchus chrysogaster)",25%
+ZAF,030213007,"- - 태평양 연어(Oncorhynchus nerka, Oncorhynchus gorbuscha, Oncorhynchus keta, Oncorhynchus tschawytscha, Oncorhynchus kisutch, Oncorhynchus masou 및 Oncorhynchus rhodurus)",25%
+ZAF,030214003,- - 대서양 연어(Salmo salar)와 다뉴브 연어(Hucho hucho),25%
+ZAF,030219005,- - 기타,25%
+ZAF,030221009,"- - 넙치(Reinhardtius hippoglossoides, Hippoglossus hippoglossus, Hippoglossus stenolepis)",free
+ZAF,030222005,- - 가자미 (Pleuronectes platessa),free
+ZAF,030223001,- - 가자미 (Solea spp.),free
+ZAF,030224008,- - 가자미 (Psetta maxima),free
+ZAF,030229001,- - 기타,free
+ZAF,030231003,- - 날개다랑어 또는 긴 지느러미 다랑어(Thunnus alalunga),free
+ZAF,030232003,- - 황다랑어(Thunnus albacares),free
+ZAF,030233006,- - 가다랑어(줄무늬 가다랭이)(Katsuwonus pelamis),free
+ZAF,030234002,- - 눈다랑어(Thunnus obesus),free
+ZAF,030235009,"- - 대서양 및 태평양 참다랑어(Thunnus thynnus, Thunnus orientalis)",free
+ZAF,030236005,- - 남방참다랑어(Thunnus maccoyii),free
+ZAF,030239004,- - 기타,free
+ZAF,030241008,"- - 청어(Clupea harengus, Clupea pallasii)",free
+ZAF,030242004,- - 멸치(Engraulis spp.),free
+ZAF,030243000,"- - 정어리[사르디나 필차르두스(Sardina pilchardus)ㆍ사르디노프스(Sardinops)속], 사르디넬라[사르디넬라(Sardinella)속], 브리스링(brisling)이나 스프랫(sprats)[스프라투스 스프라투스(Sprattus sprattus)]",free
+ZAF,030244007,"- - 고등어(Scomber scombrus, Scomber australasicus, Scomber japonicas)",free
+ZAF,030245003,- - 고등어와 전갱이(Trachurus spp.),free
+ZAF,030246001,- - 코비아(Rachycentron canadum),free
+ZAF,030247006,- - 황새치 (Xiphias Gladius),free
+ZAF,030249009,- - 기타,free
+ZAF,030251002,"- - 대구(Gadus morhua, Gadus ogac, Gadus Macrocephalus)",free
+ZAF,030252009,- - 대구(Melanogrammus aeglefinus),free
+ZAF,030253005,- - 석탄어(Pollachius virens),free
+ZAF,030254001,"- - Hake (Merluccius spp., Urophycis spp.)",free
+ZAF,030255008,- - 알래스카 폴록(Theragra chalcogramma),free
+ZAF,030256004,"- - 블루와이팅(Micromesistius poutassou, Micromesistius australis)",free
+ZAF,030259003,- - 기타,free
+ZAF,030271001,- - 틸라피아(Oreochromis spp.),free
+ZAF,030272008,"- - 메기(Pangasius spp., Silurus spp., Clarias spp., Ictalurus spp.)",free
+ZAF,030273004,"- - 잉어(Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.)",free
+ZAF,030274000,- - 뱀장어[앙귈라(Anguilla)속],free
+ZAF,030279002,- - 기타,free
+ZAF,030281006,- - 상어와 기타 상어,free
+ZAF,030282002,- - 가오리와 가오리류(Rajidae),free
+ZAF,030283009,- - 이빨고기(Dissostichus spp.),free
+ZAF,030284005,- - 농어(Dicentrarchus spp.),free
+ZAF,030285001,- - 도미 (Sparidae),free
+ZAF,030289007,- - 기타,free
+ZAF,030291000,- - 간ㆍ어란(魚卵)ㆍ어백(魚白),free
+ZAF,030292007,- - 상어 지느러미,free
+ZAF,030299001,- - 기타,free
+ZAF,030311008,- - 홍연어(Oncorhynchus nerka),25%
+ZAF,030312004,"- - 기타 태평양 연어(Oncorhynchus gorbuscha, Oncorhynchus keta, Oncorhynchus tschawytscha, Oncorhynchus kisutch, Oncorhynchus masou 및 Oncorhynchus rhodurus)",25%
+ZAF,030313000,- - 대서양 연어[살모 살라(Salmo salar)]와 다뉴브 연어[후코 후코(Hucho hucho)],25%
+ZAF,030314007,"- - 송어(Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache 및 Oncorhynchus chrysogaster)",25%
+ZAF,030319009,- - 기타,25%
+ZAF,030323005,- - 틸라피아(Oreochromis spp.),free
+ZAF,030324001,"- - 메기(Pangasius spp., Silurus spp., Clarias spp., Ictalurus spp.)",free
+ZAF,030325008,"- - 잉어(Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.)",free
+ZAF,030326004,- - 뱀장어(Anguilla spp.),free
+ZAF,030329003,- - 기타,free
+ZAF,030331007,"- - 넙치(Reinhardtius hippoglossoides, Hippoglossus hippoglossus, Hippoglossus stenolepis)",free
+ZAF,030332003,- - 가자미 (Pleuronectes platessa),free
+ZAF,030333002,- - 가자미 (Solea spp.),free
+ZAF,030334006,- - 가자미 (Psetta maxima),free
+ZAF,030339008,- - 기타,free
+ZAF,030341001,- - 날개다랑어 또는 긴 지느러미 다랑어(Thunnus alalunga),free
+ZAF,030342008,- - 황다랑어(Thunnus albacares),free
+ZAF,030343004,- - 가다랑어(줄무늬 가다랭이)(Katsuwonus pelamis),free
+ZAF,030344000,- - 눈다랑어[터너스 오베서스(Thunnus obesus)],free
+ZAF,030345007,"- - 대서양 및 태평양 참다랑어(Thunnus thynnus, Thunnus orientalis)",free
+ZAF,030346003,- - 남방참다랑어(Thunnus maccoyii),free
+ZAF,030349002,- - 기타,free
+ZAF,030351006,"- - 청어(Clupea harengus, Clupea pallasii)",free
+ZAF,030353009,"- - 정어리(Sardina pilchardus, Sardinops spp.), 사르디넬라(Sardinella spp.), 브리슬링 또는 스프랫(Sprattus sprattus)",free
+ZAF,030354005,"- - 고등어(Scomber scombrus, Scomber australasicus, Scomber japonicus)",free
+ZAF,030355001,- - 고등어와 전갱이(Trachurus spp.),free
+ZAF,030356008,- - 코비아(Rachycentron canadum),free
+ZAF,030357004,- - 황새치 (Xiphias Gladius),free
+ZAF,030359007,- - 기타,free
+ZAF,030363003,"- - 대구(Gadus morhua, Gadus ogac, Gadus Macrocephalus)",free
+ZAF,030364000,- - 해덕[멜라노그라무스 애그레피누스(Melanogrammus aeglefinus)],free
+ZAF,030365006,- - 석탄어(Pollachius virens),free
+ZAF,030366002,"- - Hake (Merluccius spp., Urophycis spp.)",free
+ZAF,030367009,- - 알래스카 폴록(Theragra chalcogramma),free
+ZAF,030368005,"- - 블루와이팅(Micromesistius poutassou, Micromesistius australis)",free
+ZAF,030369001,- - 기타,free
+ZAF,030381000,- - 곱상어와 그 밖의 상어,free
+ZAF,030382006,- - 가오리와 가오리류(Rajidae),free
+ZAF,030383002,- - 이빨고기(Dissostichus spp.),free
+ZAF,030384009,- - 농어(Dicentrarchus spp.),free
+ZAF,030389000,- - 기타,free
+ZAF,030391004,"- - 간, 알, 정어리",free
+ZAF,030392000,- - 상어 지느러미,free
+ZAF,030399005,- - 기타,free
+ZAF,030431000,- - 틸라피아[오레오크로미스(Oreochromis)속],25%
+ZAF,030432007,"- - 메기(Pangasius spp., Silurus spp., Clarias spp., Ictalurus spp.)",25%
+ZAF,030433003,- - 나일퍼치(Lates niloticus),25%
+ZAF,030439001,- - 기타,25%
+ZAF,030441005,"- - 태평양 연어(Oncorhynchus nerka, Oncorhynchus gorbuscha, Oncorhynchus keta, Oncorhynchus tschawytscha, Oncorhynchus kisutch, Oncorhynchus masou 및 Oncorhynchus rhodurus), 대서양 연어(Salmo salar) 및 다뉴브 연어(Hucho hucho)",25%
+ZAF,030442001,"- - 송어(Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache 및 Oncorhynchus chrysogaster)",25%
+ZAF,030443008,"- - 납작한 물고기(가시과, 양쪽과, Cynoglossidae, Soleidae, Scophalmidae 및 Citharidae)",25%
+ZAF,030444004,"- - Bregmacerotidae, Euclichthyidae, Gadidae, Macrouridae, Melanonidae, Merlucciidae, Moridae 및 Muraenolepididae과의 물고기",25%
+ZAF,030445000,- - 황새치[자이피어스 글래디어스(Xiphias gladius)],25%
+ZAF,030446007,- - 이빨고기(Dissostichus spp.),25%
+ZAF,030447003,- - 상어와 기타 상어,25%
+ZAF,030448009,- - 가오리와 가오리류(Rajidae),25%
+ZAF,030449103,"- - - 멸치(Engraulis spp.); 청어(Clupea harengus, clupea pallasii)",free
+ZAF,030449901,- - - 기타,25%
+ZAF,030451001,"- - 틸라피아(Oreochromis spp.), 메기(Pangasius spp., Silurus spp., Clarias spp., Ictalurus spp.), 잉어(Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.), 장어(Anguilla spp.), 나일 농어(Lates niloticus) 및 독사(Channa spp.)",25%
+ZAF,030452006,- - 연어과,25%
+ZAF,030453002,"- - Bregmacerotidae, Euclichthyidae, Gadidae, Macrouridae, Melanonidae, Merlucciidae, Moridae 및 Muraenolepididae과의 물고기",25%
+ZAF,030454009,- - 황새치 (Xiphias Gladius),25%
+ZAF,030455005,- - 이빨고기(Dissostichus spp.),25%
+ZAF,030456001,- - 상어와 기타 상어,25%
+ZAF,030457008,- - 가오리와 가오리류(Rajidae),25%
+ZAF,030459108,"- - - 멸치(Engraulis spp.); 청어(Clupea harengus, clupea pallasii)",free
+ZAF,030459906,- - - 기타,25%
+ZAF,030461101,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030461908,- - - 기타,25%
+ZAF,030462108,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030462906,- - - 기타,25%
+ZAF,030463104,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030463902,- - - 기타,25%
+ZAF,030469102,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030469900,- - - 기타,25%
+ZAF,030471106,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030471904,- - - 기타,25%
+ZAF,030472102,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030472900,- - - 기타,25%
+ZAF,030473109,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030473907,- - - 기타,25%
+ZAF,030474105,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030474903,- - - 기타,25%
+ZAF,030475101,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030475906,- - - 기타,25%
+ZAF,030479107,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030479905,- - - 기타,25%
+ZAF,030481100,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030481909,- - - 기타,25%
+ZAF,030482107,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030482905,- - - 기타,25%
+ZAF,030483103,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030483901,- - - 기타,25%
+ZAF,030484108,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030484908,- - - 기타,25%
+ZAF,030485106,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030485904,- - - 기타,25%
+ZAF,030486005,"- - 청어(Clupea harengus, Clupea pallasii)",free
+ZAF,030487109,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030487907,- - - 기타,25%
+ZAF,030488105,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030488903,- - - 기타,25%
+ZAF,030489101,- - - 멸치(Engraulis spp.),free
+ZAF,030489209,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030489904,- - - 기타,25%
+ZAF,030491105,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030491903,- - - 기타,25%
+ZAF,030492101,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030492906,- - - 기타,25%
+ZAF,030493108,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030493906,- - - 기타,25%
+ZAF,030494104,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030494902,- - - 기타,25%
+ZAF,030495100,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030495909,- - - 기타,25%
+ZAF,030496107,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030496905,- - - 기타,25%
+ZAF,030497103,"- - - 무게가 7kg 이상 8kg 이하인 직사각형 블록, 끼워넣은 플라스틱이 없는 것(뼈가 포함된 블록은 제외)",free
+ZAF,030497901,- - - 기타,25%
+ZAF,030499106,"- - - 멸치(Engraulis spp.); 청어(Clupea harengus, Clupea pallasii); 블록, 직사각형, 무게가 7kg 이상이지만 8kg을 초과하지 않는 것, 끼어있는 플라스틱이 없는 것(뼈가 들어 있는 블록은 제외)",free
+ZAF,030499904,- - - 기타,25%
+ZAF,030520003,"- 생선의 간, 알, 정어리, 건조, 훈제, 소금에 절이거나 소금물에 담근 것",free
+ZAF,030531004,"- - 틸라피아(Oreochromis spp.), 메기(Pangasius spp., Silurus spp., Clarias spp., Ictalurus spp.), 잉어(Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.), 장어(Anguilla spp.), 나일 농어(Lates niloticus) 및 독사(Channa spp.)",25%
+ZAF,030532000,- - 브레그마세로티대(Bregmacerotidae)과ㆍ유클리티대(Euclichthyidae)과ㆍ가디대(Gadidae)과ㆍ마크로우리대(Macrouridae)과ㆍ멜라노니대(Melanonidae)과ㆍ메르루치대(Merlucciidae)과ㆍ모리대(Moridae)과ㆍ무라에놀레피디대(Muraenolepididae)과의 어류,25%
+ZAF,030539102,- - - 멸치(Engraulis spp.),free
+ZAF,030539900,- - - 기타,25%
+ZAF,030541009,"- - 태평양 연어(Oncorhynchus nerka, Oncorhynchus gorbuscha, Oncorhynchus keta, Oncorhynchus tschawytscha, Oncorhynchus kisutch, Oncorhynchus masou 및 Oncorhynchus rhodurus), 대서양 연어(Salmo salar) 및 다뉴브 연어(Hucho hucho)",25%
+ZAF,030542005,"- - 청어(Clupea harengus, Clupea pallasii)",free
+ZAF,030543001,"- - 송어(Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache 및 Oncorhynchus chrysogaster)",25%
+ZAF,030544008,"- - 틸라피아(Oreochromis spp.), 메기(Pangasius spp., Silurus spp., Clarias spp., Ictalurus spp.), 잉어(Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.), 장어(Anguilla spp.), 나일 농어(Lates niloticus) 및 독사(Channa spp.)",25%
+ZAF,030549107,- - - 멸치(Engraulis spp.),free
+ZAF,030549905,- - - 기타,25%
+ZAF,030551003,"- - 대구(Gadus morhua, Gadus ogac, Gadus Macrocephalus)",free
+ZAF,030552000,"- - 틸라피아[오레오크로미스(Oreochromis)속], 메기[판가시우스(Pangasius)속ㆍ실루러스(Silurus)속ㆍ클라리아스(Clarias)속ㆍ익타루러스(Ictalurus)속], 잉어[사이프리너스(Cyprinus)속ㆍ카라시우스(Carassius)속ㆍ크테노파린고돈 이델루스(Ctenopharyngodon idellus)ㆍ하이포프탈미크티스(Hypophthalmichthys)속ㆍ시리누스(Cirrhinus)속ㆍ마일로파린고돈 피세우스(Mylopharyngodon piceus)ㆍ카틀라 카틀라(Catla catla)ㆍ라베오(Labeo)속ㆍ오스테오킬루스 하셀티(Osteochilus hasselti)ㆍ렙토바르부스 호에베니(Leptobarbus hoeveni)ㆍ메갈로브라마(Megalobrama)속], 뱀장어[앙귈라(Anguilla)속], 나일 퍼치[라테스 니로티쿠스(Lates niloticus)], 가물치[카나(Channa)속]",25%
+ZAF,030553006,"- - Bregmacerotidae, Euclichthyidae, Gadidae, Macrouridae, Melanonidae, Merlucciidae, Moridae 및 Muraenolepididae과의 어류(대구 제외)(Gadus morhua, Gadus ogac, Gadus macrocephalus)",25%
+ZAF,030554109,- - - 멸치(Engraulis spp.),free
+ZAF,030554908,- - - 기타,25%
+ZAF,030559004,- - 기타,25%
+ZAF,030561008,"- - 청어(Clupea harengus, Clupea pallasii)",free
+ZAF,030562004,"- - 대구(Gadus morhua, Gadus ogac, Gadus Macrocephalus)",free
+ZAF,030563000,- - 멸치[엔그라울리스(Engraulis)속],free
+ZAF,030564007,"- - 틸라피아(Oreochromis spp.), 메기(Pangasius spp., Silurus spp., Clarias spp., Ictalurus spp.), 잉어(Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.), 장어(Anguilla spp.), 나일 농어(Lates niloticus) 및 독사(Channa spp.)",25%
+ZAF,030569009,- - 기타,25%
+ZAF,030571109,- - - 건조된 것(소금에 절인 것인지 여부는 상관없으나 훈제한 것은 아님),free
+ZAF,030571908,- - - 기타,25%
+ZAF,030572106,"- - - 멸치(Engraulis spp.); 청어(Clupea harengus, Clupea pallasii)(건조한 것 제외, 소금에 절인 것인지 여부와 관계없으나 훈제한 것은 제외); 및 대구(Gadus morhua, Gadus ogac, Gadus macrocephalus)(훈제한 것은 제외)",free
+ZAF,030572904,- - - 기타,25%
+ZAF,030579100,"- - - 멸치(Engraulis spp.); 청어(Clupea harengus, Clupea pallasii)(건조한 것 제외, 소금에 절인 것인지 여부와 관계없으나 훈제한 것은 제외); 및 대구(Gadus morhua, Gadus ogac, Gadus macrocephalus)(훈제한 것은 제외)",free
+ZAF,030579909,- - - 기타,25%
+ZAF,030611106,- - - 훈제,"5,5c/kg"
+ZAF,030611904,- - - 기타,free
+ZAF,030612102,- - - 훈제,30%
+ZAF,030612900,- - - 기타,free
+ZAF,030614105,- - - 훈제,"5,5c/kg"
+ZAF,030614903,- - - 기타,free
+ZAF,030615101,- - - 훈제,"5,5c/kg"
+ZAF,030615908,- - - 기타,free
+ZAF,030616108,- - - 훈제,"5,5c/kg"
+ZAF,030616906,- - - 기타,free
+ZAF,030617104,- - - 훈제,"5,5c/kg"
+ZAF,030617902,- - - 기타,free
+ZAF,030619107,- - - 훈제,"5,5c/kg"
+ZAF,030619905,- - - 기타,free
+ZAF,030631008,"- - 닭새우 및 기타 바다 가재(Palinurus spp., Panulirus spp., Jasus spp.)",free
+ZAF,030632004,- - 랍스타(Homarus spp.),free
+ZAF,030633000,- - 게,free
+ZAF,030634007,- - 노르웨이 랍스터(Nephrops norvegicus),free
+ZAF,030635003,"- - 냉수성 새우 및 참새우(Pandalus spp., Crangon crangon)",free
+ZAF,030636009,- - 기타 새우 및 참새우,free
+ZAF,030639009,- - 기타,free
+ZAF,030691102,- - - 훈제,"5,5c/kg"
+ZAF,030691900,- - - 기타,free
+ZAF,030692109,- - - 훈제,30%
+ZAF,030692907,- - - 기타,free
+ZAF,030693105,- - - 훈제,"5,5c/kg"
+ZAF,030693903,- - - 기타,free
+ZAF,030694101,- - - 훈제,"5,5c/kg"
+ZAF,030694904,- - - 기타,free
+ZAF,030695108,- - - 훈제,"5,5c/kg"
+ZAF,030695906,- - - 기타,free
+ZAF,030699103,- - - 훈제,"5,5c/kg"
+ZAF,030699901,- - - 기타,free
+ZAF,030711002,"- - 살아 있는 것, 신선한 것 또는 냉장한 것",free
+ZAF,030712009,- - 냉동,free
+ZAF,030719100,- - - 훈제,"5,5c/kg"
+ZAF,030719909,- - - 기타,free
+ZAF,030721007,"- - 살아 있는 것, 신선한 것 또는 냉장한 것",free
+ZAF,030722003,- - 냉동,free
+ZAF,030729105,- - - 훈제,"5,5c/kg"
+ZAF,030729903,- - - 기타,free
+ZAF,030731001,"- - 살아 있는 것, 신선한 것 또는 냉장한 것",free
+ZAF,030732008,- - 냉동,25%
+ZAF,030739107,- - - 훈제,25%
+ZAF,030739207,"- - - 냉동, 껍질 제거 안 함 (훈제 제외)",25%
+ZAF,030739304,"- - - 냉동, 껍질을 반으로 자른 상태(훈제 제외)",25%
+ZAF,030739401,"- - - 냉동, 껍질이 벗겨진 고기(훈제 제외)",25%
+ZAF,030739908,- - - 기타,25%
+ZAF,030742002,"- - 살아 있는 것, 신선한 것 또는 냉장한 것",free
+ZAF,030743009,- - 냉동,free
+ZAF,030749104,- - - 훈제,"5,5c/kg"
+ZAF,030749902,- - - 기타,free
+ZAF,030751000,"- - 살아 있는 것, 신선한 것, 냉장한 것",free
+ZAF,030752007,- - 냉동,free
+ZAF,030759109,- - - 훈제,"5,5c/kg"
+ZAF,030759907,- - - 기타,free
+ZAF,030760106,- - 훈제,"5,5c/kg"
+ZAF,030760904,- - 기타,free
+ZAF,030771008,"- - 살아 있는 것, 신선한 것 또는 냉장한 것",free
+ZAF,030772006,- - 냉동,free
+ZAF,030779108,- - - 훈제,"5,5c/kg"
+ZAF,030779906,- - - 기타,free
+ZAF,030781004,"- - 살아 있는, 신선한 또는 냉장한 전복(Haliotis spp.)",free
+ZAF,030782000,"- - 살아있거나, 신선하거나 냉장한 수정고둥류[스트롬버스(Strombus)속]",free
+ZAF,030783007,- - 냉동 전복 (Haliotis spp.),free
+ZAF,030784003,- - 냉동 스트롬보이드 조개(Strombus spp.),free
+ZAF,030787105,- - - 훈제,"5,5c/kg"
+ZAF,030787908,- - - 기타,free
+ZAF,030788106,- - - 훈제,"5,5c/kg"
+ZAF,030788904,- - - 기타,free
+ZAF,030791009,"- - 살아 있는 것, 신선한 것 또는 냉장한 것",free
+ZAF,030792005,- - 냉동,free
+ZAF,030799301,- - - 훈제,"5,5c/kg"
+ZAF,030799905,- - - 기타,free
+ZAF,030811006,"- - 살아 있는 것, 신선한 것 또는 냉장한 것",free
+ZAF,030812002,- - 냉동,free
+ZAF,030819104,- - - 훈제,"2,75c/kg"
+ZAF,030819902,- - - 기타,free
+ZAF,030821000,"- - 살아 있는 것, 신선한 것, 냉장한 것",free
+ZAF,030822007,- - 냉동,free
+ZAF,030829109,- - - 훈제,"2,75c/kg"
+ZAF,030829907,- - - 기타,free
+ZAF,030830106,- - 훈제,"2,75c/kg"
+ZAF,030830904,- - 기타,free
+ZAF,030890103,- - 훈제,"2,75c/kg"
+ZAF,030890901,- - 기타,free
+ZAF,030910003,- 생선의,free
+ZAF,030990006,- 기타,free
+ZAF,040110073,"- - 1리터 이하를 담는 용기에 담긴 초고온(UHT) 또는 ""장수명"" 우유, 영양가를 증가시키는 목적만을 위해 미네랄, 비타민, 효소 및 유사한 첨가제를 첨가했는지 여부와 관계없이, 이러한 첨가제가 최종 제품의 부피 기준 1%를 초과하지 않는 경우",free
+ZAF,040110093,"- - 영양가를 증가시키는 목적만을 위해 미네랄, 비타민, 효소 및 유사한 첨가물을 포함하든 포함하지 않든 기타 우유이며 이러한 첨가물이 최종 제품의 부피 기준 1%를 초과하지 않는 경우",free
+ZAF,040110901,- - 기타,free
+ZAF,040120078,"- - 1리터 이하를 담는 용기에 담긴 초고온(UHT) 또는 ""장수명"" 우유, 영양가를 증가시키는 목적만을 위해 미네랄, 비타민, 효소 및 유사한 첨가제를 첨가했는지 여부와 관계없이, 이러한 첨가제가 최종 제품의 부피 기준 1%를 초과하지 않는 경우",free
+ZAF,040120094,"- - 영양가를 증가시키는 목적만을 위해 미네랄, 비타민, 효소 및 유사한 첨가물을 포함하든 포함하지 않든 기타 우유이며 이러한 첨가물이 최종 제품의 부피 기준 1%를 초과하지 않는 경우",free
+ZAF,040120906,- - 기타,free
+ZAF,040140077,"- - 1리터 이하를 담는 용기에 담긴 초고온(UHT) 또는 ""장수명"" 우유, 영양가를 증가시키는 목적만을 위해 미네랄, 비타민, 효소 및 유사한 첨가제를 첨가했는지 여부와 관계없이, 이러한 첨가제가 최종 제품의 부피 기준 1%를 초과하지 않는 경우",free
+ZAF,040140093,"- - 영양가를 증가시키는 목적만을 위해 미네랄, 비타민, 효소 및 유사한 첨가물을 포함하든 포함하지 않든 기타 우유이며 이러한 첨가물이 최종 제품의 부피 기준 1%를 초과하지 않는 경우",free
+ZAF,040140905,- - 기타,free
+ZAF,040150071,"- - 1리터 이하를 담는 용기에 담긴 초고온(UHT) 또는 ""장수명"" 우유, 영양가를 증가시키는 목적만을 위해 미네랄, 비타민, 효소 및 유사한 첨가제를 첨가했는지 여부와 관계없이, 이러한 첨가제가 최종 제품의 부피 기준 1%를 초과하지 않는 경우",free
+ZAF,040150098,"- - 영양가를 증가시키는 목적만을 위해 미네랄, 비타민, 효소 및 유사한 첨가물을 포함하든 포함하지 않든 기타 우유이며 이러한 첨가물이 최종 제품의 부피 기준 1%를 초과하지 않는 경우",free
+ZAF,040150900,- - 기타,free
+ZAF,040210107,"- - 향료가 첨가되지 않았으며, 추가 설탕이나 기타 감미료가 포함되어 있지 않습니다.",450c/kg with a maximum of 96%
+ZAF,040210905,- - 기타,450c/kg with a maximum of 96%
+ZAF,040221108,- - - 향미 없음,450c/kg with a maximum of 96%
+ZAF,040221906,- - - 기타,450c/kg with a maximum of 96%
+ZAF,040229001,- - 기타,450c/kg with a maximum of 96%
+ZAF,040291002,- - 추가 설탕이나 기타 감미료를 포함하지 않음,450c/kg with a maximum of 96%
+ZAF,040299100,- - - 에어로졸 용기,450c/kg with a maximum of 96%
+ZAF,040299909,- - - 기타,450c/kg with a maximum of 96%
+ZAF,040320008,- 요거트,free
+ZAF,040390107,"- - 과일, 견과류 또는 코코아 향이 나는 것 또는 함유된 것",450c/kg with a maximum of 96%
+ZAF,040390204,"- - 농축되지 않았거나 설탕이나 기타 감미료를 포함하지 않는 발효유, 무향이며 과일, 견과류 또는 코코아를 포함하지 않음(버터밀크 제외)",450c/kg with a maximum of 96%
+ZAF,040390905,- - 기타,450c/kg with a maximum of 96%
+ZAF,040410007,- 유청 및 개질 유청(농축 여부 또는 추가 설탕 또는 기타 감미료 함유 여부와 관계없음),450c/kg with a maximum of 96%
+ZAF,040490100,- - 지방이 없는 기준으로 계산된 최소 30%(m/m)의 우유 단백질을 함유한 유제품 분말 혼합물,450c/kg with a maximum of 96%
+ZAF,040490909,- - 기타,450c/kg with a maximum of 96%
+ZAF,040510108,- - 내용물이 20kg 이상인 직접 포장의 경우,500c/kg with a maximum of 79%
+ZAF,040510906,- - 기타,500c/kg with a maximum of 79%
+ZAF,040520102,- - 유지방 함량이 39% 이상 75% 미만인 것,500c/kg with a maximum of 37%
+ZAF,040520900,- - 기타,500c/kg with a maximum of 79%
+ZAF,040590007,- 기타,500c/kg with a maximum of 79%
+ZAF,040610004,"- 신선한 (익지 않은 또는 숙성되지 않은) 치즈, 유청 치즈 및 두부 포함",500c/kg with a maximum of 95%
+ZAF,040620009,- 모든 종류의 강판 치즈 또는 가루 치즈,500c/kg with a maximum of 95%
+ZAF,040630003,- 가공치즈(갈거나 가루로 만든 것은 불가),500c/kg with a maximum of 95%
+ZAF,040640008,- PENICILLIUM ROQUEFORTI가 생성하는 푸른 정맥 치즈 및 기타 정맥을 함유한 치즈,500c/kg with a maximum of 95%
+ZAF,040690116,- - - 스위스에서 수입,500c/kg with a maximum of 95%
+ZAF,040690124,- - - 기타,500c/kg with a maximum of 95%
+ZAF,040690213,- - - 스위스에서 수입,500c/kg with a maximum of 95%
+ZAF,040690221,- - - 기타,500c/kg with a maximum of 95%
+ZAF,040690914,- - - 스위스에서 수입,500c/kg with a maximum of 95%
+ZAF,040690993,- - - 기타,500c/kg with a maximum of 95%
+ZAF,040711101,- - - 세금 목적상 각각 150c 미만의 가치,free
+ZAF,040711908,- - - 기타,free
+ZAF,040719102,- - - 타조알,free
+ZAF,040719900,- - - 기타,free
+ZAF,040721106,- - - 세금 목적상 각각 150c 미만의 가치,free
+ZAF,040721904,- - - 기타,free
+ZAF,040729107,- - - 타조알,free
+ZAF,040729905,- - - 기타,free
+ZAF,040790101,- - 타조알,free
+ZAF,040790209,"- - Gallus domesticus 종의 가금류, 익히지 않은 것",free
+ZAF,040790904,- - 기타,free
+ZAF,040811008,- - 건조,19%
+ZAF,040819009,- - 기타,19%
+ZAF,040891004,- - 건조,19%
+ZAF,040899102,- - - Gallus domesticus 종의 달걀 노른자와 흰자로 구성된 생펄프,19%
+ZAF,040899900,- - - 기타,19%
+ZAF,040900000,천연꿀,22%
+ZAF,041010005,- 곤충,free
+ZAF,041090109,- - 에어로졸 용기,free
+ZAF,041090907,- - 기타,free
+ZAF,050100003,세척 또는 세척 여부와 관계없이 가공되지 않은 인간 머리카락; 인간 머리카락 폐기물,free
+ZAF,050210001,"- 돼지, 멧돼지 털과 그 폐기물",free
+ZAF,050290008,- 기타,free
+ZAF,050400101,- 소시지 케이싱,free
+ZAF,050400900,- 기타,free
+ZAF,050510002,- 충전재로 사용되는 종류의 깃털; 솜털,free
+ZAF,050590106,- - 타조의,free
+ZAF,050590904,- - 기타,free
+ZAF,050610006,- 산으로 처리된 골질과 뼈,free
+ZAF,050690106,- - 가공되지 않거나 탈지되거나 단순히 준비된 것(그러나 모양을 잡기 위해 절단되지는 않음),free
+ZAF,050690908,- - 기타,free
+ZAF,050710107,- - 아프리카코끼리(Loxodonta Africana)의 상아; 상아가루 및 그 폐기물,free
+ZAF,050710204,"- - 흰코뿔소(Ceratotherium simum), 검은코뿔소(Diceros bicornis)의 뿔; 상아가루 및 그 폐기물",free
+ZAF,050710905,- - 기타,free
+ZAF,050790006,- 기타,free
+ZAF,050800059,- 전복의 껍질,free
+ZAF,050800106,"- 기타 껍질, 가공되지 않았거나 단순히 준비되었지만 모양을 잡기 위해 절단되지 않음",free
+ZAF,050800904,- 기타,free
+ZAF,051000002,"암베르그리스, 캐스터리움, 사향 및 사향; 칸타리드; 담즙(건조 여부와 관계없음); 제약 제품 제조에 사용되는 선 및 기타 동물성 제품(신선, 냉장, 냉동 또는 기타 임시 보존)",free
+ZAF,051110000,- 소의 정액,free
+ZAF,051191151,"- - - 생선 또는 갑각류, 연체동물 또는 기타 수생 무척추동물의 제품(생선 알 제외), 가공하지 않은 것 또는 단순히 가공한 것",free
+ZAF,051191909,- - - 기타,free
+ZAF,051199055,- - - 타조 알 껍질 (미가공),free
+ZAF,051199101,- - - 힘줄과 힘줄,free
+ZAF,051199152,- - - 혈분; 동물 정액; 생가죽 및 가죽의 깎은 부분 및 이와 유사한 폐기물,free
+ZAF,051199802,- - - 기타 동물성 제품(가공하지 않은 것 또는 단순히 가공한 것),free
+ZAF,051199903,- - - 기타,free
+ZAF,060110003,"- 구근, 괴경, 괴경뿌리, 구근관 및 근경, 휴면상태",free
+ZAF,060120004,"- 성장 중이거나 꽃이 핀 구근, 괴경, 괴경뿌리, 덩이줄기, 뿌리줄기 및 근경; 치커리 식물 및 뿌리",free
+ZAF,060210003,- 뿌리가 없는 절단 및 가지,free
+ZAF,060220008,"- 식용 과일이나 견과류를 맺는 나무, 관목 및 수풀(접목 여부와 관계없음)",free
+ZAF,060230002,"- 진달래와 철쭉, 접목 여부와 관계없음",free
+ZAF,060240007,"- 장미, 접목 여부와 관계 없음",free
+ZAF,060290008,- 기타,free
+ZAF,060311003,- - 장미,20%
+ZAF,060312001,- - 카네이션,20%
+ZAF,060313006,- - 난초,20%
+ZAF,060314002,- - 국화,20%
+ZAF,060315009,- - 백합(Lilium spp.),20%
+ZAF,060319004,- - 기타,20%
+ZAF,060390003,- 기타,20%
+ZAF,060420102,- - 이끼와 지의류,20%
+ZAF,060420900,- - 기타,20%
+ZAF,060490104,- - 이끼와 지의류,20%
+ZAF,060490902,- - 기타,20%
+ZAF,070110001,- 씨앗,"0,44c/kg"
+ZAF,070190008,- 기타,"0,44c/kg"
+ZAF,070200000,토마토(신선한 것이나 냉장한 것으로 한정한다),15%
+ZAF,070310009,- 양파와 샬롯,15%
+ZAF,070320003,- 마늘,325c/kg with a maximum of 37%
+ZAF,070390005,- 부추 및 기타 알리아과 야채,15%
+ZAF,070410002,- 콜리플라워와 브로콜리,free
+ZAF,070420007,- 브뤼셀 콩나물,free
+ZAF,070490009,- 기타,free
+ZAF,070511002,- - 양배추상추(머리상추),free
+ZAF,070519003,- - 기타,free
+ZAF,070521007,- - Witloof 치커리(Cichorium intybus var. foliosum),free
+ZAF,070529008,- - 기타,free
+ZAF,070610009,- 당근과 순무,free
+ZAF,070690006,- 기타,free
+ZAF,070700009,"오이와 오이피클, 신선하거나 냉장",15%
+ZAF,070810007,- 완두콩(Pisum sativum),15%
+ZAF,070820001,"- 콩(Vigna spp., Phaseolus spp.)",free
+ZAF,070890003,- 기타 콩과 야채,free
+ZAF,070920005,- 아스파라거스,15%
+ZAF,070930006,- 가지,free
+ZAF,070940004,- 셀러리악 외의 셀러리,free
+ZAF,070951005,- - 아가리쿠스속의 버섯,15%
+ZAF,070952001,- - Boletus속의 버섯,15%
+ZAF,070953008,- - Cantharellus속의 버섯,15%
+ZAF,070954004,- - 표고버섯(Lentinus edodes),15%
+ZAF,070955000,"- - 송이버섯(Tricholoma matsutake, Tricholoma magnivelare, Tricholoma anatolicum, Tricholoma dulciolens, Tricholoma caligatum)",15%
+ZAF,070956007,- - 트러플(Tuber spp.),free
+ZAF,070959103,- - - 트러플,free
+ZAF,070959901,- - - 기타,15%
+ZAF,070960003,- CAPSICUM속 또는 PIMENTA속의 과일,15%
+ZAF,070970008,"- 시금치, 뉴질랜드 시금치, 오라체 시금치(가든 시금치)",free
+ZAF,070991003,- - 글로브 아티초크,free
+ZAF,070992002,- - 올리브,15%
+ZAF,070993006,"- - 호박, 스쿼시 및 박과류(Cucurbita spp.)",15%
+ZAF,070999004,- - 기타,15%
+ZAF,071010000,- 감자,30%
+ZAF,071021001,- - 완두콩 (Pisum sativum),10%
+ZAF,071022008,"- - 콩(Vigna spp., Phaseolus spp.)",10%
+ZAF,071029002,- - 기타,24%
+ZAF,071030001,"- 시금치, 뉴질랜드 시금치, 오라체 시금치(가든 시금치)",20%
+ZAF,071040004,- 달콤한 옥수수,10%
+ZAF,071080108,- - 트러플,free
+ZAF,071080908,- - 기타,10%
+ZAF,071090007,- 야채 혼합물,10%
+ZAF,071120009,- 올리브,25%
+ZAF,071140008,- 오이와 오이피클,20%
+ZAF,071151009,- - 아가리쿠스속의 버섯,20%
+ZAF,071159006,- - 기타,20%
+ZAF,071190108,- - 샬롯과 부추,20%
+ZAF,071190205,- - 케이퍼,20%
+ZAF,071190302,- - 후추속의 열매,free
+ZAF,071190906,- - 기타,20%
+ZAF,071220002,- 양파,20%
+ZAF,071231003,- - 아가리쿠스속의 버섯,20%
+ZAF,071232009,- - 목이삭(Auricularia spp.),20%
+ZAF,071233006,- - 젤리균류(Tremella spp.),20%
+ZAF,071234002,- - 표고버섯(Lentinus edodes),20%
+ZAF,071239004,- - 기타,20%
+ZAF,071290152,- - 요리용 허브,4c/kg
+ZAF,071290904,- - 기타,20%
+ZAF,071310109,- - 파종용 씨앗,15%
+ZAF,071310206,"- - 기타, 완두콩, 통째",15%
+ZAF,071310257,"- - 완두콩, 껍질을 벗기거나 쪼개기",30%
+ZAF,071310907,- - 기타,free
+ZAF,071320103,- - 파종용 씨앗,free
+ZAF,071320901,- - 기타,free
+ZAF,071331104,- - - 파종용 씨앗,15%
+ZAF,071331902,- - - 기타,15%
+ZAF,071332100,- - - 파종용 씨앗,10%
+ZAF,071332909,- - - 기타,10%
+ZAF,071333107,- - - 파종용 씨앗,10%
+ZAF,071333905,- - - 기타,10%
+ZAF,071334103,- - - 파종용 씨앗,10%
+ZAF,071334901,- - - 기타,10%
+ZAF,071335107,- - - 파종용 씨앗,10%
+ZAF,071335908,- - - 기타,10%
+ZAF,071339105,- - - 파종용 씨앗,10%
+ZAF,071339903,- - - 기타,10%
+ZAF,071340102,- - 파종용 씨앗,free
+ZAF,071340900,- - 기타,free
+ZAF,071350107,- - 파종용 씨앗,15%
+ZAF,071350905,- - 기타,15%
+ZAF,071360101,- - 파종용 씨앗,15%
+ZAF,071360209,- - 전체 (파종용 씨앗 제외),15%
+ZAF,071360306,- - 껍질이 벗겨지거나 갈라짐,24%
+ZAF,071390016,- - 파종용 씨앗,15%
+ZAF,071390105,- - 전체 (파종용 씨앗 제외),15%
+ZAF,071390202,- - 껍질이 벗겨지거나 갈라짐,24%
+ZAF,071410102,- - 냉동,5%
+ZAF,071410209,- - 신선하거나 냉장,free
+ZAF,071410900,- - 기타,free
+ZAF,071420107,- - 냉동,5%
+ZAF,071420204,- - 신선하거나 냉장,free
+ZAF,071420905,- - 기타,free
+ZAF,071430101,- - 냉동,5%
+ZAF,071430209,- - 신선하거나 냉장,free
+ZAF,071430906,- - 기타,free
+ZAF,071440106,- - 냉동,5%
+ZAF,071440203,- - 신선하거나 냉장,free
+ZAF,071440904,- - 기타,free
+ZAF,071450100,- - 냉동,5%
+ZAF,071450208,- - 신선하거나 냉장,free
+ZAF,071450909,- - 기타,free
+ZAF,071490109,- - 냉동,5%
+ZAF,071490206,- - 신선하거나 냉장,free
+ZAF,071490907,- - 기타,free
+ZAF,080111107,- - - 무가당,free
+ZAF,080111905,- - - 기타,free
+ZAF,080112103,- - - 신선한,free
+ZAF,080112200,"- - - 기타, 전체",free
+ZAF,080112901,- - - 기타,20%
+ZAF,080119051,- - - 신선한,free
+ZAF,080119108,"- - - 기타, 전체",free
+ZAF,080119906,- - - 기타,20%
+ZAF,080121004,- - 껍질 속에,free
+ZAF,080122000,- - 껍데기를 벗긴 것,free
+ZAF,080131009,- - 껍질 속에,free
+ZAF,080132005,- - 껍질을 벗긴,free
+ZAF,080211003,- - 껍질 속에,free
+ZAF,080212000,- - 껍데기를 벗긴 것,free
+ZAF,080221008,- - 껍질 속에,free
+ZAF,080222004,- - 껍질을 벗긴,free
+ZAF,080231002,- - 껍질 속에,free
+ZAF,080232009,- - 껍질을 벗긴,free
+ZAF,080241007,- - 껍질 속에,free
+ZAF,080242003,- - 껍질을 벗긴,free
+ZAF,080251001,- - 껍질 속에,free
+ZAF,080252008,- - 껍질을 벗긴,free
+ZAF,080261006,- - 껍질 속에,free
+ZAF,080262002,- - 껍질을 벗긴,free
+ZAF,080270004,- 콜라 너트(Cola spp.),free
+ZAF,080280009,- 아레카 너트,free
+ZAF,080291006,- - 껍질이 있는 소나무 열매,free
+ZAF,080292006,- - 껍질을 벗긴 소나무 열매,free
+ZAF,080299116,- - - - 껍질 속에,free
+ZAF,080299124,- - - - 껍질이 벗겨짐,free
+ZAF,080299906,- - - 기타,free
+ZAF,080310108,- - 신선한,5%
+ZAF,080310906,- - 기타,5%
+ZAF,080390104,- - 신선한,5%
+ZAF,080390902,- - 기타,5%
+ZAF,080410101,- - 신선한,free
+ZAF,080410907,- - 기타,free
+ZAF,080420106,- - 신선한,free
+ZAF,080420904,- - 기타,free
+ZAF,080430100,- - 신선한,15%
+ZAF,080430909,- - 기타,15%
+ZAF,080440105,- - 신선한,5%
+ZAF,080440903,- - 기타,5%
+ZAF,080450118,- - - 망고,35%
+ZAF,080450193,- - - 기타,35%
+ZAF,080450916,"- - - 망고, 건조",35%
+ZAF,080450991,- - - 기타,35%
+ZAF,080510105,- - 신선한,4%
+ZAF,080510903,- - 기타,4%
+ZAF,080521106,- - - 신선한,4%
+ZAF,080521904,- - - 기타,4%
+ZAF,080522102,- - - 신선한,4%
+ZAF,080522900,- - - 기타,4%
+ZAF,080529107,- - - 신선한,4%
+ZAF,080529905,- - - 기타,4%
+ZAF,080540109,- - 신선한,4%
+ZAF,080540907,- - 기타,4%
+ZAF,080550103,- - 신선한,4%
+ZAF,080550901,- - 기타,4%
+ZAF,080590101,- - 신선한,4%
+ZAF,080590902,- - 기타,4%
+ZAF,080610001,- 신선한,4%
+ZAF,080620006,- 건조,10%
+ZAF,080711001,- - 수박,15%
+ZAF,080719002,- - 기타,15%
+ZAF,080720007,- 파파야(Papayas),15%
+ZAF,080810009,- 사과,4%
+ZAF,080830008,- 배,4%
+ZAF,080840002,- 모과,4%
+ZAF,080910002,- 살구,4%
+ZAF,080921003,- - 사워 체리(Prunus cerasus),4%
+ZAF,080929004,- - 기타,4%
+ZAF,080930001,"- 복숭아, 천도복숭아 포함",4%
+ZAF,080940006,- 자두와 슬로,4%
+ZAF,081010002,- 딸기,15%
+ZAF,081020007,"- 라즈베리, 블랙베리, 뽕, 로건베리",free
+ZAF,081030001,"- 검은색, 흰색 또는 붉은색 건포도와 구스베리",free
+ZAF,081040006,"- 크랜베리, 블루베리 및 VACCINIUM 속의 기타 과일",free
+ZAF,081050000,- 키위프루트(kiwifruit),5%
+ZAF,081060005,- 두리안,5%
+ZAF,081070008,- 감,5%
+ZAF,081090106,- - 그라나딜라와 리치,15%
+ZAF,081090300,- - 석류,5%
+ZAF,081090904,- - 기타,5%
+ZAF,081110103,- - 추가 설탕이나 기타 감미료를 포함하지 않음,20%
+ZAF,081110901,- - 기타,20%
+ZAF,081120108,- - 추가 설탕이나 기타 감미료를 포함하지 않음,20%
+ZAF,081120906,- - 기타,20%
+ZAF,081190053,- - 추가 설탕이나 기타 감미료를 함유하지 않은 그라나딜라 펄프 및 리치 펄프,5%
+ZAF,081190106,- - 기타 그라나딜라펄프 및 리치펄프,5%
+ZAF,081190851,- - 추가 설탕이나 기타 감미료를 함유하지 않은 기타 과일,20%
+ZAF,081190908,- - 기타,20%
+ZAF,081210000,- 체리,20%
+ZAF,081290154,- - 그라나딜라펄프;리치펄프,5%
+ZAF,081290200,- - 딸기,20%
+ZAF,081290901,- - 기타,20%
+ZAF,081310003,- 살구,10%
+ZAF,081320008,- 자두,10%
+ZAF,081330002,- 사과,10%
+ZAF,081340007,- 기타 과일,10%
+ZAF,081350001,- 이 장의 견과류 또는 건조 과일의 혼합물,10%
+ZAF,081400002,"감귤류 또는 멜론(수박 포함)의 껍질, 신선한 것, 냉동한 것, 건조한 것 또는 소금물, 유황수 또는 기타 방부제 용액에 임시 보존한 것",free
+ZAF,090111109,- - - Coffea arabica 종,free
+ZAF,090111206,- - - Coffea robusta 종,free
+ZAF,090111907,- - - 기타,free
+ZAF,090112105,- - - Coffea arabica 종,free
+ZAF,090112202,- - - Coffea robusta 종,free
+ZAF,090112903,- - - 기타,free
+ZAF,090121006,- - 카페인이 제거되지 않음,6c/kg
+ZAF,090122002,- - 디카페인,6c/kg
+ZAF,090190109,- - 커피 껍질과 껍질,20%
+ZAF,090190206,- - 커피가 함유된 커피 대용품,10c/kg
+ZAF,090210009,- 내용물이 3kg을 초과하지 않는 직접 포장의 녹차(발효되지 않음),free
+ZAF,090220003,- 기타 녹차(발효되지 않음),free
+ZAF,090230105,- - 내용물의 직접 포장 시 1kg을 초과하지 않음,400c/kg
+ZAF,090230903,- - 기타,400c/kg
+ZAF,090240002,- 기타 홍차(발효차) 및 기타 부분발효차,400c/kg
+ZAF,090300008,친구,free
+ZAF,090411002,- - 분쇄도 안하고,free
+ZAF,090412009,- - 으깨거나 갈아서,free
+ZAF,090421104,- - - 고추속(Capsicum)의 열매,25%
+ZAF,090421309,- - - 피멘타 속의 열매,free
+ZAF,090422100,- - - 고추속(Capsicum)의 열매,25%
+ZAF,090422305,- - - 피멘타 속의 열매,free
+ZAF,090510008,- 으깨지도 갈지도 않음,free
+ZAF,090520004,- 으깨거나 갈아서,free
+ZAF,090611007,- - 계피(Cinnamomum zeylanicum blume),free
+ZAF,090619000,- - 기타,free
+ZAF,090620008,- 으깨거나 갈아서,free
+ZAF,090710007,- 으깨지도 갈지도 않음,free
+ZAF,090720001,- 으깨거나 갈아서,free
+ZAF,090811007,- - 분쇄도 안하고,free
+ZAF,090812003,- - 으깨거나 갈아서,free
+ZAF,090821001,- - 분쇄도 안하고,free
+ZAF,090822008,- - 으깨거나 갈아서,free
+ZAF,090831006,- - 분쇄도 안하고,free
+ZAF,090832002,- - 으깨거나 갈아서,free
+ZAF,090921005,- - 분쇄도 안하고,free
+ZAF,090922001,- - 으깨거나 갈아서,free
+ZAF,090931004,- - 분쇄도 안하고,free
+ZAF,090932006,- - 으깨거나 갈아서,free
+ZAF,090961003,- - 분쇄도 안하고,free
+ZAF,090962002,- - 으깨거나 갈아서,free
+ZAF,091011000,- - 부수지도 잘게 부수지도 않은 것,15%
+ZAF,091012007,- - 으깨거나 갈아서,20%
+ZAF,091020009,- 사프란,free
+ZAF,091030003,- 강황(쿠르쿠마),free
+ZAF,091091007,- - 이 장의 주 1(b)에 언급된 혼합물,free
+ZAF,091099008,- - 기타,free
+ZAF,100111003,- - 씨앗,free
+ZAF,100119004,- - 기타,free
+ZAF,100191003,- - 씨앗,"42,2c/kg"
+ZAF,100199000,- - 기타,"42,2c/kg"
+ZAF,100210000,- 종자,free
+ZAF,100290007,- 기타,free
+ZAF,100310004,- 씨앗,free
+ZAF,100390000,- 기타,free
+ZAF,100410008,- 씨앗,free
+ZAF,100490004,- 기타,free
+ZAF,100510001,- 씨앗,free
+ZAF,100590105,"- - 인간 소비에 적합한 건조된 알갱이 또는 곡물, 추가 가공 또는 가공되지 않으며 씨앗으로 포장되지 않음(팝콘(Zea mays everta) 제외)",free
+ZAF,100590903,- - 기타,free
+ZAF,100610005,- 껍질이 벗겨지지 않은 쌀(벼 또는 벼 껍질 없는 쌀),free
+ZAF,100620004,- 껍질을 벗긴 현미,free
+ZAF,100630004,- 반정미 또는 통정미(광택 또는 유약처리 여부와 관계없음),free
+ZAF,100640009,- 깨진 밥,free
+ZAF,100710009,- 씨앗,3%
+ZAF,100790005,- 기타,3%
+ZAF,100810002,- 메밀,free
+ZAF,100821003,- - 씨앗,free
+ZAF,100829004,- - 기타,free
+ZAF,100830001,- 카나리아 씨앗,free
+ZAF,100840006,- 포니오(Digitaria spp.),5%
+ZAF,100850000,- 퀴노아(quinoa)[체노포디움 퀴노아(Chenopodium quinoa)],5%
+ZAF,100860005,- 트리티케일,5%
+ZAF,100890009,- 기타 곡물,5%
+ZAF,110100101,"- 전곡(겨, 배아 및 배유)을 제분하여 생산된 갈색 밀박(분리된 밀겨, 분리된 밀 배아 또는 분리된 밀 세몰리나 또는 배유 제외)","63,29c/kg"
+ZAF,110100209,- 제11장 추가 주 1(a)에 정의된 케이크 밀가루,"63,29c/kg"
+ZAF,110100306,- 제11장 추가 주 1(a)에 정의된 흰빵용 밀가루,"63,29c/kg"
+ZAF,110100905,- 기타,"63,29c/kg"
+ZAF,110220104,- - 제11장 추가 주 2에 정의된 초미립 옥수수 가루,free
+ZAF,110220902,- - 기타,free
+ZAF,110290157,- - 귀리가루,"2,75c/kg"
+ZAF,110290300,- - 수수가루,3%
+ZAF,110290408,- - 쌀가루,20%
+ZAF,110290505,- - 호밀가루,"1,1c/kg"
+ZAF,110290904,- - 기타,"0,65c/kg"
+ZAF,110311002,- - 밀의,20%
+ZAF,110313102,"- - - 최종 제품의 질량 기준 1%를 초과하지 않는 미네랄과 비타민을 첨가하는 것 외에는 추가 가공되지 않은 옥수수 가루로, 영양가를 높이는 목적만을 위한 것임",5%
+ZAF,110313900,- - - 기타,5%
+ZAF,110319100,- - - 귀리의,"2,75c/kg"
+ZAF,110319208,- - - 쌀의,20%
+ZAF,110319909,- - - 기타,"0,65c/kg"
+ZAF,110320108,- - 밀의,20%
+ZAF,110320205,"- - 귀리, 내용물이 10kg을 초과하는 직접 포장","2,75c/kg"
+ZAF,110320906,- - 기타,free
+ZAF,110412104,- - - 25kg을 초과하지 않는 내용물의 직접 포장,free
+ZAF,110412908,- - - 기타,free
+ZAF,110419104,- - - 보리의,free
+ZAF,110419902,- - - 기타,20%
+ZAF,110422007,- - 귀리의,free
+ZAF,110423100,"- - - 다진 말린 커널, 추가 준비 또는 가공되지 않음",5%
+ZAF,110423909,- - - 기타,5%
+ZAF,110429109,- - - 보리의,free
+ZAF,110429907,- - - 기타,20%
+ZAF,110430009,"- 곡물의 배아, 통곡물, 압연곡물, 플레이크 또는 분쇄곡물",free
+ZAF,110510003,"- 밀가루, 밀가루 가루",20%
+ZAF,110520105,- - 감자 조각으로 만든 펠릿,20%
+ZAF,110520903,- - 기타,20%
+ZAF,110610104,- - 말린 콩,free
+ZAF,110610902,- - 기타,free
+ZAF,110620001,- 사고나무 또는 뿌리 또는 괴경의 것 07.14호,free
+ZAF,110630103,- - 스위스에서 수입,20%
+ZAF,110630901,- - 기타,20%
+ZAF,110710108,- - 밀의,free
+ZAF,110710205,- - 보리의,free
+ZAF,110710256,- - 귀리의,"2,75c/kg"
+ZAF,110710507,- - 수수의,3%
+ZAF,110710906,- - 기타,"0,85c/kg"
+ZAF,110720102,- - 밀의,free
+ZAF,110720202,- - 보리의,free
+ZAF,110720250,- - 귀리의,"2,75c/kg"
+ZAF,110720900,- - 기타,"0,85c/kg"
+ZAF,110811108,- - - 내용물의 직접 포장 시 1.5kg을 초과하지 않음,free
+ZAF,110811906,- - - 기타,10%
+ZAF,110812104,- - - 내용물의 직접 포장 시 1.5kg을 초과하지 않음,free
+ZAF,110812902,- - - 기타,10%
+ZAF,110813100,- - - 내용물의 직접 포장 시 1.5kg을 초과하지 않음,free
+ZAF,110813909,- - - 기타,10%
+ZAF,110814107,- - - 내용물의 직접 포장 시 1.5kg을 초과하지 않음,free
+ZAF,110814905,- - - 기타,10%
+ZAF,110819109,- - - 내용물의 직접 포장 시 1.5kg을 초과하지 않음,free
+ZAF,110819907,- - - 기타,10%
+ZAF,110820009,- 이눌린,20%
+ZAF,110900003,밀 글루텐(건조 여부와 관계 없음),free
+ZAF,120110000,- 종자,8%
+ZAF,120190007,- 기타,8%
+ZAF,120230003,- 씨앗,10%
+ZAF,120241004,- - 껍질 속에,10%
+ZAF,120242000,- - 꼬투리를 벗긴 것(부수었는지에 상관없다),10%
+ZAF,120300003,코프라,free
+ZAF,120400007,"아마씨, 깨졌는지 여부와 관계 없음","9,4%"
+ZAF,120510203,- - 파종에 사용되는 종류의 씨앗,free
+ZAF,120510900,- - 기타,10%
+ZAF,120590001,- 기타,10%
+ZAF,120600004,해바라기 씨앗(부서졌는지 여부와 관계 없음),"9,4%"
+ZAF,120710002,- 야자 열매와 씨앗,"7,4%"
+ZAF,120721003,- - 씨앗,"9,4%"
+ZAF,120729004,- - 기타,"9,4%"
+ZAF,120730001,- 피마자유씨앗,"7,4%"
+ZAF,120740006,- 참깨,"7,4%"
+ZAF,120750000,- 겨자씨,free
+ZAF,120760005,- 잇꽃(Carthamus Tinctorius) 씨앗,"9,4%"
+ZAF,120770009,- 멜론 씨앗,"9,4%"
+ZAF,120791005,- - 양귀비 씨앗,"9,4%"
+ZAF,120799006,- - 기타,"9,4%"
+ZAF,120810006,- 콩의,20%
+ZAF,120890002,- 기타,20%
+ZAF,120910001,- 사탕무 씨앗,free
+ZAF,120921000,- - 루우산(lucerne)(알팔파) 종자,free
+ZAF,120922007,- - 클로버(Trifolium spp.) 씨앗,free
+ZAF,120923003,- - 페스큐 씨앗,free
+ZAF,120924009,- - 켄터키 블루그래스(Poa pratensis L.) 씨앗,free
+ZAF,120925006,"- - 호밀풀(Lolium multiflorum Lam., Lolium perenne L.) 씨앗",free
+ZAF,120929001,- - 기타,free
+ZAF,120930009,- 주로 꽃을 위해 재배되는 초본 식물의 씨앗,free
+ZAF,120991002,- - 야채 씨앗,free
+ZAF,120999100,- - - 씨앗,free
+ZAF,120999909,- - - 기타,free
+ZAF,121010006,"- 홉콘(분말, 분말 또는 펠릿 형태가 아님)",free
+ZAF,121020004,"- 홉 콘, 분쇄, 분말 또는 펠릿 형태; 루풀린",free
+ZAF,121120105,- - 냉장 또는 냉동,free
+ZAF,121120903,- - 기타,12%
+ZAF,121130104,- - 냉장 또는 냉동,free
+ZAF,121130908,- - 기타,15%
+ZAF,121140104,- - 냉장 또는 냉동,free
+ZAF,121140902,- - 기타,15%
+ZAF,121150109,- - 냉장 또는 냉동,free
+ZAF,121150907,- - 기타,20%
+ZAF,121160006,- 아프리카 체리나무껍질(Prunus africana),20%
+ZAF,121190050,- - 냉장 또는 냉동,free
+ZAF,121190107,"- - 기타, 피레트럼",free
+ZAF,121190204,"- - 기타, 바질, 보리지, 히솝, 민트, 로즈마리, 루, 세이지, 분쇄 또는 으깬 것이 아님","0,45c/kg"
+ZAF,121190301,"- - 기타, 바질, 보리지, 히솝, 민트, 로즈마리, 루, 세이지, 분쇄 또는 으깬 것.",4c/kg
+ZAF,121190409,"- - 기타, 감초뿌리",12%
+ZAF,121190514,"- - - 잎과 줄기, 건조, 10kg을 초과하지 않는 직접 포장",20%
+ZAF,121190530,"- - - 기타 잎과 줄기, 건조",20%
+ZAF,121190598,- - - 기타,20%
+ZAF,121190808,"- - 기타, 주로 약국에서 사용되는 종류",15%
+ZAF,121190905,- - 기타,20%
+ZAF,121221105,- - - 냉동,5%
+ZAF,121221903,- - - 기타,free
+ZAF,121229106,- - - 냉동,5%
+ZAF,121229904,- - - 기타,free
+ZAF,121291000,- - 사탕무,20%
+ZAF,121292103,"- - - 건조, 전체, 분할, 분쇄 또는 분말 형태, 추가 준비 또는 가공되지 않음(파종용 종자 제외)",20%
+ZAF,121292901,- - - 기타,20%
+ZAF,121293002,- - 사탕수수,20%
+ZAF,121294009,- - 치커리 뿌리,free
+ZAF,121299000,- - 기타,20%
+ZAF,121300006,"곡물 짚 및 껍질(미가공, 다진 것, 분쇄한 것, 압착한 것 또는 펠릿 형태인지 여부와 관계없음)",free
+ZAF,121410004,- 루세른(알팔파) 가루 및 펠릿,free
+ZAF,121490000,- 기타,free
+ZAF,130120007,- 아라비아 고무,free
+ZAF,130190009,- 기타,free
+ZAF,130211002,- - 아편,12%
+ZAF,130212009,- - 감초의,12%
+ZAF,130213005,- - 홉의,free
+ZAF,130214109,- - - 스위스에서 수입한 제약용도로 적합,15%
+ZAF,130214206,"- - - 기타, 제약용도로 적합",15%
+ZAF,130214907,- - - 기타,25%
+ZAF,130219054,- - - 바닐라 올레오레진(바닐라 추출물),free
+ZAF,130219070,- - - 피레트룸 또는 로테논을 함유한 식물의 뿌리,free
+ZAF,130219119,"- - - 기타, 스위스에서 수입한 제약용도에 적합",15%
+ZAF,130219127,"- - - 기타, 제약용도로 적합",15%
+ZAF,130219143,- - - Aspalathus linearis 종(루이보스/레드 부시),25%
+ZAF,130219909,- - - 기타,25%
+ZAF,130220000,- 펙틴질ㆍ펙티닝산염(pectinate)과 펙틴산염(pectate),free
+ZAF,130231001,- - 아가아가,free
+ZAF,130232105,- - - 수정되지 않음,free
+ZAF,130232202,- - - 수정됨,"8,5%"
+ZAF,130239100,- - - 수정되지 않음,free
+ZAF,130239207,- - - 수정됨,"8,5%"
+ZAF,140110004,- 대나무,free
+ZAF,140120009,- 라탄,free
+ZAF,140190108,- - 오시어,free
+ZAF,140190906,- - 기타,free
+ZAF,140420107,- - 미가공,free
+ZAF,140420905,- - 기타,15%
+ZAF,140490001,- 기타,free
+ZAF,150110006,- 라드,free
+ZAF,150120000,- 그 밖의 돼지의 지방,free
+ZAF,150190002,- 기타,free
+ZAF,150210003,- 탤로우,free
+ZAF,150290006,- 기타,free
+ZAF,150300009,"라드 스테아린, 라드 오일, 올레오스테아린, 올레오 오일 및 탤로우 오일(유화 또는 혼합되지 않았거나 기타 방법으로 제조되지 않음)",10%
+ZAF,150410007,- 어간유 및 그 분획물,free
+ZAF,150420001,- 생선의 지방 및 오일과 그 분획물(간유 제외),free
+ZAF,150430006,- 해양 포유류의 지방 및 오일과 그 분획물,free
+ZAF,150500103,"- 양모기름, 조잡함",free
+ZAF,150500901,- 기타,10%
+ZAF,150600158,- 풋 오일,free
+ZAF,150600905,- 기타,10%
+ZAF,150710105,- - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,150710903,- - 기타,10%
+ZAF,150790101,- - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,150790903,- - 기타,10%
+ZAF,150810109,- - 식품 조리과정에서 사용하기 위해 판매 및 공급,"9,8%"
+ZAF,150810907,- - 기타,"9,8%"
+ZAF,150890105,- - 식품 조리과정에서 사용하기 위해 판매 및 공급,"9,8%"
+ZAF,150890903,- - 기타,"9,8%"
+ZAF,150920107,- - 에어로졸 용기,10%
+ZAF,150920905,- - 기타,10%
+ZAF,150930101,- - 에어로졸 용기,10%
+ZAF,150930905,- - 기타,10%
+ZAF,150940106,- - 에어로졸 용기,10%
+ZAF,150940904,- - 기타,10%
+ZAF,150990109,- - 에어로졸 용기,10%
+ZAF,150990907,- - 기타,10%
+ZAF,151010102,- - 에어로졸 용기,10%
+ZAF,151010900,- - 기타,10%
+ZAF,151090109,- - 에어로졸 용기,10%
+ZAF,151090907,- - 기타,10%
+ZAF,151110106,- - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,151110904,- - 기타,10%
+ZAF,151190102,- - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,151190900,- - 기타,10%
+ZAF,151211106,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,151211904,- - - 기타,10%
+ZAF,151219107,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,151219905,- - - 기타,10%
+ZAF,151221100,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,151221909,- - - 기타,10%
+ZAF,151229101,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,151229906,- - - 기타,10%
+ZAF,151311101,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,free
+ZAF,151311908,- - - 기타,free
+ZAF,151319100,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,free
+ZAF,151319909,- - - 기타,free
+ZAF,151321104,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,free
+ZAF,151321902,- - - 기타,free
+ZAF,151329105,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,free
+ZAF,151329903,- - - 기타,free
+ZAF,151411103,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,151411901,- - - 기타,10%
+ZAF,151419104,- - - 식품 조리과정에서 사용하도록 205리터 이하 용량의 용기에 담아 판매 및 공급,10%
+ZAF,151419201,"- - - 기타, 205리 이하 용기",10%
+ZAF,151419902,- - - 기타,10%
+ZAF,151491106,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,151491908,- - - 기타,10%
+ZAF,151499100,- - - 식품 조리과정에서 사용하도록 205리터 이하 용량의 용기에 담아 판매 및 공급,10%
+ZAF,151499208,"- - - 기타, 205리 이하 용기",10%
+ZAF,151499909,- - - 기타,10%
+ZAF,151511107,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,151511905,- - - 기타,10%
+ZAF,151519108,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,151519906,- - - 기타,10%
+ZAF,151521101,- - - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,151521907,- - - 기타,10%
+ZAF,151529102,- - - 식품 조리과정에서 사용하도록 205리터 이하 용량의 용기에 담아 판매 및 공급,10%
+ZAF,151529206,"- - - 기타, 205리 이하 용기",10%
+ZAF,151529900,- - - 기타,10%
+ZAF,151530002,- 피마자유 및 그 분획물,10%
+ZAF,151550109,- - 식품 조리과정에서 사용하기 위해 판매 및 공급,10%
+ZAF,151550907,- - 기타,10%
+ZAF,151560103,- - 식품 조리 과정에서 사용하기 위해 판매 및 공급되는 오일,10%
+ZAF,151560901,- - 기타,10%
+ZAF,151590107,- - 식품 조리 과정에서 사용하기 위해 판매 및 공급되는 오일,10%
+ZAF,151590905,- - 기타,10%
+ZAF,151610104,- - 전적으로 물고기나 해양 포유류로부터 얻어짐,10%
+ZAF,151610902,- - 기타,10%
+ZAF,151620109,- - 피마자유,free
+ZAF,151620907,- - 기타,10%
+ZAF,151630006,- 미생물성 지방 및 오일과 그 분획물,10%
+ZAF,151710108,"- - 무게 기준으로 유지방이 10% 초과, 15% 이하 함유",10%
+ZAF,151710906,- - 기타,10%
+ZAF,151790104,"- - 무게 기준으로 유지방이 10% 초과, 15% 이하 함유",10%
+ZAF,151790201,- - 몰드 릴리스 제제로 사용되는 종류의 식용 혼합물 또는 제제,10%
+ZAF,151790902,- - 기타,10%
+ZAF,151800107,- 리녹신,10%
+ZAF,151800905,- 기타,10%
+ZAF,152000003,"글리세롤, 조; 글리세롤 물 및 알칼리",free
+ZAF,152110109,- - 카르나바왁스,free
+ZAF,152110907,- - 기타,10%
+ZAF,152190008,- 기타,10%
+ZAF,152200000,"데그라스(degras), 지방성 물질이나 동물성ㆍ식물성 왁스를 처리할 때 생기는 잔유물",10%
+ZAF,160100100,- 파테 드 푸아그라와 푸아그라(거위 간 페이스트),free
+ZAF,160100151,- 곤충을 함유하고 있음,free
+ZAF,160100208,- 모르타델라 볼로냐,40% or 240c/kg
+ZAF,160100909,- 기타,40% or 240c/kg
+ZAF,160210001,- 균질화된 제제,free
+ZAF,160220103,- - 파테 드 푸아그라와 푸아그라(거위 간 페이스트),free
+ZAF,160220901,- - 기타,37% or 240c/kg
+ZAF,160231007,- - 칠면조의,free
+ZAF,160232100,- - - 페이스트,20%
+ZAF,160232909,- - - 기타,220c/kg
+ZAF,160239105,- - - 페이스트,20%
+ZAF,160239903,- - - 기타,27%
+ZAF,160241001,- - 햄과 그 부위,15% or 130c/kg
+ZAF,160242008,- - 어깨 및 그 부위,15% or 130c/kg
+ZAF,160249304,"- - - 조리된 갈비, 냉동, 양념하지 않음, 내용물이 10kg 이상인 직접 포장",free
+ZAF,160249908,- - - 기타,15% or 130c/kg
+ZAF,160250301,- - 곱창,free
+ZAF,160250409,"- - 기타, 탈수, 내용물이 5kg 이상인 직접 포장",free
+ZAF,160250905,- - 기타,40% or 240c/kg
+ZAF,160290059,- - 가공 또는 보존된 타조고기,40% or 240c/kg
+ZAF,160290105,- - 페이스트,20%
+ZAF,160290202,- - 균질화 복합 식품 제조,free
+ZAF,160290253,"- - 기타, 곤충 포함",free
+ZAF,160290903,- - 기타,40% or 240c/kg
+ZAF,160300108,- 고기 추출물(고래고기 제외),25%
+ZAF,160300159,- 고래고기 추출물 및 주스,25%
+ZAF,160300205,- 기타 고기의 육즙,25%
+ZAF,160300302,- 생선 추출물,25%
+ZAF,160300914,- - 전복 추출물 및 주스,25%
+ZAF,160300998,- - 기타,25%
+ZAF,160411005,- - 연어,6c/kg
+ZAF,160412109,- - - 냉동,25% or 200c/kg
+ZAF,160412907,- - - 기타,6c/kg
+ZAF,160413059,"- - - 정어리(Sardine pilchardus), 기름에 담겨 기밀 금속 용기에 담겨 있음","2,4c/kg net"
+ZAF,160413105,"- - - 청어(Sprattus sprattus), 기름에 담겨 있고 기밀이 유지되는 금속 용기에 담겨 있음","2,4c/kg net"
+ZAF,160413121,- - - 사르디넬라(Sardinella spp.)는 사람이 소비하기 위한 기밀 금속 용기에 담겨 있습니다.,"2,4c/kg net"
+ZAF,160413156,"- - - 기타, 사르디넬라(Sardinella spp.), 기밀 금속 용기","2,4c/kg net"
+ZAF,160413172,- - - 정어리(Sardinops spp.)는 사람이 소비하기 위한 기밀 금속 용기에 담겨 있습니다.,free
+ZAF,160413202,"- - - 기타, 정어리(정어리)(Sardinops spp.), 기밀 금속 용기",free
+ZAF,160413806,"- - - 기타, 냉동",25% or 200c/kg
+ZAF,160413903,- - - 기타,6c/kg
+ZAF,160414101,- - - 냉동,25% or 200c/kg
+ZAF,160414907,- - - 기타,6c/kg
+ZAF,160415108,- - - 냉동,25% or 200c/kg
+ZAF,160415205,"- - - 기밀용기, 냉동하지 마세요",6c/kg
+ZAF,160415906,- - - 기타,6c/kg
+ZAF,160416007,- - 멸치,25%
+ZAF,160417100,- - - 냉동,25% or 200c/kg
+ZAF,160417909,- - - 기타,6c/kg
+ZAF,160418107,- - - 냉동,25% or 200c/kg
+ZAF,160418905,- - - 기타,6c/kg
+ZAF,160419103,- - - 냉동,25% or 200c/kg
+ZAF,160419200,"- - - 전갱이(Trachurus trachurus), 기밀 금속 용기에 담겨 있음, 냉동되지 않음",6c/kg
+ZAF,160419901,- - - 기타,6c/kg
+ZAF,160420100,- - 생선 페이스트,"16,5c/kg with a maximum of 25%"
+ZAF,160420208,- - 균질화 복합 식품 제조,free
+ZAF,160420313,"- - - 통조림, 다진 멸치",6c/kg
+ZAF,160420399,- - - 기타,25%
+ZAF,160420402,"- - 기타 정어리(정어리)(Sardinops spp.), 고등어 및 고등어(Trachurus trachurus), 기밀 금속 용기에 담겨 있음",6c/kg
+ZAF,160420453,- - 기타 정어리(정어리)(Sardinops spp.) 및 정어리(Sardinella spp.)를 다진 후 밀폐 용기에 담아 사람이 소비하도록 함,6c/kg
+ZAF,160420801,"- - 기타, 냉동",25% or 200c/kg
+ZAF,160420909,- - 기타,6c/kg
+ZAF,160431004,- - 캐비어,30%
+ZAF,160432000,- - 캐비어 대용물,27%
+ZAF,160510100,- - 균질화 복합 식품 제조,free
+ZAF,160510800,"- - 기타, 기밀용기 금속용기","5,5c/kg"
+ZAF,160510908,- - 기타,"5,5c/kg"
+ZAF,160521100,- - - 균질화 복합 식품 제조,free
+ZAF,160521909,- - - 기타,"5,5c/kg"
+ZAF,160529101,- - - 균질화 복합 식품 제조,free
+ZAF,160529904,- - - 기타,"5,5c/kg"
+ZAF,160530109,- - 균질화 복합 식품 제조,free
+ZAF,160530907,- - 기타,30%
+ZAF,160540103,- - 균질화 복합 식품 제조,free
+ZAF,160540804,"- - 기타, 기밀용기 금속용기","5,5c/kg"
+ZAF,160540901,- - 기타,"5,5c/kg"
+ZAF,160551104,- - - 균질화 복합 식품 제조,free
+ZAF,160551201,"- - - 기타, 기밀용기 금속용기","5,5c/kg"
+ZAF,160551902,- - - 기타,"5,5c/kg"
+ZAF,160552100,- - - 균질화 복합 식품 제조,free
+ZAF,160552208,"- - - 기타, 기밀용기 금속용기","5,5c/kg"
+ZAF,160552909,- - - 기타,"5,5c/kg"
+ZAF,160553107,- - - 균질화 복합 식품 제조,free
+ZAF,160553212,- - - - 훈제,free
+ZAF,160553220,- - - - 기타,free
+ZAF,160553905,- - - 기타,25%
+ZAF,160554103,- - - 균질화 복합 식품 제조,free
+ZAF,160554200,"- - - 기타, 기밀용기 금속용기","5,5c/kg"
+ZAF,160554901,- - - 기타,"5,5c/kg"
+ZAF,160555106,- - - 균질화 복합 식품 제조,free
+ZAF,160555207,"- - - 기타, 기밀용기 금속용기","5,5c/kg"
+ZAF,160555908,- - - 기타,"5,5c/kg"
+ZAF,160556106,- - - 균질화 복합 식품 제조,free
+ZAF,160556203,"- - - 기타, 기밀용기 금속용기","5,5c/kg"
+ZAF,160556904,- - - 기타,"5,5c/kg"
+ZAF,160557102,- - - 균질화 복합 식품 제조,free
+ZAF,160557205,"- - - 기타, 기밀용기 금속용기","5,5c/kg"
+ZAF,160557900,- - - 기타,"5,5c/kg"
+ZAF,160558109,- - - 균질화 복합 식품 제조,free
+ZAF,160558206,"- - - 기타, 기밀용기 금속용기","5,5c/kg"
+ZAF,160558907,- - - 기타,"5,5c/kg"
+ZAF,160559105,- - - 균질화 복합 식품 제조,free
+ZAF,160559202,"- - - 기타, 기밀용기 금속용기","5,5c/kg"
+ZAF,160559903,- - - 기타,"5,5c/kg"
+ZAF,160561109,- - - 균질화 복합 식품 제조,free
+ZAF,160561206,"- - - 기타, 기밀용기 금속용기","2,75c/kg"
+ZAF,160561907,- - - 기타,"2,25c/kg"
+ZAF,160562105,- - - 균질화 복합 식품 제조,free
+ZAF,160562202,"- - - 기타, 기밀용기 금속용기","2,75c/kg"
+ZAF,160562903,- - - 기타,"2,25c/kg"
+ZAF,160563101,- - - 균질화 복합 식품 제조,free
+ZAF,160563209,"- - - 기타, 기밀용기 금속용기","2,75c/kg"
+ZAF,160563904,- - - 기타,"2,25c/kg"
+ZAF,160569104,- - - 균질화 복합 식품 제조,free
+ZAF,160569207,"- - - 기타, 기밀용기 금속용기","2,75c/kg"
+ZAF,160569908,- - - 기타,"2,25c/kg"
+ZAF,170112002,- - 비트 설탕,"234,89c/kg"
+ZAF,170113009,- - 이 장의 소제목 주 2에 명시된 사탕수수 설탕,"234,89c/kg"
+ZAF,170114005,- - 기타 사탕수수 설탕,"234,89c/kg"
+ZAF,170191002,- - 향료나 색소를 첨가한 제품,"234,89c/kg"
+ZAF,170199003,- - 기타,"234,89c/kg"
+ZAF,170211001,- - 건조물질 기준으로 무수락토오스로 표현된 질량 기준 99% 이상의 락토오스를 함유함,free
+ZAF,170219000,- - 기타,free
+ZAF,170220008,- 메이플 설탕과 메이플 시럽,free
+ZAF,170230002,- 과당을 함유하지 않거나 건조 상태에서 과당의 함량이 질량 기준으로 20% 미만인 포도당 및 포도당 시럽,free
+ZAF,170240007,- 건조 상태에서 과당을 질량 기준으로 20% 이상 50% 미만 함유하는 포도당 및 포도당 시럽(전화당 제외),free
+ZAF,170250001,- 화학적으로 순수한 과당,free
+ZAF,170260006,"- 기타 과당 및 과당시럽, 건조 상태에서 과당을 질량 기준으로 50% 이상 함유(전화당 제외)",free
+ZAF,170290115,- - - 다른 설탕과 혼합된 것으로 건조 상태에서 무게 기준으로 사탕수수 또는 사탕무 설탕이 50% 이상 함유된 것,free
+ZAF,170290123,- - - 다른 당류와 혼합하지 않음,free
+ZAF,170290905,- - 기타,free
+ZAF,170310007,- 사탕수수 당밀,free
+ZAF,170390003,- 기타,free
+ZAF,170410000,- 추잉껌(당을 도포하였는지에 상관없다),25%
+ZAF,170490007,- 기타,37%
+ZAF,180100007,"코코아콩, 통째 또는 부서진 것, 생 것 또는 구운 것",free
+ZAF,180200000,"코코아의 껍데기와 껍질, 그 밖의 코코아 웨이스트(waste)",free
+ZAF,180310009,- 탈지하지 않음,free
+ZAF,180320003,- 전부 또는 일부 탈지됨,free
+ZAF,180400008,"코코아 버터, 지방 및 오일",free
+ZAF,180500001,추가 설탕이나 기타 감미료를 포함하지 않는 코코아 파우더,free
+ZAF,180610050,- - 음료 제조를 위한 준비물,17%
+ZAF,180610905,- - 기타,17%
+ZAF,180620101,- - 코코아를 함유한 초콜릿 및 설탕과자류,21%
+ZAF,180620905,- - 기타,17%
+ZAF,180631005,- - 채워짐,20%
+ZAF,180632001,- - 채워지지 않음,20%
+ZAF,180690006,- 기타,17%
+ZAF,190110003,"- 유아 또는 어린이에게 적합한 제품, 소매용으로 판매되는 제품",20%
+ZAF,190120008,- 제19.05호의 제빵제품 제조용 혼합물 및 반죽,20%
+ZAF,190190107,- - 옥수수가루,10% or 55c/kg less 90%
+ZAF,190190131,- - 제19장 추가 주 2에 정의된 알코올성 음료를 만드는 조제품(소제1901.90.20호의 조제품 제외),20%
+ZAF,190190158,"- - 기타, 음료 제조용 조제품(세관세 하위 항목 1901.90.20의 제품을 제외)",20%
+ZAF,190190204,- - 제19장 추가 주 1에 정의된 전통적인 아프리카 맥주 가루,20%
+ZAF,190190301,"- - 기타, 유제품 분말 혼합물, 무지방 기준으로 계산된 최소 30%(m/m)의 우유 단백질 함유",20%
+ZAF,190190409,"- - 기타, 내용물이 5kg 이상인 직접 포장된 것",20%
+ZAF,190190905,- - 기타,20%
+ZAF,190211003,- - 계란을 함유함,30%
+ZAF,190219004,- - 기타,40%
+ZAF,190220109,- - 고기가 들어있음,3c/kg
+ZAF,190220206,"- - 생선, 갑각류 또는 연체동물로 채워짐","5,5c/kg"
+ZAF,190220907,- - 기타,20%
+ZAF,190230006,- 기타 파스타,20%
+ZAF,190240108,- - 준비 안됨,30%
+ZAF,190240906,- - 기타,20%
+ZAF,190300006,"전분으로 제조된 타피오카 및 그 대체물, 플레이크, 곡물, 진주, 체질 또는 이와 유사한 형태",free
+ZAF,190410004,- 곡물 또는 곡물 가공품을 팽창 또는 볶아서 얻은 가공식품,25%
+ZAF,190420106,"- - 볶지 않은 시리얼 플레이크를 기반으로 한 ""뮤즐리"" 유형의 제품",5%
+ZAF,190420904,- - 기타,25%
+ZAF,190430003,- 불가밀,20%
+ZAF,190490108,- - 준비된 밥,5c/kg
+ZAF,190490906,- - 기타,20%
+ZAF,190510008,- 크리스프브레드,21%
+ZAF,190520002,- 진저브레드 등,21%
+ZAF,190531003,- - 달콤한 비스킷,21%
+ZAF,190532006,- - 와플과 웨이퍼,21%
+ZAF,190540001,"- 러스크, 토스트 빵 및 이와 유사한 토스트 제품",21%
+ZAF,190590101,- - 글루텐빵,"3,6c/kg with a maximum of 25%"
+ZAF,190590209,"- - 성찬 웨이퍼, 제약용으로 적합한 종류의 빈 봉지, 봉인 웨이퍼, 쌀 종이 및 이와 유사한 제품",17%
+ZAF,190590306,- - 빵가루,17%
+ZAF,190590403,"- - 흑빵(갈색 밀가루와 물로 만든 반죽으로 효모로 발효시키거나 다른 방법으로 발효시켜서 만든 다른 재료가 들어가거나 들어가지 않고 어떤 형태, 크기 또는 모양으로 구워진 것)",21%
+ZAF,190590901,- - 기타,21%
+ZAF,200110005,- 오이와 오이피클,20%
+ZAF,200190109,- - 올리브,25%
+ZAF,200190206,- - 양파,20%
+ZAF,200190303,- - 단옥수수 (Zea mays var. saccharata),20%
+ZAF,200190907,- - 기타,20%
+ZAF,200210106,- - 냉동식품(조리식품 제외),20%
+ZAF,200210807,"- - 기타, 기밀용기 금속용기",30%
+ZAF,200210904,- - 기타,110c/kg less 80% with a maximum of 37%
+ZAF,200290102,"- - 브릭스 값이 32 브릭스를 초과하지 않고 보스트윅 값이 4.2센티미터를 초과하지 않는 토마토 페이스트, 200리터 이상 담는 용기",37%
+ZAF,200290202,- - 브릭스 값이 32브릭스 초과 38브릭스 이하인 토마토 페이스트로서 200리 이상 용기에 담긴 것,37%
+ZAF,200290900,- - 기타,37%
+ZAF,200310106,- - 냉동식품(조리식품 제외),20%
+ZAF,200310908,- - 기타,37%
+ZAF,200390051,- - 트러플,free
+ZAF,200390106,- - 냉동식품(조리식품 제외),20%
+ZAF,200390904,- - 기타,37%
+ZAF,200410103,"- - 밀가루, 가루 또는 플레이크 형태",20%
+ZAF,200410219,"- - - 물에 데쳐 가공하고 기름에 데쳐 변색을 방지한 것, 냉동한 것(추가 덱스트로오스 함유 여부와 관계없이)",20%
+ZAF,200410294,- - - 기타,20%
+ZAF,200410913,"- - - 물에 데쳐 가공한 쐐기 모양 또는 기타 절단면 또는 조각과 통째 감자(기름에 데쳐 변색을 방지한 것, 냉동한 것, 추가 가공이나 가공하지 않은 것(덱스트로오스 첨가 여부와 관계없음))",20%
+ZAF,200410995,- - - 기타,20%
+ZAF,200490101,"- - 양배추, 오이, 오이피클","4,15c/kg"
+ZAF,200490207,"- - 완두콩(Pisum sativum), 콩(Vigna spp., Phaseolus spp.) 및 렌즈콩","4,15c/kg"
+ZAF,200490304,- - 올리브,25%
+ZAF,200490401,- - 단옥수수 (Zea mays var. saccharata),20%
+ZAF,200490908,- - 기타,20%
+ZAF,200510107,- - 스위스에서 수입,20%
+ZAF,200510905,- - 기타,20%
+ZAF,200520101,"- - 밀가루, 가루 또는 플레이크 형태",20%
+ZAF,200520902,- - 기타,20%
+ZAF,200540100,- - 유아식품이나 식이요법 또는 요리 목적으로 사용되는 종류의 밀가루 또는 밀가루 조제품,20%
+ZAF,200540909,- - 기타,"4,15c/kg"
+ZAF,200551004,"- - 콩, 껍질 제거","4,15c/kg"
+ZAF,200559005,- - 기타,"4,15c/kg"
+ZAF,200560002,- 아스파라거스,20%
+ZAF,200570007,- 올리브,25%
+ZAF,200580001,- 단옥수수(Zea mays var. saccharata),20%
+ZAF,200591002,- - 죽순,20%
+ZAF,200599119,- - - - 스위스에서 수입,"6,6c/kg with a maximum of 25%"
+ZAF,200599127,- - - - 기타,"6,6c/kg with a maximum of 25%"
+ZAF,200599216,- - - - 스위스에서 수입,"4,15c/kg"
+ZAF,200599224,- - - - 기타,"4,15c/kg"
+ZAF,200599313,- - - - 스위스에서 수입,"4,15c/kg"
+ZAF,200599321,- - - - 기타,"4,15c/kg"
+ZAF,200599917,- - - - 스위스에서 수입,20%
+ZAF,200599992,- - - - 기타,20%
+ZAF,200600106,- 설탕에 절인 껍질,free
+ZAF,200600203,- 결정화된 과일,"7,25c/kg with a maximum of 22%"
+ZAF,200600300,"- 체리, 물기를 뺀 것 또는 설탕에 절인 것",20% or 215c/kg less 80%
+ZAF,200600408,- 단옥수수(Zea mays var. saccharata),"30% or 7,25c/kg"
+ZAF,200600904,- 기타,"7,25c/kg with a maximum of 22%"
+ZAF,200710007,- 균질화된 제제,"30% or 4,5c/kg"
+ZAF,200791009,- - 감귤류,"30% or 4,5c/kg"
+ZAF,200799000,- - 기타,"30% or 4,5c/kg"
+ZAF,200811112,- - - - 매끈하게 포장하여 소매 판매합니다.,"0,99c/kg"
+ZAF,200811155,"- - - - 기타, 소매판매를 위해 포장한 것","0,99c/kg"
+ZAF,200811198,- - - - 기타,"0,99c/kg"
+ZAF,200811201,"- - - 땅콩, 볶은 것","0,99c/kg"
+ZAF,200811902,- - - 기타,"0,99c/kg"
+ZAF,200819008,- - 기타 혼합물을 포함함,free
+ZAF,200820005,- 파인애플,55%
+ZAF,200830002,- 감귤류,5%
+ZAF,200840004,- 배,5%
+ZAF,200850009,- 살구,5%
+ZAF,200860003,- 체리,5%
+ZAF,200870008,"- 복숭아, 천도복숭아 포함",5%
+ZAF,200880002,- 딸기,5%
+ZAF,200891003,- - 팜하트,20%
+ZAF,200893006,"- - 크랜베리(Vaccinium Macrocarpon, Vaccinium oxycoccos); 링곤베리(Vaccinium vitis-idaea)",5%
+ZAF,200897001,- - 혼합물,5%
+ZAF,200899403,- - - 타마린드,free
+ZAF,200899500,"- - - 시럽에 절인 생강, 45kg 이상의 내용물을 직접 포장한 것",free
+ZAF,200899903,- - - 기타,5%
+ZAF,200911000,- - 냉동한 것,25%
+ZAF,200912007,"- - 동결되지 않은 것, 브릭스 값이 20을 초과하지 않는 것",25%
+ZAF,200919001,- - 기타,25%
+ZAF,200921005,- - 브릭스 값이 20을 초과하지 않음,25%
+ZAF,200929006,- - 기타,25%
+ZAF,200931001,- - 브릭스 값이 20을 초과하지 않음,25%
+ZAF,200939000,- - 기타,25%
+ZAF,200941004,- - 브릭스 값이 20을 초과하지 않음,25%
+ZAF,200949005,- - 기타,25%
+ZAF,200950002,- 토마토 주스,25%
+ZAF,200961003,- - 브릭스 값이 30을 초과하지 않음,5%
+ZAF,200969004,- - 기타,5%
+ZAF,200971008,- - 브릭스 값이 20을 초과하지 않음,free
+ZAF,200979009,- - 기타,free
+ZAF,200981108,- - - 추가된 설탕이나 기타 감미료를 함유하지 않고 브릭스 값이 45를 초과하는 농축액,20%
+ZAF,200981908,- - - 기타,20%
+ZAF,200989100,"- - - 키위 주스(농축액, 추가 설탕 또는 기타 감미료를 포함하지 않음, 브릭스 값이 60을 초과함)",20%
+ZAF,200989208,"- - - 석류 주스(농축액, 추가 설탕 또는 기타 감미료를 함유하지 않음, 브릭스 값이 60을 초과함)",20%
+ZAF,200989305,"- - - 체리 주스(농축, 추가 설탕 또는 기타 감미료를 포함하지 않음, 브릭스 값이 60을 초과함)",20%
+ZAF,200989402,"- - - 추가 설탕이나 기타 감미료를 함유하지 않은 농축 패션프루트 주스, 브릭스 값이 45를 초과함",20%
+ZAF,200989453,"- - - 망고 주스(농축, 추가 설탕 또는 기타 감미료를 포함하지 않음, 브릭스 값이 15를 초과함)",20%
+ZAF,200989504,- - - 기타 과일주스,20%
+ZAF,200989550,- - - 견과류 주스,free
+ZAF,200989607,- - - 야채주스,25%
+ZAF,200990108,- - 과일주스,20%
+ZAF,200990159,- - 견과류 주스,free
+ZAF,200990205,- - 야채주스,25%
+ZAF,210111100,- - - 식물성 지방이 첨가된 분쇄 볶은 커피 혼합물,20%
+ZAF,210111909,- - - 기타,25%
+ZAF,210112107,- - - 식물성 지방이 첨가된 분쇄 볶은 커피 혼합물,20%
+ZAF,210112905,- - - 기타,25%
+ZAF,210120001,"- 차 또는 마테차의 추출물, 에센스 및 농축물과 이러한 추출물, 에센스 또는 농축물을 기본으로 하거나 차 또는 마테차를 기본으로 한 제제",free
+ZAF,210130103,- - 볶은 치커리 및 기타 볶은 커피 대용품,"9,2c/kg"
+ZAF,210130901,- - 기타,25%
+ZAF,210210000,- 활성 효모,15%
+ZAF,210220005,"- 비활성 효모; 기타 단세포 미생물, 죽은",15%
+ZAF,210230005,- 준비된 베이킹파우더,30%
+ZAF,210310004,- 간장,5%
+ZAF,210320009,- 토마토 케첩 및 기타 토마토 소스,5%
+ZAF,210330119,- - - 스위스에서 수입,8c/kg
+ZAF,210330127,- - - 기타,8c/kg
+ZAF,210330216,- - - 스위스에서 수입,5%
+ZAF,210330224,- - - 기타,5%
+ZAF,210390108,"- - 밀가루, 밀가루 또는 맥아 추출물로 만든 소스 및 그 조제품",20%
+ZAF,210390914,"- - - 마요네즈, 소매용으로 포장된 것",5%
+ZAF,210390957,- - - 기타 마요네즈,5%
+ZAF,210390997,- - - 기타,5%
+ZAF,210410105,- - 수프와 국물을 위한 준비물,20%
+ZAF,210410202,"- - 기타, 분말, 고체 또는 기타 농축 형태",25%
+ZAF,210410903,- - 기타,3c/kg
+ZAF,210420002,- 균질화된 복합 식품 제조,free
+ZAF,210500104,- 코코아나 추가 설탕을 함유하지 않은 아이스크림,10%
+ZAF,210500201,- 코코아 또는 추가 설탕이 함유된 아이스크림,25%
+ZAF,210500902,- 기타,20%
+ZAF,210610102,"- - 분말 형태의 대두 단백질 농축물, 건조 물질을 기준으로 단백질 함량이 65%를 초과함",10%
+ZAF,210610900,- - 기타,20%
+ZAF,210690133,- - 제21장 추가 주 1에 정의된 알코올성 음료를 만드는 조제품,20%
+ZAF,210690176,- - 이당류 무첨가 유아식 분말형,free
+ZAF,210690206,- - 과일주스를 기본으로 하지 아니한 음료제조용 시럽 및 기타 농축물 또는 조제품(관세세목 2106.90.69에 해당하는 것은 제외),free
+ZAF,210690222,- - 과일주스를 기본으로 한 음료 제조용 시럽 및 기타 농축물 또는 조제품(관세 소항목 2106.90.69에 해당하는 제품은 제외),20%
+ZAF,210690257,"- - 기타, 시럽(과일주스를 기본으로 한 시럽은 제외)",free
+ZAF,210690354,- - 감미료(사카린을 기제로 한 감미료 제외),5%
+ZAF,210690508,- - 인간의 식품 제조에 사용되는 종류의 화학물질과 식품의 혼합물,10%
+ZAF,210690672,- - 음료 제조에 사용되는 종류의 복합 알코올성 제제(향기성 물질을 기반으로 한 것은 제외),154c/li
+ZAF,210690699,- - 향료가 함유된 빨대,free
+ZAF,210690907,- - 기타,20%
+ZAF,220110009,- 미네랄워터 및 탄산수,free
+ZAF,220190005,- 기타,free
+ZAF,220210105,- - 2.5L 이하를 담는 밀폐용기(접이식 플라스틱 튜브에 담긴 것은 제외),"4,36c/li"
+ZAF,220210908,- - 기타,"3,3c/li"
+ZAF,220291200,- - - 2.5ℓ 이하 밀폐용기(접이식 플라스틱 튜브에 담긴 것 및 우유를 기본으로 한 것 제외),21%
+ZAF,220291900,- - - 기타,21%
+ZAF,220299200,- - - 2.5ℓ 이하 밀폐용기(접이식 플라스틱 튜브에 담긴 것 및 우유를 기본으로 한 것 제외),21%
+ZAF,220299901,- - - 기타,21%
+ZAF,220300052,- 제22장 추가 주 1에 정의된 전통적인 아프리카 맥주,5%
+ZAF,220300907,- 기타,5%
+ZAF,220410004,- 스파클링 와인,25%
+ZAF,220421302,- - - 알코올을 첨가하여 발효가 방해되거나 중단된 포도즙,25%
+ZAF,220421418,"- - - - 알코올 함량이 용량 기준으로 4.5% 이상, 16.5%를 초과하지 않는 것.",25%
+ZAF,220421426,- - - - 기타,25%
+ZAF,220421515,"- - - - 알코올 함량이 용량 기준으로 15% 이상, 22%를 초과하지 않는 것.",25%
+ZAF,220421523,- - - - 기타,25%
+ZAF,220422309,- - - 알코올을 첨가하여 발효가 방해되거나 중단된 포도즙,25%
+ZAF,220422414,"- - - - 알코올 함량이 용량 기준으로 4.5% 이상, 16.5%를 초과하지 않는 것.",25%
+ZAF,220422422,- - - - 기타,25%
+ZAF,220422511,"- - - - 알코올 함량이 용량 기준으로 15% 이상, 22%를 초과하지 않는 것.",25%
+ZAF,220422521,- - - - 기타,25%
+ZAF,220429303,- - - 알코올을 첨가하여 발효가 방해되거나 중단된 포도즙,25%
+ZAF,220429419,"- - - - 알코올 함량이 용량 기준으로 4.5% 이상, 16.5%를 초과하지 않는 것.",25%
+ZAF,220429427,- - - - 기타,25%
+ZAF,220429516,"- - - - 알코올 함량이 용량 기준으로 15% 이상, 22%를 초과하지 않는 것.",25%
+ZAF,220429524,- - - - 기타,25%
+ZAF,220430009,- 기타 포도즙,25%
+ZAF,220510100,- - 스파클링,25%
+ZAF,220510216,"- - - 알코올 함량이 용량 기준으로 4.5% 이상, 15%를 초과하지 않는 것.",25%
+ZAF,220510224,- - - 기타,25%
+ZAF,220510313,"- - - 알코올 함량이 용량 기준으로 15% 이상, 22%를 초과하지 않는 것.",25%
+ZAF,220510321,- - - 기타,25%
+ZAF,220590212,"- - - 알코올 함량이 용량 기준으로 4.5% 이상, 15%를 초과하지 않는 것.",25%
+ZAF,220590220,- - - 기타,25%
+ZAF,220590318,"- - - 알코올 함량이 용량 기준으로 15% 이상, 22%를 초과하지 않는 것.",25%
+ZAF,220590328,- - - 기타,25%
+ZAF,220600053,- 발효 과일 또는 밀주를 첨가한 스파클링 음료; 과일 또는 꿀을 발효하여 얻은 발효 과일 또는 밀주를 첨가한 스파클링 음료의 혼합물; 발효 과일 또는 밀주를 첨가한 스파클링 음료와 무알코올 음료의 혼합물,25%
+ZAF,220600150,- 제22장 추가 주 1에 정의된 전통적인 아프리카 맥주,25%
+ZAF,220600177,- 알코올 함량이 2.5% 미만인 기타 발효 음료(보강되지 않음),25%
+ZAF,220600193,"- 발아되지 않은 곡물의 기타 발효 음료(보강되지 않음, 알코올 함량이 용량 기준 2.5% 이상, 9% 이하)",25%
+ZAF,220600215,"- 맥아를 첨가하지 않은 곡물의 발효 음료와 비알코올 음료의 기타 혼합물(보강하지 않음, 알코올 함량이 용량 기준 2.5% 이상, 9% 이하)",25%
+ZAF,220600819,"- 알코올 도수가 용량 기준 2.5% 이상, 15%를 초과하지 않는, 강화되지 않은 기타 발효 사과 또는 배 음료",25%
+ZAF,220600827,"- 과일이나 꿀을 발효시켜 만든 발효 음료의 혼합물을 포함한 기타 발효 과일 음료 및 밀주 음료(보강하지 않고 알코올 함량이 용량 기준 2.5% 이상, 15% 이하)",25%
+ZAF,220600835,"- 알코올 함량이 용량 기준 15% 이상, 23%를 초과하지 않는, 강화된 기타 발효 사과 또는 배 음료",25%
+ZAF,220600843,"- 과일이나 꿀을 발효시켜 얻은 발효 음료의 혼합물을 포함하는 기타 발효 과일 음료 및 밀주 음료, 알코올 강도가 용량 기준 15% 이상, 23% 이하인 강화 음료.",25%
+ZAF,220600851,"- 발효 과일음료 또는 밀주음료와 비알코올 음료의 기타 혼합물(보강하지 않고 알코올 함량이 용량 기준 2.5% 이상, 15% 이하)",25%
+ZAF,220600878,"- 발효 과일음료 또는 밀주음료와 비알코올 음료의 기타 혼합물(강화, 알코올 함량이 용량 기준 15% 이상, 23%를 초과하지 않음)",25%
+ZAF,220600908,- 기타,25%
+ZAF,220710000,- 변성하지 않은 에틸알코올(알코올의 용량이 전 용량의 100분의 80 이상인 것으로 한정한다),317c/li aa
+ZAF,220720005,- 에틸 알코올 및 기타 변성 주류(모든 강도),317c/li aa
+ZAF,220820114,- - - 제22장 추가 주 7에 정의된 브랜디,154c/li
+ZAF,220820199,- - - 기타,154c/li
+ZAF,220820912,- - - 제22장 추가 주 7에 정의된 브랜디,136c/li
+ZAF,220820998,- - - 기타,136c/li
+ZAF,220830100,- - 2리터 이하 용량의 용기에 담아두는 경우,154c/li
+ZAF,220830909,- - 기타,136c/li
+ZAF,220840105,- - 2리터 이하 용량의 용기에 담아두는 경우,154c/li
+ZAF,220840903,- - 기타,136c/li
+ZAF,220850109,- - 2리터 이하 용량의 용기에 담아두는 경우,154c/li
+ZAF,220850908,- - 기타,136c/li
+ZAF,220860104,- - 2리터 이하 용량의 용기에 담아두는 경우,154c/li
+ZAF,220860902,- - 기타,136c/li
+ZAF,220870214,- - - 알코올 함량이 용량 기준 15%를 초과하지만 23%를 초과하지 않는 것,154c/li
+ZAF,220870222,- - - 기타,154c/li
+ZAF,220870915,- - - 알코올 함량이 용량 기준 15%를 초과하지만 23%를 초과하지 않는 것,136c/li
+ZAF,220870923,- - - 기타,136c/li
+ZAF,220890213,- - - 알코올 함량이 용량 기준 15%를 초과하지만 23%를 초과하지 않는 것,154c/li
+ZAF,220890221,- - - 기타,154c/li
+ZAF,220890914,- - - 알코올 함량이 용량 기준 15%를 초과하지만 23%를 초과하지 않는 것,136c/li
+ZAF,220890922,- - - 기타,136c/li
+ZAF,220900003,아세트산으로부터 얻은 식초 및 식초대용품,5c/li
+ZAF,230110108,- - 고래밥,free
+ZAF,230110906,- - 기타,free
+ZAF,230120005,"- 생선 또는 갑각류, 연체동물 또는 기타 수생 무척추동물의 밀가루, 가루 및 펠릿",free
+ZAF,230210004,- 옥수수(corn)의,free
+ZAF,230230003,- 밀의,free
+ZAF,230240008,- 기타 곡물,free
+ZAF,230250002,- 콩과식물의,free
+ZAF,230310008,- 전분 제조 잔류물 및 유사 잔류물,free
+ZAF,230320002,"- 사탕무펄프, 바가스 및 기타 설탕 제조 폐기물",free
+ZAF,230330007,- 찌꺼기 및 폐기물의 양조 또는 증류,free
+ZAF,230400007,대두유 추출로 인해 발생하는 기름 케이크 및 기타 고체 잔류물(분쇄 여부 또는 펠릿 형태),"6,6%"
+ZAF,230500000,땅콩기름을 추출할 때 얻는 오일 케이크와 고체 형태의 유박[잘게 부순 것인지 또는 펠릿(pellet) 모양인지에 상관없다],"6,6%"
+ZAF,230610009,- 면실씨,"6,6%"
+ZAF,230620003,- 아마씨의,"6,6%"
+ZAF,230630008,- 해바라기씨앗,"6,6%"
+ZAF,230641009,- - 저에루산 유채 또는 콜자씨앗,"6,6%"
+ZAF,230649007,- - 기타,"6,6%"
+ZAF,230650007,- 코코넛이나 코프라,"6,6%"
+ZAF,230660001,- 야자 열매 또는 씨앗,"6,6%"
+ZAF,230690005,- 기타,"6,6%"
+ZAF,230700008,와인 침전물;아르골,20%
+ZAF,230800001,"동물사료에 사용되는 종류의 펠릿 형태인지 여부와 관계없이 식물성 재료 및 식물성 폐기물, 식물성 잔류물 및 부산물(다른 곳에 지정 또는 포함되지 않음)",free
+ZAF,230910107,- - 스위스에서 수입,20%
+ZAF,230910905,- - 기타,20%
+ZAF,230990103,- - 단맛이 나는 사료,free
+ZAF,230990154,- - 갑각류 식품으로 만든 조제품; 연어 식품으로 만든 조제품,free
+ZAF,230990200,- - 항생제를 첨가한 사료보충제(우유대체제 제외),free
+ZAF,230990308,- - 멜렌게스트롤 아세테이트를 첨가한 사료 보충제,free
+ZAF,230990359,- - 콜린염화물을 질량 기준으로 40% 이상 함유하는 사료 보충제,free
+ZAF,230990405,- - 알팔파 주스(루세른 주스)에서 얻은 단백질 농축물,free
+ZAF,230990502,- - 팜지방산 칼슘염,free
+ZAF,230990604,- - 푸라졸리돈을 함유한 사료 보충제,free
+ZAF,230990650,- - 항생제 또는 멜렌게스트롤 아세테이트를 첨가했는지 여부와 관계없이 질량 기준으로 40% 이상의 리신을 함유하는 사료 보충제,free
+ZAF,230990707,- - 항산화제 또는 응집 방지제로 안정화된 단일 비타민 및 그 유도체,free
+ZAF,230990758,- - 락토파민을 함유한 제제,free
+ZAF,230990774,- - 질량 기준으로 메티오닌을 85% 이상 함유하는 제제,free
+ZAF,230990804,- - 생선 가용물,20%
+ZAF,230990913,- - - 스위스에서 수입,20%
+ZAF,230990928,- - - 기타,20%
+ZAF,240110002,- 줄기나 껍질을 벗기지 않은 담배,860c/kg less 85% with a maximum of 44%
+ZAF,240120007,"- 담배, 줄기가 일부 또는 전부 제거되거나 벗겨짐",15% or 860c/kg less 85%
+ZAF,240130001,- 담배 쓰레기,77c/kg
+ZAF,240210103,- - 스위스에서 수입,110c/kg net
+ZAF,240210901,- - 기타,110c/kg net
+ZAF,240220108,- - 스위스에서 수입,45%
+ZAF,240220906,- - 기타,45%
+ZAF,240290126,- - - 스위스에서 수입,45%
+ZAF,240290142,- - - 기타,45%
+ZAF,240290223,- - - 스위스에서 수입,45%
+ZAF,240290248,- - - 기타,45%
+ZAF,240311006,- - 이 장의 소제목 주 1에 명시된 물담배,45%
+ZAF,240319104,"- - - 파이프 담배, 내용물이 5kg 미만인 직접 포장",45%
+ZAF,240319201,- - - 기타 파이프 담배,45%
+ZAF,240319309,- - - 담배 담배,40%
+ZAF,240391207,- - - 스위스에서 수입,15%
+ZAF,240391800,- - - 기타,15%
+ZAF,240399100,- - - 스너프,40%
+ZAF,240399208,- - - 담배 추출물 및 에센스,free
+ZAF,240399305,- - - 기타 담배 대체품,45%
+ZAF,240399402,- - - 기타 파이프 담배 대체품,45%
+ZAF,240399909,- - - 기타,45%
+ZAF,240411115,- - - - 스위스에서 수입하여 막대기 형태로 소매 판매합니다.,15%
+ZAF,240411131,"- - - - 스위스에서 수입, 기타",15%
+ZAF,240411158,"- - - - 기타, 막대기 형태로 소매용으로 판매됨",15%
+ZAF,240411190,- - - - 기타,15%
+ZAF,240411913,- - - - 막대기 형태로 소매 판매를 위해 내놓음,15%
+ZAF,240411999,- - - - 기타,15%
+ZAF,240412006,"- - 기타, 니코틴 함유",free
+ZAF,240419108,- - - 니코틴 대체물을 함유,free
+ZAF,240419205,"- - - 기타, 막대기 형태로 소매용으로 판매됨",45%
+ZAF,240419906,- - - 기타,45%
+ZAF,240491006,- - 경구투여용,20%
+ZAF,240492002,- - 경피투여용,free
+ZAF,240499007,- - 기타,free
 CHL,01012100,-- Pure-bred breeding animals,6%
 CHL,01012910,--- For racing,6%
 CHL,01012990,--- Other:,6%
@@ -68204,6 +69730,3099 @@ RUS,2404910002,"---- Either not containing milk fats, saccharose, isoglucose, gl
 RUS,2404910009,---- Other,12%
 RUS,2404920000,-- For transdermal application,3%
 RUS,2404990000,-- Other,5%
+NZL,0101210010,. . . . . 종마,Free
+NZL,0101210015,. . . . . 암말,Free
+NZL,0101210017,. . . . . 종마,Free
+NZL,0101210019,. . . . . 암말,Free
+NZL,0101210023,. . . . . 종마,Free
+NZL,0101210027,. . . . . 암말,Free
+NZL,0101210031,. . . . . 종마,Free
+NZL,0101210033,. . . . . 암말,Free
+NZL,0101210035,. . . . . 종마,Free
+NZL,0101210037,. . . . . 암말,Free
+NZL,0101210041,. . . . . 종마,Free
+NZL,0101210049,. . . . . 암말,Free
+NZL,0101290010,". . . . . 종마, 수말, 거세마",Free
+NZL,0101290013,. . . . . 암말과 암말,Free
+NZL,0101290015,". . . . . 종마, 수말, 거세마",Free
+NZL,0101290017,. . . . . 암말과 암말,Free
+NZL,0101290021,". . . . . 종마, 수말, 거세마",Free
+NZL,0101290023,. . . . . 암말과 암말,Free
+NZL,0101290027,". . . . . 종마, 수말, 거세마",Free
+NZL,0101290029,. . . . . 암말과 암말,Free
+NZL,0101290033,. . . . 종마,Free
+NZL,0101290035,. . . . 암말,Free
+NZL,0101290039,. . . . 기타,Free
+NZL,0101300010,. . 순종 번식 동물,Free
+NZL,0101300019,. . 기타,Free
+NZL,0101900000,- 기타,Free
+NZL,0102210010,. . . 낙농,Free
+NZL,0102210019,. . . 소고기,Free
+NZL,0102290010,. . . . 낙농,Free
+NZL,0102290019,. . . . 소고기,Free
+NZL,0102290029,. . . 기타,Free
+NZL,0102310010,. . . 낙농,Free
+NZL,0102310019,. . . 소고기,Free
+NZL,0102390010,. . . . 낙농,Free
+NZL,0102390019,. . . . 소고기,Free
+NZL,0102390029,. . . 기타,Free
+NZL,0102900010,. . . 낙농,Free
+NZL,0102900018,. . . 소고기,Free
+NZL,0102900023,. . . . 낙농,Free
+NZL,0102900025,. . . . 소고기,Free
+NZL,0102900029,. . . 기타,Free
+NZL,0103100000,- 순종 번식 동물,Free
+NZL,0103910001,. . . 번식을 위해,Free
+NZL,0103910009,. . . 기타,Free
+NZL,0103920001,. . . 번식을 위해,Free
+NZL,0103920009,. . . 기타,Free
+NZL,0104100001,. . 번식을 위해,Free
+NZL,0104100009,. . 기타,Free
+NZL,0104200010,. . 번식을 위해,Free
+NZL,0104200019,. . 기타,Free
+NZL,0105110001,. . . 번식을 위해,Free
+NZL,0105110009,. . . 기타,Free
+NZL,0105120001,. . . 번식을 위해,Free
+NZL,0105120009,. . . 기타,Free
+NZL,0105130010,. . . 번식을 위해,Free
+NZL,0105130019,. . . 기타,Free
+NZL,0105140010,. . . 번식을 위해,Free
+NZL,0105140019,. . . 기타,Free
+NZL,0105150010,. . . 번식을 위해,Free
+NZL,0105150019,. . . 기타,Free
+NZL,0105940010,. . . . 번식을 위해,Free
+NZL,0105940013,. . . . 기타,Free
+NZL,0105940016,. . . . 번식을 위해,Free
+NZL,0105940019,. . . . 기타,Free
+NZL,0105990001,. . . 번식을 위해,Free
+NZL,0105990009,. . . 기타,Free
+NZL,0106110000,-- 영장류,Free
+NZL,0106120010,"-- 고래, 돌고래 및 돌고래(고래목의 포유류); 해우 및 듀공(바다표범목의 포유류); 물개, 바다사자 및 바다코끼리(물개아목의 포유류)",Free
+NZL,0106130000,-- 낙타와 기타 낙타과 동물(Camelidae),Free
+NZL,0106140000,-- 토끼와 산토끼,Free
+NZL,0106190010,. . . . 번식을 위해,Free
+NZL,0106190015,. . . . 기타,Free
+NZL,0106190019,. . . 개들,Free
+NZL,0106190029,. . . 기타,Free
+NZL,0106200000,- 파충류(뱀과 거북이 포함),Free
+NZL,0106310000,-- 맹금류,Free
+NZL,0106320000,"-- 앵무새목(앵무새, 앵무새, 마코, 앵무새 포함)",Free
+NZL,0106330000,-- 타조; 에뮤(Dromaius novaehollandiae),Free
+NZL,0106390010,-- 기타,Free
+NZL,0106410010,. . . . 패키지로,Free
+NZL,0106410019,. . . . 기타,Free
+NZL,0106410029,. . . 기타,Free
+NZL,0106490000,-- 기타,Free
+NZL,0106900000,- 기타,Free
+NZL,0201100001,. . 시체,Free
+NZL,0201100011,. . . 송아지고기 (바비 아님),Free
+NZL,0201100019,. . . 기타,Free
+NZL,0201200001,. . . . P1등급,Free
+NZL,0201200009,. . . . G등급,Free
+NZL,0201200019,. . . . L1 및 L2 등급,Free
+NZL,0201200021,. . . . P1등급,Free
+NZL,0201200029,. . . . G등급,Free
+NZL,0201200031,. . . 황소,Free
+NZL,0201200039,. . . 기타,Free
+NZL,0201200041,. . . . 뉴질랜드 육류 생산자 위원회 정의에 따른 절단,Free
+NZL,0201200049,. . . . 기타,Free
+NZL,0201200051,. . . 황소,Free
+NZL,0201200059,". . 송아지고기(바비큐 제외), 4등분 및 컷",Free
+NZL,0201200069,. . 기타,Free
+NZL,0201300001,. . . 뉴질랜드 육류 생산자 위원회 정의에 따른 절단,Free
+NZL,0201300009,. . . 기타,Free
+NZL,0201300011,. . 황소,Free
+NZL,0201300021,. . . 순경,Free
+NZL,0201300029,. . . 기타,Free
+NZL,0202100001,. . 시체,Free
+NZL,0202100011,. . . 송아지고기 (바비 아님),Free
+NZL,0202100019,. . . 기타,Free
+NZL,0202200001,. . . . P1등급,Free
+NZL,0202200009,. . . . G등급,Free
+NZL,0202200019,. . . . L1 및 L2 등급,Free
+NZL,0202200021,. . . . P1등급,Free
+NZL,0202200029,. . . . G등급,Free
+NZL,0202200031,. . . 황소,Free
+NZL,0202200039,. . . 기타,Free
+NZL,0202200041,. . . . 뉴질랜드 육류 생산자 위원회 정의에 따른 절단,Free
+NZL,0202200049,. . . . 기타,Free
+NZL,0202200051,. . . 황소,Free
+NZL,0202200059,". . 송아지고기(바비큐 제외), 4등분 및 컷",Free
+NZL,0202200069,. . 기타,Free
+NZL,0202300001,. . . 뉴질랜드 육류 생산자 위원회 정의에 따른 절단,Free
+NZL,0202300009,. . . 기타,Free
+NZL,0202300011,. . 황소,Free
+NZL,0202300021,. . . 순경,Free
+NZL,0202300029,. . . 기타,Free
+NZL,0203110002,. . . 야생 돼지,5%
+NZL,0203110008,. . . 기타,5%
+NZL,0203120001,. . . 야생 돼지,5%
+NZL,0203120009,. . . 기타,5%
+NZL,0203190001,. . . 야생 돼지,5%
+NZL,0203190009,. . . 기타,5%
+NZL,0203210002,. . . 야생 돼지,5%
+NZL,0203210008,. . . 기타,5%
+NZL,0203220001,. . . 야생 돼지,5%
+NZL,0203220009,. . . 기타,5%
+NZL,0203290001,. . . 야생 돼지,5%
+NZL,0203290011,. . . . 고기 뼈와 뒷다리,5%
+NZL,0203290019,. . . . 기타,5%
+NZL,0204100002,. . A등급,Free
+NZL,0204100008,. . 베타 등급,Free
+NZL,0204100012,. . PH 등급,Free
+NZL,0204100018,. . PL 등급,Free
+NZL,0204100022,. . PM 등급,Free
+NZL,0204100028,. . PX 등급,Free
+NZL,0204100032,. . YL 등급,Free
+NZL,0204100038,. . YM 등급,Free
+NZL,0204100042,. . YX 등급,Free
+NZL,0204100048,. . 기타,Free
+NZL,0204210002,. . . . HL 등급,Free
+NZL,0204210008,. . . . HX 등급,Free
+NZL,0204210018,. . . . 기타,Free
+NZL,0204210022,. . . . MF 등급,Free
+NZL,0204210028,. . . . MH 등급,Free
+NZL,0204210032,. . . . ML 등급,Free
+NZL,0204210038,. . . . MM 등급,Free
+NZL,0204210042,. . . . MX 등급,Free
+NZL,0204210048,. . . . 기타,Free
+NZL,0204210058,. . . 램 등급,Free
+NZL,0204220001,. . . 양고기,Free
+NZL,0204220009,. . . 기타,Free
+NZL,0204230001,. . . 양고기,Free
+NZL,0204230009,. . . 기타,Free
+NZL,0204300002,. . A등급,Free
+NZL,0204300008,. . 베타 등급,Free
+NZL,0204300012,. . PH 등급,Free
+NZL,0204300018,. . PL 등급,Free
+NZL,0204300022,. . PM 등급,Free
+NZL,0204300028,. . PX 등급,Free
+NZL,0204300032,. . YL 등급,Free
+NZL,0204300038,. . YM 등급,Free
+NZL,0204300042,. . YX 등급,Free
+NZL,0204300048,. . 기타,Free
+NZL,0204410002,. . . . HL 등급,Free
+NZL,0204410008,. . . . HX 등급,Free
+NZL,0204410018,. . . . 기타,Free
+NZL,0204410022,. . . . MF 등급,Free
+NZL,0204410028,. . . . MH 등급,Free
+NZL,0204410032,. . . . ML 등급,Free
+NZL,0204410038,. . . . MM 등급,Free
+NZL,0204410042,. . . . MX 등급,Free
+NZL,0204410048,. . . . 기타,Free
+NZL,0204410058,. . . 램 등급,Free
+NZL,0204420001,. . . 양고기,Free
+NZL,0204420009,. . . 기타,Free
+NZL,0204430001,. . . 양고기,Free
+NZL,0204430009,. . . 기타,Free
+NZL,0204500000,- 염소고기,Free
+NZL,0205000000,"말, 당나귀, 노새 또는 버새의 고기(신선, 냉장 또는 냉동)",Free
+NZL,0206100001,. . 두뇌,Free
+NZL,0206100009,. . 하트,Free
+NZL,0206100011,. . 신장,Free
+NZL,0206100019,. . 간,Free
+NZL,0206100021,. . 흉선,Free
+NZL,0206100029,. . 방언,Free
+NZL,0206100039,. . 기타,Free
+NZL,0206210000,-- 방언,Free
+NZL,0206220000,-- 간,Free
+NZL,0206290001,. . . 두뇌,Free
+NZL,0206290009,. . . 하트,Free
+NZL,0206290011,. . . 신장,Free
+NZL,0206290019,. . . 흉선,Free
+NZL,0206290029,. . . 기타,Free
+NZL,0206300001,. . 하트,Free
+NZL,0206300009,. . 신장,Free
+NZL,0206300011,. . 간,Free
+NZL,0206300019,. . 방언,Free
+NZL,0206300029,. . 기타,Free
+NZL,0206410000,-- 간,Free
+NZL,0206490001,. . . 하트,Free
+NZL,0206490009,. . . 신장,Free
+NZL,0206490011,. . . 방언,Free
+NZL,0206490019,. . . 기타,Free
+NZL,0206800001,. . . 두뇌,Free
+NZL,0206800009,. . . 하트,Free
+NZL,0206800011,. . . 신장,Free
+NZL,0206800019,. . . 간,Free
+NZL,0206800021,. . . 흉선,Free
+NZL,0206800029,. . . 방언,Free
+NZL,0206800039,. . . 기타,Free
+NZL,0206800041,. . . 두뇌,Free
+NZL,0206800049,. . . 하트,Free
+NZL,0206800051,. . . 신장,Free
+NZL,0206800059,. . . 간,Free
+NZL,0206800061,. . . 흉선,Free
+NZL,0206800069,. . . 방언,Free
+NZL,0206800079,. . . 기타,Free
+NZL,0206800081,. . . 하트,Free
+NZL,0206800089,. . . 신장,Free
+NZL,0206800091,. . . 간,Free
+NZL,0206800095,. . . 방언,Free
+NZL,0206800099,. . . 기타,Free
+NZL,0206900001,. . . 두뇌,Free
+NZL,0206900009,. . . 하트,Free
+NZL,0206900011,. . . 신장,Free
+NZL,0206900019,. . . 간,Free
+NZL,0206900021,. . . 흉선,Free
+NZL,0206900029,. . . 방언,Free
+NZL,0206900039,. . . 기타,Free
+NZL,0206900041,. . . 두뇌,Free
+NZL,0206900049,. . . 하트,Free
+NZL,0206900051,. . . 신장,Free
+NZL,0206900059,. . . 간,Free
+NZL,0206900061,. . . 흉선,Free
+NZL,0206900069,. . . 방언,Free
+NZL,0206900079,. . . 기타,Free
+NZL,0206900081,. . . 하트,Free
+NZL,0206900089,. . . 신장,Free
+NZL,0206900091,. . . 간,Free
+NZL,0206900095,. . . 방언,Free
+NZL,0206900099,. . . 기타,Free
+NZL,0207110000,"-- 조각으로 자르지 않음, 신선하거나 냉장",5%
+NZL,0207120000,-- 조각내지 않고 냉동,5%
+NZL,0207130000,-- 신선하거나 냉장한 부위와 내장,5%
+NZL,0207141000,--- 간,5%
+NZL,0207149000,--- 기타,5%
+NZL,0207240000,"-- 조각으로 자르지 않음, 신선하거나 냉장",5%
+NZL,0207250000,-- 조각내지 않고 냉동,5%
+NZL,0207260000,-- 신선하거나 냉장한 부위와 내장,5%
+NZL,0207271000,--- 간,5%
+NZL,0207279000,--- 기타,5%
+NZL,0207410010,"-- 조각으로 자르지 않음, 신선하거나 냉장",5%
+NZL,0207420010,-- 조각내지 않고 냉동,5%
+NZL,0207430010,"-- 지방간, 신선하거나 냉장",5%
+NZL,0207440000,"-- 기타, 신선하거나 냉장",5%
+NZL,0207451000,--- 간,5%
+NZL,0207459000,--- 기타,5%
+NZL,0207510000,"-- 조각으로 자르지 않음, 신선하거나 냉장",5%
+NZL,0207520000,-- 조각내지 않고 냉동,5%
+NZL,0207530000,"-- 지방간, 신선하거나 냉장",5%
+NZL,0207540000,"-- 기타, 신선하거나 냉장",5%
+NZL,0207551000,--- 간,5%
+NZL,0207559000,--- 기타,5%
+NZL,0207601000,"-- 지방간, 신선하거나 냉장",5%
+NZL,0207602000,"-- 간, 냉동",5%
+NZL,0207609010,". . . 조각으로 자르지 않음, 신선하거나 냉장",5%
+NZL,0207609015,. . . 조각내지 않고 냉동,5%
+NZL,0207609019,". . . 기타, 신선하거나 냉장",5%
+NZL,0207609029,". . . 기타, 냉동",5%
+NZL,0208100001,. . 토끼,Free
+NZL,0208100009,. . 산토끼,Free
+NZL,0208300000,- 영장류의,Free
+NZL,0208400010,"- 고래, 돌고래 및 돌고래목(고래목의 포유류); 해우 및 듀공(바다소목의 포유류); 물개, 바다사자 및 바다코끼리(물개아목의 포유류)",Free
+NZL,0208500000,- 파충류(뱀과 거북이 포함),Free
+NZL,0208600000,- 낙타와 기타 낙타과 동물(Camelidae),Free
+NZL,0208900011,. . . . 피자,Free
+NZL,0208900013,. . . . 꼬리,Free
+NZL,0208900015,. . . . 기타,Free
+NZL,0208900017,. . . . 냉장,Free
+NZL,0208900018,. . . . 언,Free
+NZL,0208900028,". . 02.07호에 명시되지 않은 메추라기, 꿩, 들오리 및 기타 새",Free
+NZL,0208900031,. . 개구리의 다리,Free
+NZL,0208900050,. . 기타,Free
+NZL,0209100000,- 돼지의,Free
+NZL,0209900000,- 기타,Free
+NZL,0210110001,. . . 그을린,Free
+NZL,0210110009,. . . 기타,Free
+NZL,0210120000,-- 배(줄무늬)와 그 부위,Free
+NZL,0210190001,. . . 베이컨,Free
+NZL,0210190011,". . . . 돼지고기, 소금에 절이거나 절인 것",Free
+NZL,0210190019,. . . . 그을린,Free
+NZL,0210190029,. . . . 기타,Free
+NZL,0210200000,- 소의 고기,5%
+NZL,0210910000,-- 영장류의,5%
+NZL,0210920010,. . . 고래의,5%
+NZL,0210920029,. . . 기타,5%
+NZL,0210930000,-- 파충류(뱀과 거북이 포함),5%
+NZL,0210991000,--- 양고기 새,5%
+NZL,0210992000,--- 가금류 간,Free
+NZL,0210993011,". . . . 양고기, 훈제",5%
+NZL,0210993021,. . . . . . 피자,5%
+NZL,0210993023,. . . . . . 꼬리,5%
+NZL,0210993025,. . . . . . 기타,5%
+NZL,0210993029,. . . . . 기타,5%
+NZL,0210993050,. . . . 기타,5%
+NZL,0301110000,-- 담수,Free
+NZL,0301190000,-- 기타,Free
+NZL,0301910001,". . . 송어(Salmo trutta, Salmo gairdneri, Salmo clarki, Salmo aguabonita, Salmo gilae)",Free
+NZL,0301910009,. . . 기타,Free
+NZL,0301920000,-- 장어(앵귈라속),Free
+NZL,0301930011,"-- 잉어(Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.)",Free
+NZL,0301940010,"-- 대서양 및 태평양 참다랑어(Thunnus thynnus, Thunnus orientalis)",Free
+NZL,0301950000,-- 남부 참다랑어(Thunnus maccoyii),Free
+NZL,0301990011,. . . 스내퍼,Free
+NZL,0301990039,. . . 기타,Free
+NZL,0302110002,. . . . 전체,Free
+NZL,0302110005,. . . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302110008,. . . . 기타,Free
+NZL,0302110012,. . . . 전체,Free
+NZL,0302110016,. . . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302110029,. . . . 기타,Free
+NZL,0302130010,. . . 전체,Free
+NZL,0302130015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302130029,. . . 기타,Free
+NZL,0302140010,. . . 전체,Free
+NZL,0302140015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302140029,. . . 기타,Free
+NZL,0302190001,. . . 전체,Free
+NZL,0302190011,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302190029,. . . 기타,Free
+NZL,0302210002,. . . 전체,Free
+NZL,0302210012,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302210029,. . . 기타,Free
+NZL,0302220001,. . . 전체,Free
+NZL,0302220011,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302220029,. . . 기타,Free
+NZL,0302230001,. . . 전체,Free
+NZL,0302230011,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302230029,. . . 기타,Free
+NZL,0302240010,. . . 전체,Free
+NZL,0302240015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302240029,. . . 기타,Free
+NZL,0302290002,. . . . 가자미,Free
+NZL,0302290012,. . . . 레몬 솔,Free
+NZL,0302290021,. . . . 뉴질랜드 가자미,Free
+NZL,0302290028,. . . . 기타,Free
+NZL,0302290031,. . . . 가자미,Free
+NZL,0302290041,. . . . 레몬 솔,Free
+NZL,0302290051,. . . . 뉴질랜드 가자미,Free
+NZL,0302290058,. . . . 기타,Free
+NZL,0302290063,. . . . 가자미,Free
+NZL,0302290073,. . . . 레몬 솔,Free
+NZL,0302290083,. . . . 뉴질랜드 가자미,Free
+NZL,0302290097,. . . . 기타,Free
+NZL,0302310001,. . . 전체,Free
+NZL,0302310011,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302310029,. . . 기타,Free
+NZL,0302320001,. . . 전체,Free
+NZL,0302320011,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302320029,. . . 기타,Free
+NZL,0302330001,. . . 전체,Free
+NZL,0302330011,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302330029,. . . 기타,Free
+NZL,0302340010,. . . 전체,Free
+NZL,0302340012,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302340029,. . . 기타,Free
+NZL,0302350011,. . . . 전체,Free
+NZL,0302350015,. . . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302350031,. . . . 기타,Free
+NZL,0302350033,. . . . 전체,Free
+NZL,0302350035,. . . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302350049,. . . . 기타,Free
+NZL,0302360010,. . . . 전체,Free
+NZL,0302360012,. . . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302360029,. . . . 기타,Free
+NZL,0302390007,. . . . 전체,Free
+NZL,0302390013,. . . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302390049,. . . . 기타,Free
+NZL,0302410010,. . . 전체,Free
+NZL,0302410015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302410029,. . . 기타,Free
+NZL,0302420010,. . . 전체,Free
+NZL,0302420015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302420029,. . . 기타,Free
+NZL,0302430010,. . . 전체,Free
+NZL,0302430015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302430029,. . . 기타,Free
+NZL,0302440010,. . . 전체,Free
+NZL,0302440015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302440029,. . . 기타,Free
+NZL,0302450010,. . . 전체,Free
+NZL,0302450015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302450029,. . . 기타,Free
+NZL,0302460010,. . . 전체,Free
+NZL,0302460015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302460029,. . . 기타,Free
+NZL,0302470010,. . . 전체,Free
+NZL,0302470015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302470029,. . . 기타,Free
+NZL,0302490010,. . . 전체,Free
+NZL,0302490015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302490019,. . . 기타,Free
+NZL,0302510010,. . . 전체,Free
+NZL,0302510015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302510029,. . . 기타,Free
+NZL,0302520010,. . . 전체,Free
+NZL,0302520015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302520029,. . . 기타,Free
+NZL,0302530010,. . . 전체,Free
+NZL,0302530015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302530029,. . . 기타,Free
+NZL,0302540010,. . . 전체,Free
+NZL,0302540015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302540029,. . . 기타,Free
+NZL,0302550010,. . . 전체,Free
+NZL,0302550015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302550029,. . . 기타,Free
+NZL,0302560010,. . . 전체,Free
+NZL,0302560015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302560029,. . . 기타,Free
+NZL,0302590010,. . . 전체,Free
+NZL,0302590015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302590029,. . . 기타,Free
+NZL,0302710010,. . . 전체,Free
+NZL,0302710015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302710029,. . . 기타,Free
+NZL,0302720010,. . . 전체,Free
+NZL,0302720015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302720029,. . . 기타,Free
+NZL,0302730011,. . . 전체,Free
+NZL,0302730017,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302730029,. . . 기타,Free
+NZL,0302740010,. . . 전체,Free
+NZL,0302740015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302740029,. . . 기타,Free
+NZL,0302790010,. . . 전체,Free
+NZL,0302790015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302790029,. . . 기타,Free
+NZL,0302810010,. . . 전체,Free
+NZL,0302810015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302810029,. . . 기타,Free
+NZL,0302820010,. . . 전체,Free
+NZL,0302820015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302820029,. . . 기타,Free
+NZL,0302830010,. . . . 남극 이빨고기(Dissostichus mawsoni),Free
+NZL,0302830015,. . . . 파타고니아 이빨고기(Dissostichus eleginoides),Free
+NZL,0302830017,. . . . 기타,Free
+NZL,0302830020,. . . . 남극 이빨고기(Dissostichus mawsoni),Free
+NZL,0302830025,. . . . 파타고니아 이빨고기(Dissostichus eleginoides),Free
+NZL,0302830027,. . . . 기타,Free
+NZL,0302830032,. . . . 남극 이빨고기(Dissostichus mawsoni),Free
+NZL,0302830036,. . . . 파타고니아 이빨고기(Dissostichus eleginoides),Free
+NZL,0302830049,. . . . 기타,Free
+NZL,0302840010,. . . 전체,Free
+NZL,0302840015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0302840029,. . . 기타,Free
+NZL,0302850010,. . . . 스내퍼,Free
+NZL,0302850019,. . . . 기타,Free
+NZL,0302850021,. . . . 스내퍼,Free
+NZL,0302850029,. . . . 기타,Free
+NZL,0302850033,. . . . 스내퍼,Free
+NZL,0302850049,. . . . 기타,Free
+NZL,0302891010,. . . . 블루노즈,Free
+NZL,0302891015,. . . . 그루퍼,Free
+NZL,0302891019,. . . . 성대,Free
+NZL,0302891025,. . . . 달고기,Free
+NZL,0302891029,. . . . 가죽재킷,Free
+NZL,0302891035,. . . . 아귀,Free
+NZL,0302891039,. . . . 숭어,Free
+NZL,0302891049,. . . . 타라키히,Free
+NZL,0302891055,. . . . 트레발리,Free
+NZL,0302891059,. . . . 뱅어,Free
+NZL,0302891065,. . . . 노랑꼬리 참치,Free
+NZL,0302891079,. . . . 기타,Free
+NZL,0302892010,. . . . 블루노즈,Free
+NZL,0302892015,. . . . 그루퍼,Free
+NZL,0302892019,. . . . 성대,Free
+NZL,0302892025,. . . . 달고기,Free
+NZL,0302892029,. . . . 가죽재킷,Free
+NZL,0302892035,. . . . 아귀,Free
+NZL,0302892039,. . . . 숭어,Free
+NZL,0302892049,. . . . 타라키히,Free
+NZL,0302892055,. . . . 트레발리,Free
+NZL,0302892059,. . . . 노랑꼬리 참치,Free
+NZL,0302892079,. . . . 기타,Free
+NZL,0302899011,. . . . 블루노즈,Free
+NZL,0302899013,. . . . 그루퍼,Free
+NZL,0302899017,. . . . 성대,Free
+NZL,0302899021,. . . . 달고기,Free
+NZL,0302899023,. . . . 가죽재킷,Free
+NZL,0302899027,. . . . 아귀,Free
+NZL,0302899031,. . . . 숭어,Free
+NZL,0302899033,. . . . 타라키히,Free
+NZL,0302899037,. . . . 트레발리,Free
+NZL,0302899041,. . . . 노랑꼬리 참치,Free
+NZL,0302899079,. . . . 기타,Free
+NZL,0302910010,. . . 연어과의 간과 알,Free
+NZL,0302910019,. . . 기타,Free
+NZL,0302920000,-- 상어 지느러미,Free
+NZL,0302990000,-- 기타,Free
+NZL,0303110010,. . . 전체,Free
+NZL,0303110012,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303110029,. . . 기타,Free
+NZL,0303120010,. . . 전체,Free
+NZL,0303120015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303120029,. . . 기타,Free
+NZL,0303130010,. . . 전체,Free
+NZL,0303130015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303130029,. . . 기타,Free
+NZL,0303140010,. . . 전체,Free
+NZL,0303140015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303140018,. . . . 기타,Free
+NZL,0303140025,. . . . 전체,Free
+NZL,0303140029,. . . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303140049,. . . . 기타,Free
+NZL,0303190011,. . . 전체,Free
+NZL,0303190015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303190039,. . . 기타,Free
+NZL,0303230010,. . . 전체,Free
+NZL,0303230015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303230029,. . . 기타,Free
+NZL,0303240010,. . . 전체,Free
+NZL,0303240015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303240029,. . . 기타,Free
+NZL,0303250011,. . . 전체,Free
+NZL,0303250021,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303250029,. . . 기타,Free
+NZL,0303260010,. . . 전체,Free
+NZL,0303260015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303260029,. . . 기타,Free
+NZL,0303290010,. . . 전체,Free
+NZL,0303290015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303290049,. . . 기타,Free
+NZL,0303310001,. . . 전체,Free
+NZL,0303310011,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303310029,. . . 기타,Free
+NZL,0303320001,. . . 전체,Free
+NZL,0303320011,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303320029,. . . 기타,Free
+NZL,0303330001,. . . 전체,Free
+NZL,0303330011,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303330029,. . . 기타,Free
+NZL,0303340010,. . . 전체,Free
+NZL,0303340015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303340039,. . . 기타,Free
+NZL,0303390002,. . . . 가자미,Free
+NZL,0303390012,. . . . 레몬 솔,Free
+NZL,0303390021,. . . . 뉴질랜드 가자미,Free
+NZL,0303390028,. . . . 기타,Free
+NZL,0303390031,. . . . 가자미,Free
+NZL,0303390041,. . . . 레몬 솔,Free
+NZL,0303390051,. . . . 뉴질랜드 가자미,Free
+NZL,0303390058,. . . . 기타,Free
+NZL,0303390062,. . . . 가자미,Free
+NZL,0303390072,. . . . 레몬 솔,Free
+NZL,0303390082,. . . . 뉴질랜드 가자미,Free
+NZL,0303390097,. . . . 기타,Free
+NZL,0303410001,. . . 전체,Free
+NZL,0303410011,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303410029,. . . 기타,Free
+NZL,0303420001,. . . 전체,Free
+NZL,0303420011,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303420029,. . . 기타,Free
+NZL,0303430001,. . . 전체,Free
+NZL,0303430011,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303430029,. . . 기타,Free
+NZL,0303440010,. . . 전체,Free
+NZL,0303440012,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303440029,. . . 기타,Free
+NZL,0303450011,. . . . 전체,Free
+NZL,0303450015,. . . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303450028,. . . . 기타,Free
+NZL,0303450031,. . . . 전체,Free
+NZL,0303450035,. . . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303450049,. . . . 기타,Free
+NZL,0303460010,. . . 전체,Free
+NZL,0303460012,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303460029,. . . 기타,Free
+NZL,0303490013,. . . 전체,Free
+NZL,0303490015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303490049,. . . 기타,Free
+NZL,0303510010,. . . 전체,Free
+NZL,0303510013,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303510029,. . . 기타,Free
+NZL,0303530010,. . . 전체,Free
+NZL,0303530015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303530029,. . . 기타,Free
+NZL,0303540010,. . . . 푸른 고등어,Free
+NZL,0303540015,. . . . 기타,Free
+NZL,0303540019,. . . . 푸른 고등어,Free
+NZL,0303540025,. . . . 기타,Free
+NZL,0303540031,. . . . 푸른 고등어,Free
+NZL,0303540049,. . . . 기타,Free
+NZL,0303550010,. . . . 잭 고등어,Free
+NZL,0303550015,. . . . 기타,Free
+NZL,0303550019,. . . . 잭 고등어,Free
+NZL,0303550025,. . . . 기타,Free
+NZL,0303550031,. . . . 잭 고등어,Free
+NZL,0303550049,. . . . 기타,Free
+NZL,0303560010,. . . 전체,Free
+NZL,0303560015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303560029,. . . 기타,Free
+NZL,0303570010,. . . 전체,Free
+NZL,0303570015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303570029,. . . 기타,Free
+NZL,0303590010,. . . 전체,Free
+NZL,0303590015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303590019,. . . 기타,Free
+NZL,0303630010,. . . 전체,Free
+NZL,0303630015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303630029,. . . 기타,Free
+NZL,0303640010,. . . 전체,Free
+NZL,0303640015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303640029,. . . 기타,Free
+NZL,0303650010,. . . 전체,Free
+NZL,0303650015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303650029,. . . 기타,Free
+NZL,0303660010,. . . 전체,Free
+NZL,0303660015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303660029,. . . 기타,Free
+NZL,0303670010,. . . 전체,Free
+NZL,0303670015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303670029,. . . 기타,Free
+NZL,0303680010,. . . . 전체,Free
+NZL,0303680015,. . . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303680020,. . . . 기타,Free
+NZL,0303680025,. . . . 전체,Free
+NZL,0303680029,. . . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303680049,. . . . 기타,Free
+NZL,0303690010,. . . . 호키,Free
+NZL,0303690013,. . . . 붉은 대구,Free
+NZL,0303690015,. . . . 기타,Free
+NZL,0303690019,. . . . 호키,Free
+NZL,0303690023,. . . . 붉은 대구,Free
+NZL,0303690025,. . . . 기타,Free
+NZL,0303690031,. . . . 호키,Free
+NZL,0303690037,. . . . 붉은 대구,Free
+NZL,0303690049,. . . . 기타,Free
+NZL,0303810010,. . . . 코끼리 물고기,Free
+NZL,0303810015,. . . . 학교 상어,Free
+NZL,0303810017,. . . . 가시상어,Free
+NZL,0303810019,. . . . 얼룩상어(리그),Free
+NZL,0303810021,. . . . 기타,Free
+NZL,0303810023,. . . . 코끼리 물고기,Free
+NZL,0303810027,. . . . 학교 상어,Free
+NZL,0303810029,. . . . 가시상어,Free
+NZL,0303810031,. . . . 얼룩상어(리그),Free
+NZL,0303810033,. . . . 기타,Free
+NZL,0303810036,. . . . 코끼리 물고기,Free
+NZL,0303810040,. . . . 학교 상어,Free
+NZL,0303810042,. . . . 가시상어,Free
+NZL,0303810044,. . . . 얼룩상어(리그),Free
+NZL,0303810059,. . . . 기타,Free
+NZL,0303820010,. . . 전체,Free
+NZL,0303820015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303820029,. . . 기타,Free
+NZL,0303830010,. . . . 남극 이빨고기(Dissostichus mawsoni),Free
+NZL,0303830013,. . . . 파타고니아 이빨고기(Dissoctichus eleginoides),Free
+NZL,0303830015,. . . . 기타,Free
+NZL,0303830017,. . . . 남극 이빨고기(Dissostichus mawsoni),Free
+NZL,0303830019,. . . . 파타고니아 이빨고기(Dissoctichus eleginoides),Free
+NZL,0303830021,. . . . 기타,Free
+NZL,0303830031,. . . . 남극 이빨고기(Dissostichus mawsoni),Free
+NZL,0303830035,. . . . 파타고니아 이빨고기(Dissoctichus eleginoides),Free
+NZL,0303830039,. . . . 기타,Free
+NZL,0303840010,. . . 전체,Free
+NZL,0303840015,. . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0303840029,. . . 기타,Free
+NZL,0303891010,. . . . 알폰시노,Free
+NZL,0303891013,. . . . 바라쿠타,Free
+NZL,0303891015,. . . . 블루노즈,Free
+NZL,0303891017,. . . . 푸른 대구,Free
+NZL,0303891019,. . . . 카디널 피쉬,Free
+NZL,0303891021,. . . . 젬피쉬,Free
+NZL,0303891022,. . . . 유령 상어,Free
+NZL,0303891023,. . . . 그루퍼,Free
+NZL,0303891025,. . . . 성대,Free
+NZL,0303891029,. . . . 달고기,Free
+NZL,0303891031,. . . . 카하와이,Free
+NZL,0303891033,. . . . 가죽재킷,Free
+NZL,0303891035,. . . . 링,Free
+NZL,0303891037,. . . . 모키,Free
+NZL,0303891039,. . . . 아귀,Free
+NZL,0303891041,. . . . 숭어,Free
+NZL,0303891043,. . . . 오렌지 러피,Free
+NZL,0303891045,. . . . . 검은색,Free
+NZL,0303891047,. . . . . 기타,Free
+NZL,0303891051,. . . . 농어,Free
+NZL,0303891053,. . . . 스내퍼,Free
+NZL,0303891055,. . . . 타라키히,Free
+NZL,0303891057,. . . . 트레발리,Free
+NZL,0303891059,. . . . . 파란색,Free
+NZL,0303891061,. . . . . 은,Free
+NZL,0303891063,. . . . . 기타,Free
+NZL,0303891065,. . . . 뱅어,Free
+NZL,0303891067,. . . . 노랑꼬리 참치,Free
+NZL,0303891079,. . . . 기타,Free
+NZL,0303892010,. . . . 알폰시노,Free
+NZL,0303892013,. . . . 바라쿠타,Free
+NZL,0303892015,. . . . 블루노즈,Free
+NZL,0303892017,. . . . 푸른 대구,Free
+NZL,0303892019,. . . . 카디널 피쉬,Free
+NZL,0303892021,. . . . 젬피쉬,Free
+NZL,0303892022,. . . . 유령 상어,Free
+NZL,0303892023,. . . . 그루퍼,Free
+NZL,0303892025,. . . . 성대,Free
+NZL,0303892029,. . . . 달고기,Free
+NZL,0303892031,. . . . 카하와이,Free
+NZL,0303892033,. . . . 가죽재킷,Free
+NZL,0303892035,. . . . 링,Free
+NZL,0303892037,. . . . 모키,Free
+NZL,0303892039,. . . . 아귀,Free
+NZL,0303892041,. . . . 숭어,Free
+NZL,0303892043,. . . . 오렌지 러피,Free
+NZL,0303892045,. . . . . 검은색,Free
+NZL,0303892047,. . . . . 기타,Free
+NZL,0303892051,. . . . 농어,Free
+NZL,0303892053,. . . . 스내퍼,Free
+NZL,0303892055,. . . . 타라키히,Free
+NZL,0303892057,. . . . 트레발리,Free
+NZL,0303892059,. . . . . 파란색,Free
+NZL,0303892061,. . . . . 은,Free
+NZL,0303892063,. . . . . 기타,Free
+NZL,0303892067,. . . . 노랑꼬리 참치,Free
+NZL,0303892079,. . . . 기타,Free
+NZL,0303899011,. . . . 알폰시노,Free
+NZL,0303899014,. . . . 바라쿠타,Free
+NZL,0303899016,. . . . 블루노즈,Free
+NZL,0303899018,. . . . 푸른 대구,Free
+NZL,0303899020,. . . . 카디널 피쉬,Free
+NZL,0303899022,. . . . 젬피쉬,Free
+NZL,0303899024,. . . . 그루퍼,Free
+NZL,0303899026,. . . . 성대,Free
+NZL,0303899027,. . . . 유령 상어,Free
+NZL,0303899028,. . . . 달고기,Free
+NZL,0303899030,. . . . . 머리,Free
+NZL,0303899032,. . . . . 기타,Free
+NZL,0303899034,. . . . 가죽재킷,Free
+NZL,0303899036,. . . . 링,Free
+NZL,0303899038,. . . . 모키,Free
+NZL,0303899040,. . . . 아귀,Free
+NZL,0303899042,. . . . 숭어,Free
+NZL,0303899044,. . . . 오렌지 러피,Free
+NZL,0303899046,. . . . . 검은색,Free
+NZL,0303899048,. . . . . 기타,Free
+NZL,0303899050,. . . . 농어,Free
+NZL,0303899052,. . . . 스내퍼,Free
+NZL,0303899054,. . . . 타라키히,Free
+NZL,0303899056,. . . . 트레발리,Free
+NZL,0303899058,. . . . . 파란색,Free
+NZL,0303899060,. . . . . 은,Free
+NZL,0303899062,. . . . . 기타,Free
+NZL,0303899064,. . . . 노랑꼬리 참치,Free
+NZL,0303899079,. . . . 기타,Free
+NZL,0303910010,. . . 연어과의 간과 알,Free
+NZL,0303910019,. . . 기타,Free
+NZL,0303920000,-- 상어 지느러미,Free
+NZL,0303990000,-- 기타,Free
+NZL,0304310000,-- 틸라피아(Oreochromis spp.),Free
+NZL,0304320000,"-- 메기(Pangasius spp., Silurus spp., Clarias spp., Ictalurus spp.)",Free
+NZL,0304330000,-- 나일퍼치(Lates niloticus),Free
+NZL,0304390010,-- 기타,Free
+NZL,0304410000,"-- 태평양 연어(Oncorhynchus nerka, Oncorhynchus gorbuscha, Oncorhynchus keta, Oncorhynchus tschawytscha, Oncorhynchus kisutch, Oncorhynchus masou 및 Oncorhynchus rhodurus), 대서양 연어(Salmo salar) 및 다뉴브 연어(Hucho hucho)",Free
+NZL,0304420000,"-- 송어(Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache 및 Oncorhynchus chrysogaster)",Free
+NZL,0304430010,. . . 가자미,Free
+NZL,0304430015,. . . 레몬 솔,Free
+NZL,0304430019,. . . 뉴질랜드 가자미,Free
+NZL,0304430029,. . . 기타,Free
+NZL,0304440010,. . . 대구,Free
+NZL,0304440015,. . . 호키,Free
+NZL,0304440017,. . . 붉은 대구,Free
+NZL,0304440019,. . . 남부 블루 화이팅,Free
+NZL,0304440029,. . . 기타,Free
+NZL,0304450000,-- 황새치(Xiphias gladius),Free
+NZL,0304460010,. . . 남극 이빨고기(Dissostichus mawsoni),Free
+NZL,0304460015,. . . 파타고니아 이빨고기(Dissostichus eleginoides),Free
+NZL,0304460019,. . . 기타,Free
+NZL,0304470010,. . . 코끼리 물고기,Free
+NZL,0304470017,. . . 얼룩상어(리그),Free
+NZL,0304470019,. . . 기타,Free
+NZL,0304480000,-- 가오리와 가오리류(Rajidae),Free
+NZL,0304490010,. . . 바라쿠타,Free
+NZL,0304490013,. . . 블루노즈,Free
+NZL,0304490015,. . . 푸른 대구,Free
+NZL,0304490017,. . . 홍관조,Free
+NZL,0304490023,. . . 젬피쉬,Free
+NZL,0304490027,. . . 그루퍼,Free
+NZL,0304490028,. . . 유령 상어,Free
+NZL,0304490029,. . . 성대,Free
+NZL,0304490035,. . . 달고기,Free
+NZL,0304490037,. . . 카하와이,Free
+NZL,0304490041,. . . 링,Free
+NZL,0304490043,. . . 모키,Free
+NZL,0304490045,. . . 아귀,Free
+NZL,0304490049,. . . 오렌지 러피,Free
+NZL,0304490051,. . . . 검은색,Free
+NZL,0304490053,. . . . 매끄러운,Free
+NZL,0304490057,. . . 스내퍼,Free
+NZL,0304490063,. . . 타라키히,Free
+NZL,0304490065,. . . 트레발리,Free
+NZL,0304490067,. . . . 남방 블루핀,Free
+NZL,0304490069,. . . . 기타,Free
+NZL,0304490071,. . . . 파란색,Free
+NZL,0304490073,. . . . 은,Free
+NZL,0304490075,. . . . 하얀색,Free
+NZL,0304490077,. . . 노랑꼬리 참치,Free
+NZL,0304490099,. . . 기타,Free
+NZL,0304510010,"-- 틸라피아(Oreochromis spp.), 메기(Pangasius spp., Silurus spp., Clarias spp., Ictalurus spp.), 잉어(Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.), 장어(Anguilla spp.), 나일 농어(Lates niloticus) 및 독사(Channa spp.)",Free
+NZL,0304520000,-- 연어과,Free
+NZL,0304530010,. . . 대구,Free
+NZL,0304530015,. . . 호키,Free
+NZL,0304530017,. . . 붉은 대구,Free
+NZL,0304530019,. . . 남부 블루 화이팅,Free
+NZL,0304530029,. . . 기타,Free
+NZL,0304540000,-- 황새치(Xiphias gladius),Free
+NZL,0304550010,. . . 남극 이빨고기(Dissostichus mawsoni),Free
+NZL,0304550015,. . . 파타고니아 이빨고기(Dissostichus eleginoides),Free
+NZL,0304550019,. . . 기타,Free
+NZL,0304560010,. . . 코끼리 물고기,Free
+NZL,0304560017,. . . 얼룩상어(리그),Free
+NZL,0304560019,. . . 기타,Free
+NZL,0304570000,-- 가오리와 가오리류(Rajidae),Free
+NZL,0304590010,. . . 바라쿠타,Free
+NZL,0304590013,. . . 블루노즈,Free
+NZL,0304590015,. . . 푸른 대구,Free
+NZL,0304590017,. . . 홍관조,Free
+NZL,0304590021,. . . 가자미,Free
+NZL,0304590023,. . . 젬피쉬,Free
+NZL,0304590024,. . . 유령 상어,Free
+NZL,0304590027,. . . 그루퍼,Free
+NZL,0304590029,. . . 성대,Free
+NZL,0304590035,. . . 달고기,Free
+NZL,0304590037,. . . 카하와이,Free
+NZL,0304590039,. . . 레몬 솔,Free
+NZL,0304590041,. . . 링,Free
+NZL,0304590043,. . . 모키,Free
+NZL,0304590045,. . . 아귀,Free
+NZL,0304590047,. . . 뉴질랜드 가자미,Free
+NZL,0304590049,. . . 오렌지 러피,Free
+NZL,0304590051,. . . . 검은색,Free
+NZL,0304590053,. . . . 매끄러운,Free
+NZL,0304590057,. . . 스내퍼,Free
+NZL,0304590063,. . . 타라키히,Free
+NZL,0304590065,. . . 트레발리,Free
+NZL,0304590067,. . . . 남방 블루핀,Free
+NZL,0304590069,. . . . 기타,Free
+NZL,0304590071,. . . . 파란색,Free
+NZL,0304590073,. . . . 은,Free
+NZL,0304590075,. . . . 하얀색,Free
+NZL,0304590077,. . . 노랑꼬리 참치,Free
+NZL,0304590089,. . . 기타,Free
+NZL,0304610000,-- 틸라피아(Oreochromis spp.),Free
+NZL,0304620000,"-- 메기(Pangasius spp., Silurus spp., Clarias spp., Ictalurus spp.)",Free
+NZL,0304630000,-- 나일퍼치(Lates niloticus),Free
+NZL,0304690010,-- 기타,Free
+NZL,0304710000,"-- 대구(Gadus morhua, Gadus ogac, Gadus Macrocephalus)",Free
+NZL,0304720000,-- 대구(Melanogrammus aeglefinus),Free
+NZL,0304730000,-- 석탄고기(Pollachius virens),Free
+NZL,0304740010,. . . 블록으로,Free
+NZL,0304740019,. . . 기타,Free
+NZL,0304750010,. . . 블록으로,Free
+NZL,0304750019,. . . 기타,Free
+NZL,0304790010,. . . . 블록으로,Free
+NZL,0304790019,. . . . 기타,Free
+NZL,0304790021,. . . . 블록으로,Free
+NZL,0304790029,. . . . 기타,Free
+NZL,0304790031,. . . . 블록으로,Free
+NZL,0304790035,. . . . 기타,Free
+NZL,0304790039,. . . 기타,Free
+NZL,0304810000,"-- 태평양 연어(Oncorhynchus nerka, Oncorhynchus gorbuscha, Oncorhynchus keta, Oncorhynchus tschawytscha, Oncorhynchus kisutch, Oncorhynchus masou 및 Oncorhynchus rhodurus), 대서양 연어(Salmo salar) 및 다뉴브 연어(Hucho hucho)",Free
+NZL,0304820000,"-- 송어(Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache 및 Oncorhynchus chrysogaster)",Free
+NZL,0304830010,. . . 블록으로,Free
+NZL,0304830015,. . . . 가자미,Free
+NZL,0304830019,. . . . 레몬 솔,Free
+NZL,0304830025,. . . . 뉴질랜드 솔,Free
+NZL,0304830029,. . . . 기타,Free
+NZL,0304840000,-- 황새치(Xiphias gladius),Free
+NZL,0304850010,. . . 남극 이빨고기(Dissostichus mawsoni),Free
+NZL,0304850019,. . . 파타고니아 이빨고기(Dissostichus eleginoides),Free
+NZL,0304850029,. . . 기타,Free
+NZL,0304860000,"-- 청어(Clupea harengus, Clupea pallasii)",Free
+NZL,0304870010,. . . 남부 블루핀,Free
+NZL,0304870019,. . . 기타,Free
+NZL,0304880010,. . . 코끼리 물고기,Free
+NZL,0304880017,. . . 학교 상어,Free
+NZL,0304880021,. . . 홍어,Free
+NZL,0304880025,. . . 얼룩상어(리그),Free
+NZL,0304880029,. . . 기타,Free
+NZL,0304890010,. . . 블록으로,Free
+NZL,0304890011,. . . . 바라쿠타,Free
+NZL,0304890013,. . . . 블루노즈,Free
+NZL,0304890015,. . . . 푸른 대구,Free
+NZL,0304890017,. . . . 홍관조,Free
+NZL,0304890023,. . . . 젬피쉬,Free
+NZL,0304890027,. . . . 그루퍼,Free
+NZL,0304890028,. . . . 유령 상어,Free
+NZL,0304890029,. . . . 성대,Free
+NZL,0304890035,. . . . 달고기,Free
+NZL,0304890037,. . . . 카하와이,Free
+NZL,0304890039,. . . . 가죽재킷,Free
+NZL,0304890043,. . . . 링,Free
+NZL,0304890045,. . . . . 파란색,Free
+NZL,0304890047,. . . . . 잭,Free
+NZL,0304890049,. . . . 아귀,Free
+NZL,0304890053,. . . . 오렌지 러피,Free
+NZL,0304890055,. . . . . 검은색,Free
+NZL,0304890057,. . . . . 매끄러운,Free
+NZL,0304890065,. . . . 스내퍼,Free
+NZL,0304890071,. . . . 타라키히,Free
+NZL,0304890073,. . . . 트레발리,Free
+NZL,0304890075,. . . . . 파란색,Free
+NZL,0304890077,. . . . . 은,Free
+NZL,0304890079,. . . . . 하얀색,Free
+NZL,0304890099,. . . . 기타,Free
+NZL,0304910000,-- 황새치(Xiphias gladius),Free
+NZL,0304920010,. . . 남극 이빨고기(Dissostichus mawsoni),Free
+NZL,0304920013,. . . 파타고니아 이빨고기(Dissostichus eleginoides),Free
+NZL,0304920016,. . . 기타,Free
+NZL,0304930010,. . . 다진 블록,Free
+NZL,0304930019,. . . 수리미,Free
+NZL,0304930039,. . . 기타,Free
+NZL,0304940010,. . . 다진 블록,Free
+NZL,0304940019,. . . 수리미,Free
+NZL,0304940029,. . . 기타,Free
+NZL,0304950010,. . . 다진 블록,Free
+NZL,0304950015,. . . . 호키,Free
+NZL,0304950019,. . . . 남부 블루 화이팅,Free
+NZL,0304950029,. . . . 기타,Free
+NZL,0304950039,. . . 기타,Free
+NZL,0304960010,. . . 다진 블록,Free
+NZL,0304960015,. . . 수리미,Free
+NZL,0304960019,. . . 기타,Free
+NZL,0304970010,. . . 다진 블록,Free
+NZL,0304970015,. . . 수리미,Free
+NZL,0304970019,. . . 기타,Free
+NZL,0304990014,. . . 다진 블록,Free
+NZL,0304990023,. . . 수리미,Free
+NZL,0304990039,. . . 기타,Free
+NZL,0305200010,. . 건조한,Free
+NZL,0305200019,. . 기타,Free
+NZL,0305310011,. . . 건조한,Free
+NZL,0305310029,. . . 기타,Free
+NZL,0305320010,. . . 건조한,Free
+NZL,0305320019,. . . 기타,Free
+NZL,0305390011,. . . 건조한,Free
+NZL,0305390029,. . . 기타,Free
+NZL,0305410010,"-- 태평양 연어(Oncorhynchus nerka, Oncorhynchus gorbuscha, Oncorhynchus keta, Oncorhynchus tschawytscha, Oncorhynchus kisutch, Oncorhynchus masou 및 Oncorhynchus rhodurus), 대서양 연어(Salmo salar) 및 다뉴브 연어(Hucho hucho)",Free
+NZL,0305420010,"-- 청어(Clupea harengus, Clupea pallasii)",Free
+NZL,0305430000,"-- 송어(Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache 및 Oncorhynchus chrysogaster)",Free
+NZL,0305440010,. . . . 필렛,Free
+NZL,0305440015,. . . . 전체,Free
+NZL,0305440029,. . . 기타,Free
+NZL,0305490010,. . . 푸른 대구,Free
+NZL,0305490015,. . . 호키,Free
+NZL,0305490023,. . . 카하와이,Free
+NZL,0305490025,. . . 고등어,Free
+NZL,0305490033,. . . 숭어,Free
+NZL,0305490035,. . . 붉은 대구,Free
+NZL,0305490043,. . . 스내퍼,Free
+NZL,0305490045,. . . 타라키히,Free
+NZL,0305490053,. . . 트레발리,Free
+NZL,0305490089,. . . 기타,Free
+NZL,0305510010,"-- 대구(Gadus morhua, Gadus ogac, Gadus Macrocephalus)",Free
+NZL,0305520000,"-- 틸라피아(Oreochromis spp.), 메기(Pangasius spp., Silurus spp., Clarias spp., Ictalurus spp.), 잉어(Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.), 장어(Anguilla spp.), 나일 농어(Lates niloticus) 및 독사(Channa spp.)",Free
+NZL,0305530000,"-- Bregmacerotidae, Euclichthyidae, Gadidae, Macrouridae, Melanonidae, Merlucciidae, Moridae 및 Muraenolepididae과의 어류(대구 제외)(Gadus morhua, Gadus ogac, Gadus microcephalus)",Free
+NZL,0305540000,"-- 청어(Clupea harengus, Clupea pallasii), 멸치(Engraulis spp.), 정어리(Sardina pilchardus, Sardinops spp.), 사르디넬라(Sardinella spp.), 브리스링 또는 청어(Sprattus sprattus), 고등어(Scomber scombrus, Scomber australasicus, Scomber japonicus), 인도 고등어(Rastrelliger spp.), 바다고기(Scomberomorus spp.), 잭 고등어와 말 고등어(Trachurus spp.), 잭, 크레발레(Caranx spp.), 날치(Rachycentron canadum), 은색 갑오징어(Pampus spp.), 태평양 꽁치(Cololabis saira), 전갱이(Decapterus spp.), 빙어(Mallotus villosus), 칼치 (Xiphias Gladius), 카와카와(Euthynnus affinis), 가다랑어(sarda spp.), 청새치, 돛새치, 작살어과(Istiophoridae)",Free
+NZL,0305590011,-- 기타,Free
+NZL,0305610010,"-- 청어(Clupea harengus, Clupea pallasii)",Free
+NZL,0305620010,"-- 대구(Gadus morhua, Gadus ogac, Gadus Macrocephalus)",Free
+NZL,0305630010,-- 멸치(Engraulis spp.),Free
+NZL,0305640010,"-- 틸라피아(Oreochromis spp.), 메기(Pangasius spp., Silurus spp., Clarias spp., Ictalurus spp.), 잉어(Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.), 장어(Anguilla spp.), 나일 농어(Lates niloticus) 및 독사(Channa spp.)",Free
+NZL,0305690011,-- 기타,Free
+NZL,0305710000,-- 상어 지느러미,Free
+NZL,0305720000,"-- 생선 머리, 꼬리, 아가미",Free
+NZL,0305790000,-- 기타,Free
+NZL,0306110001,. . . 전체,Free
+NZL,0306110011,. . . . 꼬리,Free
+NZL,0306110029,. . . . 기타,Free
+NZL,0306120010,-- 랍스터(Homarus spp.),Free
+NZL,0306140010,-- 게,Free
+NZL,0306150000,-- 노르웨이 랍스터(Nephrops norvegicus),Free
+NZL,0306160000,"-- 냉수성 새우 및 참새우(Pandalus spp., Crangon crangon)",Free
+NZL,0306170000,-- 기타 새우와 새우,Free
+NZL,0306190012,-- 기타,Free
+NZL,0306310010,. . . 살다,Free
+NZL,0306310019,. . . 기타,Free
+NZL,0306320010,. . . 살다,Free
+NZL,0306320019,. . . 기타,Free
+NZL,0306330010,. . . 살다,Free
+NZL,0306330019,. . . 기타,Free
+NZL,0306340010,. . . 살다,Free
+NZL,0306340019,. . . 기타,Free
+NZL,0306350010,. . . 살다,Free
+NZL,0306350019,. . . 기타,Free
+NZL,0306360010,. . . 살다,Free
+NZL,0306360019,. . . 기타,Free
+NZL,0306390010,. . . 살다,Free
+NZL,0306390020,. . . 기타,Free
+NZL,0306911000,"--- 껍질이 있는 상태이든 아니든, 훈제 과정 전이나 훈제 과정 중에 조리했든 아니든 훈제된 것",Free
+NZL,0306911900,"--- 통째로, 조리된",5%
+NZL,0306912900,--- 기타,Free
+NZL,0306921000,"--- 껍질이 있는 상태이든 아니든, 훈제 과정 전이나 훈제 과정 중에 조리했든 아니든 훈제된 것",Free
+NZL,0306921900,"--- 통째로, 조리된",5%
+NZL,0306922900,--- 기타,Free
+NZL,0306931000,"--- 껍질이 있는 상태이든 아니든, 훈제 과정 전이나 훈제 과정 중에 조리했든 아니든 훈제된 것",Free
+NZL,0306931900,"--- 통째로, 조리된",5%
+NZL,0306932900,--- 기타,Free
+NZL,0306941000,--- 그을린,Free
+NZL,0306941900,"--- 통째로, 조리된",5%
+NZL,0306942900,--- 기타,Free
+NZL,0306951000,--- 그을린,Free
+NZL,0306951900,"--- 통째로, 조리된",5%
+NZL,0306952900,--- 기타,Free
+NZL,0306991000,--- 그을린,Free
+NZL,0306991900,"--- 통째로, 조리된",5%
+NZL,0306992902,--- 기타,Free
+NZL,0307110010,. . . . . 살다,Free
+NZL,0307110015,. . . . . . 전체,Free
+NZL,0307110017,. . . . . . 반껍질,Free
+NZL,0307110019,. . . . . . 고기,Free
+NZL,0307110021,. . . . . 살다,Free
+NZL,0307110025,. . . . . . 전체,Free
+NZL,0307110027,. . . . . . 반껍질,Free
+NZL,0307110029,. . . . . . 고기,Free
+NZL,0307110031,. . . . 살다,Free
+NZL,0307110035,. . . . . 전체,Free
+NZL,0307110037,. . . . . 반껍질,Free
+NZL,0307110039,. . . . . 고기,Free
+NZL,0307110041,. . . . 살다,Free
+NZL,0307110045,. . . . . 전체,Free
+NZL,0307110047,. . . . . 반껍질,Free
+NZL,0307110049,. . . . . 고기,Free
+NZL,0307110059,. . . 기타,Free
+NZL,0307120010,. . . . . 전체,Free
+NZL,0307120013,. . . . . 반껍질,Free
+NZL,0307120019,. . . . . 고기,Free
+NZL,0307120021,. . . . . 전체,Free
+NZL,0307120023,. . . . . 반껍질,Free
+NZL,0307120029,. . . . . 고기,Free
+NZL,0307120031,. . . . 전체,Free
+NZL,0307120033,. . . . 반껍질,Free
+NZL,0307120039,. . . . 고기,Free
+NZL,0307120041,. . . . 전체,Free
+NZL,0307120043,. . . . 반껍질,Free
+NZL,0307120049,. . . . 고기,Free
+NZL,0307120059,. . . 기타,Free
+NZL,0307190011,. . . . 농사지었다,Free
+NZL,0307190051,. . . . 기타,Free
+NZL,0307190053,. . . 태평양(Crassostrea gigas),Free
+NZL,0307190055,". . . 바위(Saccostrea cuccullatta, Saccostrea glomerata)",Free
+NZL,0307190069,. . . 기타,Free
+NZL,0307210002,. . . 살다,Free
+NZL,0307210010,. . . 고기,Free
+NZL,0307210020,. . . 기타,Free
+NZL,0307220002,-- 언,Free
+NZL,0307290002,-- 기타,Free
+NZL,0307310002,. . . 살다,Free
+NZL,0307310011,. . . . 전체,Free
+NZL,0307310021,. . . . 반껍질,Free
+NZL,0307310031,. . . . 고기,Free
+NZL,0307310039,. . . 기타,Free
+NZL,0307320010,. . . 전체,Free
+NZL,0307320013,. . . . 1kg당 45개 이상의 홍합,Free
+NZL,0307320015,. . . . 기타,Free
+NZL,0307320019,. . . 고기,Free
+NZL,0307390025,. . . 그을린,Free
+NZL,0307390049,. . . 기타,Free
+NZL,0307420010,. . . 오징어:,Free
+NZL,0307420015,. . . . 전체 또는 머리와 껍질을 벗긴 것,Free
+NZL,0307420021,. . . . 튜브 또는 스테이크,Free
+NZL,0307420029,. . . . 기타,Free
+NZL,0307430010,. . . 오징어,Free
+NZL,0307430013,. . . . 전체,Free
+NZL,0307430015,. . . . 머리가 빠지고 내장이 빠지다,Free
+NZL,0307430017,. . . . 튜브 또는 스테이크,Free
+NZL,0307430019,. . . . 머리와 촉수,Free
+NZL,0307430029,. . . . 기타,Free
+NZL,0307490010,. . . 오징어,Free
+NZL,0307490043,. . . . 건조한,Free
+NZL,0307490049,. . . . 기타,Free
+NZL,0307510001,. . . 살다,Free
+NZL,0307510009,. . . 신선하거나 냉장,Free
+NZL,0307520000,-- 언,Free
+NZL,0307590000,-- 기타,Free
+NZL,0307600001,. . 살다,Free
+NZL,0307600011,". . . 신선, 냉장 또는 냉동",Free
+NZL,0307600029,. . . 기타,Free
+NZL,0307710010,. . . . 조개,Free
+NZL,0307710013,. . . . 투아투아,Free
+NZL,0307710015,. . . . 기타 조개류,Free
+NZL,0307710017,. . . . 기타,Free
+NZL,0307710019,. . . 기타,Free
+NZL,0307720010,. . . 조개,Free
+NZL,0307720013,. . . 투아투아,Free
+NZL,0307720015,. . . 기타 조개류,Free
+NZL,0307720019,. . . 기타,Free
+NZL,0307790000,-- 기타,Free
+NZL,0307810011,. . . 살다,Free
+NZL,0307810017,. . . 냉장,Free
+NZL,0307810029,. . . 기타,Free
+NZL,0307820000,"-- 살아 있는, 신선한 또는 냉장한 스트롬보이드 조개(Strombus spp.)",Free
+NZL,0307830000,-- 냉동 전복(Haliotis spp.),Free
+NZL,0307840000,-- 냉동 스트롬보이드 조개(Strombus spp.),Free
+NZL,0307870000,-- 기타 전복(Haliotis spp.),Free
+NZL,0307880000,-- 기타 스트롬보이드 조개(Strombus spp.),Free
+NZL,0307910012,. . . 냉장,Free
+NZL,0307910070,. . . 기타,Free
+NZL,0307920002,-- 언,Free
+NZL,0307990002,-- 기타,Free
+NZL,0308110000,"-- 생, 신선 또는 냉장",Free
+NZL,0308120000,-- 언,Free
+NZL,0308192000,--- 그을린,Free
+NZL,0308199010,--- 기타,5%
+NZL,0308210000,"-- 생, 신선 또는 냉장",Free
+NZL,0308220000,-- 언,Free
+NZL,0308292000,--- 그을린,Free
+NZL,0308299010,--- 기타,5%
+NZL,0308301000,"-- 생, 신선 또는 냉장",Free
+NZL,0308302000,--- 언,Free
+NZL,0308303000,--- 그을린,Free
+NZL,0308309000,--- 기타,5%
+NZL,0308901000,"-- 생, 신선 또는 냉장",Free
+NZL,0308902000,--- 언,Free
+NZL,0308903000,--- 그을린,Free
+NZL,0308909002,--- 기타,5%
+NZL,0309100000,- 물고기의,Free
+NZL,0309901000,-- 갑각류,Free
+NZL,0309902010,. . . 동결건조 홍합가루,Free
+NZL,0309902020,. . . 기타,Free
+NZL,0309903000,-- 수생 무척추동물,5%
+NZL,0401100100,-- 신선한,Free
+NZL,0401100900,-- 기타,Free
+NZL,0401200100,-- 신선한,Free
+NZL,0401200901,. . . UHT 우유,Free
+NZL,0401200905,. . . 기타,Free
+NZL,0401400010,. . 신선한,Free
+NZL,0401400019,. . 기타,Free
+NZL,0401500010,. . 신선한,Free
+NZL,0401500019,. . 기타,Free
+NZL,0402100002,. . . 분무 공정,5%
+NZL,0402100009,. . . 기타,5%
+NZL,0402100018,. . 기타,5%
+NZL,0402210001,. . . . 유아 또는 병자용 식품으로 사용하도록 준비됨,5%
+NZL,0402210009,. . . . 버터지방 26% 이하 함유 전유 및 혼합 전유분말,5%
+NZL,0402210019,. . . . 기타,5%
+NZL,0402210029,. . . 기타,5%
+NZL,0402290001,. . . . 유아 또는 병자용 식품으로 사용하도록 준비됨,5%
+NZL,0402290009,. . . . 버터지방 26% 이하 함유 전유 및 혼합 전유분말,5%
+NZL,0402290019,. . . . 기타,5%
+NZL,0402290029,. . . 기타,5%
+NZL,0402910000,-- 첨가된 설탕이나 기타 감미료가 포함되지 않음,Free
+NZL,0402990010,. . . . 응축된,Free
+NZL,0402990015,. . . . 무가당 연의,Free
+NZL,0402990017,. . . . 기타,Free
+NZL,0402990021,". . . . 초고온(UHT) 우유, 가당",Free
+NZL,0402990029,. . . . 기타,Free
+NZL,0403200100,"-- 코코아 함유, 완전 탈지 기준으로 계산된 코코아 중량의 5% 미만",5%
+NZL,0403200500,"-- 향신료, 커피 또는 커피 추출물, 식물 또는 식물의 일부, 곡물 또는 제빵류가 첨가된 제품",5%
+NZL,0403200900,-- 기타,5%
+NZL,0403900100,-- 농축되지 않고 단맛이 첨가되지 않음,Free
+NZL,0403901100,--- 액체 또는 반고체,Free
+NZL,0403901901,. . . . . 스프레이 공정 방식으로 제조,5%
+NZL,0403901909,. . . . . 기타,5%
+NZL,0403901911,. . . . . 지방 함량이 1.5% 이하인 분말 또는 과립,5%
+NZL,0403901919,. . . . . 지방을 1.5% 이상 함유하는 분말 또는 과립,5%
+NZL,0403901921,. . . . . . 응축된,5%
+NZL,0403901929,. . . . . . 무가당 연의,5%
+NZL,0403901939,. . . . . . 기타,5%
+NZL,0404100000,- 유청 및 변형 유청(농축 여부 또는 설탕이나 기타 감미료를 첨가했는지 여부와 관계 없음),5%
+NZL,0404900100,-- 농축되지 않고 단맛이 첨가되지 않음,Free
+NZL,0404901102,. . . . . . 염화불화탄소를 함유한,Free
+NZL,0404901108,. . . . . . 기타,Free
+NZL,0404901119,. . . . . 기타,Free
+NZL,0404901129,반고체,Free
+NZL,0404901900,--- 기타,5%
+NZL,0405100001,. . 무염,Free
+NZL,0405100009,". . . 크리머리, 패트에 담긴",Free
+NZL,0405100011,". . . 크리머리, 대량으로",Free
+NZL,0405100019,. . 술취한,Free
+NZL,0405200000,- 유제품 스프레드,Free
+NZL,0405900001,. . 무수 유지방,Free
+NZL,0405900005,. . 버터 기름,Free
+NZL,0405900009,. . 기타,Free
+NZL,0406100001,. . 신선한 치즈,Free
+NZL,0406100009,. . 굳어진 식품,Free
+NZL,0406200001,. . 체더 치즈,Free
+NZL,0406200009,. . 콜비,Free
+NZL,0406200011,. . 체셔,Free
+NZL,0406200019,. . 에그몬트,Free
+NZL,0406200021,. . 고다,Free
+NZL,0406200029,. . 기타,Free
+NZL,0406300000,- 가공치즈(갈거나 가루로 만들지 않은 것),Free
+NZL,0406400000,- 푸른 정맥 치즈 및 Penicillium roqueforti가 생성하는 정맥을 함유한 기타 치즈,Free
+NZL,0406900001,. . 깡통에,Free
+NZL,0406900011,. . . 체더 치즈,Free
+NZL,0406900019,. . . 콜비,Free
+NZL,0406900021,. . . 체셔,Free
+NZL,0406900029,. . . 에그몬트,Free
+NZL,0406900031,. . . 고다,Free
+NZL,0406900039,. . . 기타,Free
+NZL,0407110000,-- Gallus domesticus 종의 가금류에 대하여,Free
+NZL,0407190000,-- 기타,Free
+NZL,0407210000,-- Gallus domesticus 종의 가금류에 대하여,Free
+NZL,0407290000,-- 기타,Free
+NZL,0407900000,- 기타,Free
+NZL,0408110000,-- 건조한,Free
+NZL,0408190001,. . . 액체,Free
+NZL,0408190009,. . . 기타,Free
+NZL,0408910000,-- 건조한,Free
+NZL,0408990001,. . . 액체,Free
+NZL,0408990009,. . . 기타,Free
+NZL,0409000010,. . . . 단화,5%
+NZL,0409000013,. . . . 다화,5%
+NZL,0409000017,. . . 기타,5%
+NZL,0409000021,. . . . 단화,5%
+NZL,0409000023,. . . . 다화,5%
+NZL,0409000025,. . . 기타,5%
+NZL,0409000027,. 빗,5%
+NZL,0409000031,. 단물,5%
+NZL,0409000033,. . . 단화,5%
+NZL,0409000035,. . . 다화,5%
+NZL,0409000039,. . 기타,5%
+NZL,0410100100,"-- 소금에 절인 것, 소금물에 절인 것, 말린 것 또는 훈제한 것; 식용 밀가루 또는 밀가루",5%
+NZL,0410100500,-- 기타,Free
+NZL,0410900000,- 기타,Free
+NZL,0501000000,세척 또는 세척 여부와 관계없이 가공되지 않은 인간 머리카락; 인간 머리카락 폐기물,Free
+NZL,0502100000,"- 돼지, 돼지 또는 멧돼지의 털과 털 및 그 폐기물",Free
+NZL,0502900000,- 기타,Free
+NZL,0504000001,. . 돼지,Free
+NZL,0504000011,. . . 소,Free
+NZL,0504000019,. . . 양고기,Free
+NZL,0504000021,. . . 양,Free
+NZL,0504000029,. . . 기타,Free
+NZL,0504000031,. . 양고기 모자,Free
+NZL,0504000039,. . 양 마개,Free
+NZL,0504000049,. . 벨스(렌넷 백),Free
+NZL,0504000051,. . . 쇠고기와 송아지고기,Free
+NZL,0504000059,. . . 양과 어린 양,Free
+NZL,0504000069,. . . 기타,Free
+NZL,0504000081,. . 사슴의,Free
+NZL,0504000089,. . 기타,Free
+NZL,0505100000,- 속을 채우는 데 사용되는 종류의 깃털,Free
+NZL,0505900000,- 기타,Free
+NZL,0506100000,- 산으로 처리된 골질과 뼈,Free
+NZL,0506900001,. . 뼈 가루 또는 분말은 최종 용도와 관계없이 사용됩니다(뼈 숯 포함),Free
+NZL,0506900009,. . 기타,Free
+NZL,0507100000,- 상아; 상아 가루 및 폐기물,Free
+NZL,0507900002,. . . 사슴,Free
+NZL,0507900009,. . . 기타,Free
+NZL,0507900011,. . . . 언,Free
+NZL,0507900012,. . . . 건조한,Free
+NZL,0507900015,. . . . 기타,Free
+NZL,0507900021,. . . . 언,Free
+NZL,0507900029,. . . . 기타,Free
+NZL,0507900038,. . . 사슴,Free
+NZL,0507900039,. . . 기타,Free
+NZL,0507900041,. . 고래 제품,Free
+NZL,0507900048,. . 기타,Free
+NZL,0508000000,"산호 및 이와 유사한 재료(가공하지 아니하거나 단순히 가공하였으나 그 밖에 가공하지 아니한 것); 연체동물, 갑각류 또는 극피동물의 껍질 및 오징어뼈(가공하지 아니하거나 단순히 가공하였으나 그 모양을 자르지 아니한 것), 그 분말 및 폐기물",Free
+NZL,0510000001,. 신선하거나 보존된 샘(건조하지 않음),Free
+NZL,0510000011,. 용연향,Free
+NZL,0510000019,. 기타,Free
+NZL,0511100000,- 소 정액,Free
+NZL,0511910001,. . . 물고기,Free
+NZL,0511910009,. . . 기타,Free
+NZL,0511990002,. . . . 사슴의,Free
+NZL,0511990003,. . . . 기타,Free
+NZL,0511990007,. . . . 양,Free
+NZL,0511990008,. . . . 기타,Free
+NZL,0511990012,. . . . 사슴의,Free
+NZL,0511990015,. . . . 기타,Free
+NZL,0511990021,. . . 고래 제품,Free
+NZL,0511990031,. . . . . 피,Free
+NZL,0511990035,. . . . . 기타,Free
+NZL,0511990041,. . . . . 양 난자,Free
+NZL,0511990045,. . . . . 배아,Free
+NZL,0511990047,. . . . . 말총과 말총 폐기물(받침재가 있거나 없이 층으로 쌓았는지 여부와 관계없음),Free
+NZL,0511990048,. . . . . 동물성 천연 스펀지,Free
+NZL,0511990049,. . . . . 기타,Free
+NZL,0601100001,. . 칼라 백합,Free
+NZL,0601100011,. . 모란의 괴경이나 뿌리,Free
+NZL,0601100013,. . 샌더소니아,Free
+NZL,0601100015,. . 릴리움,Free
+NZL,0601100017,. . 튤립,Free
+NZL,0601100029,. . 기타,Free
+NZL,0601200001,. . 치커리 식물과 뿌리,Free
+NZL,0601200009,. . 기타,Free
+NZL,0602100000,- 뿌리가 없는 절단 및 미끄러짐,Free
+NZL,0602200000,"- 식용 과일이나 견과류를 맺는 나무, 관목 및 수풀(접목 여부와 관계 없음)",Free
+NZL,0602300000,"- 진달래와 철쭉, 접목 여부와 관계없이",Free
+NZL,0602400000,"- 장미, 접목 여부와 관계없이",Free
+NZL,0602900001,. . 버섯 균사체,Free
+NZL,0602900011,". . . 토착 나무, 식물",Free
+NZL,0602900019,. . . 키위 스톡,Free
+NZL,0602900021,. . . 기타 과일 스톡,Free
+NZL,0602900029,. . . 기타,Free
+NZL,0603110000,-- 장미,Free
+NZL,0603120000,-- 카네이션,Free
+NZL,0603130000,-- 난초,Free
+NZL,0603140000,-- 국화,Free
+NZL,0603150000,-- 백합(Lilium spp.),Free
+NZL,0603190021,. . . 프로테아과(모든 프로테아와 류카덴드론 포함),Free
+NZL,0603190024,. . . 알스트로메리아,Free
+NZL,0603190027,. . . 집소힐라,Free
+NZL,0603190030,. . . 봄철 구근,Free
+NZL,0603190033,. . . 잔테데스키아(칼라 백합),Free
+NZL,0603190036,. . . 젠티아나,Free
+NZL,0603190039,. . . 네리네스,Free
+NZL,0603190042,. . . 샌더소니아,Free
+NZL,0603190048,. . . 모란,Free
+NZL,0603190051,. . . 델피니엄,Free
+NZL,0603190054,. . . 라크스퍼,Free
+NZL,0603190057,. . . 라일락,Free
+NZL,0603190060,. . . 에리그니움 플라눔,Free
+NZL,0603190063,. . . 수국,Free
+NZL,0603190066,. . . 튤립,Free
+NZL,0603190069,. . . 가막살 나무속,Free
+NZL,0603190072,. . . 포르뮴,Free
+NZL,0603190075,. . . 피토스포룸,Free
+NZL,0603190078,. . . 기타,Free
+NZL,0603900101,. . . 모란,Free
+NZL,0603900109,. . . 기타,Free
+NZL,0603900900,-- 기타,5%
+NZL,0604200010,. . 이끼,Free
+NZL,0604200015,. . 프로테아과(모든 프로테아와 류카덴드론 포함),Free
+NZL,0604200019,. . 기타,Free
+NZL,0604901010,. . . 이끼,Free
+NZL,0604901015,. . . 프로테아과(모든 프로테아와 류카덴드론 포함),Free
+NZL,0604901019,. . . 기타,Free
+NZL,0604909000,-- 기타,5%
+NZL,0701100000,- 씨앗,Free
+NZL,0701900000,- 기타,Free
+NZL,0702000000,"토마토, 신선하거나 냉장",Free
+NZL,0703100100,-- 양파,Free
+NZL,0703100900,-- 샬롯,Free
+NZL,0703200000,- 마늘,Free
+NZL,0703900000,- 부추와 기타 알리아과 야채,Free
+NZL,0704100010,. . 콜리플라워,Free
+NZL,0704100020,. . 브로콜리,Free
+NZL,0704200000,- 브뤼셀 콩나물,Free
+NZL,0704900001,. . 양배추,Free
+NZL,0704900010,. . 기타,Free
+NZL,0705110000,-- 양배추 상추(머리상추),Free
+NZL,0705190000,-- 기타,Free
+NZL,0705210000,-- Witloof 치커리(Cichorium intybus var. foliosum),Free
+NZL,0705290000,-- 기타,Free
+NZL,0706100001,. . 붉은 머리털,Free
+NZL,0706100009,. . 순무,Free
+NZL,0706900000,- 기타,Free
+NZL,0707000000,"오이와 오이 피클, 신선하거나 냉장",Free
+NZL,0708100000,- 완두콩(Pisum sativum),Free
+NZL,0708200000,"- 콩(Vigna spp., Phaseolus spp.)",Free
+NZL,0708900000,- 기타 콩과 야채,Free
+NZL,0709200000,- 아스파라거스,Free
+NZL,0709300000,- 가지,Free
+NZL,0709400000,- 셀러리악 외의 셀러리,Free
+NZL,0709511000,-- 아가리쿠스속 버섯,Free
+NZL,0709520100,-- Boletus속의 버섯,Free
+NZL,0709530000,-- Cantharellus속의 버섯,Free
+NZL,0709540000,-- 시이타케(Lentinus edodes),Free
+NZL,0709550000,"-- 송이버섯(Tricholoma matsutake, Tricholoma magnivelare, Tricholoma anatolicum, Tricholoma dulciolens, Tricholoma caligatum)",Free
+NZL,0709560000,-- 트러플(Tuber spp.),Free
+NZL,0709590020,-- 기타,Free
+NZL,0709600000,- Capsicum속 또는 Pepper속의 과일,Free
+NZL,0709700000,"- 시금치, 뉴질랜드 시금치, 오라체 시금치(정원 시금치)",Free
+NZL,0709910000,-- 아티초크,Free
+NZL,0709920000,-- 올리브,Free
+NZL,0709930010,. . . 스쿼시,Free
+NZL,0709930015,. . . 박과,Free
+NZL,0709930019,. . . 기타,Free
+NZL,0709990010,. . . 케이퍼,Free
+NZL,0709990015,. . . 달콤한 옥수수,Free
+NZL,0709990019,. . . 기타,Free
+NZL,0710100000,- 감자,Free
+NZL,0710210001,. . . 익히지 않은,Free
+NZL,0710210009,. . . 기타,Free
+NZL,0710220001,. . . . 익히지 않은,Free
+NZL,0710220009,. . . . 기타,Free
+NZL,0710220011,. . . 완두콩,Free
+NZL,0710220019,. . . 기타,Free
+NZL,0710290000,-- 기타,Free
+NZL,0710300000,"- 시금치, 뉴질랜드 시금치, 오라체 시금치(정원 시금치)",Free
+NZL,0710400000,- 달콤한 옥수수,5%
+NZL,0710800001,. . 붉은 머리털,Free
+NZL,0710800009,. . 아스파라거스,Free
+NZL,0710800019,. . 기타,Free
+NZL,0710900001,. . 완두콩,Free
+NZL,0710900009,. . 콩,Free
+NZL,0710900019,. . 기타,Free
+NZL,0711200000,- 올리브,5%
+NZL,0711400000,- 오이와 오이 피클,5%
+NZL,0711510000,-- 아가리쿠스속 버섯,5%
+NZL,0711590010,. . . 버섯,5%
+NZL,0711590020,. . . 트러플,5%
+NZL,0711900010,. . 콩,5%
+NZL,0711900020,. . 완두콩,5%
+NZL,0711900030,. . 토마토,5%
+NZL,0711900040,. . 양파,5%
+NZL,0711900050,. . 케이퍼,5%
+NZL,0711900090,. . 기타,5%
+NZL,0712200000,- 양파,5%
+NZL,0712310000,-- 아가리쿠스속 버섯,5%
+NZL,0712320000,-- 목귀(Auricularia spp.),5%
+NZL,0712330000,-- 젤리균류(Tremella spp.),5%
+NZL,0712340000,-- 시이타케(Lentinus edodes),5%
+NZL,0712391100,--- 트러플,Free
+NZL,0712391910,--- 기타,5%
+NZL,0712900100,-- 옥수수,Free
+NZL,0712900900,-- 혼합물을 포함한 허브,Free
+NZL,0712901901,. . . 감자(잘라내거나 얇게 썰었는지 여부와 관계없이 추가 가공하지 않음),Free
+NZL,0712901909,. . . 기타,Free
+NZL,0713100100,-- 나뉘다,Free
+NZL,0713100801,. . . . 소매 판매를 위해 포장됨,Free
+NZL,0713100809,. . . . 기타,Free
+NZL,0713100811,. . . . 인공 건조 또는 탈수,Free
+NZL,0713100819,. . . . 기타,Free
+NZL,0713200100,-- 나뉘다,Free
+NZL,0713200801,. . . . 소매 판매를 위해 포장됨,Free
+NZL,0713200809,. . . . 기타,Free
+NZL,0713200811,. . . . 인공 건조 또는 탈수,Free
+NZL,0713200819,. . . . 기타,Free
+NZL,0713310001,. . . . 소매 판매를 위해 포장됨,Free
+NZL,0713310009,. . . . 기타,Free
+NZL,0713310011,. . . . 인공 건조 또는 탈수,Free
+NZL,0713310019,. . . . 기타,Free
+NZL,0713320001,. . . . 소매 판매를 위해 포장됨,Free
+NZL,0713320009,. . . . 기타,Free
+NZL,0713320011,. . . . 인공 건조 또는 탈수,Free
+NZL,0713320019,. . . . 기타,Free
+NZL,0713330001,. . . . 소매 판매를 위해 포장됨,Free
+NZL,0713330009,. . . . 기타,Free
+NZL,0713330011,. . . . 인공 건조 또는 탈수,Free
+NZL,0713330019,. . . . 기타,Free
+NZL,0713340010,. . . . 소매 판매를 위해 포장됨,Free
+NZL,0713340015,. . . . 기타,Free
+NZL,0713340025,. . . . 인공 건조 또는 탈수,Free
+NZL,0713340029,. . . . 기타,Free
+NZL,0713350010,. . . . 소매 판매를 위해 포장됨,Free
+NZL,0713350015,. . . . 기타,Free
+NZL,0713350025,. . . . 인공 건조 또는 탈수,Free
+NZL,0713350029,. . . . 기타,Free
+NZL,0713390010,. . . . 소매 판매를 위해 포장됨,Free
+NZL,0713390015,. . . . 기타,Free
+NZL,0713390025,. . . . 인공 건조 또는 탈수,Free
+NZL,0713390029,. . . . 기타,Free
+NZL,0713400000,- 렌즈콩,Free
+NZL,0713500001,. . . 소매 판매를 위해 포장됨,Free
+NZL,0713500009,. . . 기타,Free
+NZL,0713500011,. . . 인공 건조 또는 탈수,Free
+NZL,0713500019,. . . 기타,Free
+NZL,0713600000,- 비둘기콩(카자누스 박스),Free
+NZL,0713900010,- 기타,Free
+NZL,0714101000,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,5%
+NZL,0714109000,-- 기타,Free
+NZL,0714201000,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,5%
+NZL,0714209000,-- 기타,Free
+NZL,0714301000,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,5%
+NZL,0714309000,-- 기타,Free
+NZL,0714401000,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,5%
+NZL,0714409000,-- 기타,Free
+NZL,0714501000,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,5%
+NZL,0714509000,-- 기타,Free
+NZL,0714902000,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,5%
+NZL,0714908000,-- 기타,Free
+NZL,0801110000,-- 건조된,Free
+NZL,0801120000,-- 내과피(내과피),Free
+NZL,0801190010,-- 기타,Free
+NZL,0801210000,-- 껍질 속에,Free
+NZL,0801220000,-- 껍질을 벗긴,Free
+NZL,0801310000,-- 껍질 속에,Free
+NZL,0801320000,-- 껍질을 벗긴,Free
+NZL,0802110000,-- 껍질 속에,Free
+NZL,0802120000,-- 껍질을 벗긴,Free
+NZL,0802210000,-- 껍질 속에,Free
+NZL,0802220000,-- 껍질을 벗긴,Free
+NZL,0802310000,-- 껍질 속에,Free
+NZL,0802320000,-- 껍질을 벗긴,Free
+NZL,0802410000,-- 껍질 속에서,Free
+NZL,0802420000,-- 껍질을 벗긴,Free
+NZL,0802510000,-- 껍질 속에,Free
+NZL,0802520000,-- 껍질을 벗긴,Free
+NZL,0802610000,-- 껍질 속에,Free
+NZL,0802620000,-- 껍질을 벗긴,Free
+NZL,0802700010,. . 껍질 속에,Free
+NZL,0802700019,. . 껍질을 벗긴,Free
+NZL,0802800010,. . 껍질 속에,Free
+NZL,0802800019,. . 껍질을 벗긴,Free
+NZL,0802910000,-- 껍질 속의 소나무 열매,Free
+NZL,0802920000,-- 껍질을 벗긴 소나무 견과류,Free
+NZL,0802990010,. . 껍질 속에,Free
+NZL,0802990020,. . 껍질을 벗긴,Free
+NZL,0803100010,. . 신선한,Free
+NZL,0803100019,. . 건조한,Free
+NZL,0803900010,. . 신선한,Free
+NZL,0803900019,. . 건조한,Free
+NZL,0804100001,. . 신선한,Free
+NZL,0804100009,. . 건조한,Free
+NZL,0804200001,. . 신선한,Free
+NZL,0804200009,. . 건조한,Free
+NZL,0804300001,. . 신선한,Free
+NZL,0804300009,. . 건조한,Free
+NZL,0804400001,. . 신선한,Free
+NZL,0804400009,. . 건조한,Free
+NZL,0804500001,. . 신선한,Free
+NZL,0804500009,. . 건조한,Free
+NZL,0805100001,. . 통째로 신선하게,Free
+NZL,0805100009,. . 기타,Free
+NZL,0805210000,"-- 만다린(귤, 사쓰마 포함)",Free
+NZL,0805220000,-- 클레멘타인,Free
+NZL,0805290010,. . . 탄젤로스,Free
+NZL,0805290019,. . . 윌킹스 및 유사한 감귤 잡종,Free
+NZL,0805400000,- 자몽과 포멜로,Free
+NZL,0805500010,. . 레몬,Free
+NZL,0805500019,. . 라임,Free
+NZL,0805900000,- 기타,Free
+NZL,0806100000,- 신선한,Free
+NZL,0806200001,. . 건포도,Free
+NZL,0806200009,". . 건포도, 머스카텔 포함",Free
+NZL,0806200011,. . 술타나,Free
+NZL,0806200019,. . 기타,Free
+NZL,0807110000,-- 수박,Free
+NZL,0807190001,. . . 머스크 멜론,Free
+NZL,0807190005,. . . 프린스 멜론,Free
+NZL,0807190009,. . . 기타,Free
+NZL,0807200000,- 파파야(파파야),Free
+NZL,0808100001,". . 펄프화, 갈기, 썰기, 다지기, 갈기, 다지기 또는 껍질 벗기기",Free
+NZL,0808100020,. . . 엔비™ (실리케이트),Free
+NZL,0808100022,. . . 후지/후지 스포츠,Free
+NZL,0808100026,. . . 그래니 스미스,Free
+NZL,0808100028,. . . 재즈™ (사이프레시),Free
+NZL,0808100032,. . . Pacific Queen™/뉴질랜드 퀸(Scired),Free
+NZL,0808100034,. . . 퍼시픽 로즈™/뉴질랜드 로즈(시로스),Free
+NZL,0808100036,. . . 핑크 레이디™/(크립스 핑크/로지 글로우),Free
+NZL,0808100050,. . . 브레이번/레드 브레이번/브레이번 스포츠,Free
+NZL,0808100052,. . . Dazzle™ (PremA129),Free
+NZL,0808100054,. . . 허니크리스프,Free
+NZL,0808100056,. . . 코루®(플루맥),Free
+NZL,0808100058,. . . Rockit™ (PremA96),Free
+NZL,0808100060,. . . 로얄 갈라/갈라,Free
+NZL,0808100079,. . . 기타,Free
+NZL,0808300010,. . 벨 드 주메,Free
+NZL,0808300015,. . 뵈르 보스크,Free
+NZL,0808300017,. . 도이엔 뒤 코미스,Free
+NZL,0808300021,. . 유럽 사람,Free
+NZL,0808300025,. . 녹색 배,Free
+NZL,0808300027,. . 나시,Free
+NZL,0808300031,. . 붉은 배,Free
+NZL,0808300035,. . 테일러의 골드,Free
+NZL,0808300049,. . 기타,Free
+NZL,0808400000,- 모과,Free
+NZL,0809100000,- 살구,Free
+NZL,0809210000,-- 사워 체리(Prunus cerasus),Free
+NZL,0809290000,-- 기타,Free
+NZL,0809300001,. . 천도복숭아,Free
+NZL,0809300009,. . 기타,Free
+NZL,0809400001,. . 자두,Free
+NZL,0809400009,. . 슬로에스,Free
+NZL,0810100000,- 딸기,Free
+NZL,0810200001,. . 라즈베리,Free
+NZL,0810200009,. . 블랙베리,Free
+NZL,0810200019,. . 기타,Free
+NZL,0810300010,. . 검은 건포도,Free
+NZL,0810300019,. . 기타,Free
+NZL,0810400001,. . 블루베리,Free
+NZL,0810400009,. . 기타,Free
+NZL,0810500010,. . 골드 플레시드,Free
+NZL,0810500019,. . 녹색 살코기,Free
+NZL,0810500025,. . 붉은 살코기,Free
+NZL,0810500030,. . 기타,Free
+NZL,0810600000,- 두리안,Free
+NZL,0810700000,- 감,Free
+NZL,0810900010,. . 패션프루트,Free
+NZL,0810900020,. . 잭프루트와 리치,Free
+NZL,0810900030,. . 보이젠베리,Free
+NZL,0810900040,. . 타마릴로,Free
+NZL,0810900050,. . 페이조아,Free
+NZL,0810900055,. . 키위베리,Free
+NZL,0810900070,. . 페피노스(solanum muricatum),Free
+NZL,0810900091,. . 기타,Free
+NZL,0811100100,-- 설탕이나 기타 감미료가 첨가된 제품,Free
+NZL,0811100900,-- 기타,5%
+NZL,0811200100,-- 설탕이나 기타 감미료가 첨가된 제품,Free
+NZL,0811200901,. . . 라즈베리,5%
+NZL,0811200921,. . . . 개별 급속 냉동,5%
+NZL,0811200923,. . . . 대량 급속 냉동,5%
+NZL,0811200928,. . . . 기타,5%
+NZL,0811200939,. . . 기타,5%
+NZL,0811900100,--- 패션프루트,Free
+NZL,0811900901,. . . . 사과,Free
+NZL,0811900909,. . . . 살구,Free
+NZL,0811900911,. . . . 베리 과일,Free
+NZL,0811900919,. . . . 과일 샐러드,Free
+NZL,0811900921,. . . . 복숭아,Free
+NZL,0811900929,. . . . 배,Free
+NZL,0811900931,. . . . 자두,Free
+NZL,0811900939,. . . . 구아바,Free
+NZL,0811900941,". . . . 오렌지, 귤, 귤",Free
+NZL,0811900949,. . . . 파파야,Free
+NZL,0811900951,. . . . 서양 자두,Free
+NZL,0811900959,. . . . 기타,Free
+NZL,0811901100,--- 패션프루트,5%
+NZL,0811901912,. . . . . 개별 급속 냉동,5%
+NZL,0811901918,. . . . . 기타,5%
+NZL,0811901931,. . . . . 개별 급속 냉동,5%
+NZL,0811901939,. . . . . 기타,5%
+NZL,0811901941,. . . . 키위프루트,5%
+NZL,0811901949,. . . . 기타,5%
+NZL,0812100000,- 체리,5%
+NZL,0812900010,. . 딸기,5%
+NZL,0812900020,. . 견과류,5%
+NZL,0812900090,. . 기타,5%
+NZL,0813100000,- 살구,Free
+NZL,0813200000,- 서양 자두,Free
+NZL,0813300000,- 사과,Free
+NZL,0813400001,. . 복숭아,Free
+NZL,0813400009,. . 기타,Free
+NZL,0813500000,- 이 장의 견과류 또는 건조 과일의 혼합물,Free
+NZL,0814000100,- 레몬 껍질,5%
+NZL,0814000900,- 기타,Free
+NZL,0901110000,-- 디카페인이 아님,Free
+NZL,0901120000,-- 디카페인,Free
+NZL,0901210000,-- 디카페인이 아님,5%
+NZL,0901220000,-- 디카페인,5%
+NZL,0901901000,-- 커피 껍질과 껍질,Free
+NZL,0901909000,-- 커피를 함유한 커피 대용품,5%
+NZL,0902100001,. . 순중량 2kg 이상의 패키지,Free
+NZL,0902100009,. . 기타,Free
+NZL,0902200000,- 기타 녹차(발효되지 않음),Free
+NZL,0902300001,. . 순중량 2kg 이상의 패키지,Free
+NZL,0902300009,. . 기타,Free
+NZL,0902400000,- 기타 홍차(발효차) 및 기타 부분 발효차,Free
+NZL,0903000000,친구,Free
+NZL,0904110000,"-- 으깨지도, 갈지도 않은",Free
+NZL,0904120000,-- 분쇄 또는 분쇄,5%
+NZL,0904210000,"-- 건조된 것, 분쇄되지 않은 것",Free
+NZL,0904220000,-- 분쇄 또는 분쇄,5%
+NZL,0905100000,"- 으깨지도, 갈지도 않은",Free
+NZL,0905200000,- 분쇄 또는 분쇄,Free
+NZL,0906110000,-- 계피(Cinnamomum zeylanicum Blume),Free
+NZL,0906190000,-- 기타,Free
+NZL,0906200000,- 분쇄 또는 분쇄,5%
+NZL,0907100000,"- 으깨지도, 갈지도 않은",Free
+NZL,0907200000,- 분쇄 또는 분쇄,5%
+NZL,0908110000,"-- 으깨지도, 갈지도 않은",Free
+NZL,0908120000,-- 분쇄 또는 분쇄,5%
+NZL,0908210000,"-- 으깨지도, 갈지도 않은",Free
+NZL,0908220000,-- 분쇄 또는 분쇄,5%
+NZL,0908310000,"-- 으깨지도, 갈지도 않은",Free
+NZL,0908320000,-- 분쇄 또는 분쇄,5%
+NZL,0909210000,"-- 으깨지도, 갈지도 않은",Free
+NZL,0909220000,-- 분쇄 또는 분쇄,5%
+NZL,0909310000,"-- 으깨지도, 갈지도 않은",Free
+NZL,0909320000,-- 분쇄 또는 분쇄,5%
+NZL,0909610010,. . . 아니스 또는 바디안의 씨앗,Free
+NZL,0909610015,. . . 캐러웨이 씨앗,Free
+NZL,0909610019,. . . 회향 씨앗; 주니퍼 열매,Free
+NZL,0909620010,. . . 아니스 또는 바디안의 씨앗,5%
+NZL,0909620015,. . . 캐러웨이 씨앗,5%
+NZL,0909620019,. . . 회향 씨앗; 주니퍼 열매,5%
+NZL,0910110010,. . . 녹색,Free
+NZL,0910110019,. . . 마른,Free
+NZL,0910120000,-- 분쇄 또는 분쇄,5%
+NZL,0910200000,- 사프란,Free
+NZL,0910300100,"-- 으깨지도, 갈지도 않은",Free
+NZL,0910300900,-- 분쇄 또는 분쇄,5%
+NZL,0910910100,"--- 으깨지도, 갈지도 않은",Free
+NZL,0910910900,--- 분쇄 또는 분쇄,5%
+NZL,0910991000,--- 카레,5%
+NZL,0910991510,. . . . 타임; 월계수 잎,Free
+NZL,0910991515,. . . . 기타,Free
+NZL,0910991910,. . . . 타임; 월계수 잎,5%
+NZL,0910991915,. . . . 기타,5%
+NZL,1001110000,-- 씨앗,Free
+NZL,1001190000,-- 기타,Free
+NZL,1001910000,-- 씨앗,Free
+NZL,1001990000,-- 기타,Free
+NZL,1002100000,- 씨앗,Free
+NZL,1002900000,- 기타,Free
+NZL,1003100000,- 씨앗,Free
+NZL,1003900000,- 기타,Free
+NZL,1004100000,- 씨앗,Free
+NZL,1004900000,- 기타,Free
+NZL,1005100000,- 씨앗,Free
+NZL,1005900000,- 기타,Free
+NZL,1006100000,- 껍질째 먹는 쌀(벼 또는 벼),Free
+NZL,1006200000,- 껍질을 벗긴 (현미) 쌀,Free
+NZL,1006300000,- 반정미 또는 통정미(광택 또는 유약처리 여부와 관계없음),Free
+NZL,1006400000,- 깨진 쌀,Free
+NZL,1007100000,- 씨앗,Free
+NZL,1007900000,- 기타,Free
+NZL,1008100000,- 메밀,Free
+NZL,1008210000,-- 씨앗,Free
+NZL,1008290000,-- 기타,Free
+NZL,1008300010,- 카나리아 씨앗,Free
+NZL,1008400000,- 포니오(Digitaria spp.),Free
+NZL,1008500000,- 퀴노아(Chenopodium quinoa),Free
+NZL,1008600000,- 트리티케일,Free
+NZL,1008900010,- 기타 곡물,Free
+NZL,1101000000,밀 또는 메슬린 밀가루,5%
+NZL,1102200000,- 옥수수 가루,5%
+NZL,1102900100,-- 쌀가루,Free
+NZL,1102901010,. . . 호밀가루,5%
+NZL,1102901019,. . . 기타,5%
+NZL,1103110000,-- 밀의,5%
+NZL,1103130000,-- 옥수수(corn)의,5%
+NZL,1103190100,--- 보리와 메슬린,5%
+NZL,1103190500,--- 귀리의,5%
+NZL,1103190912,. . . . 쌀의,Free
+NZL,1103190919,. . . . 기타,Free
+NZL,1103200100,-- 밀의,5%
+NZL,1103200500,"-- 보리, 옥수수, 메슬린, 귀리",5%
+NZL,1103200900,-- 다른 곡물의,Free
+NZL,1104120000,-- 귀리의,5%
+NZL,1104190011,. . . 보리의,5%
+NZL,1104190019,. . . 기타,5%
+NZL,1104220000,-- 귀리의,5%
+NZL,1104230000,-- 옥수수(corn)의,5%
+NZL,1104290011,. . . 보리의,5%
+NZL,1104290019,. . . 기타,5%
+NZL,1104300000,"- 곡물의 배아, 통곡물, 압연곡물, 플레이크 또는 분쇄곡물",5%
+NZL,1105100001,"- 밀가루, 밀가루 및 분말",5%
+NZL,1105200000,"- 플레이크, 과립 및 펠릿",5%
+NZL,1106100001,- 07.13호의 건조된 콩과식물,Free
+NZL,1106200001,- 사고 또는 07.14호의 뿌리 또는 괴경,Free
+NZL,1106300011,. . . 안토시아닌 함량이 5% 미만인 경우,Free
+NZL,1106300015,. . . 기타,Free
+NZL,1106300019,. . 기타,Free
+NZL,1107100001,. . 양조에 사용,Free
+NZL,1107100009,. . 기타,Free
+NZL,1107200001,. . 양조에 사용,Free
+NZL,1107200009,. . 기타,Free
+NZL,1108110000,-- 밀 전분,5%
+NZL,1108120000,-- 옥수수 전분,5%
+NZL,1108130000,-- 감자 전분,5%
+NZL,1108140000,-- 마니옥(카사바) 전분,5%
+NZL,1108190100,--- 애로우루트,Free
+NZL,1108190900,--- 기타,5%
+NZL,1108200000,- 이눌린,Free
+NZL,1109000000,밀 글루텐(건조 여부와 관계 없음),Free
+NZL,1201100000,- 씨앗,Free
+NZL,1201900000,- 기타,Free
+NZL,1202300000,- 씨앗,Free
+NZL,1202410000,-- 껍질 속에,Free
+NZL,1202420000,-- 껍질이 벗겨졌는지 여부와 관계없이,Free
+NZL,1203000000,코프라,Free
+NZL,1204000000,"아마씨, 부서졌는지 여부와 관계없이",Free
+NZL,1205100012,. . . 인증됨,Free
+NZL,1205100015,. . . 인증되지 않음,Free
+NZL,1205100019,. . 기타,Free
+NZL,1205900012,. . . 인증됨,Free
+NZL,1205900015,. . . 인증되지 않음,Free
+NZL,1205900019,. . 기타,Free
+NZL,1206000000,해바라기 씨앗(깨졌는지 여부와 관계 없음),Free
+NZL,1207100010,- 야자 열매와 씨앗,Free
+NZL,1207210000,-- 씨앗,Free
+NZL,1207290000,-- 기타,Free
+NZL,1207300010,- 피마자유 씨앗,Free
+NZL,1207400000,- 참깨 씨앗,Free
+NZL,1207500000,- 겨자씨,Free
+NZL,1207600010,- 잇꽃(Carthamus Tinctorius) 씨앗,Free
+NZL,1207700000,- 멜론 씨앗,Free
+NZL,1207910000,-- 양귀비 씨앗,Free
+NZL,1207990013,. . . 시어넛(카리테넛),Free
+NZL,1207990014,. . . . 전체,Free
+NZL,1207990017,. . . . 껍질을 벗긴,Free
+NZL,1207990024,. . . . 기타,Free
+NZL,1207990029,. . . 기타,Free
+NZL,1208100000,- 콩의,Free
+NZL,1208900010,. . . 밀가루,Free
+NZL,1208900015,. . . 식사,Free
+NZL,1208900019,. . 기타,Free
+NZL,1209100000,- 사탕무 씨앗,Free
+NZL,1209210010,-- 루세른(알팔파) 씨앗,Free
+NZL,1209220002,. . . 알시케,Free
+NZL,1209220009,. . . 무리,Free
+NZL,1209220012,. . . 클러스터와 흰색 혼합,Free
+NZL,1209220015,. . . . 인증됨,Free
+NZL,1209220018,. . . . 인증되지 않음,Free
+NZL,1209220022,. . . . Grasslands Maku 인증,Free
+NZL,1209220028,. . . . 인증되지 않음,Free
+NZL,1209220032,. . . . . 하무아 초원,Free
+NZL,1209220035,. . . . . 초원 파웨라,Free
+NZL,1209220038,. . . . . 투로아 초원,Free
+NZL,1209220042,. . . . . 여우,Free
+NZL,1209220044,. . . . . 스파도니,Free
+NZL,1209220046,. . . . . 기타,Free
+NZL,1209220048,. . . . 인증되지 않음,Free
+NZL,1209220052,. . . . 초원 코하,Free
+NZL,1209220054,. . . . 인증되지 않음,Free
+NZL,1209220056,. . . . 인증됨,Free
+NZL,1209220058,. . . . 인증되지 않음,Free
+NZL,1209220062,. . . 지하 클로버,Free
+NZL,1209220065,. . . 유아,Free
+NZL,1209220068,. . . 젖먹이와 흰 혼합물,Free
+NZL,1209220072,. . . 술라,Free
+NZL,1209220078,. . . 달콤한 클로버,Free
+NZL,1209220082,. . . . . 초원 후이아,Free
+NZL,1209220084,. . . . . 초원 코푸,Free
+NZL,1209220086,. . . . . 초원 피타우,Free
+NZL,1209220088,. . . . . 타호라 초원,Free
+NZL,1209220093,. . . . . 기타,Free
+NZL,1209220095,. . . . 인증되지 않음,Free
+NZL,1209220098,. . . 기타,Free
+NZL,1209230002,. . . 그래스랜드 쿡,Free
+NZL,1209230008,. . . 초원 로아,Free
+NZL,1209230011,. . . 태즈먼 초원,Free
+NZL,1209230018,. . . 기타 인증된 씹는 풀 또는 붉은 잔디,Free
+NZL,1209230029,. . . 기타 인증된 키 큰 페스큐,Free
+NZL,1209230031,. . . 인증되지 않은 씹는 풀 또는 붉은 잔디,Free
+NZL,1209230039,. . . 인증되지 않은 키 큰 페스큐,Free
+NZL,1209230049,. . . 호밀풀 혼합물,Free
+NZL,1209240000,-- 켄터키 블루그래스(Poa pratensis L.) 씨앗,Free
+NZL,1209250002,. . . . 세레스 프로그로우,Free
+NZL,1209250008,. . . . 일치,Free
+NZL,1209250012,. . . . 가뭄의 달인,Free
+NZL,1209250018,. . . . 엘렛,Free
+NZL,1209250022,. . . . 아리키 초원,Free
+NZL,1209250028,. . . . 초원 코로넷,Free
+NZL,1209250032,. . . . 초원 마나와,Free
+NZL,1209250038,. . . . 초원 모아타,Free
+NZL,1209250042,. . . . 초원 누이,Free
+NZL,1209250048,. . . . 초원 파로아,Free
+NZL,1209250052,. . . . 루아누이 초원,Free
+NZL,1209250058,. . . . 초원 타마,Free
+NZL,1209250062,. . . . 야친,Free
+NZL,1209250068,. . . . 기타,Free
+NZL,1209250072,. . . . 잡종,Free
+NZL,1209250078,. . . . 이탈리아 사람,Free
+NZL,1209250088,. . . . 다년생,Free
+NZL,1209290002,. . . . 초원 하카리,Free
+NZL,1209290008,. . . . 그래스랜드 티키,Free
+NZL,1209290012,. . . . 에그몬트 초원,Free
+NZL,1209290018,. . . . 그래스랜드 세프턴,Free
+NZL,1209290022,. . . . 뉴질랜드,Free
+NZL,1209290028,. . . . 인증되지 않음,Free
+NZL,1209290032,. . . . . 아파누이 초원,Free
+NZL,1209290033,. . . . . 초원 카라,Free
+NZL,1209290037,. . . . . 초원 와나,Free
+NZL,1209290038,. . . . . 기타,Free
+NZL,1209290043,. . . . 인증되지 않음,Free
+NZL,1209290045,. . . . 인증됨,Free
+NZL,1209290049,. . . . 인증되지 않음,Free
+NZL,1209290052,. . . . 초원 마투아,Free
+NZL,1209290058,. . . . 인증되지 않음,Free
+NZL,1209290061,. . . . . 매시 바신,Free
+NZL,1209290065,. . . . . 기타,Free
+NZL,1209290069,. . . . 인증되지 않음,Free
+NZL,1209290081,. . . 초원 푸나 치커리,Free
+NZL,1209290083,". . . . Grasslands Kahu, 인증됨",Free
+NZL,1209290085,. . . . 인증되지 않음,Free
+NZL,1209290087,. . . 비트루트,Free
+NZL,1209290089,. . . 기타,Free
+NZL,1209300001,. . 소매용 팩에 들어 있음,Free
+NZL,1209300009,. . 기타,Free
+NZL,1209910001,. . . . 양배추,Free
+NZL,1209910009,. . . . 당근,Free
+NZL,1209910011,. . . . 양파,Free
+NZL,1209910019,. . . . 무,Free
+NZL,1209910021,. . . . 토마토,Free
+NZL,1209910029,. . . . 은비트,Free
+NZL,1209910039,. . . . 기타,Free
+NZL,1209910041,. . . . 양배추,Free
+NZL,1209910049,. . . . 당근,Free
+NZL,1209910051,. . . . 양파,Free
+NZL,1209910059,. . . . 무,Free
+NZL,1209910061,. . . . 토마토,Free
+NZL,1209910069,. . . . 은비트,Free
+NZL,1209910079,. . . . 기타,Free
+NZL,1209990001,". . . . . 인증된 종자, 2세대",Free
+NZL,1209990009,. . . . . 인증되지 않음,Free
+NZL,1209990019,. . . . 기타,Free
+NZL,1209990021,. . . 이리 같은,Free
+NZL,1209990029,". . . 스웨덴, 씨앗용",Free
+NZL,1209990031,. . . 씨앗용 순무,Free
+NZL,1209990039,. . . 톱풀,Free
+NZL,1209990041,. . . . 소매용 팩에 들어 있음,Free
+NZL,1209990049,. . . . 기타,Free
+NZL,1209990051,. . . 나무,Free
+NZL,1209990059,. . . 기타,Free
+NZL,1210100000,- 홉 콘은 분쇄되거나 분말화되지 않았으며 펠릿 형태도 아닙니다,Free
+NZL,1210200100,"-- 홉 콘, 분쇄, 분말 또는 펠릿 형태",Free
+NZL,1210200900,-- 루풀린,5%
+NZL,1211200010,- 인삼 뿌리,Free
+NZL,1211300010,- 코카 잎,Free
+NZL,1211400010,- 양귀비 짚,Free
+NZL,1211500010,- 에페드라,Free
+NZL,1211600000,- 아프리카 체리나무 껍질(Prunus africana),Free
+NZL,1211901010,. . 감초 뿌리,Free
+NZL,1211901013,. . . 신선한 잎,Free
+NZL,1211901019,. . . 건조된 잎(훈제용으로 준비됨),Free
+NZL,1211901023,. . . 살비노린 A 추출물을 혼합한 건조 잎,Free
+NZL,1211901029,. . . 기타,Free
+NZL,1211901050,. . 기타,Free
+NZL,1212210010,. . . 신선하거나 냉장,Free
+NZL,1212210015,". . . . 히지키(Mehijiki, Hiziki, Hijaki) 해초(Hizikia fusiforme)",Free
+NZL,1212210019,. . . . 기타,Free
+NZL,1212290010,. . . 신선하거나 냉장,Free
+NZL,1212290015,". . . . 히지키(Mehijiki, Hiziki, Hijaki) 해초(Hizikia fusiforme)",Free
+NZL,1212290019,. . . . 기타,Free
+NZL,1212910000,-- 사탕무,Free
+NZL,1212920010,-- 로커스트콩(캐롭),Free
+NZL,1212930000,-- 사탕수수,Free
+NZL,1212940000,-- 치커리 뿌리,Free
+NZL,1212990010,". . . 살구, 복숭아(천도복숭아 포함) 또는 자두 씨앗과 핵",Free
+NZL,1212990013,. . . 블랙커런트 포마스,Free
+NZL,1212990039,. . . 기타,Free
+NZL,1213000100,- 동물성 사료로 사용하기 위해 분쇄되거나 펠릿화된 곡물 짚과 껍질,5%
+NZL,1213000900,- 기타,Free
+NZL,1214100000,- 루세른(알팔파) 가루 및 펠릿,Free
+NZL,1214900000,- 기타,Free
+NZL,1301200000,- 아라비아 고무,Free
+NZL,1301900001,". . 안식향, 다머, 트라가칸트 및 인디언검",Free
+NZL,1301900009,. . 카우리검,Free
+NZL,1301900013,. . . 때리다,Free
+NZL,1301900015,. . . 기타,Free
+NZL,1301900019,. . 기타,Free
+NZL,1302110000,-- 아편,Free
+NZL,1302120000,-- 감초의,Free
+NZL,1302130000,-- 홉의,Free
+NZL,1302140010,-- 마황의,Free
+NZL,1302190001,. . . 바닐라의,Free
+NZL,1302190010,. . . 피레트룸 또는 로테논을 함유한 식물의 뿌리,Free
+NZL,1302190029,. . . 기타,Free
+NZL,1302200000,"- 펙틴질, 펙티네이트 및 펙테이트",Free
+NZL,1302310000,-- 아가아가르,Free
+NZL,1302320000,"-- 메뚜기콩, 메뚜기콩 씨앗 또는 구아 씨앗에서 유래한 점액질 및 증점제(변형 여부 불문)",Free
+NZL,1302390000,-- 기타,Free
+NZL,1401100000,- 대나무,Free
+NZL,1401200000,- 라탄,Free
+NZL,1401900000,- 기타,Free
+NZL,1404200000,- 코튼 린터,Free
+NZL,1404900010,. . . 카폭,Free
+NZL,1404900013,. . . 식물성 머리카락,Free
+NZL,1404900016,. . . 기타,Free
+NZL,1404900019,. . . 빗자루수수(sorghum vulgare var. technicum),Free
+NZL,1404900022,. . . 기타,Free
+NZL,1404900025,. . . 염색에 주로 사용되는 종류의 생식물성 원료,Free
+NZL,1404900039,. . . 기타,Free
+NZL,1501100000,- 라드,Free
+NZL,1501200010,. . . 조잡한,Free
+NZL,1501200015,. . . 세련된,Free
+NZL,1501200019,. . 기타,Free
+NZL,1501900010,. . . 조잡한,Free
+NZL,1501900015,. . . 세련된,Free
+NZL,1501900019,. . 기타,Free
+NZL,1502100010,. . . 소고기,Free
+NZL,1502100015,. . . 기타,Free
+NZL,1502100021,. . . 혼합 등급,Free
+NZL,1502100025,. . . 장 및 하위 등급,Free
+NZL,1502100029,. . . 기타,Free
+NZL,1502900010,. . . 조잡한,Free
+NZL,1502900015,. . . . 니트의 발,Free
+NZL,1502900019,. . . . 기타,Free
+NZL,1502900029,. . 기타,Free
+NZL,1503000100,- 올레오 오일,5%
+NZL,1503000901,". . 스테아린, 식용",Free
+NZL,1503000909,. . 기타,Free
+NZL,1504100001,. . . 스테아린,Free
+NZL,1504100009,. . . 기타,Free
+NZL,1504100019,. . 기타 어간유 및 그 분획물,Free
+NZL,1504200100,-- 분수,Free
+NZL,1504200900,-- 기타,5%
+NZL,1504300101,. . . 고래의,Free
+NZL,1504300109,. . . 기타,Free
+NZL,1504300901,. . . 고래의,5%
+NZL,1504300909,. . . 기타,5%
+NZL,1505000100,"- 양모 기름, 조잡함",Free
+NZL,1505000900,- 기타,5%
+NZL,1506000001,. 분수,Free
+NZL,1506000011,. . 조잡한,Free
+NZL,1506000019,. . 세련된,Free
+NZL,1507100000,- 원유(탈검 여부와 관계 없음),Free
+NZL,1507900000,- 기타,Free
+NZL,1508100000,- 원유,Free
+NZL,1508900000,- 기타,Free
+NZL,1509200000,- 엑스트라 버진 올리브 오일,Free
+NZL,1509300000,- 버진 올리브 오일,Free
+NZL,1509400000,- 기타 버진 올리브 오일,Free
+NZL,1509900000,- 기타,Free
+NZL,1510100000,- 원유 올리브 포마스 오일,Free
+NZL,1510900000,- 기타,Free
+NZL,1511100000,- 원유,Free
+NZL,1511900000,- 기타,Free
+NZL,1512110000,-- 원유,Free
+NZL,1512190000,-- 기타,Free
+NZL,1512210000,-- 고시폴이 제거되었는지 여부와 관계없이 원유,Free
+NZL,1512290000,-- 기타,Free
+NZL,1513110000,-- 원유,5%
+NZL,1513190100,--- 분수,5%
+NZL,1513190900,--- 기타,5%
+NZL,1513210000,-- 원유,Free
+NZL,1513290000,-- 기타,Free
+NZL,1514110000,-- 원유,Free
+NZL,1514190000,-- 기타,Free
+NZL,1514910000,-- 원유,Free
+NZL,1514990000,-- 기타,Free
+NZL,1515110000,-- 원유,Free
+NZL,1515190000,-- 기타,Free
+NZL,1515210000,-- 원유,Free
+NZL,1515290000,-- 기타,Free
+NZL,1515300000,- 피마자유 및 그 분획물,Free
+NZL,1515500000,- 참기름 및 그 분획물,Free
+NZL,1515601000,- 미생물 지방 및 오일과 그 분획물,Free
+NZL,1515900011,. . 호호바 오일 및 그 분획물,Free
+NZL,1515900015,. . 통 오일 및 그 분획물,Free
+NZL,1515900021,. . 아보카도 오일,Free
+NZL,1515900030,. . 기타,Free
+NZL,1516100001,. . 고래의,Free
+NZL,1516100009,. . 기타,Free
+NZL,1516200110,-- 재에스테르화,Free
+NZL,1516200910,-- 왁스 같은 특성을 지닌 수소화 오일,Free
+NZL,1516201910,-- 기타,5%
+NZL,1516301000,-- 재에스테르화,Free
+NZL,1516302000,-- 왁스 같은 특성을 지닌 수소화 오일,Free
+NZL,1516303000,-- 기타,5%
+NZL,1517100001,. . . 다중불포화,5%
+NZL,1517100009,. . . 가득한,5%
+NZL,1517100011,. . . 다중불포화,5%
+NZL,1517100019,. . . 가득한,5%
+NZL,1517100029,. . . 기타,5%
+NZL,1517900102,. . . . 염화불화탄소를 함유한,5%
+NZL,1517900108,. . . . 기타,5%
+NZL,1517900119,. . . 기타,5%
+NZL,1517900901,. . . 다중불포화,5%
+NZL,1517900909,. . . 가득한,5%
+NZL,1517900919,. . . 기타,5%
+NZL,1517901100,--- 코코넛(코프라) 오일,5%
+NZL,1517901902,. . . . . 염화불화탄소를 함유한,Free
+NZL,1517901908,. . . . . 기타,Free
+NZL,1517901919,. . . . 기타,Free
+NZL,1518000101,. . 아마씨유,Free
+NZL,1518000109,. . 리녹신,Free
+NZL,1518000111,. . . 통 오일,Free
+NZL,1518000121,. . . 고래의,Free
+NZL,1518000129,. . . 기타,Free
+NZL,1518000900,"- 이 장의 동물성, 식물성 또는 미생물성 지방 또는 오일 또는 다른 지방 또는 오일의 분획물의 비식용 혼합물 또는 제제(다른 곳에 명시되거나 포함되지 않음)",Free
+NZL,1520001000,"- 글리세롤(글리세린), 조",Free
+NZL,1520009000,- 글리세롤수와 글리세롤 알칼리,Free
+NZL,1521100000,- 식물성 왁스,Free
+NZL,1521900100,-- 밀랍,5%
+NZL,1521900901,. . . 경뇌,Free
+NZL,1521900909,. . . 기타,Free
+NZL,1522000000,Degras; 지방성 물질 또는 동물성 또는 식물성 왁스 처리로 인해 발생하는 잔류물,Free
+NZL,1601000001,. . 닭,Free
+NZL,1601000009,. . 칠면조,Free
+NZL,1601000011,. . 오리,Free
+NZL,1601000019,. . 기타,Free
+NZL,1601000030,. 기타,Free
+NZL,1602100110,--- 야채나 기타 식품과 함께 섭취하면 고기 페이스트가 됩니다,5%
+NZL,1602100901,. . . . 콘드 비프,Free
+NZL,1602100909,". . . . 혀, 양, 어린 양",Free
+NZL,1602100911,". . . . 혀, 다른 종류",Free
+NZL,1602100919,. . . . 양고기,Free
+NZL,1602100930,. . . . 곤충,Free
+NZL,1602100940,. . . . 기타,Free
+NZL,1602101910,-- 그렇지 않으면 포장됨,Free
+NZL,1602200100,-- 푸아그라 파테,5%
+NZL,1602200900,-- 기타,Free
+NZL,1602310000,-- 칠면조의,5%
+NZL,1602321000,---- 야채나 기타 식품과 함께 섭취하면 고기 페이스트가 됩니다,5%
+NZL,1602322000,---- 기타,Free
+NZL,1602329001,. . . . 닭,Free
+NZL,1602329009,. . . . 기타,Free
+NZL,1602390100,---- 야채나 기타 식품과 함께 섭취하면 고기 페이스트가 됩니다,5%
+NZL,1602390900,---- 기타,Free
+NZL,1602391901,. . . . 닭,Free
+NZL,1602391909,. . . . 오리,Free
+NZL,1602391919,. . . . 기타,Free
+NZL,1602410100,---- 야채나 기타 식품과 함께 섭취 시,5%
+NZL,1602410900,---- 기타,Free
+NZL,1602411900,--- 그렇지 않으면 포장됨,Free
+NZL,1602420100,---- 야채나 기타 식품과 함께 섭취 시,5%
+NZL,1602420900,---- 기타,Free
+NZL,1602421900,--- 그렇지 않으면 포장됨,Free
+NZL,1602490100,---- 야채나 기타 식품과 함께 섭취하면 고기 페이스트가 됩니다,5%
+NZL,1602490900,---- 기타,Free
+NZL,1602491900,--- 그렇지 않으면 포장됨,Free
+NZL,1602500100,--- 야채나 기타 식품과 함께 섭취하면 고기 페이스트가 됩니다,5%
+NZL,1602500901,. . . . 콘드 비프,Free
+NZL,1602500909,. . . . 방언,Free
+NZL,1602500919,. . . . 기타,Free
+NZL,1602501900,-- 그렇지 않으면 포장됨,Free
+NZL,1602900100,-- 혈액 준비,5%
+NZL,1602901110,"---- 기타, 야채 또는 기타 식품과 함께 사용; 고기 페이스트",5%
+NZL,1602901901,". . . . . 혀, 양, 어린 양",Free
+NZL,1602901909,. . . . . 양고기,Free
+NZL,1602901920,. . . . . 곤충,Free
+NZL,1602901930,. . . . . 기타,Free
+NZL,1602902910,--- 그렇지 않으면 포장됨,Free
+NZL,1603000101,. . . 추출물,Free
+NZL,1603000109,. . . 기타,Free
+NZL,1603000111,. . 물고기의,Free
+NZL,1603000121,. . . 홍합 기름,Free
+NZL,1603000129,. . . 기타,Free
+NZL,1603000900,- 다른 수생 무척추동물,5%
+NZL,1604110001,". . . 술, 기름 또는 소스를 첨가했는지 여부와 관계없이 밀폐된 캔이나 병에 담아 보관하십시오",Free
+NZL,1604110009,. . . 그렇지 않으면 포장됨,Free
+NZL,1604120001,". . . 술, 기름 또는 소스를 첨가했는지 여부와 관계없이 밀폐된 캔이나 병에 담아 보관하십시오",Free
+NZL,1604120009,. . . 그렇지 않으면 포장됨,Free
+NZL,1604130100,---- 정어리와 브리스링,Free
+NZL,1604130900,---- 기타,5%
+NZL,1604131900,--- 그렇지 않으면 포장됨,Free
+NZL,1604140100,"--- 술, 기름 또는 소스를 첨가했는지 여부와 관계없이 밀폐된 캔이나 병에 담아 보관하십시오",5%
+NZL,1604140900,--- 그렇지 않으면 포장됨,Free
+NZL,1604150100,"--- 술, 기름 또는 소스를 첨가했는지 여부와 관계없이 밀폐된 캔이나 병에 담아 보관하십시오",5%
+NZL,1604150900,--- 그렇지 않으면 포장됨,Free
+NZL,1604160100,"--- 술, 기름 또는 소스를 첨가했는지 여부와 관계없이 밀폐된 캔이나 병에 담아 보관하십시오",5%
+NZL,1604160900,--- 그렇지 않으면 포장됨,Free
+NZL,1604171000,"--- 술, 기름 또는 소스를 첨가했는지 여부와 관계없이 밀폐된 캔이나 병에 담아 보관하십시오",5%
+NZL,1604179000,--- 그렇지 않으면 포장됨,Free
+NZL,1604181010,"--- 술, 기름 또는 소스를 첨가했는지 여부와 관계없이 밀폐된 캔이나 병에 담아 보관하십시오",5%
+NZL,1604189010,--- 그렇지 않으면 포장됨,Free
+NZL,1604190101,. . . . . 정어리,Free
+NZL,1604190109,". . . . . 실드, 꽁치",Free
+NZL,1604190901,. . . . . 카하와이,5%
+NZL,1604190909,. . . . . 바라쿠타,5%
+NZL,1604190939,. . . . . 기타,5%
+NZL,1604191911,--- 그렇지 않으면 포장됨,Free
+NZL,1604200100,--- 페이스트,5%
+NZL,1604200901,. . . . 머리,Free
+NZL,1604200909,. . . . 생선가락,Free
+NZL,1604200911,. . . . 생선을 넣은 저녁 식사 준비,Free
+NZL,1604200919,. . . . 생선 케이크,Free
+NZL,1604200929,. . . . 기타,Free
+NZL,1604201101,". . . . . 청어, 정어리",Free
+NZL,1604201109,". . . . . 정어리, 실드, 브리스링, 꽁치",Free
+NZL,1604201900,---- 연어,Free
+NZL,1604202901,. . . . . 카하와이,5%
+NZL,1604202909,. . . . . 바라쿠타,5%
+NZL,1604202911,. . . . . 참치,5%
+NZL,1604202919,. . . . . 기타,5%
+NZL,1604203900,--- 그렇지 않으면 포장됨,Free
+NZL,1604310000,-- 캐비아,5%
+NZL,1604320000,-- 캐비어 대용품,5%
+NZL,1605100100,--- 페이스트,5%
+NZL,1605100901,. . . . 머리,Free
+NZL,1605100909,. . . . 기타,Free
+NZL,1605101901,. . . 밀폐된 캔이나 병에 담아,Free
+NZL,1605101919,. . . 그렇지 않으면 포장됨,Free
+NZL,1605211000,---- 페이스트,5%
+NZL,1605212010,. . . . . 머리,Free
+NZL,1605212019,. . . . . 기타,Free
+NZL,1605219000,--- 기타,Free
+NZL,1605291000,---- 페이스트,5%
+NZL,1605292010,. . . . . 머리,Free
+NZL,1605292019,. . . . . 기타,Free
+NZL,1605299000,--- 기타,Free
+NZL,1605300100,--- 페이스트,5%
+NZL,1605300901,. . . . 머리,Free
+NZL,1605300909,. . . . 기타,Free
+NZL,1605301901,. . . . 바위 랍스터(가재),Free
+NZL,1605301909,. . . . 기타,Free
+NZL,1605301911,. . . . 바위 랍스터(가재),Free
+NZL,1605301929,. . . . 기타,Free
+NZL,1605400100,--- 페이스트,5%
+NZL,1605400901,. . . . 머리,Free
+NZL,1605400909,. . . . 기타,Free
+NZL,1605401901,. . . 밀폐된 캔이나 병에 담아,Free
+NZL,1605401919,. . . 그렇지 않으면 포장됨,Free
+NZL,1605511000,---- 페이스트,5%
+NZL,1605512010,. . . . . 머리,Free
+NZL,1605512019,. . . . . 기타,Free
+NZL,1605519010,. . . . 밀폐된 캔이나 병에 담아,Free
+NZL,1605519019,. . . . 그렇지 않으면 포장됨,Free
+NZL,1605521000,---- 페이스트,5%
+NZL,1605522010,. . . . . 머리,Free
+NZL,1605522019,. . . . . 기타,Free
+NZL,1605529010,. . . . 밀폐된 캔이나 병에 담아,Free
+NZL,1605529019,. . . . 그렇지 않으면 포장됨,Free
+NZL,1605531000,---- 페이스트,5%
+NZL,1605532010,. . . . . 머리,Free
+NZL,1605532019,. . . . . 기타,Free
+NZL,1605539010,. . . . 밀폐된 캔이나 병에 담아,Free
+NZL,1605539015,. . . . . 부스러기나 으깬 것,Free
+NZL,1605539019,. . . . . 캡슐 형태로 동결건조된 분말,Free
+NZL,1605539029,. . . . . 기타,Free
+NZL,1605541010,---- 페이스트,5%
+NZL,1605542011,. . . . . 머리,Free
+NZL,1605542029,. . . . . 기타,Free
+NZL,1605549011,. . . . 밀폐된 캔이나 병에 담아,Free
+NZL,1605549029,. . . . 그렇지 않으면 포장됨,Free
+NZL,1605551000,---- 페이스트,5%
+NZL,1605552010,. . . . . 머리,Free
+NZL,1605552019,. . . . . 기타,Free
+NZL,1605559010,. . . . 밀폐된 캔이나 병에 담아,Free
+NZL,1605559019,. . . . 그렇지 않으면 포장됨,Free
+NZL,1605561000,---- 페이스트,5%
+NZL,1605562010,. . . . . 머리,Free
+NZL,1605562019,. . . . . 기타,Free
+NZL,1605569010,. . . . 밀폐된 캔이나 병에 담아,Free
+NZL,1605569019,. . . . 그렇지 않으면 포장됨,Free
+NZL,1605571000,---- 페이스트,5%
+NZL,1605572010,. . . . . 머리,Free
+NZL,1605572019,. . . . . 기타,Free
+NZL,1605579010,. . . . . 파우아,Free
+NZL,1605579015,. . . . . 기타,Free
+NZL,1605579019,. . . . . 파우아,Free
+NZL,1605579029,. . . . . 기타,Free
+NZL,1605581000,---- 페이스트,5%
+NZL,1605582010,. . . . . 머리,Free
+NZL,1605582019,. . . . . 기타,Free
+NZL,1605589010,. . . . 밀폐된 캔이나 병에 담아,Free
+NZL,1605589019,. . . . 그렇지 않으면 포장됨,Free
+NZL,1605591010,---- 페이스트,5%
+NZL,1605592011,. . . . . 머리,Free
+NZL,1605592029,. . . . . 기타,Free
+NZL,1605599011,. . . . 밀폐된 캔이나 병에 담아,Free
+NZL,1605599029,. . . . 그렇지 않으면 포장됨,Free
+NZL,1605611000,---- 야채나 기타 식품과 함께 섭취 시,5%
+NZL,1605612000,---- 기타,Free
+NZL,1605619000,--- 그렇지 않으면 포장됨,Free
+NZL,1605621000,---- 야채나 기타 식품과 함께 섭취 시,5%
+NZL,1605622000,---- 기타,Free
+NZL,1605629000,--- 그렇지 않으면 포장됨,Free
+NZL,1605631000,---- 야채나 기타 식품과 함께 섭취 시,5%
+NZL,1605632000,---- 기타,Free
+NZL,1605639000,--- 그렇지 않으면 포장됨,Free
+NZL,1605691000,---- 야채나 기타 식품과 함께 섭취 시,5%
+NZL,1605692000,---- 기타,Free
+NZL,1605699000,--- 그렇지 않으면 포장됨,Free
+NZL,1701120010,. . . 99° 미만의 편광,Free
+NZL,1701120019,. . . 기타,Free
+NZL,1701130000,-- 이 장의 소제목 주 2에 명시된 사탕수수 설탕,Free
+NZL,1701140010,. . . 99° 미만의 편광,Free
+NZL,1701140019,. . . 기타,Free
+NZL,1701910001,. . . . 5kg을 초과하지 않는 팩으로,Free
+NZL,1701910009,. . . . 기타,Free
+NZL,1701910019,. . . 기타,Free
+NZL,1701990001,. . . . . 5kg을 초과하지 않는 팩으로,Free
+NZL,1701990009,. . . . . 기타,Free
+NZL,1701990011,. . . . . 5kg을 초과하지 않는 팩으로,Free
+NZL,1701990021,. . . . . 5kg을 초과하지만 15kg을 초과하지 않는 팩,Free
+NZL,1701990029,. . . . . 기타,Free
+NZL,1701990032,. . . . 5kg을 초과하지 않는 팩으로,Free
+NZL,1701990038,. . . . 기타,Free
+NZL,1701990041,. . . . 5kg을 초과하지 않는 팩으로,Free
+NZL,1701990049,. . . . 기타,Free
+NZL,1702110000,-- 건조물질 기준으로 무수 락토오스로 표현된 중량 기준 99% 이상의 락토오스 함유,5%
+NZL,1702190000,-- 기타,5%
+NZL,1702200000,- 메이플 설탕과 메이플 시럽,Free
+NZL,1702300001,. . 화학적으로 순수한 포도당,Free
+NZL,1702300009,. . 기타,Free
+NZL,1702400001,. . 화학적으로 순수한 포도당,Free
+NZL,1702400009,. . 기타,Free
+NZL,1702500000,- 화학적으로 순수한 과당,Free
+NZL,1702600000,"- 기타 과당 및 과당시럽(건조상태에서 중량기준 과당 50% 이상 함유, 전화당 제외)",Free
+NZL,1702900100,-- 유아용 식품 준비,5%
+NZL,1702900900,-- 인공 꿀,5%
+NZL,1702901100,-- 캐러멜,5%
+NZL,1702901801,. . . 화학적으로 순수한 말토스,Free
+NZL,1702901809,. . . 기타,Free
+NZL,1703100001,. . 세련된,Free
+NZL,1703100011,. . . 식량을 비축하다,Free
+NZL,1703100019,. . . 기타,Free
+NZL,1703900001,. . 식량을 비축하다,Free
+NZL,1703900009,. . 기타,Free
+NZL,1704100000,- 설탕 코팅 여부와 관계없이 씹는 껌,5%
+NZL,1704900010,- 기타,5%
+NZL,1801000000,"코코아 콩, 통째 또는 부서진 것, 생것 또는 구운 것",Free
+NZL,1802000000,"코코아 껍질, 껍질, 스킨 및 기타 코코아 폐기물",Free
+NZL,1803100000,- 탈지되지 않음,Free
+NZL,1803200000,- 전부 또는 부분적으로 탈지됨,Free
+NZL,1804000000,"코코아 버터, 지방 및 오일",Free
+NZL,1805000000,설탕이나 기타 감미료를 첨가하지 않은 코코아 파우더,Free
+NZL,1806100000,- 설탕이나 기타 감미료를 첨가한 코코아 가루,5%
+NZL,1806200010,. . 중량 기준으로 유제품(분유)이 30% 이상 함유된 제품,5%
+NZL,1806200090,. . 기타,5%
+NZL,1806310001,. . . . 성형,5%
+NZL,1806310011,. . . . . 포장,5%
+NZL,1806310019,. . . . . 포장을 풀다,5%
+NZL,1806310029,. . . 기타,5%
+NZL,1806320001,. . . . 성형,5%
+NZL,1806320011,. . . . . 포장,5%
+NZL,1806320019,. . . . . 포장을 풀다,5%
+NZL,1806320029,. . . 기타,5%
+NZL,1806900001,. . 15g 초과,5%
+NZL,1806900011,. . . . 소매용 팩에 들어 있음,5%
+NZL,1806900019,. . . . 기타,5%
+NZL,1806900029,. . . 기타,5%
+NZL,1901100100,-- 코코아 함유,5%
+NZL,1901100900,-- 기타,5%
+NZL,1901200100,-- 코코아 함유,5%
+NZL,1901200900,-- 기타,5%
+NZL,1901900110,-- 코코아 함유,5%
+NZL,1901900903,. . . . . 소매용 팩에 들어 있음,5%
+NZL,1901900905,. . . . . 다른 팩에서는,5%
+NZL,1901900912,. . . . 상업용 양조에 사용,5%
+NZL,1901900918,. . . . 기타,5%
+NZL,1901900930,. . . 기타,5%
+NZL,1902110000,-- 계란을 함유한,5%
+NZL,1902190000,-- 기타,5%
+NZL,1902200000,- 조리 여부와 관계없이 채워진 파스타,5%
+NZL,1902300101,. . . 맛 파우치가 들어있는 건면 케이크,5%
+NZL,1902300109,. . . 기타,5%
+NZL,1902300901,. . . 건면떡,5%
+NZL,1902300909,. . . 기타,5%
+NZL,1902400000,- 쿠스쿠스,5%
+NZL,1903000000,"전분으로 제조된 타피오카 및 그 대체물, 플레이크, 곡물, 진주, 체질 또는 이와 유사한 형태",Free
+NZL,1904100100,-- 초콜릿이나 코코아로 코팅,5%
+NZL,1904100902,. . . . . 주로 옥수수,5%
+NZL,1904100905,. . . . . 주로 귀리,5%
+NZL,1904100911,. . . . . 주로 쌀,5%
+NZL,1904100915,. . . . . 주로 밀,5%
+NZL,1904100919,. . . . . 기타,5%
+NZL,1904100921,. . . . . 주로 옥수수,5%
+NZL,1904100925,. . . . . 주로 귀리,5%
+NZL,1904100931,. . . . . 주로 쌀,5%
+NZL,1904100935,. . . . . 주로 밀,5%
+NZL,1904100939,. . . . . 기타,5%
+NZL,1904100941,. . . . 옥수수,5%
+NZL,1904100945,. . . . 귀리,5%
+NZL,1904100951,. . . . 쌀,5%
+NZL,1904100955,. . . . 밀,5%
+NZL,1904100961,. . . . 혼합물,5%
+NZL,1904100969,. . . . 기타,5%
+NZL,1904201000,-- 초콜릿이나 코코아로 코팅,5%
+NZL,1904205000,-- 뮤즐리,5%
+NZL,1904209002,. . . . . 주로 옥수수,5%
+NZL,1904209005,. . . . . 주로 귀리,5%
+NZL,1904209011,. . . . . 주로 쌀,5%
+NZL,1904209015,. . . . . 주로 밀,5%
+NZL,1904209019,. . . . . 기타,5%
+NZL,1904209021,. . . . . 주로 옥수수,5%
+NZL,1904209025,. . . . . 주로 귀리,5%
+NZL,1904209031,. . . . . 주로 쌀,5%
+NZL,1904209035,. . . . . 주로 밀,5%
+NZL,1904209039,. . . . . 기타,5%
+NZL,1904209041,. . . . 옥수수,5%
+NZL,1904209045,. . . . 귀리,5%
+NZL,1904209051,. . . . 쌀,5%
+NZL,1904209055,. . . . 밀,5%
+NZL,1904209061,. . . . 혼합물,5%
+NZL,1904209069,. . . . 기타,5%
+NZL,1904300000,- 불거 밀,5%
+NZL,1904900100,-- 초콜릿으로 코팅,5%
+NZL,1904900901,. . . . 뮤즐리,5%
+NZL,1904900909,. . . . 기타,5%
+NZL,1904900929,. . . 기타,5%
+NZL,1905100000,- 크리스프브레드,5%
+NZL,1905200000,- 진저브레드 등,5%
+NZL,1905310021,. . . . 완전 코팅됨,5%
+NZL,1905310023,. . . . 부분적으로 코팅됨,5%
+NZL,1905310029,. . . . 기타,5%
+NZL,1905310031,. . . . 완전 코팅됨,5%
+NZL,1905310033,. . . . 부분적으로 코팅됨,5%
+NZL,1905310039,. . . . 기타,5%
+NZL,1905320021,. . . . 완전 코팅됨,5%
+NZL,1905320023,. . . . 부분적으로 코팅됨,5%
+NZL,1905320029,. . . . 기타,5%
+NZL,1905320031,. . . . 완전 코팅됨,5%
+NZL,1905320033,. . . . 부분적으로 코팅됨,5%
+NZL,1905320039,. . . . 기타,5%
+NZL,1905400001,". . 설탕, 꿀, 지방, 치즈 또는 코코아가 첨가된 제품",5%
+NZL,1905400009,. . 기타,5%
+NZL,1905900100,-- 성찬 웨이퍼; 유월절 빵,Free
+NZL,1905900500,-- 호두 까는 기구,5%
+NZL,1905900901,. . . 달콤한 비스킷 외의 비스킷,5%
+NZL,1905900909,. . . 케이크,5%
+NZL,1905900919,. . . 기타,5%
+NZL,2001100001,. . 오이,5%
+NZL,2001100009,. . 오이와 딜 씨앗으로 구성된 혼합물,5%
+NZL,2001100019,. . 오이 피클,5%
+NZL,2001900112,. . . 양파,5%
+NZL,2001900119,. . . 기타,5%
+NZL,2001900900,-- 식물의 기타 식용 부분,5%
+NZL,2002100000,"- 토마토, 통째 또는 조각",Free
+NZL,2002900100,"-- 주스, 퓨레, 농축액",Free
+NZL,2002900900,-- 기타,Free
+NZL,2003101000,- 아가리쿠스속 버섯,5%
+NZL,2003901000,-- 트러플,5%
+NZL,2003909000,-- 기타,5%
+NZL,2004100000,- 감자,5%
+NZL,2004900100,"-- 달콤한 옥수수, 포도잎, 얌(고구마), 홉순, 야자심",5%
+NZL,2004900901,. . . 올리브와 케이퍼,5%
+NZL,2004900909,. . . 콩,5%
+NZL,2004900911,. . . 완두콩,5%
+NZL,2004900919,. . . 기타,5%
+NZL,2005100000,- 균질화 야채,5%
+NZL,2005200001,. . 밀폐된 캔에 보관,5%
+NZL,2005200009,. . 기타,5%
+NZL,2005400000,- 완두콩(Pisum sativum),5%
+NZL,2005510001,. . . 구운 것,5%
+NZL,2005510009,. . . 기타,5%
+NZL,2005590000,-- 기타,5%
+NZL,2005600000,- 아스파라거스,5%
+NZL,2005700000,- 올리브,Free
+NZL,2005800000,- 달콤한 옥수수(Zea mays var. saccharata),5%
+NZL,2005910000,-- 죽순,5%
+NZL,2005990100,--- 케이퍼,Free
+NZL,2005990917,. . . . 비트루트,5%
+NZL,2005990921,. . . . 기타,5%
+NZL,2006001000,- 과일 껍질,Free
+NZL,2006002000,-- 아스파라거스,5%
+NZL,2006003001,. . . 올리브,Free
+NZL,2006003009,. . . 케이퍼,Free
+NZL,2006004000,"-- 단옥수수(Zea mays var., saccharata)",5%
+NZL,2006005001,. . . 완두콩(Pisum sativum),5%
+NZL,2006005011,. . . . . 구운 것,5%
+NZL,2006005015,. . . . . 기타,5%
+NZL,2006005019,. . . . 기타,5%
+NZL,2006007001,. . . 비트루트,5%
+NZL,2006007009,. . . 기타,5%
+NZL,2006009000,- 기타,5%
+NZL,2007100000,- 균질화된 제제,5%
+NZL,2007910000,-- 감귤류,5%
+NZL,2007990010,. . . 블랙커런트 퓨레,5%
+NZL,2007990019,. . . 기타,5%
+NZL,2008110001,. . . 땅콩버터,Free
+NZL,2008110021,. . . . . 혼합물,Free
+NZL,2008110031,. . . . . 기타,Free
+NZL,2008110039,. . . . 볶지 않음,Free
+NZL,2008190100,--- 캐슈넛,Free
+NZL,2008190901,. . . . . 아몬드,Free
+NZL,2008190911,. . . . . 헤이즐넛(필버트),Free
+NZL,2008190921,. . . . . 마카다미아 너트,Free
+NZL,2008190929,. . . . . 기타,Free
+NZL,2008190931,. . . . . 마카다미아 너트,Free
+NZL,2008190939,. . . . . 기타,Free
+NZL,2008200100,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,Free
+NZL,2008200900,-- 기타,Free
+NZL,2008300100,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,5%
+NZL,2008300901,". . . 오렌지, 귤, 귤",Free
+NZL,2008300909,. . . 기타,Free
+NZL,2008400100,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,5%
+NZL,2008400900,-- 기타,5%
+NZL,2008500100,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,5%
+NZL,2008500900,-- 기타,5%
+NZL,2008600100,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,5%
+NZL,2008600900,-- 기타,Free
+NZL,2008700100,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,5%
+NZL,2008700900,-- 기타,5%
+NZL,2008800100,-- 첨가당을 첨가하지 않고 조리하여 냉동보관한 제품입니다,5%
+NZL,2008800900,-- 기타,5%
+NZL,2008910000,-- 팜 하트,5%
+NZL,2008931000,--- 다른 설탕을 포함하지 않고 조리 및 냉동보관,5%
+NZL,2008939000,--- 기타,5%
+NZL,2008970010,. . . 과일의,5%
+NZL,2008970019,. . . 기타,5%
+NZL,2008990101,. . . . . 생강,Free
+NZL,2008990109,. . . . . 기타,Free
+NZL,2008990129,. . . . 기타,Free
+NZL,2008991101,. . . . . 라즈베리,5%
+NZL,2008991108,. . . . . 보이젠베리,5%
+NZL,2008991131,. . . . . 키위프루트,5%
+NZL,2008991149,. . . . . 기타,5%
+NZL,2008992100,----- 서양 자두,Free
+NZL,2008992501,. . . . . . 사과,5%
+NZL,2008992509,. . . . . . 자두,5%
+NZL,2008993101,. . . . . . 검은 건포도,5%
+NZL,2008993105,. . . . . . 라즈베리,5%
+NZL,2008993111,. . . . . . 보이젠베리,5%
+NZL,2008993129,. . . . . . 기타,5%
+NZL,2008993901,. . . . . . 키위프루트,Free
+NZL,2008993909,. . . . . . 구아바,Free
+NZL,2008993911,. . . . . . 파파야,Free
+NZL,2008993949,. . . . . . 기타,Free
+NZL,2009110100,---- 첨가당 함유,5%
+NZL,2009110900,---- 기타,5%
+NZL,2009111100,---- 첨가당 함유,5%
+NZL,2009111900,---- 기타,5%
+NZL,2009121100,---- 첨가당 함유,5%
+NZL,2009121900,---- 기타,5%
+NZL,2009122100,---- 첨가당 함유,5%
+NZL,2009122900,---- 기타,5%
+NZL,2009191200,---- 첨가당 함유,5%
+NZL,2009191800,---- 기타,5%
+NZL,2009192100,---- 첨가당 함유,5%
+NZL,2009192900,---- 기타,5%
+NZL,2009211100,---- 첨가당 함유,5%
+NZL,2009211900,---- 기타,5%
+NZL,2009212100,---- 첨가당 함유,5%
+NZL,2009212900,---- 기타,5%
+NZL,2009291100,---- 첨가당 함유,5%
+NZL,2009291900,---- 기타,5%
+NZL,2009292100,---- 첨가당 함유,5%
+NZL,2009292900,---- 기타,5%
+NZL,2009311100,----- 첨가당 함유,5%
+NZL,2009311900,----- 기타,5%
+NZL,2009312100,----- 첨가당 함유,5%
+NZL,2009312900,----- 기타,5%
+NZL,2009313111,. . . . . . 레몬,5%
+NZL,2009313119,. . . . . . 기타,5%
+NZL,2009313911,. . . . . . 레몬,5%
+NZL,2009313919,. . . . . . 기타,5%
+NZL,2009314111,. . . . . . 레몬,5%
+NZL,2009314119,. . . . . . 기타,5%
+NZL,2009314911,. . . . . . 레몬,5%
+NZL,2009314919,. . . . . . 기타,5%
+NZL,2009391100,----- 첨가당 함유,5%
+NZL,2009391900,----- 기타,5%
+NZL,2009392100,----- 첨가당 함유,5%
+NZL,2009392900,----- 기타,5%
+NZL,2009393111,. . . . . . 레몬,5%
+NZL,2009393119,. . . . . . 기타,5%
+NZL,2009393911,. . . . . . 레몬,5%
+NZL,2009393919,. . . . . . 기타,5%
+NZL,2009394111,. . . . . . 레몬,5%
+NZL,2009394119,. . . . . . 기타,5%
+NZL,2009394911,. . . . . . 레몬,5%
+NZL,2009394919,. . . . . . 기타,5%
+NZL,2009410011,. . . . 첨가당 함유,Free
+NZL,2009410019,. . . . 기타,Free
+NZL,2009410021,. . . . 첨가당 함유,Free
+NZL,2009410029,. . . . 기타,Free
+NZL,2009490011,. . . . 첨가당 함유,Free
+NZL,2009490019,. . . . 기타,Free
+NZL,2009490021,. . . . 첨가당 함유,Free
+NZL,2009490029,. . . . 기타,Free
+NZL,2009500100,--- 첨가당 함유,5%
+NZL,2009500900,--- 기타,5%
+NZL,2009501100,--- 첨가당 함유,5%
+NZL,2009501900,--- 기타,5%
+NZL,2009611100,---- 첨가당 함유,5%
+NZL,2009611900,---- 기타,5%
+NZL,2009612100,---- 첨가당 함유,5%
+NZL,2009612900,---- 기타,5%
+NZL,2009691100,---- 첨가당 함유,5%
+NZL,2009691900,---- 기타,5%
+NZL,2009692100,---- 첨가당 함유,5%
+NZL,2009692900,---- 기타,5%
+NZL,2009711100,---- 첨가당 함유,5%
+NZL,2009711900,---- 기타,5%
+NZL,2009712100,---- 첨가당 함유,5%
+NZL,2009712900,---- 기타,5%
+NZL,2009793100,---- 첨가당 함유,5%
+NZL,2009793900,---- 기타,5%
+NZL,2009794100,---- 첨가당 함유,5%
+NZL,2009794900,---- 기타,5%
+NZL,2009811000,---- 첨가당 함유,5%
+NZL,2009812000,---- 기타,5%
+NZL,2009819010,. . . . 첨가당 함유,5%
+NZL,2009819019,. . . . 기타,5%
+NZL,2009891010,. . . . . 패션프루트,5%
+NZL,2009891016,. . . . . 기타 과일 주스,5%
+NZL,2009891019,. . . . . 야채 주스,5%
+NZL,2009891025,. . . . . 기타,5%
+NZL,2009892010,. . . . . . 패션프루트,5%
+NZL,2009892015,. . . . . . 블랙커런트 농축액,5%
+NZL,2009892019,. . . . . . 블루베리 농축액,5%
+NZL,2009892025,. . . . . . 보이젠베리 농축액,5%
+NZL,2009892030,. . . . . . 기타,5%
+NZL,2009892039,. . . . . 야채 주스,5%
+NZL,2009892045,. . . . . 기타,5%
+NZL,2009893010,. . . . . . 패션프루트,5%
+NZL,2009893020,. . . . . . 기타,5%
+NZL,2009893021,. . . . . . 패션프루트,5%
+NZL,2009893025,. . . . . . 블랙커런트 농축액,5%
+NZL,2009893029,. . . . . . 블루베리 농축액,5%
+NZL,2009893035,. . . . . . 보이젠베리 농축액,5%
+NZL,2009893040,. . . . . . 기타,5%
+NZL,2009894000,----- 첨가당 함유,5%
+NZL,2009899000,----- 기타,5%
+NZL,2009899210,. . . . . 첨가당 함유,5%
+NZL,2009899220,. . . . . 기타,5%
+NZL,2009900102,. . . . 과일 주스 혼합물,5%
+NZL,2009900109,. . . . 야채 주스 혼합물,5%
+NZL,2009900115,. . . . 기타,5%
+NZL,2009900902,. . . . 과일 주스 혼합물,5%
+NZL,2009900909,. . . . 야채 주스 혼합물,5%
+NZL,2009900915,. . . . 기타,5%
+NZL,2009901102,. . . . 과일 주스 혼합물,5%
+NZL,2009901109,. . . . 야채 주스 혼합물,5%
+NZL,2009901115,. . . . 기타,5%
+NZL,2009902100,---- 과일,5%
+NZL,2009902900,---- 기타,5%
+NZL,2101110001,. . . . 1kg을 초과하지 않는 팩으로,5%
+NZL,2101110005,. . . . 기타,5%
+NZL,2101110009,. . . 기타,5%
+NZL,2101121000,"--- 분쇄된 커피, 볶은 커피, 식물성 지방 및 때로는 다른 재료를 혼합한 커피 페이스트",5%
+NZL,2101129002,. . . . 1kg을 초과하지 않는 팩으로,5%
+NZL,2101129008,. . . . 기타,5%
+NZL,2101129029,. . . 기타,5%
+NZL,2101200100,"-- 차, 분유, 설탕을 혼합한 제품",5%
+NZL,2101200900,-- 기타,Free
+NZL,2101300000,"- 볶은 치커리 및 기타 볶은 커피 대체품, 그리고 그 추출물, 에센스 및 농축물",5%
+NZL,2102100002,. . . 빵 효모,Free
+NZL,2102100004,. . . 양조장 효모,Free
+NZL,2102100006,. . . 와인 효모,Free
+NZL,2102100008,. . . 기타,Free
+NZL,2102100012,. . . 빵 효모,Free
+NZL,2102100019,. . . 기타,Free
+NZL,2102200100,-- 비활성 효모,Free
+NZL,2102201100,--- 조류의,Free
+NZL,2102201900,--- 기타,5%
+NZL,2102300000,- 준비된 베이킹파우더,5%
+NZL,2103100000,- 간장,5%
+NZL,2103200000,- 토마토 케첩과 기타 토마토 소스,5%
+NZL,2103300100,-- 겨자가루와 밀가루,Free
+NZL,2103300900,-- 준비된 머스타드,5%
+NZL,2103900010,. . . 땅콩 함유,5%
+NZL,2103900015,. . . 기타,5%
+NZL,2103900023,. . . 땅콩 함유,5%
+NZL,2103900027,. . . 기타,5%
+NZL,2103900033,. . . 땅콩 함유,5%
+NZL,2103900039,. . . 기타,5%
+NZL,2104100105,"-- 물고기, 갑각류 및 연체동물",5%
+NZL,2104100941,. . . 고기,5%
+NZL,2104100945,. . . 채소,5%
+NZL,2104100949,. . . 기타,5%
+NZL,2104200000,- 균질화된 복합 식품 제조,5%
+NZL,2105001000,- 코코아 함유,5%
+NZL,2105001100,-- 1.15% vol 이하 함유.,5%
+NZL,2105002100,"-- 1.15% vol. 이상, 2.5% vol. 이하 함유.",per l 5%  plus 55.351￠
+NZL,2105002900,"-- 2.5% vol. 이상, 6% vol. 이하 함유.",per l al 5%  plus $36.905
+NZL,2105003100,"-- 6% vol. 이상, 9% vol. 이하 함유.",per l 5%  plus $2.9524
+NZL,2105003900,"-- 9% vol. 이상, 14% vol. 이하 함유.",per l 5%  plus  $3.6905
+NZL,2105004200,"-- 14% vol. 이상, 23% vol. 이하 함유.",per l al 5%  plus s $67.220
+NZL,2105004900,-- 기타,per l al 5%  plus  $67.220
+NZL,2105005900,- 기타,5%
+NZL,2106100100,-- 조직화된 식물성 단백질,Free
+NZL,2106100900,-- 기타,5%
+NZL,2106901010,-- 사카린과 감미료로 사용되는 식품으로 구성된 정제,5%
+NZL,2106902000,--- 1.15% vol 이하 함유.,Free
+NZL,2106903100,---- 허가된 제조 구역에서 추가 제조를 위해,Free
+NZL,2106903900,---- 기타,Free
+NZL,2106904100,---- 허가된 제조 구역에서 추가 제조를 위해,Free
+NZL,2106904900,---- 기타,Free
+NZL,2106905100,---- 허가된 제조 구역에서 추가 제조를 위해,Free
+NZL,2106905900,---- 기타,Free
+NZL,2106906100,---- 허가된 제조 구역에서 추가 제조를 위해,Free
+NZL,2106906900,---- 기타,Free
+NZL,2106907100,---- 허가된 제조 구역에서 추가 제조를 위해,Free
+NZL,2106907900,---- 기타,Free
+NZL,2106908101,. . . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2106908109,. . . . . . 다른 용기에,Free
+NZL,2106908111,. . . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2106908119,. . . . . . 다른 용기에,Free
+NZL,2106908901,. . . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2106908909,. . . . . . 다른 용기에,Free
+NZL,2106908911,. . . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2106908919,. . . . . . 다른 용기에,Free
+NZL,2106909100,--- 1.15% vol 이하 함유.,5%
+NZL,2106909200,"--- 1.15% vol. 이상, 2.5% vol. 이하 함유.",per l 5%  plus 55.351￠
+NZL,2106909300,"--- 2.5% vol. 이상, 6% vol. 이하 함유.",per l al 5%  plus $36.905
+NZL,2106909400,"--- 6% vol. 이상, 9% vol. 이하 함유.",per l 5%  plus $2.9524
+NZL,2106909500,"--- 9% vol. 이상, 14% vol. 이하 함유.",per l 5%  plus $3.6905
+NZL,2106909800,"--- 14% vol. 이상, 23% vol. 이하 함유.",per l al 5%  plus $67.220
+NZL,2106909700,--- 기타,per l al 5%  plus $67.220
+NZL,2106909901,. . . 인간 식품 제조에 사용되는 화학 물질과 식품의 혼합물,5%
+NZL,2106909909,. . . 코코넛 크림,5%
+NZL,2106909911,. . . 견과류 페이스트,5%
+NZL,2106909919,". . . 단맛 지방, 식용 지방(버터지방 포함) 및 설탕의 조제품",5%
+NZL,2106909921,. . . 음료 제조용 결정 또는 분말,5%
+NZL,2106909929,. . . 젤리 결정 또는 분말,5%
+NZL,2106909942,. . . . . 염화불화탄소를 함유한,5%
+NZL,2106909948,. . . . . 기타,5%
+NZL,2106909961,. . . . . . 정제 형태로,5%
+NZL,2106909969,. . . . . . 기타,5%
+NZL,2106909980,. . . . . 기타,5%
+NZL,2201100100,-- 금속 용기에,5%
+NZL,2201100900,-- 기타,5%
+NZL,2201900102,. . . . 염화불화탄소를 함유한,5%
+NZL,2201900108,. . . . 기타,5%
+NZL,2201900119,. . . 기타,5%
+NZL,2201900900,-- 기타,5%
+NZL,2202100100,-- 금속 용기에,5%
+NZL,2202100900,-- 기타,5%
+NZL,2202911010,. . . . 사슴 제품을 함유하고 있습니다,5%
+NZL,2202911019,. . . . 기타,5%
+NZL,2202919010,. . . . 사슴 제품을 함유하고 있습니다,5%
+NZL,2202919019,. . . . 기타,5%
+NZL,2202991010,. . . . 사슴 제품을 함유하고 있습니다,5%
+NZL,2202991019,. . . . 기타,5%
+NZL,2202999010,. . . . 사슴 제품을 함유하고 있습니다,5%
+NZL,2202999020,. . . . 기타,5%
+NZL,2203000201,. . 캔,Free
+NZL,2203000209,. . 기타,Free
+NZL,2203001201,. . 캔,per l 55.351￠
+NZL,2203001209,. . 기타,per l 55.351￠
+NZL,2203002202,. . 캔,per l al $36.905
+NZL,2203002208,. . 기타,per l al $36.905
+NZL,2203003102,. . 캔,per l al $36.905
+NZL,2203003108,. . 기타,per l al $36.905
+NZL,2203003902,. . 캔,per l al $36.905
+NZL,2203003908,. . 기타,per l al $36.905
+NZL,2204100100,-- 샴페인,per l  $3.6905
+NZL,2204101201,. . . . 빨간색,5%
+NZL,2204101209,. . . . 하얀색,5%
+NZL,2204101801,. . . . 빨간색,per l 5% plus $3.6905
+NZL,2204101809,. . . . 하얀색,per l 5% plus $3.6905
+NZL,2204210201,. . . . . . 750ml 이하의 용량의 용기에,5%
+NZL,2204210209,. . . . . . 다른 용기에,5%
+NZL,2204210211,. . . . . . 750ml 이하의 용량의 용기에,5%
+NZL,2204210219,. . . . . . 다른 용기에,5%
+NZL,2204210221,. . . . . . 750ml 이하의 용량의 용기에,5%
+NZL,2204210229,. . . . . . 다른 용기에,5%
+NZL,2204210231,. . . . . . 750ml 이하의 용량의 용기에,5%
+NZL,2204210239,. . . . . . 다른 용기에,5%
+NZL,2204210241,. . . . . . 750ml 이하의 용량의 용기에,5%
+NZL,2204210249,. . . . . . 다른 용기에,5%
+NZL,2204211301,. . . . . . 750ml 이하의 용량의 용기에,per l al 5%  plus $67.220
+NZL,2204211309,. . . . . . 다른 용기에,per l al 5%  plus $67.220
+NZL,2204211311,. . . . . . 750ml 이하의 용량의 용기에,per l al 5%  plus $67.220
+NZL,2204211319,. . . . . . 다른 용기에,per l al 5%  plus $67.220
+NZL,2204211321,. . . . . . 750ml 이하의 용량의 용기에,per l al 5%  plus $67.220
+NZL,2204211329,. . . . . . 다른 용기에,per l al 5%  plus $67.220
+NZL,2204211801,. . . . . . 750ml 이하의 용량의 용기에,per l 5% plus $3.6905
+NZL,2204211809,. . . . . . 다른 용기에,per l 5% plus $3.6905
+NZL,2204211811,. . . . . . 750ml 이하의 용량의 용기에,per l 5% plus $3.6905
+NZL,2204211819,. . . . . . 다른 용기에,per l 5% plus $3.6905
+NZL,2204221010,. . . . . 하얀색,5%
+NZL,2204221011,. . . . . 빨간색,5%
+NZL,2204221013,. . . . . 셰리,5%
+NZL,2204221015,. . . . . 포트,5%
+NZL,2204221019,. . . . . 다른 종류,5%
+NZL,2204221910,. . . . . 셰리,per l al 5% plus $67.220
+NZL,2204221911,. . . . . 포트,per l al 5% plus $67.220
+NZL,2204221919,. . . . . 다른 종류,per l al 5% plus $67.220
+NZL,2204229010,. . . . . 하얀색,per l 5% plus $3.6905
+NZL,2204229019,. . . . . 빨간색,per l 5% plus $3.6905
+NZL,2204291010,. . . . . 하얀색,5%
+NZL,2204291030,. . . . . 빨간색,5%
+NZL,2204291031,. . . . . 셰리,5%
+NZL,2204291033,. . . . . 포트,5%
+NZL,2204291039,. . . . . 다른 종류,5%
+NZL,2204292010,. . . . . 셰리,per l al 5% plus $67.220
+NZL,2204292020,. . . . . 포트,per l al 5% plus $67.220
+NZL,2204292029,. . . . . 다른 종류,per l al 5% plus $67.220
+NZL,2204299010,. . . . . 하얀색,per l 5% plus $3.6905
+NZL,2204299019,. . . . . 빨간색,per l 5% plus $3.6905
+NZL,2204300000,- 다른 포도즙,5%
+NZL,2205100101,". . . . 14% vol. 이상을 함유하고, 주류 또는 주류를 함유한 물질을 첨가하여 강화됨",Free
+NZL,2205100111,. . . . . 6% vol 이하 함유.,Free
+NZL,2205100119,". . . . . 6% vol. 이상, 9.5% vol. 이하 함유.",Free
+NZL,2205100129,. . . . . 9.5% vol 이상을 함유함.,Free
+NZL,2205101200,"---- 14% vol. 이상을 함유하고, 주류 또는 주류를 함유한 물질을 첨가하여 강화됨",per l al  $67.220
+NZL,2205101900,---- 기타,per l  $3.6905
+NZL,2205102201,"14% vol. 이상을 함유하고, 주류 또는 주류를 함유한 물질을 첨가하여 강화됨",5%
+NZL,2205102211,. . . . . 6% vol 이하 함유.,5%
+NZL,2205102221,". . . . . 6% vol. 이상, 9.5% vol. 이하 함유.",5%
+NZL,2205102229,. . . . . 9.5% vol 이상을 함유함.,5%
+NZL,2205103300,"---- 14% vol. 이상을 함유하고, 주류 또는 주류를 함유한 물질을 첨가하여 강화됨",per l al  $67.220
+NZL,2205103800,---- 기타,per l  $3.6905
+NZL,2205900101,"14% vol. 이상을 함유하고, 주류 또는 주류를 함유한 물질을 첨가하여 강화됨",Free
+NZL,2205900111,6% vol 이하 함유.,Free
+NZL,2205900119,"6% vol. 이상, 9.5% vol. 이하 함유.",Free
+NZL,2205900129,9.5% vol 이상을 함유함.,Free
+NZL,2205901200,"---- 14% vol. 이상을 함유하고, 주류 또는 주류를 함유한 물질을 첨가하여 강화됨",per l al  $67.220
+NZL,2205901900,---- 기타,per l  $3.6905
+NZL,2205902201,"14% vol. 이상을 함유하고, 주류 또는 주류를 함유한 물질을 첨가하여 강화됨",5%
+NZL,2205902211,6% vol 이하 함유.,5%
+NZL,2205902221,"6% vol. 이상, 9.5% vol. 이하 함유.",5%
+NZL,2205902229,9.5% vol 이상을 함유함.,5%
+NZL,2205903300,"---- 14% vol. 이상을 함유하고, 주류 또는 주류를 함유한 물질을 첨가하여 강화됨",per l al 5%  $67.220
+NZL,2205903800,---- 기타,per l 5%  $3.6905
+NZL,2206000201,. . . . . 스파클링,Free
+NZL,2206000209,. . . . . 기타,Free
+NZL,2206000219,. . . . 기타,Free
+NZL,2206000801,. . . . . 스파클링,per l $3.6905
+NZL,2206000809,. . . . . 기타,per l $3.6905
+NZL,2206000819,. . . . 기타,per l $3.6905
+NZL,2206001201,. . . . . 스파클링,Free
+NZL,2206001209,. . . . . 기타,Free
+NZL,2206001219,. . . . 기타,Free
+NZL,2206001701,. . . . . 스파클링,per l $67.220
+NZL,2206001709,. . . . . 기타,per l $67.220
+NZL,2206001719,. . . . 기타,per l $67.220
+NZL,2206002200,--- 허가된 제조 구역에서 추가 제조를 위해,Free
+NZL,2206002800,--- 기타,per l al  $67.220
+NZL,2206003201,. . . 스파클링,Free
+NZL,2206003209,. . . 기타,Free
+NZL,2206003301,. . . . 스파클링,Free
+NZL,2206003309,. . . . 기타,Free
+NZL,2206003701,. . . . 스파클링,per l 55.351￠
+NZL,2206003709,. . . . 기타,per l 55.351￠
+NZL,2206004301,. . . . 스파클링,Free
+NZL,2206004309,. . . . 기타,Free
+NZL,2206004701,. . . . 스파클링,per l al $36.905
+NZL,2206004709,. . . . 기타,per l al $36.905
+NZL,2206005301,. . . . 스파클링,Free
+NZL,2206005309,. . . . 기타,Free
+NZL,2206005701,. . . . 스파클링,per l $2.9524
+NZL,2206005709,. . . . 기타,per l $2.9524
+NZL,2206006201,. . . . 스파클링,Free
+NZL,2206006209,. . . . 기타,Free
+NZL,2206006801,. . . . 스파클링,per l $3.6905
+NZL,2206006809,. . . . 기타,per l $3.6905
+NZL,2206007101,. . . . 스파클링,Free
+NZL,2206007109,. . . . 기타,Free
+NZL,2206007801,. . . . 스파클링,per l al $67.220
+NZL,2206007809,. . . . 기타,per l al $67.220
+NZL,2206008100,--- 허가된 제조 구역에서 추가 제조를 위해,Free
+NZL,2206008900,--- 기타,per l al  $67.220
+NZL,2207101100,--- 허가된 제조 지역에서 제조하는 경우,Free
+NZL,2207101900,--- 기타,per l al  $67.220
+NZL,2207102100,--- 허가된 제조 지역에서 제조하는 경우,Free
+NZL,2207102900,--- 기타,per l al  $67.220
+NZL,2207200100,-- 뉴질랜드 세관장이 승인한 공식에 따라 변성된 에틸 알코올,Free
+NZL,2207201200,--- 허가된 제조 지역에서 제조하는 경우,Free
+NZL,2207201800,---- 항공 정신,Free
+NZL,2207202300,----- 모터 스피릿과 혼합하면 엔진 연료로 사용할 수 있습니다,per l ms 70.024￠  plus 8￠  per g of Pb
+NZL,2207202710,. . . . . . 자동차용 디젤과 추가로 혼합됨,Free
+NZL,2207202713,. . . . . . 선박용 디젤과 추가로 혼합,Free
+NZL,2207202715,. . . . . . 바이오디젤과 추가로 혼합,Free
+NZL,2207202719,. . . . . . 다른 물질과 추가로 혼합됨,Free
+NZL,2207203200,----- 기타,per l  30.2￠
+NZL,2207203300,--- 허가된 제조 지역에서 제조하는 경우,Free
+NZL,2207203500,---- 모터 스피릿과 혼합,per l ms  70.024￠  per g of Pb
+NZL,2207203710,. . . . . 자동차용 디젤과 혼합,Free
+NZL,2207203713,. . . . . 선박용 디젤과 혼합,Free
+NZL,2207203715,. . . . . 바이오디젤과 혼합,Free
+NZL,2207203719,. . . . . 다른 물질과 혼합,Free
+NZL,2207204100,--- 허가된 제조 지역에서 제조하는 경우,Free
+NZL,2207204900,--- 기타,per l al $67.220
+NZL,2208200201,. . . . . . . 병에 담아,Free
+NZL,2208200209,. . . . . . . 그렇지 않으면 포장됨,Free
+NZL,2208200219,. . . . . . 다른 용기에,Free
+NZL,2208200401,. . . . . . . 병에 담아,per l al $67.220
+NZL,2208200409,. . . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208200419,. . . . . . 다른 용기에,per l al $67.220
+NZL,2208200601,. . . . . . . 병에 담아,Free
+NZL,2208200609,. . . . . . . 그렇지 않으면 포장됨,Free
+NZL,2208200619,. . . . . . 다른 용기에,Free
+NZL,2208200801,. . . . . . . 병에 담아,per l al $67.220
+NZL,2208200809,. . . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208200819,. . . . . . 다른 용기에,per l al $67.220
+NZL,2208201101,. . . . . . 병에 담아,Free
+NZL,2208201109,. . . . . . 그렇지 않으면 포장됨,Free
+NZL,2208201119,. . . . . 다른 용기에,Free
+NZL,2208201901,. . . . . . 병에 담아,per l al $67.220
+NZL,2208201909,. . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208201919,. . . . . 다른 용기에,per l al $67.220
+NZL,2208202101,. . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2208202109,. . . . . 다른 용기에,Free
+NZL,2208202111,. . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2208202119,. . . . . 다른 용기에,Free
+NZL,2208202901,. . . . . 180리터 미만의 용량의 용기에,per l al $67.220
+NZL,2208202909,. . . . . 다른 용기에,per l al $67.220
+NZL,2208202911,. . . . . 180리터 미만의 용량의 용기에,per l al $67.220
+NZL,2208202919,. . . . . 다른 용기에,per l al $67.220
+NZL,2208300201,. . . . . . 병에 담아,Free
+NZL,2208300209,. . . . . . 그렇지 않으면 포장됨,Free
+NZL,2208300219,. . . . . 다른 용기에,Free
+NZL,2208300401,. . . . . . 병에 담아,per l al $67.220
+NZL,2208300409,. . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208300419,. . . . . 다른 용기에,per l al $67.220
+NZL,2208300601,. . . . . . 병에 담아,Free
+NZL,2208300609,. . . . . . 그렇지 않으면 포장됨,Free
+NZL,2208300619,. . . . . 다른 용기에,Free
+NZL,2208300801,. . . . . . 병에 담아,per l al $67.220
+NZL,2208300809,. . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208300819,. . . . . 다른 용기에,per l al $67.220
+NZL,2208301101,. . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2208301109,. . . . . 다른 용기에,Free
+NZL,2208301111,. . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2208301119,. . . . . 다른 용기에,Free
+NZL,2208301901,. . . . . 180리터 미만의 용량의 용기에,per l al $67.220
+NZL,2208301909,. . . . . 다른 용기에,per l al $67.220
+NZL,2208301911,. . . . . 180리터 미만의 용량의 용기에,per l al $67.220
+NZL,2208301919,. . . . . 다른 용기에,per l al $67.220
+NZL,2208400201,. . . . . . 병에 담아,Free
+NZL,2208400209,. . . . . . 그렇지 않으면 포장됨,Free
+NZL,2208400219,. . . . . 다른 용기에,Free
+NZL,2208400401,. . . . . . 병에 담아,per l al $67.220
+NZL,2208400409,. . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208400419,. . . . . 다른 용기에,per l al $67.220
+NZL,2208400601,. . . . . . 병에 담아,Free
+NZL,2208400609,. . . . . . 그렇지 않으면 포장됨,Free
+NZL,2208400619,. . . . . 다른 용기에,Free
+NZL,2208400801,. . . . . . 병에 담아,per l al $67.220
+NZL,2208400809,. . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208400819,. . . . . 다른 용기에,per l al $67.220
+NZL,2208401101,. . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2208401109,. . . . . 다른 용기에,Free
+NZL,2208401111,. . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2208401119,. . . . . 다른 용기에,Free
+NZL,2208401901,. . . . . 180리터 미만의 용량의 용기에,per l al $67.220
+NZL,2208401909,. . . . . 다른 용기에,per l al $67.220
+NZL,2208401911,. . . . . 180리터 미만의 용량의 용기에,per l al $67.220
+NZL,2208401919,. . . . . 다른 용기에,per l al $67.220
+NZL,2208500201,. . . . . 병에 담아,5%
+NZL,2208500209,. . . . . 그렇지 않으면 포장됨,5%
+NZL,2208500401,. . . . . 병에 담아,per l al 5% plus $67.220
+NZL,2208500409,. . . . . 그렇지 않으면 포장됨,per l al 5% plus $67.220
+NZL,2208500601,. . . . . 병에 담아,per l al 50￠
+NZL,2208500609,. . . . . 그렇지 않으면 포장됨,per l al 50￠
+NZL,2208500801,. . . . . 병에 담아,per l al 50￠ plus $67.220
+NZL,2208500809,. . . . . 그렇지 않으면 포장됨,per l al 50￠ plus $67.220
+NZL,2208501101,. . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2208501109,. . . . . 다른 용기에,Free
+NZL,2208501111,. . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2208501119,. . . . . 다른 용기에,Free
+NZL,2208501901,. . . . . 180리터 미만의 용량의 용기에,per l al $67.220
+NZL,2208501909,. . . . . 다른 용기에,per l al $67.220
+NZL,2208501911,. . . . . 180리터 미만의 용량의 용기에,per l al $67.220
+NZL,2208501919,. . . . . 다른 용기에,per l al $67.220
+NZL,2208601101,. . . . . 병에 담아,5%
+NZL,2208601109,. . . . . 그렇지 않으면 포장됨,5%
+NZL,2208601901,. . . . . 병에 담아,per l al 5% plus $67.220
+NZL,2208601909,. . . . . 그렇지 않으면 포장됨,per l al 5% plus $67.220
+NZL,2208602101,. . . . . 병에 담아,per l al 50￠
+NZL,2208602109,. . . . . 그렇지 않으면 포장됨,per l al 50￠
+NZL,2208602901,. . . . . 병에 담아,per l al 5%0￠ plus $67.220
+NZL,2208602909,. . . . . 그렇지 않으면 포장됨,per l al 5%0￠ plus $67.220
+NZL,2208609101,. . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2208609109,. . . . . 다른 용기에,Free
+NZL,2208609111,. . . . . 180리터 미만의 용량의 용기에,Free
+NZL,2208609119,. . . . . 다른 용기에,Free
+NZL,2208609901,. . . . . 180리터 미만의 용량의 용기에,per l al $67.220
+NZL,2208609909,. . . . . 다른 용기에,per l al $67.220
+NZL,2208609911,. . . . . 180리터 미만의 용량의 용기에,per l al $67.220
+NZL,2208609919,. . . . . 다른 용기에,per l al $67.220
+NZL,2208701000,-- 허가된 제조 구역에서 추가 제조를 위해,5%
+NZL,2208702000,--- 1.15% vol 이하 함유.,Free
+NZL,2208703000,"--- 1.15% vol. 이상, 2.5% vol. 이하 함유.",per l  55.351￠
+NZL,2208704000,"--- 2.5% vol. 이상, 6% vol. 이하 함유.",per l al  $36.905
+NZL,2208705000,"--- 6% vol. 이상, 9% vol. 이하 함유.",per l  $2.9524
+NZL,2208706000,"--- 9% vol. 이상, 14% vol. 이하 함유.",per l 5%  plus $3.6905
+NZL,2208707100,"--- 14% vol. 이상, 23% vol. 이하 함유.",per l al 5%  plus $67.220
+NZL,2208708001,". . . . 23% vol. 이상, 57% vol. 이하 함유.",per l al $67.220
+NZL,2208708009,. . . . 기타,per l al $67.220
+NZL,2208900200,--- 허가된 제조 구역에서 추가 제조를 위해,Free
+NZL,2208900600,---- 23% vol 이하 함유.,per l al  $67.220
+NZL,2208900800,---- 기타,per l al  $67.220
+NZL,2208904210,. . . . 병에 담아,Free
+NZL,2208904215,. . . . 그렇지 않으면 포장됨,Free
+NZL,2208904810,. . . . 병에 담아,per l al $67.220
+NZL,2208904815,. . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208905300,--- 허가된 제조 구역에서 추가 제조를 위해,Free
+NZL,2208905810,. . . . . . 브랜디를 함유,Free
+NZL,2208905815,. . . . . . 기타,Free
+NZL,2208905820,. . . . . 위스키(whiskey)를 함유한 증류주,Free
+NZL,2208905825,. . . . . 럼주를 함유한 주류,Free
+NZL,2208905830,. . . . . 진을 함유한 증류주,Free
+NZL,2208905835,. . . . . 보드카를 함유한 증류주,Free
+NZL,2208905839,. . . . . 기타,Free
+NZL,2208906210,. . . . . . 브랜디를 함유,per l 55.351￠
+NZL,2208906215,. . . . . . 기타,per l 55.351￠
+NZL,2208906220,. . . . . 위스키(whiskey)를 함유한 증류주,per l 55.351￠
+NZL,2208906225,. . . . . 럼주를 함유한 주류,per l 55.351￠
+NZL,2208906230,. . . . . 진을 함유한 증류주,per l 55.351￠
+NZL,2208906235,. . . . . 보드카를 함유한 증류주,per l 55.351￠
+NZL,2208906239,. . . . . 기타,per l 55.351￠
+NZL,2208906810,. . . . . . 브랜디를 함유,per l al $36.905
+NZL,2208906815,. . . . . . 기타,per l al $36.905
+NZL,2208906820,. . . . . 위스키(whiskey)를 함유한 증류주,per l al $36.905
+NZL,2208906825,. . . . . 럼주를 함유한 주류,per l al $36.905
+NZL,2208906830,. . . . . 진을 함유한 증류주,per l al $36.905
+NZL,2208906835,. . . . . 보드카를 함유한 증류주,per l al $36.905
+NZL,2208906839,. . . . . 기타,per l al $36.905
+NZL,2208907210,. . . . . . 브랜디를 함유,per l $2.9524
+NZL,2208907215,. . . . . . 기타,per l $2.9524
+NZL,2208907220,. . . . . 위스키(whiskey)를 함유한 증류주,per l $2.9524
+NZL,2208907225,. . . . . 럼주를 함유한 주류,per l $2.9524
+NZL,2208907230,. . . . . 진을 함유한 증류주,per l $2.9524
+NZL,2208907235,. . . . . 보드카를 함유한 증류주,per l $2.9524
+NZL,2208907239,. . . . . 기타,per l $2.9524
+NZL,2208907810,. . . . . . 브랜디를 함유,per l $3.6905
+NZL,2208907815,. . . . . . 기타,per l $3.6905
+NZL,2208907820,. . . . . 위스키(whiskey)를 함유한 증류주,per l $3.6905
+NZL,2208907825,. . . . . 럼주를 함유한 주류,per l $3.6905
+NZL,2208907830,. . . . . 진을 함유한 증류주,per l $3.6905
+NZL,2208907835,. . . . . 보드카를 함유한 증류주,per l $3.6905
+NZL,2208907839,. . . . . 기타,per l $3.6905
+NZL,2208908510,. . . . . . 브랜디를 함유,per l al $67.220
+NZL,2208908515,. . . . . . 기타,per l al $67.220
+NZL,2208908520,. . . . . 위스키(whiskey)를 함유한 증류주,per l al $67.220
+NZL,2208908525,. . . . . 럼주를 함유한 주류,per l al $67.220
+NZL,2208908530,. . . . . 진을 함유한 증류주,per l al $67.220
+NZL,2208908535,. . . . . 보드카를 함유한 증류주,per l al $67.220
+NZL,2208908539,. . . . . 기타,per l al $67.220
+NZL,2208909710,. . . . . . . 병에 담아,per l al $67.220
+NZL,2208909715,. . . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208909717,. . . . . . . 병에 담아,per l al $67.220
+NZL,2208909719,. . . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208909720,. . . . . . 병에 담아,per l al $67.220
+NZL,2208909725,. . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208909730,. . . . . . 병에 담아,per l al $67.220
+NZL,2208909735,. . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208909740,. . . . . . 병에 담아,per l al $67.220
+NZL,2208909745,. . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208909750,. . . . . . 병에 담아,per l al $67.220
+NZL,2208909755,. . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2208909760,. . . . . . 병에 담아,per l al $67.220
+NZL,2208909765,. . . . . . 그렇지 않으면 포장됨,per l al $67.220
+NZL,2209000000,아세트산으로부터 얻은 식초 및 식초 대체물,Free
+NZL,2301100001,. . . 간 식사,5%
+NZL,2301100009,. . . 고기 식사,5%
+NZL,2301100019,. . . 기타,5%
+NZL,2301100021,. . 밀가루,5%
+NZL,2301100029,. . 기름 찌끼,5%
+NZL,2301200001,. . 어분,5%
+NZL,2301200009,. . 기타,5%
+NZL,2302100000,- 옥수수(corn)의,Free
+NZL,2302300000,- 밀의,Free
+NZL,2302400010,. . 쌀,Free
+NZL,2302400013,. . 기타,Free
+NZL,2302500000,- 콩과식물의,Free
+NZL,2303100000,- 전분 제조 잔류물 및 유사 잔류물,Free
+NZL,2303200000,"- 사탕무 펄프, 바가스 및 기타 설탕 제조 폐기물",Free
+NZL,2303300000,- 찌꺼기 및 폐기물을 양조하거나 증류합니다,Free
+NZL,2304000000,대두유 추출로 인해 발생하는 오일 케이크 및 기타 고체 잔류물(분쇄 여부와 관계없이 펠릿 형태),Free
+NZL,2305000000,땅콩기름 추출로 인해 발생하는 오일케이크 및 기타 고체 잔류물(분쇄 여부와 관계없이 펠릿 형태),Free
+NZL,2306100000,- 면화씨앗,Free
+NZL,2306200000,- 아마씨의,Free
+NZL,2306300000,- 해바라기 씨앗,Free
+NZL,2306410000,-- 저에루산 유채씨앗 또는 유채씨앗,Free
+NZL,2306490000,-- 기타,Free
+NZL,2306500000,- 코코넛이나 코프라,Free
+NZL,2306600000,- 야자 열매 또는 씨앗,Free
+NZL,2306900010,. . 옥수수(corn) 배아,Free
+NZL,2306900013,. . 기타,Free
+NZL,2307000000,와인 찌꺼기; 아르골,Free
+NZL,2308000011,. 도토리와 밤나무,5%
+NZL,2308000019,. 기타,5%
+NZL,2309100101,. . . 개를 위해,5%
+NZL,2309100109,. . . 고양이를 위해,5%
+NZL,2309100911,. . . . 주로 육류 폐기물,5%
+NZL,2309100921,. . . . 주로 생선 폐기물,5%
+NZL,2309100929,. . . . 기타,5%
+NZL,2309100931,. . . . 주로 육류 폐기물,5%
+NZL,2309100941,. . . . 주로 생선 폐기물,5%
+NZL,2309100949,. . . . 기타,5%
+NZL,2309101911,". . . . 주로 고기나 내장, 신선, 냉장 또는 냉동",5%
+NZL,2309101921,. . . . 건조 제품,5%
+NZL,2309101929,. . . . 기타,5%
+NZL,2309101931,". . . . 주로 고기나 내장, 신선, 냉장 또는 냉동",5%
+NZL,2309101941,. . . . 건조 제품,5%
+NZL,2309101949,. . . . 기타,5%
+NZL,2309900101,. . . 개를 위해,5%
+NZL,2309900111,. . . 고양이를 위해,5%
+NZL,2309900119,. . . 기타,5%
+NZL,2309900900,-- 양과 소가 핥다,Free
+NZL,2309901901,. . . 가금류 매시,5%
+NZL,2309901909,. . . 가금류 펠릿,5%
+NZL,2309901911,. . . 단맛이 나는 사료,5%
+NZL,2309901919,. . . 기타,5%
+NZL,2401100101,". . . . 연기 경화, 버지니아 유형",Free
+NZL,2401100109,. . . . 기타,Free
+NZL,2401100902,". . . . 연기 경화, 버지니아 유형",Free
+NZL,2401100908,. . . . 기타,Free
+NZL,2401101901,". . . 연기 경화, 버지니아 유형",Free
+NZL,2401101909,. . . 기타,Free
+NZL,2401200101,". . . . 연기 경화, 버지니아 유형",Free
+NZL,2401200109,. . . . 기타,Free
+NZL,2401200902,". . . . 연기 경화, 버지니아 유형",Free
+NZL,2401200908,. . . . 기타,Free
+NZL,2401201901,". . . 연기 경화, 버지니아 유형",Free
+NZL,2401201909,. . . 기타,Free
+NZL,2401300100,--- 시가,Free
+NZL,2401300900,"--- 담배, 담배, 코담배",Free
+NZL,2401301900,-- 다른 목적을 위해,Free
+NZL,2402100002,. . 100g당 500g 이하,"per KTC $1,589.96"
+NZL,2402100008,. . 기타,"per KTC $1,589.96"
+NZL,2402201000,"-- 1,000개비당 실제 담배 함량이 0.8kg을 초과함","per KTC 5%  plus $1,812.61"
+NZL,2402209000,"-- 1,000개비의 담배 실제 함량이 0.8kg을 초과하지 않음","per 1,000  5  plus $1,272.01"
+NZL,2402900101,. . . 100g당 500g 이하,Free
+NZL,2402900109,. . . 기타,Free
+NZL,2402901200,"--- 1,000명당 1.1kg 초과",Free
+NZL,2402901800,"--- 1,000당 중량이 1.1kg을 초과하지 않음",Free
+NZL,2403111010,--- 허가된 제조 구역에서 추가 제조를 위해,5%
+NZL,2403119010,--- 기타,per kg 5%  plus $271.89
+NZL,2403191000,--- 허가된 제조 구역에서 추가 제조를 위해,5%
+NZL,2403199010,. . . . 파이프,"per KTC 5% plus $1,812.61"
+NZL,2403199015,. . . . 담배,"per KTC 5% plus $1,812.61"
+NZL,2403199019,. . . . 기타,"per KTC 5% plus $1,812.61"
+NZL,2403911000,--- 허가된 제조 구역에서 추가 제조를 위해,5%
+NZL,2403919001,. . . . 파이프,"per KTC 5% plus $1,812.61"
+NZL,2403919005,. . . . 담배,"per KTC 5% plus $1,812.61"
+NZL,2403919010,. . . . 기타,"per KTC 5% plus $1,812.61"
+NZL,2403990200,--- 코담배,"per KTC   $1,589.96"
+NZL,2403990900,--- 담배 추출물 및 에센스,Free
+NZL,2403991110,--- 담배 대체품의 흡연 혼합물,Free
+NZL,2403999001,액체 형태의 분쇄된 폐담배,"per KTC 5% plus $1,812.61"
+NZL,2403999005,시가 및 셰루트 제조에 사용되는 담배 바인더 및 포장지,"per KTC 5% plus $1,812.61"
+NZL,2403999010,. . . . 기타,"per KTC 5% plus $1,812.61"
+NZL,2404110200,---- 재구성된 담배를 함유하고 있습니다,per KTC 5%  plus $906.30
+NZL,2404110600,---- 기타,per KTC 5%  plus $794.97
+NZL,2404111100,---- 재구성된 담배를 함유하고 있습니다,"per KTC 5%  plus $1,812.61"
+NZL,2404111500,---- 기타,"5%  plus $1,812.61"
+NZL,2404120001,. . . 일회용 전자담배 및 이와 유사한 일회용 전자담배 기화 장치,Free
+NZL,2404120005,. . . 전기 증발 장치와 함께 사용할 수 있는 미리 채워진 카트리지,Free
+NZL,2404120011,. . . 액체 용액,Free
+NZL,2404120019,. . . 기타,Free
+NZL,2404190101,. . . . 일회용 전자담배 및 이와 유사한 일회용 전자담배 기화 장치,Free
+NZL,2404190105,. . . . 전기 증발 장치와 함께 사용할 수 있는 미리 채워진 카트리지,Free
+NZL,2404190111,. . . . 액체 용액,Free
+NZL,2404190119,. . . . 기타,Free
+NZL,2404190501,. . . . 일회용 전자담배 및 이와 유사한 일회용 전자담배 기화 장치,Free
+NZL,2404190505,. . . . 전기 증발 장치와 함께 사용할 수 있는 미리 채워진 카트리지,Free
+NZL,2404190511,. . . . 액체 용액,Free
+NZL,2404190519,. . . . 기타,Free
+NZL,2404910000,-- 경구 투여용,5%
+NZL,2404920000,-- 경피 적용을 위해,Free
+NZL,2404990000,-- 기타,Free
 TWN,01012100003,"Live horses, pure-bred breeding animals",2.5%
 TWN,01012900005,Other live horses,2.5%
 TWN,01013000002,Live asses,2.5%
