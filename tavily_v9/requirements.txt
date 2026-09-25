@@ -1,0 +1,5 @@
+flask
+python-dotenv
+openai
+tavily-python
+brotli>=1.2.0
