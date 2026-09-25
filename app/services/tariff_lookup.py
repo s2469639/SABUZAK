@@ -257,28 +257,38 @@ def get_tariff_regimes(hs_code: str, country_iso3: str):
 def get_subitem_breakdown(hs_code: str, country_iso3: str):
     """등록된 HS코드가 6~8자리라서 여러 10자리 세부품목에 걸칠 때, 그
     세부품목 각각의 코드/품명/실제 세율을 보여주기 위한 상세 목록.
-    (범위 표시("0~5%")가 왜 나왔는지 사용자가 직접 확인할 수 있게 함)"""
-    matched_rows = find_matching_rows(hs_code)
-    if len(matched_rows) <= 1:
+    (범위 표시("0~5%")가 왜 나왔는지 사용자가 직접 확인할 수 있게 함).
+    MFN(기본세율)도 FTA 협정과 같은 표에서 첫 번째 컬럼으로 함께 보여준다 -
+    범위가 FTA 쪽이 아니라 MFN 쪽에서만 생겨도(예: 협정은 전부 0%인데
+    MFN만 세부품목별로 다름) 이 표에서 바로 확인할 수 있어야 하기 때문."""
+    matched_rows = {
+        re.sub(r"\D", "", row[1]): row for row in find_matching_rows(hs_code) if len(row) > 1
+    }
+    fta_columns = _country_columns(country_iso3)
+    mfn_by_code = {code: (name_ko, rate) for code, name_ko, rate in find_mfn_rows(hs_code, country_iso3)}
+
+    # FTA 세부품목도, MFN 세부품목도 둘 다 1개 이하면 굳이 상세표를 보여줄 필요 없다.
+    if len(matched_rows) <= 1 and len(mfn_by_code) <= 1:
         return []
 
-    columns = _country_columns(country_iso3)
-    if not columns:
-        return []
-
+    all_codes = sorted(set(matched_rows) | set(mfn_by_code))
     items = []
-    for row in matched_rows:
+    for digits in all_codes:
+        row = matched_rows.get(digits)
         rates = []
-        for col_idx, regime_name in columns:
-            if col_idx >= len(row):
-                continue
-            _, disp = _parse_cell(row[col_idx])
-            rates.append({"regime": regime_name, "display": disp})
-        items.append({
-            "code": row[1].strip() if len(row) > 1 else "",
-            "name_ko": row[2].strip() if len(row) > 2 else "",
-            "rates": rates,
-        })
+        if mfn_by_code:
+            _, mfn_raw = mfn_by_code.get(digits, (None, None))
+            _, mfn_disp = _parse_mfn_cell(mfn_raw) if mfn_raw is not None else (None, None)
+            rates.append({"regime": "MFN(기본세율)", "display": mfn_disp or "정보 없음"})
+        if row:
+            for col_idx, regime_name in fta_columns:
+                if col_idx >= len(row):
+                    continue
+                _, disp = _parse_cell(row[col_idx])
+                rates.append({"regime": regime_name, "display": disp})
+        name_ko = row[2].strip() if row and len(row) > 2 else (mfn_by_code.get(digits, ("", ""))[0] or "")
+        code = row[1].strip() if row and len(row) > 1 else digits
+        items.append({"code": code, "name_ko": name_ko, "rates": rates})
     return items
 
 

@@ -11,7 +11,7 @@
   <div class="exchange-rate-icon">$</div>
   <div class="exchange-rate-info">
     <span class="exchange-rate-label">현재 환율 ({{ exchange_info.currency_code }} → KRW)</span>
-    <strong class="exchange-rate-value">1 {{ exchange_info.currency_code }} = 약 {{ "{:,.0f}".format(exchange_info.rate_krw) }}원</strong>
+    <strong class="exchange-rate-value">{{ "{:,}".format(exchange_info.display_unit) }} {{ exchange_info.currency_code }} = 약 {{ "{:,.0f}".format(exchange_info.display_rate_krw) }}원</strong>
   </div>
   <span class="exchange-rate-note">참고용 · 실시간 아님</span>
 </div>
@@ -48,8 +48,9 @@
   <div class="empty">아직 조사한 적 없습니다. "지금 조사하기"를 눌러주세요 (UN Comtrade + 관세청 + AI 분석, 몇 초~수십 초 걸릴 수 있어요).</div>
   {% else %}
   {% set result = row.result %}
+  {% set country_label = expo.country_ko or expo.country or result.target_country %}
   <div class="detail-head">
-    <h3>{{ result.target_country }}의 교역통계 (HS {{ result.hscode }})</h3>
+    <h3>{{ country_label }}의 교역통계 (HS {{ result.hscode }})</h3>
     <div class="detail-meta">
       {% if result.from_cache %}
         <span class="badge cache">저장된 결과 · {{ result.fetched_at | kst }}</span>
@@ -89,16 +90,16 @@
     <div class="panel">
       {% set comp = result.competitiveness %}
       {% if comp and comp.top_suppliers %}
-        <p class="sub-title">{{ result.target_country }}의 수입지역 순위 ({{ comp.year }}년)</p>
+        <p class="sub-title">{{ country_label }}의 수입지역 순위 ({{ comp.year }}년)</p>
       {% else %}
-        <p class="sub-title">{{ result.target_country }}의 주요 경쟁국 비교</p>
+        <p class="sub-title">{{ country_label }}의 주요 경쟁국 비교</p>
       {% endif %}
       {% if comp and comp.total_import_usd %}
         {% if comp.is_mirror_estimate %}
           <p><span class="badge mirror">🪞 상대국 보고 기반 추정치</span></p>
           <p class="note">
-            ⚠️ {{ result.target_country }}이(가) 이 API에 직접 보고한 공식 수치가 없어서,
-            전세계 각국이 "{{ result.target_country }}에 수출했다"고 보고한 값들을 합산한
+            ⚠️ {{ country_label }}이(가) 이 API에 직접 보고한 공식 수치가 없어서,
+            전세계 각국이 "{{ country_label }}에 수출했다"고 보고한 값들을 합산한
             <strong>추정치</strong>입니다.
           </p>
         {% endif %}
@@ -153,7 +154,7 @@
     <!-- 성장 트렌드 -->
     {% set gt = result.growth_trend %}
     <div class="panel">
-      <p class="sub-title">{{ result.target_country }}의 수입 추이{% if gt %} ({{ gt.years_with_data }}/{{ gt.years_requested | length }}개년 데이터 확보){% endif %}</p>
+      <p class="sub-title">{{ country_label }}의 수입 추이{% if gt %} ({{ gt.years_with_data }}/{{ gt.years_requested | length }}개년 데이터 확보){% endif %}</p>
       {% if gt and gt.by_year %}
         {% if gt.is_mirror_estimate %}
           <p><span class="badge mirror">🪞 상대국 보고 기반 추정치</span></p>
@@ -173,7 +174,7 @@
   </div>
 
   {% set ke = result.korea_exports_customs %}
-  <div class="section-divider">한국의 {{ result.target_country }} 수출 추이 <span class="sub-num" style="display:inline">관세청 기준 (FOB)</span></div>
+  <div class="section-divider">한국의 {{ country_label }} 수출 추이 <span class="sub-num" style="display:inline">관세청 기준 (FOB)</span></div>
   {% if ke and ke.available %}
     {% if ke.by_year and (ke.by_year | map(attribute='export_usd') | select | list) %}
       <div class="panel">
@@ -192,16 +193,16 @@
   {% set dv = result.derived %}
   {% if dv and dv.yearly_rows %}
     <div class="section-divider">연도별 교역 현황
-      <span class="sub-num" style="display:inline">{{ result.target_country }} 수입: UN Comtrade · 한국 수출: 관세청</span>
+      <span class="sub-num" style="display:inline">{{ country_label }} 수입: UN Comtrade · 한국 수출: 관세청</span>
     </div>
     <div class="tbl-wrap">
       <table class="tbl">
         <tr>
           <th>연도</th>
-          <th>{{ result.target_country }} 수입액<br><span class="sub-num">전체, USD</span></th>
+          <th>{{ country_label }} 수입액<br><span class="sub-num">전체, USD</span></th>
           <th>전년 대비</th>
           {% if dv.has_customs %}
-            <th>한국 → {{ result.target_country }} 수출액<br><span class="sub-num">관세청, USD</span></th>
+            <th>한국 → {{ country_label }} 수출액<br><span class="sub-num">관세청, USD</span></th>
             <th>전년 대비</th>
           {% endif %}
           {% if dv.has_notes %}<th>참고</th>{% endif %}
@@ -222,14 +223,14 @@
     </div>
     {% set ytd = dv.korea.customs_ytd %}
     {% if ytd %}
-      <p class="note">한국 → {{ result.target_country }} 수출 {{ ytd.year }}년 1~{{ ytd.months }}월 누계: <strong style="color:var(--text)">{{ money(ytd.export_usd) }}</strong>
+      <p class="note">한국 → {{ country_label }} 수출 {{ ytd.year }}년 1~{{ ytd.months }}월 누계: <strong style="color:var(--text)">{{ money(ytd.export_usd) }}</strong>
         {% if ytd.prev_export_usd is defined %}(전년 동기 {{ money(ytd.prev_export_usd) }}{% if ytd.yoy_pct is not none %}, {{ yoy(ytd.yoy_pct) }}{% endif %}){% endif %}
       </p>
     {% endif %}
-    <p class="note">수입액은 {{ result.target_country }}가 신고한 CIF 기준, 한국 수출액은 한국 관세청 FOB 기준이라 두 값을 직접 나눠 비교하면 안 됩니다.</p>
+    <p class="note">수입액은 {{ country_label }}가 신고한 CIF 기준, 한국 수출액은 한국 관세청 FOB 기준이라 두 값을 직접 나눠 비교하면 안 됩니다.</p>
   {% endif %}
 
-  <div class="section-divider">{{ result.target_country }} AI 전략 시사점
+  <div class="section-divider">{{ country_label }} AI 전략 시사점
     <span class="info" tabindex="0">i<span class="info-pop">위 UN Comtrade·관세청 수치를 바탕으로 한 AI 해석입니다. 실제 전략 결정 전 추가 검증을 권장합니다.</span></span>
   </div>
   {% set ai = result.ai_insight %}

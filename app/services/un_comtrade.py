@@ -182,10 +182,15 @@ def translate_item_desc(text):
         client, _ = get_config()
         model = os.getenv("OPENAI_TRANSLATE_MODEL", "gpt-4o-mini")
         prompt = (
-            "다음은 HS코드 품목 분류 설명(영문)입니다. 무역 실무에서 쓰는 자연스러운 "
-            "한국어로 번역하세요. 'heading no. 1605'처럼 호 번호가 나오면 '제1605호'로 "
-            "쓰고, 'n.e.c.'는 '달리 분류되지 않은'으로 옮기세요. "
-            "번역문만 한 문단으로 출력하세요.\n\n" + text
+            "다음은 HS코드 품목 분류 설명(영문)입니다. 관세율표 문구를 그대로 직역하지 "
+            "말고, 이 품목이 실제로 뭔지 일반인도 바로 이해할 수 있게 쉬운 한국어 한 "
+            "문장으로 풀어서 설명하세요. 'heading no. 1605'처럼 호 번호가 나오면 "
+            "'제1605호'로 자연스럽게 녹이고, 'n.e.c.'나 'whether or not ~' 같은 법률 "
+            "문구는 번역하지 말고 아예 생략하세요. 예시: "
+            "'Food preparations; pasta, stuffed (with meat or other substances), "
+            "whether or not cooked or otherwise prepared' -> "
+            "'고기 등의 속을 채운 파스타류(만두형 식품 포함)'. "
+            "설명 문장만 출력하고 다른 말은 덧붙이지 마세요.\n\n" + text
         )
         resp = client.chat.completions.create(
             model=model,

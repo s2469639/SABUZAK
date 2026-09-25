@@ -261,6 +261,8 @@ def _apply_filters(query):
     search = request.args.get("search", "").strip()
     date_from = request.args.get("date_from", "").strip()
     date_to = request.args.get("date_to", "").strip()
+    scale_list = [s for s in request.args.getlist("scale") if s in ("대", "중", "소")]
+    audience_list = [a for a in request.args.getlist("audience_type") if a in ("B2B", "B2C")]
 
     if keyword_tag:
         query = query.filter(Exhibition.keywords.ilike(f"%{keyword_tag}%"))
@@ -272,6 +274,14 @@ def _apply_filters(query):
             (Exhibition.name.ilike(like))
             | (Exhibition.country_ko.ilike(like))
             | (Exhibition.city.ilike(like))
+        )
+    if scale_list:
+        query = query.filter(Exhibition.scale.in_(scale_list))
+    if audience_list:
+        # audience_type이 "B2B/B2C"(둘 다 해당)로 저장된 행은 B2B만 골라도,
+        # B2C만 골라도 나와야 하니 부분일치(LIKE)로 판정한다.
+        query = query.filter(
+            db.or_(*[Exhibition.audience_type.ilike(f"%{a}%") for a in audience_list])
         )
 
     date_from_int = _ymd_int(date_from)
@@ -286,7 +296,7 @@ def _apply_filters(query):
         if date_to_int:
             query = query.filter(Exhibition.start_date <= date_to_int)
 
-    return query, keyword_tag, food_only, search, date_from, date_to
+    return query, keyword_tag, food_only, search, date_from, date_to, scale_list, audience_list
 
 
 def _keyword_tags_for(base_query, limit=15):
@@ -302,7 +312,9 @@ def _keyword_tags_for(base_query, limit=15):
 
 
 def _build_list_context(base_query, title, list_endpoint, list_kwargs, continent):
-    query, keyword_tag, food_only, search, date_from, date_to = _apply_filters(base_query)
+    query, keyword_tag, food_only, search, date_from, date_to, scale_list, audience_list = (
+        _apply_filters(base_query)
+    )
     sort = request.args.get("sort", "asc")
     if sort == "desc":
         query = query.filter(Exhibition.start_date != UNKNOWN_DATE)
@@ -324,6 +336,8 @@ def _build_list_context(base_query, title, list_endpoint, list_kwargs, continent
         "sort": sort,
         "date_from": date_from,
         "date_to": date_to,
+        "selected_scales": scale_list,
+        "selected_audience_types": audience_list,
     }
 
 
