@@ -1,0 +1,28 @@
+{# 입력 폼 (트렌드 조사·부스 컨셉 공통). form_action, submit_label을 set으로 넘긴다 #}
+  <div class="form-container">
+    <form method="POST" action="{{ form_action }}" id="analyze-form">
+      {% if expo_id %}<input type="hidden" name="expo_id" value="{{ expo_id }}">{% endif %}
+      {% if product_id %}<input type="hidden" name="product_id" value="{{ product_id }}">{% endif %}
+      <div class="form-grid">
+        <div class="form-group"><label for="name">제품명 *</label><input type="text" id="name" name="name" value="{{ form.name }}" placeholder="예: 멸치 칼국수 밀키트" required maxlength="100"></div>
+        <div class="form-group"><label for="country">진출 대상 국가 *</label><input type="text" id="country" name="country" value="{{ form.country }}" placeholder="예: 말레이시아, 미국" required maxlength="100"></div>
+        <div class="form-group"><label for="strengths">제품 강점</label><input type="text" id="strengths" name="strengths" value="{{ form.strengths }}" placeholder="예: 진하게 우려낸 멸치 육수와 부드러운 생면"></div>
+        <div class="form-group"><label for="ingredients">주요 원료</label><input type="text" id="ingredients" name="ingredients" value="{{ form.ingredients }}" placeholder="예: 밀가루, 멸치추출물, 건다시마, 애호박"></div>
+        <div class="form-group"><label for="certifications">보유 인증</label><input type="text" id="certifications" name="certifications" value="{{ form.certifications }}" placeholder="예: HACCP"></div>
+        <div class="form-group"><label for="price">가격대</label><input type="text" id="price" name="price" value="{{ form.price }}" placeholder="예: 2인분 소매가 5~7달러"></div>
+      </div>
+      <details class="opt" {% if form.exhibition_name or form.exhibition_website %}open{% endif %}>
+        <summary>박람회 정보 (선택)</summary>
+        <div class="form-grid">
+          <div class="form-group"><label for="exhibition_name">박람회명</label><input type="text" id="exhibition_name" name="exhibition_name" value="{{ form.exhibition_name }}" placeholder="예: Summer Fancy Food Show 2027" maxlength="100"></div>
+          <div class="form-group"><label for="exhibition_website">박람회 사이트</label><input type="text" id="exhibition_website" name="exhibition_website" value="{{ form.exhibition_website }}" placeholder="예: specialtyfood.com" maxlength="100"></div>
+        </div>
+      </details>
+      <div class="actions">
+        <button type="submit" class="btn-submit" id="submit-btn">{{ submit_label }}</button>
+        <label class="check"><input type="checkbox" name="force" {% if force %}checked{% endif %}> 캐시 무시하고 새로 조사</label>
+      </div>
+    </form>
+  </div>
+
+  <div class="alert error" id="form-error" {% if not error %}hidden{% endif %}>{{ error or "" }}</div>

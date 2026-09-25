@@ -1355,6 +1355,21 @@ p.page-desc:not(:last-child) {
   gap: 12px;
 }
 
+.tariff-card-frame {
+  padding: 8px;
+}
+
+.trend-v2-frame {
+  width: 100%;
+  height: 900px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+}
+@media (max-width: 720px) {
+  .trend-v2-frame { height: 700px; }
+}
+
 .tariff-card-title {
   display: flex;
   align-items: center;

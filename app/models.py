@@ -200,6 +200,32 @@ class ConceptDraft(db.Model):
         return f"<ConceptDraft {self.exhibition_name} ({self.status})>"
 
 
+class TrendResult(db.Model):
+    """v15(트렌드 조사) 완료 결과 요약을 (박람회, 제품) 단위로 남겨두는 기록.
+    실제 분석 원문은 v15/ 자체 job/캐시(cache.db, results/*.json)에 있고,
+    여기는 "작성 중인 박람회" 목록에서 트렌드 조사를 이미 했는지/요약이
+    뭐였는지 보여주기 위한 가벼운 포인터만 저장한다."""
+
+    __bind_key__ = "app_data"
+    __tablename__ = "trend_results"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    exhibition_id = db.Column(db.Integer, nullable=False)  # raw_exhibitions.id (다른 DB라 FK 불가)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
+    job_id = db.Column(db.String(64), nullable=False)  # v15 job id (/trend/<job_id> 결과 화면으로 바로 이동 가능)
+    summary = db.Column(db.Text)
+    fetched_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", backref=db.backref("trend_results", lazy=True))
+    product = db.relationship(
+        "Product", backref=db.backref("trend_results", lazy=True, cascade="all, delete-orphan")
+    )
+
+    def __repr__(self):
+        return f"<TrendResult expo={self.exhibition_id} product={self.product_id}>"
+
+
 class EmailTemplate(db.Model):
     """로그인한 사용자 본인에게만 귀속되는 바이어 팔로업 메일 템플릿. 사용자마다 버전 1~3을
     따로 가지며, 그중 하나만 그 사용자의 발송에 쓰이는 활성(is_active) 버전이 된다."""
