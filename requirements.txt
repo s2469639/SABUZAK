@@ -19,3 +19,4 @@ comtradeapicall
 tavily-python
 pydantic
 openpyxl
+gunicorn
