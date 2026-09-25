@@ -43,6 +43,8 @@ class Product(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     name = db.Column(db.String(150), nullable=False)
     hs_code = db.Column(db.String(20), nullable=False)
+    brand = db.Column(db.String(150))  # 브랜드명
+    product_form = db.Column(db.String(100))  # 제품 형태 (예: 냉동, 분말, 병조림)
     ingredients = db.Column(db.Text)
     target_price = db.Column(db.String(100))  # 목표 소매 가격대/단위중량 (예: "4.99 GBP / 350g")
     certifications = db.Column(db.String(200))  # 보유 인증 (예: "비건, 코셔, HACCP")

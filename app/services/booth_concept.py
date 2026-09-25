@@ -50,6 +50,8 @@ def _build_product_text(products):
     for p in products:
         blocks.append(
             f"- 제품명: {p.name}\n"
+            f"  브랜드명: {p.brand or '-'}\n"
+            f"  제품 형태: {p.product_form or '-'}\n"
             f"  원재료 특징: {p.ingredients or '-'}\n"
             f"  보유 인증: {p.certifications or '-'}\n"
             f"  핵심 강점: {p.strengths or '-'}\n"
