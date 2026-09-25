@@ -1654,18 +1654,25 @@ body {
 
 .concept-image-card {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
   margin-top: 8px;
 }
 
-.concept-image-card button[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
+.concept-image-preview {
+  width: 100%;
+  max-width: 720px;
+  border-radius: 8px;
+  border: 1px solid #ebe8e2;
+  display: block;
+}
+
+.concept-image-form {
+  align-self: flex-start;
 }
 
 .concept-image-prompt {
-  margin-top: 8px;
   padding: 10px 12px;
   background: #f7f6f3;
   border: 1px solid #ebe8e2;

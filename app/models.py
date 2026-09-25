@@ -187,6 +187,7 @@ class ConceptDraft(db.Model):
     events = db.Column(db.Text)  # JSON: [{id, tag, title, schedule, description}, ...]
     target_buyers = db.Column(db.Text)  # JSON: ["...", ...]
     image_prompt = db.Column(db.Text)  # 3D 렌더링용 완성형 영문 프롬프트
+    image_path = db.Column(db.Text)  # 생성된 이미지의 static 상대경로 (예: generated/concept/12.png)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

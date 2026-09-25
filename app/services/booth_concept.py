@@ -6,6 +6,7 @@ app.schemas.booth_concept.BoothConcept로 검증한다. OPENAI_API_KEY가 없거
 호출/검증에 실패하면 규칙 기반 폴백으로 대체해 화면이 비지 않게 한다.
 """
 
+import base64
 import json
 import os
 
@@ -18,6 +19,7 @@ from app.services.hscode import resolve_country_iso
 from app.services.openai_client import get_client
 
 OPENAI_MODEL = "gpt-4o"
+IMAGE_MODEL = "gpt-image-1"
 
 
 def _format_date(value):
@@ -212,3 +214,22 @@ def generate_booth_concept(expo, products, trends_data=None) -> dict:
         result = _fallback_generate(expo, products)
 
     return result.model_dump()
+
+
+def generate_booth_image(prompt: str, negative_prompt: str = NEGATIVE_PROMPT) -> bytes:
+    """image_generation.prompt로 실제 부스 렌더링 이미지를 생성해 PNG 바이트로 반환한다.
+    gpt-image-1은 negative_prompt 파라미터가 없어서 "Avoid: ..." 문장으로 프롬프트에 덧붙인다."""
+    client = get_client()
+    full_prompt = f"{prompt}\n\nAvoid: {negative_prompt}."
+    response = client.images.generate(
+        model=IMAGE_MODEL,
+        prompt=full_prompt,
+        size="1536x1024",
+        quality="medium",
+        n=1,
+    )
+    image = response.data[0]
+    if image.b64_json:
+        return base64.b64decode(image.b64_json)
+    import requests
+    return requests.get(image.url, timeout=30).content

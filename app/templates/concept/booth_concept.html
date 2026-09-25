@@ -90,16 +90,21 @@
 {% endif %}
 
 <div class="card concept-image-card">
-  <div>
-    <p class="section-eyebrow">부스 컨셉 예상 이미지</p>
-    {% if draft.image_prompt %}
-    <p class="placeholder-note">실제 이미지 생성은 준비 중입니다. 아래 프롬프트를 Midjourney/DALL-E에 직접 붙여넣어 미리 확인할 수 있어요.</p>
-    <p class="concept-image-prompt">{{ draft.image_prompt }}</p>
-    {% else %}
-    <p class="placeholder-note">AI 이미지 생성은 준비 중입니다.</p>
-    {% endif %}
-  </div>
-  <button type="button" class="btn-primary" disabled title="준비 중">AI 이미지 생성</button>
+  <p class="section-eyebrow">부스 컨셉 예상 이미지</p>
+
+  {% if draft.image_path %}
+  <img src="{{ url_for('static', filename=draft.image_path) }}" alt="부스 예상 이미지" class="concept-image-preview">
+  {% endif %}
+
+  {% if draft.image_prompt %}
+  <p class="concept-image-prompt">{{ draft.image_prompt }}</p>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('concept.generate_image', draft_id=draft.id) }}" class="concept-image-form">
+    <button type="submit" class="btn-primary">
+      {{ '이미지 다시 생성하기' if draft.image_path else 'AI 이미지 생성' }}
+    </button>
+  </form>
 </div>
 
 <form method="post" action="{{ url_for('concept.generate', draft_id=draft.id) }}" class="regenerate-form">
