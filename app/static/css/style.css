@@ -1356,7 +1356,9 @@ p.page-desc:not(:last-child) {
 }
 
 .tariff-card-frame {
-  padding: 8px;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .trend-v2-frame {
