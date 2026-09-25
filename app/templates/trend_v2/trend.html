@@ -4,9 +4,6 @@
 {% block kind %}trend{% endblock %}
 {% block result_base %}/trend/{% endblock %}
 {% block loading_sub %}세 가지 분석을 동시에 진행해요. 보통 3~5분 걸려요.{% endblock %}
-{% block back_link %}
-{% if expo_id %}<a class="top-back-link" href="{{ url_for('exhibition.detail', expo_id=expo_id) }}#trend">← 박람회 상세로 돌아가기</a>{% endif %}
-{% endblock %}
 {% block content %}
   <div class="page-head">
     <div>
