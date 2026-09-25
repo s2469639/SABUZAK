@@ -751,6 +751,14 @@ p.page-desc:not(:last-child) {
   margin-left: auto;
 }
 
+.expo-update-form {
+  flex-shrink: 0;
+}
+
+.expo-update-form .btn-chip {
+  white-space: nowrap;
+}
+
 .keyword-filter-tag {
   background: #f3f4f6;
   border: 1px solid #e5e7eb;

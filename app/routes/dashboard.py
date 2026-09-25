@@ -1,9 +1,10 @@
+import json
 import subprocess
 import sys
 import threading
 from pathlib import Path
 
-from flask import Blueprint, Response, flash, redirect, render_template, url_for
+from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import login_required
 
 from app.models import Exhibition
@@ -12,14 +13,41 @@ bp = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 
 _BASE_DIR = Path(__file__).resolve().parent.parent.parent
 _PIPELINE_SCRIPT = _BASE_DIR / "scripts" / "weekly_pipeline.py"
-_LOG_DIR = _BASE_DIR / "instance" / "logs"
+_RESULT_PATH = _BASE_DIR / "instance" / "logs" / "last_result.json"
 
 # 박람회 갱신 파이프라인(크롤링+분류, 몇 분~몇십 분 걸림)을 웹 요청과 별도
 # 스레드에서 돌리기 위한 아주 단순한 인메모리 상태. 여러 워커 프로세스로
 # 띄우는 배포라면 워커별로 따로 도니 프로세스 간 공유는 안 되지만, 이
 # 프로젝트는 단일 내부용 인스턴스라 이 정도로 충분하다.
 _pipeline_lock = threading.Lock()
-_pipeline_state = {"running": False, "process": None}
+_pipeline_state = {"running": False, "process": None, "banner": None}
+
+
+def is_pipeline_running():
+    return _pipeline_state["running"]
+
+
+def pop_pipeline_banner():
+    """완료 배너 메시지를 한 번만 반환하고 지운다 (다음 페이지 로드부턴 안 뜸).
+    "업데이트 완료! (신규 추가: N건 / 내용 업데이트: M건 / 변경 없음: K건)" 형태."""
+    with _pipeline_lock:
+        banner = _pipeline_state["banner"]
+        _pipeline_state["banner"] = None
+    return banner
+
+
+def _build_banner_text(result):
+    if not result.get("ok"):
+        failed = ", ".join(result.get("failed_steps") or [])
+        return f"업데이트 중 일부 단계 실패 ({failed}) - 자세한 내용은 instance/logs 폴더 확인"
+    summary = result.get("crawl_summary")
+    if not summary:
+        return "업데이트 완료!"
+    return (
+        "업데이트 완료! (신규 추가: {new}건 / 내용 업데이트: {updated}건 / 변경 없음: {unchanged}건)"
+    ).format(
+        new=summary.get("new", 0), updated=summary.get("updated", 0), unchanged=summary.get("unchanged", 0),
+    )
 
 
 def _run_pipeline_background(skip_crawl):
@@ -29,9 +57,19 @@ def _run_pipeline_background(skip_crawl):
     process = subprocess.Popen(cmd, cwd=str(_BASE_DIR))
     _pipeline_state["process"] = process
     process.wait()
+
+    banner = "업데이트 완료!"
+    try:
+        if _RESULT_PATH.exists():
+            result = json.loads(_RESULT_PATH.read_text(encoding="utf-8"))
+            banner = _build_banner_text(result)
+    except Exception:
+        pass
+
     with _pipeline_lock:
         _pipeline_state["running"] = False
         _pipeline_state["process"] = None
+        _pipeline_state["banner"] = banner
 
 # 지도는 나중에 추가 예정 — 지금은 대륙 버튼만
 CONTINENTS = ["아메리카", "유럽", "중동·아프리카", "아시아", "오세아니아"]
@@ -71,7 +109,7 @@ def index():
 
     return render_template(
         "dashboard/continent_map.html", continents=CONTINENTS, counts=counts,
-        pipeline_running=_pipeline_state["running"], **all_list_ctx
+        pipeline_running=is_pipeline_running(), pipeline_banner=pop_pipeline_banner(), **all_list_ctx
     )
 
 
@@ -89,22 +127,5 @@ def run_weekly_pipeline():
 
     thread = threading.Thread(target=_run_pipeline_background, args=(False,), daemon=True)
     thread.start()
-    flash("박람회 크롤링+분류를 백그라운드에서 시작했습니다. 몇 분~몇십 분 걸릴 수 있어요 (진행 로그는 아래 링크로 확인).", "success")
+    flash("박람회 업데이트를 시작했습니다. 몇 분~몇십 분 걸릴 수 있어요.", "success")
     return redirect(url_for("dashboard.index"))
-
-
-@bp.route("/pipeline-status")
-@login_required
-def pipeline_status():
-    """가장 최근 파이프라인 실행 로그 파일을 그대로 텍스트로 보여준다
-    (별도 화면 없이 새로고침만으로 진행 상황을 볼 수 있게)."""
-    if not _LOG_DIR.exists():
-        return Response("아직 실행 로그가 없습니다.", mimetype="text/plain")
-
-    logs = sorted(_LOG_DIR.glob("weekly_pipeline_*.log"), reverse=True)
-    if not logs:
-        return Response("아직 실행 로그가 없습니다.", mimetype="text/plain")
-
-    content = logs[0].read_text(encoding="utf-8", errors="replace")
-    status = "실행 중...\n\n" if _pipeline_state["running"] else "완료됨\n\n"
-    return Response(status + content, mimetype="text/plain")
