@@ -12,7 +12,13 @@ Column I(대만) / 종가세(페루) ) 우선순위 키워드로 그 나라의 �
 해당하는 컬럼을 고른다. 상세 근거는 KEYWORD_NOTES 주석 참고.
 
 튀르키예는 품목 카테고리(농산물/공산품/가공농산물/수산물)마다 헤더 구조가
-통째로 다른 매트릭스표라 이 방식으로 못 뽑는다 -> 제외 (TODO: 별도 처리).
+통째로 다른 매트릭스표라 일반 로직으로 못 뽑아서 process_turkey()로 별도
+처리한다: 헤더 1행(카테고리)+2행(국가그룹) 2단 구조에서, 데이터 행마다
+실제 값이 채워진 컬럼들("활성 블록")을 찾고 그 안에서 'SOUTH KOREA' 단독
+컬럼 -> 'S.KOREA'/'SOUTH KOREA'가 포함된 묶음 컬럼 -> 'Other'/'Other
+Count.'(그 어떤 특혜 그룹에도 안 걸리는 국가용) 순으로 우선순위를 매겨
+한국에 적용될 세율 컬럼을 고른다.
+
 몽골은 사부작 박람회 목록에 없는 국가라 제외.
 
 실행: python scripts/market/build_mfn_rates.py
@@ -32,9 +38,10 @@ OUT_PATH = Path(__file__).resolve().parent / "mfn_base_rates.csv"
 # 비표준이었음)
 ISO3_FIX = {"CAM": "KHM", "BRU": "BRN", "MYA": "MMR"}
 
-# 스킵할 파일(국가코드 기준): 튀르키예(카테고리별 매트릭스, 별도처리 필요),
-# 몽골(박람회 목록에 없음)
-SKIP_COUNTRIES = {"TUR", "MNG"}
+# 스킵할 파일(국가코드 기준): 몽골(박람회 목록에 없음). 튀르키예는
+# process_turkey()로 별도 처리하므로 여기서 스킵하지 않는다.
+SKIP_COUNTRIES = {"MNG"}
+TURKEY_SPECIAL = {"TUR"}
 
 # 이 순서대로 헤더에서 첫 매치되는 컬럼을 그 나라의 "MFN 기준 관세율"로 쓴다.
 # 최혜국/MFN을 기본세율보다 먼저 두는 이유: 중국·캐나다·콜롬비아·필리핀
@@ -106,6 +113,61 @@ def process_file(path):
     return country, out_rows
 
 
+def process_turkey(path):
+    """튀르키예: 카테고리(농산물/공산품/가공농산물/수산물)마다 헤더가 통째로
+    다른 매트릭스표. 데이터 행마다 값이 채워진 컬럼 범위("활성 블록")를 찾고,
+    그 안에서 한국에 적용되는 컬럼을 고른다(모듈 docstring 참고)."""
+    wb = openpyxl.load_workbook(path, data_only=True, read_only=True)
+    ws = wb[wb.sheetnames[0]]
+    rows_iter = ws.iter_rows(values_only=True)
+    header1 = next(rows_iter)
+    header2 = next(rows_iter)
+    col_header = [_flatten(header2[i]) if i < len(header2) else "" for i in range(len(header1))]
+
+    out_rows = []
+    for row in rows_iter:
+        if len(row) < 4:
+            continue
+        hs_cell = _flatten(row[3])
+        digits = re.sub(r"\D", "", hs_cell)
+        if not digits or len(digits) < 2 or digits[:2] not in FOOD_CHAPTERS:
+            continue
+
+        filled = [i for i in range(8, len(row)) if row[i] not in (None, "")]
+        if not filled:
+            continue
+
+        chosen = None
+        # 1) 'SOUTH KOREA' 단독 컬럼
+        for i in filled:
+            if col_header[i] == "SOUTH KOREA":
+                chosen = i
+                break
+        # 2) 한국이 포함된 묶음 컬럼 (예: "EU, BOS-HERZ, UK, EFTA, F.ISLAND, S.KOREA, MYS")
+        if chosen is None:
+            for i in filled:
+                if "S.KOREA" in col_header[i] or "SOUTH KOREA" in col_header[i]:
+                    chosen = i
+                    break
+        # 3) 어떤 특혜 그룹에도 안 걸리는 나라용 "기타" 컬럼
+        if chosen is None:
+            for i in filled:
+                if "Other" in col_header[i]:
+                    chosen = i
+                    break
+        # 4) 최후 수단: 그 행에서 값이 채워진 첫 컬럼(활성 블록의 첫 컬럼이라
+        #    보통 그 블록 전체에 적용되는 기본/일반 세율일 가능성이 높음)
+        if chosen is None:
+            chosen = filled[0]
+
+        rate = _extract_rate(row[chosen])
+        if not rate:
+            continue
+        name_ko = _flatten(row[5]) if len(row) > 5 else ""
+        out_rows.append(("TUR", digits, name_ko, rate))
+    return out_rows
+
+
 def main():
     files = sorted(glob.glob(f"{UPLOAD_DIR}/*.xlsx"))
     all_rows = []
@@ -123,6 +185,14 @@ def main():
         peek_country = ISO3_FIX.get(peek_country, peek_country)
         if peek_country in SKIP_COUNTRIES:
             print(f"  건너뜀 (제외 대상: {peek_country}): {name}")
+            continue
+
+        if peek_country in TURKEY_SPECIAL:
+            print(f"처리 중 (특수 매트릭스): {name} ({peek_country})")
+            rows = process_turkey(f)
+            if rows:
+                seen_countries.add("TUR")
+                all_rows.extend(rows)
             continue
 
         print(f"처리 중: {name} ({peek_country})")
