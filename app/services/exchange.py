@@ -75,8 +75,18 @@ def get_exchange_info(country_name):
     if rate is None:
         return None
 
+    # IDR·VND처럼 원화 대비 단위가 아주 작은 통화는 "1 IDR = 약 0원"처럼
+    # 반올림 때문에 0으로 보이는 문제가 있었다. 화면에 보여줄 단위를
+    # "1 단위 = 0이 아닌 값이 나올 때까지" 10배씩 키워서 잡는다
+    # (예: 1 IDR이 아니라 1,000 IDR 기준으로 표시).
+    display_unit = 1
+    while rate * display_unit < 1 and display_unit < 100_000:
+        display_unit *= 10
+
     return {
         "currency_code": currency_code,
         "currency_name": _CURRENCY_KO_NAMES.get(currency_code, currency_code),
         "rate_krw": rate,
+        "display_unit": display_unit,
+        "display_rate_krw": rate * display_unit,
     }

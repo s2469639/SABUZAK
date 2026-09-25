@@ -305,10 +305,13 @@ def build_hscode_context(expo, products):
             best = min(numeric_regimes, key=lambda r: r["tariff_ave"])
         for r in regimes:
             r["is_best"] = (r is best) if best else False
-        has_range = any(r.get("is_range") for r in regimes)
         mfn_rate = (
             tariff_lookup.get_mfn_rate(product.hs_code, country_iso) if country_iso else None
         )
+        # FTA 협정 세율뿐 아니라 MFN(기본세율)이 세부품목별로 갈려도(예: 협정은
+        # 전부 0%인데 MFN만 8.3~54.3%처럼 다름) "우리 제품이 정확히 몇 %인지"를
+        # 알려줘야 하므로, 어느 쪽이 범위든 세부품목 표를 띄운다.
+        has_range = any(r.get("is_range") for r in regimes) or bool(mfn_rate and mfn_rate.get("is_range"))
         subitems = (
             tariff_lookup.get_subitem_breakdown(product.hs_code, country_iso)
             if (country_iso and has_range) else []
