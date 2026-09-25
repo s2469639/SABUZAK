@@ -22,6 +22,10 @@ _pipeline_lock = threading.Lock()
 _pipeline_state = {"running": False, "process": None}
 
 
+def is_pipeline_running():
+    return _pipeline_state["running"]
+
+
 def _run_pipeline_background(skip_crawl):
     cmd = [sys.executable, str(_PIPELINE_SCRIPT)]
     if skip_crawl:
@@ -71,7 +75,7 @@ def index():
 
     return render_template(
         "dashboard/continent_map.html", continents=CONTINENTS, counts=counts,
-        pipeline_running=_pipeline_state["running"], **all_list_ctx
+        pipeline_running=is_pipeline_running(), **all_list_ctx
     )
 
 

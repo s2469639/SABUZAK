@@ -7,17 +7,7 @@
     <h1>대륙별 박람회 현황</h1>
     <span class="page-desc">지도에서 권역을 클릭해 대륙별 박람회 목록을 확인하세요.</span>
   </div>
-  <div class="dash-header-actions">
-    <form method="post" action="{{ url_for('dashboard.run_weekly_pipeline') }}" class="btn-loading-form" style="display:inline;">
-      <button type="submit" class="btn-secondary" data-loading-text="시작하는 중..." {% if pipeline_running %}disabled{% endif %}>
-        {% if pipeline_running %}박람회 목록 갱신 중...{% else %}박람회 목록 지금 갱신{% endif %}
-      </button>
-    </form>
-    {% if pipeline_running %}
-    <a href="{{ url_for('dashboard.pipeline_status') }}" target="_blank" class="page-desc" style="margin-left:8px;">진행 로그 보기 →</a>
-    {% endif %}
-    <button type="button" class="btn-primary" data-modal-open="add-product-modal">+ 제품 추가하기</button>
-  </div>
+  <button type="button" class="btn-primary" data-modal-open="add-product-modal">+ 제품 추가하기</button>
 </div>
 
 <div class="modal-overlay" id="add-product-modal">

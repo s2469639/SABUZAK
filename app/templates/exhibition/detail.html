@@ -30,7 +30,7 @@
           <span class="badge-nonfood">비식품</span>
         {% endif %}
       </h1>
-      <p class="expo-head-meta">{{ expo.country_ko or expo.country }} · {{ expo.city }} · {{ expo.start_date|kdate }} ~ {{ expo.end_date|kdate }}</p>
+      <p class="expo-head-meta">{{ expo.country_ko or expo.country }} · {{ expo.city }} · {{ kdate_range(expo.start_date, expo.end_date) }}</p>
     </div>
   </div>
   <a href="{{ url_for('dashboard.index') }}" class="btn-secondary">← 대시보드로</a>
@@ -64,7 +64,7 @@
           </div>
           <div class="info-item">
             <span class="info-label">일정</span>
-            <span class="info-value">{{ expo.start_date|kdate }} ~ {{ expo.end_date|kdate }}</span>
+            <span class="info-value">{{ kdate_range(expo.start_date, expo.end_date) }}</span>
           </div>
           <div class="info-item">
             <span class="info-label">규모</span>

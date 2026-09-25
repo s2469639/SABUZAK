@@ -8,7 +8,7 @@ from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.models import Exhibition, NtmMeasure, Product
-from app.routes.dashboard import CONTINENT_DB_VALUES
+from app.routes.dashboard import CONTINENT_DB_VALUES, is_pipeline_running
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
 from app.services.exchange import get_exchange_info
@@ -399,7 +399,7 @@ def expo_list(continent):
     ctx = _build_list_context(
         base_query, continent, "exhibition.expo_list", {"continent": continent}, continent
     )
-    return render_template("dashboard/expo_list.html", **ctx)
+    return render_template("dashboard/expo_list.html", pipeline_running=is_pipeline_running(), **ctx)
 
 
 @bp.route("/country/<country>")
@@ -414,7 +414,7 @@ def expo_list_by_country(country):
     ctx = _build_list_context(
         base_query, country, "exhibition.expo_list_by_country", {"country": country}, ""
     )
-    return render_template("dashboard/expo_list.html", **ctx)
+    return render_template("dashboard/expo_list.html", pipeline_running=is_pipeline_running(), **ctx)
 
 
 @bp.route("/partial/all")
@@ -425,7 +425,7 @@ def expo_list_partial_all():
         Exhibition.is_active == 1, Exhibition.id.notin_(dup_ids)
     )
     ctx = _build_list_context(base_query, "해외", "exhibition.expo_list_partial_all", {}, "")
-    return render_template("dashboard/_expo_list_partial.html", **ctx)
+    return render_template("dashboard/_expo_list_partial.html", pipeline_running=is_pipeline_running(), **ctx)
 
 
 @bp.route("/partial/<continent>")
@@ -444,7 +444,7 @@ def expo_list_partial(continent):
     ctx = _build_list_context(
         base_query, continent, "exhibition.expo_list_partial", {"continent": continent}, continent
     )
-    return render_template("dashboard/_expo_list_partial.html", **ctx)
+    return render_template("dashboard/_expo_list_partial.html", pipeline_running=is_pipeline_running(), **ctx)
 
 
 def _split_paragraphs(text):
