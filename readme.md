@@ -71,8 +71,9 @@ SABUZAK/
 │   ├── routes/
 │   │   ├── auth.py             # 로그인/회원가입
 │   │   ├── dashboard.py        # 세계 지도 대시보드
-│   │   ├── exhibition.py       # 박람회 상세, 시장/트렌드/HS코드 탭, 관세율 동기화
-│   │   ├── concept.py          # 부스 컨셉 기획
+│   │   ├── exhibition.py       # 박람회 상세, 시장/HS코드 탭, 관세율 동기화
+│   │   ├── trend_v2.py         # 트렌드 조사 + 부스 컨셉(v15/ 로직 그대로 재사용, 3D 부스 뷰어 포함)
+│   │   ├── concept.py          # 부스 컨셉 기획 (기존 시스템 - concept.py/booth_concept.py 계열, trend_v2와 별개로 유지 중)
 │   │   ├── drafts.py           # 작성 중인 박람회(초안) 목록
 │   │   ├── mypage.py           # 제품 등록/수정/삭제, 엑셀 일괄 등록
 │   │   └── buyers.py           # 바이어 연락처/팔로업/메일템플릿/Gmail 연동 (블루프린트 여러 개)
@@ -84,8 +85,7 @@ SABUZAK/
 │   │   ├── un_comtrade.py      # UN Comtrade 교역 통계
 │   │   ├── wto_client.py       # WTO 국가별 평균 관세율(참고용)
 │   │   ├── kr_customs.py       # 관세청 HS코드 마스터 연동
-│   │   ├── market_trend.py     # 구글 트렌드/경쟁사/뉴스 기반 시장 분석 파이프라인
-│   │   ├── booth_concept.py    # 부스 컨셉 AI 생성
+│   │   ├── booth_concept.py    # 부스 컨셉 AI 생성 (기존 concept.py 계열)
 │   │   ├── exchange.py         # 환율 조회
 │   │   ├── openai_client.py    # OpenAI 클라이언트 래퍼
 │   │   ├── mailer.py / mail_llm.py / mailmerge.py / google_oauth.py / attachments.py / card_scan.py
@@ -113,7 +113,7 @@ SABUZAK/
 │   ├── classify/        # 박람회 분류/전처리
 │   └── market/          # 관세율 데이터 원천 (build_mfn_rates.py, *_FTA_협정세율_*.csv, mfn_base_rates.csv 등)
 │
-├── market_trend_analysis/   # 시장 트렌드 분석 CLI/코어 로직 (app/services/market_trend.py가 재사용)
+├── v15/                       # 트렌드 조사 + 부스 컨셉(3D 뷰어 포함) 원본 로직 (app/routes/trend_v2.py가 그대로 재사용)
 ├── un_v6/                    # UN Comtrade 대시보드 관련 별도 모듈
 ├── instance/                 # SQLite DB, 캐시 파일 (git 미포함)
 ├── config.py

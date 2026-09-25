@@ -20,3 +20,4 @@ tavily-python
 pydantic
 openpyxl
 gunicorn
+brotli

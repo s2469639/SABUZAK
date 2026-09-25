@@ -1,9 +1,31 @@
+import re
 from datetime import datetime, timedelta, timezone
 
 from flask import Flask, redirect, url_for
 from sqlalchemy import inspect, text
 
 from app.extensions import db, login_manager
+
+
+def split_points(text_, limit=4):
+    """v15(트렌드 조사/부스 컨셉)의 리테일 분석 긴 문장을 불릿용으로 나눈다
+    (문장 끝·쉼표 기준, 너무 짧게 쪼개지면 원문 그대로). v15/app.py 원본 그대로."""
+    text_ = str(text_ or "").strip()
+    if not text_:
+        return []
+    parts = [p.strip(" .·-") for p in re.split(r"(?<=[.!?。])\s+|(?<=다)\.\s*|\s*[;·•]\s*|\n+", text_)]
+    parts = [p for p in parts if p]
+    if len(parts) <= 1:
+        parts = [p.strip() for p in text_.split(", ") if p.strip()]
+    if len(parts) <= 1 or any(len(p) < 4 for p in parts):
+        return [text_]
+    return parts[:limit]
+
+
+def chips(text_, limit=6):
+    """'400g, 밀키트, 멸치 육수와 생면 포함' -> 칩 목록. v15/app.py 원본 그대로."""
+    parts = [p.strip() for p in re.split(r"[,/·]|\s+\+\s+", str(text_ or "")) if p.strip()]
+    return parts[:limit]
 
 
 def format_kdate(value):
@@ -117,6 +139,8 @@ def create_app(config_object="config.Config"):
     app.jinja_env.filters["usd_short"] = usd_short
     app.jinja_env.filters["pct"] = pct
     app.jinja_env.filters["kst"] = kst
+    app.jinja_env.filters["split_points"] = split_points
+    app.jinja_env.filters["chips"] = chips
 
     @app.route("/")
     def root():
@@ -148,6 +172,10 @@ def create_app(config_object="config.Config"):
 
     from app.routes.drafts import bp as drafts_bp
     app.register_blueprint(drafts_bp)
+
+    from app.routes.trend_v2 import api_bp as trend_v2_api_bp, pages_bp as trend_v2_pages_bp
+    app.register_blueprint(trend_v2_pages_bp)
+    app.register_blueprint(trend_v2_api_bp)
 
     from app.routes.buyers import (
         buyer_gmail_bp,
