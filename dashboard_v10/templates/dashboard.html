@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>박람회 준비 통합 대시보드</title>
+<style>
+  :root {
+    --bg: #0b111e; --panel: #131c2e; --panel-2: #0f1728; --line: #1e293b; --line-2: #334155;
+    --text: #f8fafc; --body: #cbd5e1; --muted: #94a3b8; --accent: #38bdf8; --blue: #2563eb;
+    --green: #34d399; --green-bg: rgba(16,185,129,.15); --red: #f87171; --red-bg: rgba(248,113,113,.14);
+    --amber: #fbbf24; --amber-bg: rgba(245,158,11,.16); --violet: #a78bfa; --violet-bg: rgba(167,139,250,.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, sans-serif; font-size: 14px; line-height: 1.55; }
+  .container { max-width: 1240px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  p.desc { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+  a { color: var(--accent); }
+
+  /* 입력 폼 */
+  .form-container { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 20px; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 16px; margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .form-group input { width: 100%; background: var(--bg); border: 1px solid var(--line-2); color: #fff; padding: 9px 12px; border-radius: 6px; font-size: 13px; }
+  .form-group input:focus { outline: 2px solid var(--blue); border-color: transparent; }
+  details.opt { margin: 4px 0 14px; }
+  details.opt summary { cursor: pointer; font-size: 13px; color: var(--accent); margin-bottom: 12px; }
+  .actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .btn-submit { background: var(--blue); color: #fff; border: none; padding: 10px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; }
+  .btn-submit:hover { background: #1d4ed8; }
+  .btn-submit:disabled { opacity: .6; cursor: progress; }
+  .check { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+  .alert { border-radius: 8px; padding: 12px 14px; margin-top: 14px; font-size: 13px; }
+  .alert.error { background: var(--red-bg); border: 1px solid #b91c1c; color: #fecaca; }
+  .alert.warn { background: var(--amber-bg); border: 1px solid #b45309; color: #fde68a; }
+  .alert.info { background: rgba(56,189,248,.08); border: 1px solid #0369a1; color: #bae6fd; }
+
+  /* 섹션 공통 */
+  .section-title { font-size: 16px; font-weight: 700; margin: 40px 0 6px; border-left: 4px solid var(--accent); padding-left: 10px; }
+  .section-sub { font-size: 12px; color: var(--muted); margin: 0 0 14px 14px; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); gap: 16px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .card-header { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .03em; display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+  .card-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .card-body { font-size: 12.5px; color: var(--body); line-height: 1.6; }
+  .card-body p { margin-bottom: 6px; }
+  .tag-label { color: var(--muted); font-weight: 600; }
+  .muted { color: var(--muted); font-size: 12px; }
+  .chip { display: inline-block; font-size: 11px; border-radius: 4px; padding: 2px 7px; border: 1px solid var(--line-2); color: var(--muted); white-space: nowrap; }
+  .chip.green { background: var(--green-bg); color: var(--green); border-color: transparent; }
+  .chip.red { background: var(--red-bg); color: var(--red); border-color: transparent; }
+  .chip.amber { background: var(--amber-bg); color: var(--amber); border-color: transparent; }
+  .chip.blue { background: rgba(56,189,248,.12); color: var(--accent); border-color: transparent; }
+  .chip.violet { background: var(--violet-bg); color: var(--violet); border-color: transparent; }
+  .empty-panel { background: var(--panel); border: 1px dashed var(--line-2); border-radius: 8px; padding: 18px; color: var(--muted); font-size: 13px; }
+
+  /* 섹션 1 */
+  .kw { background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+  .kw-orig { font-family: ui-monospace, Menlo, monospace; font-size: 12px; word-break: break-word; }
+  .kw-ko { color: var(--muted); font-size: 11px; }
+  .kw-list { display: flex; flex-direction: column; gap: 6px; }
+  .badge-num { font-size: 12px; font-weight: 700; border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
+  .badge-num.up { background: var(--green-bg); color: var(--green); }
+  .badge-num.down { background: var(--red-bg); color: var(--red); }
+  .badge-num.flat, .badge-num.rising { background: rgba(255,255,255,.06); color: var(--body); }
+  .insight { border-top: 1px solid var(--line); padding-top: 8px; margin-top: auto; font-size: 12px; }
+  .insight::before { content: "↗ "; color: var(--accent); }
+
+  /* 섹션 2 (j_test 화면 구성) */
+  .converted-price { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .tooltip-wrapper { position: relative; display: inline-block; margin-top: auto; cursor: help; }
+  .price-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .price-badge.success { background: var(--green-bg); color: var(--green); border: 1px solid #059669; }
+  .price-badge.warning { background: var(--amber-bg); color: var(--amber); border: 1px solid #d97706; }
+  .tooltip-text { visibility: hidden; opacity: 0; width: 260px; background: #030712; color: #e2e8f0; border: 1px solid var(--line-2);
+                  border-radius: 6px; padding: 8px 12px; position: absolute; z-index: 10; bottom: 125%; left: 0; font-size: 11px; line-height: 1.5; transition: opacity .2s; }
+  .tooltip-wrapper:hover .tooltip-text, .tooltip-wrapper:focus-within .tooltip-text { visibility: visible; opacity: 1; }
+  .channel-tag { display: inline-block; background: var(--line); border: 1px solid var(--line-2); border-radius: 4px; padding: 3px 8px; font-size: 11px; margin: 4px 4px 0 0; color: var(--accent); }
+
+  /* 섹션 3 */
+  .research-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+  .conclusion { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.45; }
+  .points { padding-left: 18px; font-size: 12.5px; color: var(--body); display: flex; flex-direction: column; gap: 4px; }
+  .interp { background: var(--amber-bg); border-radius: 6px; padding: 8px 10px; font-size: 12px; color: #fde68a; }
+  .notice { font-size: 12px; color: var(--amber); }
+  .card-footer { margin-top: auto; border-top: 1px solid var(--line); padding-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .btn-more { background: transparent; border: 1px solid var(--line-2); color: var(--accent); border-radius: 6px; padding: 6px 10px; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .btn-more:hover { background: rgba(56,189,248,.08); }
+  .btn-more:disabled { color: var(--muted); cursor: default; }
+  .ref { background: rgba(56,189,248,.12); color: var(--accent); border: 0; border-radius: 4px; padding: 0 5px; font-size: 11px; cursor: pointer; margin-left: 3px; font-family: inherit; }
+  .ref:hover { background: rgba(56,189,248,.25); }
+
+  /* 섹션 4 */
+  .booth-summary { background: var(--violet-bg); border: 1px solid #6d28d9; border-radius: 8px; padding: 14px 16px; font-size: 14px; font-weight: 600; color: #ede9fe; margin-bottom: 14px; }
+  .big-idea { background: var(--panel); border-left: 4px solid var(--violet); border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 14px; }
+  .big-idea .en { font-size: 17px; font-weight: 700; }
+  .big-idea .ko { color: var(--muted); font-size: 13px; }
+  table.grid { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.grid th, table.grid td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--body); }
+  table.grid th { color: var(--muted); font-weight: 600; background: var(--panel-2); }
+  .table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 14px; }
+  .booth-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 16px; margin-bottom: 16px; }
+  .booth-card .card-header { color: var(--violet); }
+  .quote-box { background: rgba(167,139,250,.1); border-left: 3px solid var(--violet); padding: 9px 12px; border-radius: 0 6px 6px 0; font-size: 13px; font-weight: 600; color: #ede9fe; }
+  .quote-box .ko { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+  .ev { font-size: 10.5px; border-radius: 4px; padding: 0 5px; margin-left: 3px; white-space: nowrap; }
+  .ev.company { background: var(--violet-bg); color: var(--violet); }
+  .ev.idea { border: 1px solid var(--line-2); color: var(--muted); }
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 12px; margin-bottom: 16px; }
+  .flow .card-title { font-size: 20px; color: var(--violet); }
+  .score.low { color: var(--red); font-weight: 700; }
+  details.review { margin-top: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: 12.5px; color: var(--body); }
+  details.review summary { cursor: pointer; color: var(--muted); }
+  details.review ul { padding-left: 18px; margin-top: 8px; }
+
+  /* 사이드바 (근거 기사) */
+  .overlay { position: fixed; inset: 0; background: rgba(2,6,23,.6); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 40; }
+  .overlay.open { opacity: 1; pointer-events: auto; }
+  aside.drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(520px, 100vw); background: var(--panel); border-left: 1px solid var(--line-2);
+                 transform: translateX(100%); transition: transform .25s ease; z-index: 50; display: flex; flex-direction: column; }
+  aside.drawer.open { transform: translateX(0); }
+  .drawer-head { padding: 16px 18px 0; border-bottom: 1px solid var(--line); }
+  .drawer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .drawer-top h2 { font-size: 16px; }
+  .btn-close { background: transparent; border: 1px solid var(--line-2); color: var(--body); border-radius: 6px; width: 32px; height: 32px; cursor: pointer; font-size: 16px; }
+  .tabs { display: flex; gap: 4px; overflow-x: auto; }
+  .tab { background: transparent; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: 8px 10px; cursor: pointer; font-size: 13px; white-space: nowrap; font-family: inherit; }
+  .tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+  .drawer-body { overflow-y: auto; padding: 14px 18px 40px; flex: 1; }
+  .tab-panel[hidden] { display: none; }
+  .article { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin-bottom: 10px; scroll-margin-top: 12px; }
+  .article.flash { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56,189,248,.35); }
+  .article .orig { font-style: italic; color: var(--text); font-size: 13px; margin: 6px 0 4px; }
+  .article .ko { color: var(--body); font-size: 12.5px; }
+  .article .src { font-size: 11.5px; color: var(--muted); margin-top: 6px; word-break: break-all; }
+  .article .src b { color: var(--accent); margin-right: 6px; }
+  .badges { display: flex; gap: 4px; flex-wrap: wrap; }
+  pre.raw { white-space: pre-wrap; word-break: break-word; font-size: 11px; color: var(--muted); max-height: 420px; overflow: auto; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>해외 박람회 준비 통합 대시보드</h1>
+  <p class="desc">현지 검색어 트렌드(Google) · 리테일 가격 벤치마킹 · 현지 웹 자료 조사(Tavily) · 부스 컨셉 기획(OpenAI)을 한 화면에서 제공합니다.</p>
+
+  <div class="form-container">
+    <form method="POST" id="analyze-form">
+      <div class="form-grid">
+        <div class="form-group"><label for="name">제품명 *</label><input type="text" id="name" name="name" value="{{ form.name }}" placeholder="예: 멸치 칼국수 밀키트" required maxlength="100"></div>
+        <div class="form-group"><label for="country">진출 대상 국가 *</label><input type="text" id="country" name="country" value="{{ form.country }}" placeholder="예: 말레이시아, 미국" required maxlength="100"></div>
+        <div class="form-group"><label for="strengths">제품 강점</label><input type="text" id="strengths" name="strengths" value="{{ form.strengths }}" placeholder="예: 진하게 우려낸 멸치 육수와 부드러운 생면"></div>
+        <div class="form-group"><label for="ingredients">주요 원료</label><input type="text" id="ingredients" name="ingredients" value="{{ form.ingredients }}" placeholder="예: 밀가루, 멸치추출물, 건다시마, 애호박"></div>
+        <div class="form-group"><label for="certifications">보유 인증</label><input type="text" id="certifications" name="certifications" value="{{ form.certifications }}" placeholder="예: HACCP"></div>
+        <div class="form-group"><label for="price">가격대</label><input type="text" id="price" name="price" value="{{ form.price }}" placeholder="예: 2인분 소매가 5~7달러"></div>
+      </div>
+      <details class="opt" {% if form.exhibition_name or form.exhibition_website %}open{% endif %}>
+        <summary>박람회 정보 (선택)</summary>
+        <div class="form-grid">
+          <div class="form-group"><label for="exhibition_name">박람회명</label><input type="text" id="exhibition_name" name="exhibition_name" value="{{ form.exhibition_name }}" placeholder="예: Summer Fancy Food Show 2027" maxlength="100"></div>
+          <div class="form-group"><label for="exhibition_website">박람회 사이트</label><input type="text" id="exhibition_website" name="exhibition_website" value="{{ form.exhibition_website }}" placeholder="예: specialtyfood.com" maxlength="100"></div>
+        </div>
+      </details>
+      <div class="actions">
+        <button type="submit" class="btn-submit" id="submit-btn">분석 실행</button>
+        <label class="check"><input type="checkbox" name="force" {% if force %}checked{% endif %}> 캐시 무시하고 새로 조사</label>
+      </div>
+    </form>
+  </div>
+
+  {% if error %}<div class="alert error">{{ error }}</div>{% endif %}
+
+  {% if data %}
+  {% set r = data.research %}
+
+  {# ============================ 1. 트렌드 ============================ #}
+  <div class="section-title">● 1. 연관 검색어 기반 시장 트렌드 4단계 클러스터링</div>
+  {% set s1 = data.section1 %}
+  {% if s1 %}
+    <p class="section-sub">{{ s1.country_ko }} ({{ s1.geo }}) · 검색 언어 {{ s1.languages|join(", ") }} · {{ s1.data_level_label_ko }} · Google 데이터 신뢰도 {{ s1.reliability_label_ko }} · 배지: 작년 같은 기간 대비 검색량 변화</p>
+    {% if s1.reliability_note_ko %}<div class="alert warn">⚠ {{ s1.reliability_note_ko }}</div>{% endif %}
+    {% for w in s1.warnings %}<div class="alert warn">{{ w }}</div>{% endfor %}
+    <div class="card-grid" style="margin-top:12px">
+      {% for c in s1.clusters if c.keywords %}
+      <div class="card">
+        <div class="card-header"><span>{{ c.label }}</span>{% if c.tag %}<span class="chip">{{ c.tag }}</span>{% endif %}</div>
+        <div class="card-title">{{ c.title_ko }}</div>
+        {% if c.summary %}<div class="card-body">{{ c.summary }}</div>{% endif %}
+        <div class="kw-list">
+          {% for kw in c.keywords %}
+          <div class="kw">
+            <div><div class="kw-orig">{{ kw.keyword }}</div>{% if kw.ko %}<div class="kw-ko">{{ kw.ko }}</div>{% endif %}
+              <div class="badges" style="margin-top:3px">
+                {% if kw.evidence == 'probe' %}<span class="chip blue">탐색 검증</span>{% elif kw.evidence == 'estimated' %}<span class="chip amber">AI 추정</span>{% endif %}
+                {% if kw.is_breakout %}<span class="chip red">급등</span>{% endif %}
+              </div></div>
+            {% if kw.badge and kw.badge.kind == 'yoy' %}<span class="badge-num {{ 'up' if kw.badge.pct > 0 else ('down' if kw.badge.pct < 0 else 'flat') }}">{{ '+' if kw.badge.pct > 0 }}{{ kw.badge.pct }}%</span>
+            {% elif kw.badge and kw.badge.kind == 'rising' %}<span class="badge-num rising">급상승 +{{ kw.badge.pct }}%</span>{% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% if c.insight %}<div class="insight">{{ c.insight }}</div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% set empty = s1.clusters|rejectattr("keywords")|map(attribute="short_ko")|list %}
+    {% if empty %}<p class="muted" style="margin-top:10px">검색 신호가 확인되지 않은 분류: {{ empty|join(", ") }}</p>{% endif %}
+  {% else %}
+    <div class="empty-panel">검색어 트렌드를 불러오지 못했습니다. {{ data.section1_error }}</div>
+  {% endif %}
+
+  {# ============================ 2. 리테일 ============================ #}
+  <div class="section-title">● 2. 현지 리테일 벤치마킹 & 경쟁 제품 가격 분석</div>
+  {% set s2 = data.section2 %}
+  {% if s2 %}
+    <div class="card-grid" style="margin-top:14px">
+      <div class="card">
+        <div class="card-header">TARGET PRODUCT</div>
+        <div class="card-title">{{ s2.target_product.title }}</div>
+        <div class="card-body">
+          <p><span class="tag-label">제품 스펙:</span> {{ s2.target_product.specs }}</p>
+          <p><span class="tag-label">시장 한계점:</span> {{ s2.target_product.complaints }}</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">RETAIL PRICE</div>
+        <div class="card-title">{{ s2.retail_price.price }}</div>
+        {% if s2.retail_price.usd_price %}
+          <div class="converted-price"><div>💵 {{ s2.retail_price.usd_price }}</div><div>₩ {{ s2.retail_price.krw_price }}</div></div>
+        {% endif %}
+        <div class="tooltip-wrapper" tabindex="0">
+          <span class="price-badge {{ 'success' if s2.retail_price.badge == '현지 유통 실측가' else 'warning' }}">● {{ s2.retail_price.badge }}</span>
+          <div class="tooltip-text">{{ s2.retail_price.badge_desc }}</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">SALES CHANNELS</div>
+        <div class="card-title">진출 타깃 채널</div>
+        <div class="card-body">
+          <p><span class="tag-label">추천 매대:</span> {{ s2.sales_channels.shelf }}</p>
+          <div>{% for ch in s2.sales_channels.channels %}<span class="channel-tag">🏬 {{ ch }}</span>{% endfor %}</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">PRICE &amp; USP STRATEGY</div>
+        <div class="card-title">{{ s2.price_strategy.positioning }}</div>
+        <div class="card-body"><p><span class="tag-label">바이어 피칭:</span> {{ s2.price_strategy.pitch }}</p></div>
+      </div>
+    </div>
+  {% else %}
+    <div class="empty-panel">리테일 벤치마킹을 불러오지 못했습니다. {{ data.section2_error }}</div>
+  {% endif %}
+
+  {# ============================ 3. 웹 자료 조사 ============================ #}
+  <div class="section-title">● 3. 현지 웹 자료 조사 요약</div>
+  {% if r %}
+    {% set st = r.stats %}
+    <p class="section-sub">Tavily로 {{ r.country }}의 주요 사이트(언론·업계지·유통몰·공공)를 먼저 찾고, 부족한 질문만 일반 웹으로 넓혀 찾은 원문 발췌를 요약했습니다. 원문은 “기사 보기”로 확인하세요.</p>
+    <div class="research-meta">
+      <span class="chip">출처 {{ st.sources_found }}곳</span>
+      <span class="chip">원문 확인 발췌 {{ st.quotes_used }}건</span>
+      <span class="chip green">주요 사이트 {{ st.main_quotes }}건</span>
+      <span class="chip">일반 웹 {{ st.open_quotes }}건</span>
+      {% if r.from_cache %}<span class="chip">저장된 결과 ({{ r.fetched_at[:10] }})</span>{% endif %}
+    </div>
+    <div class="card-grid">
+      {% for c in r.cards %}
+      {% set n = data.view.articles[c.qid]|length %}
+      <div class="card">
+        <div class="card-header"><span>{{ question_labels[c.qid] }}</span><span class="chip">{{ c.qid }}</span></div>
+        <div class="card-title">{{ c.title }}</div>
+        <div class="muted">{{ c.question }}</div>
+        {% if c.notice %}<div class="notice">{{ c.notice }}</div>{% endif %}
+        {% if c.conclusion %}
+          <div class="conclusion">{{ c.conclusion.text }}{% for i in c.conclusion.quote_ids %}<button class="ref" type="button" data-tab="{{ c.qid }}" data-target="{{ i }}">{{ i }}</button>{% endfor %}</div>
+        {% endif %}
+        {% if c.points %}
+          <ul class="points">{% for p in c.points %}<li>{{ p.text }}{% for i in p.quote_ids %}<button class="ref" type="button" data-tab="{{ c.qid }}" data-target="{{ i }}">{{ i }}</button>{% endfor %}</li>{% endfor %}</ul>
+        {% endif %}
+        {% if c.interpretation %}<div class="interp">AI 해석 · {{ c.interpretation }}</div>{% endif %}
+        {% if c.gaps %}<div class="notice">확인 필요: {{ c.gaps }}</div>{% endif %}
+        <div class="card-footer">
+          <span class="muted">출처 {{ c.source_count }}곳 · 주요 사이트 {{ c.main_quotes }} / 일반 웹 {{ c.open_quotes }}</span>
+          <button class="btn-more" type="button" data-tab="{{ c.qid }}" {% if not n %}disabled{% endif %}>기사 {{ n }}건 보기 →</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-panel">웹 자료 조사를 불러오지 못했습니다. {{ data.research_error }}</div>
+  {% endif %}
+
+  {# ============================ 4. 부스 컨셉 ============================ #}
+  <div class="section-title">● 4. 부스 컨셉 기획 <span class="chip violet" style="vertical-align:2px">OpenAI 단독 기획</span></div>
+  {% set b = r.booth if r else None %}
+  {% macro basis(x) -%}
+    {%- for i in x.quote_ids %}<button class="ref" type="button" data-tab="memo" data-target="{{ i }}">{{ i }}</button>{% endfor -%}
+    {%- for c in x.company %}<span class="ev company">기업: {{ c }}</span>{% endfor -%}
+    {%- if x.is_idea %}<span class="ev idea">기획 제안</span>{% endif -%}
+  {%- endmacro %}
+  {% if b %}
+    {% set rs = b.research %}
+    <p class="section-sub">위 웹 자료 조사(3번)를 쓰지 않고, 입력한 정보와 OpenAI가 스스로 조사한 내용으로 {{ "기획자 초안 → 바이어 채점 → " ~ ("수정" if b.stage == "revised" else "기준 통과") if b.mode == "B" else "기획자 1회" }} 과정을 거쳐 만든 기획안입니다.
+      <button class="btn-more" type="button" data-tab="memo" style="margin-left:6px">OpenAI 조사 메모 {{ rs.notes|length }}건 보기 →</button></p>
+    {% if b.summary %}<div class="booth-summary">요약 · {{ b.summary }}</div>{% endif %}
+
+    {% set br = b.brief %}
+    {% if br.big_idea.line_en %}
+      <div class="big-idea"><div class="muted">BIG IDEA</div><div class="en">“{{ br.big_idea.line_en }}”</div><div class="ko">{{ br.big_idea.line_ko }}</div>
+        {% if br.big_idea.why %}<div class="card-body" style="margin-top:6px">{{ br.big_idea.why }} {{ basis(br.big_idea) }}</div>{% endif %}</div>
+    {% endif %}
+    {% if br.insights %}
+      <div class="table-wrap"><table class="grid">
+        <tr><th>사실</th><th>인사이트</th><th>우리 부스가 할 일</th></tr>
+        {% for i in br.insights %}<tr><td>{{ i.fact }} {{ basis(i) }}</td><td>{{ i.insight }}</td><td>{{ i.implication }}</td></tr>{% endfor %}
+      </table></div>
+    {% endif %}
+    {% if br.target_buyers or b.positioning.core_message %}
+      <p class="card-body" style="margin-bottom:14px">
+        {% if br.target_buyers %}<span class="tag-label">타깃 바이어</span> {% for t in br.target_buyers %}{{ t.priority or loop.index }}순위 {{ t.type }} ({{ t.job }}){% if not loop.last %} · {% endif %}{% endfor %}<br>{% endif %}
+        {% if b.positioning.core_message %}<span class="tag-label">핵심 메시지</span> {{ b.positioning.core_message }}{% endif %}
+      </p>
+    {% endif %}
+
+    {% set titles = [("main_visual", "MAIN VISUAL", "메인 비주얼"), ("slogan", "SLOGAN", "슬로건"), ("signature_pairing", "SIGNATURE PAIRING", "시그니처 페어링"),
+                     ("demonstration", "LIVE DEMO", "시연"), ("packaging", "PACKAGING", "패키징"), ("merchandising", "MERCHANDISING", "진열 가이드")] %}
+    <div class="booth-grid">
+      {% for key, en, ko in titles %}
+      {% set sec = b.sections[key] %}
+      <div class="card booth-card">
+        <div class="card-header"><span>{{ en }}</span></div>
+        <div class="card-title">{{ ko }}</div>
+        {% if sec.concept_en %}<div class="quote-box">“{{ sec.concept_en }}”<span class="ko">{{ sec.concept_ko }}</span></div>{% endif %}
+        {% if sec.main_en %}<div class="quote-box">“{{ sec.main_en }}”<span class="ko">{{ sec.main_ko }}</span></div>{% endif %}
+        {% if sec.sub_en %}<div class="quote-box" style="font-weight:500">“{{ sec.sub_en }}”<span class="ko">{{ sec.sub_ko }}</span></div>{% endif %}
+        <div class="card-body">
+          {% if sec.item %}<p><span class="tag-label">페어링:</span> {{ sec.item }}</p>{% endif %}
+          {% if sec.intent %}<p><span class="tag-label">기획 의도:</span> {{ sec.intent }}</p>{% endif %}
+          {% if sec.title %}<p><span class="tag-label">시연:</span> {{ sec.title }}</p>{% endif %}
+          {% if sec.direction %}<p><span class="tag-label">방향:</span> {{ sec.direction }}</p>{% endif %}
+          {% for z in sec.zones %}<p><span class="tag-label">{{ loop.index }}. {{ z.name }}</span>{% if z.position %} ({{ z.position }}){% endif %} {{ z.purpose }} {{ basis(z) }}</p>{% endfor %}
+        </div>
+        {% if sec.bullets %}<ul class="points">{% for x in sec.bullets %}<li>{{ x.text }} {{ basis(x) }}</li>{% endfor %}</ul>{% endif %}
+        {% if sec.key_message %}<div class="insight">{{ sec.key_message }}</div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if b.visitor_flow["3s"] or b.visitor_flow["30s"] or b.visitor_flow["3min"] %}
+      <div class="flow">
+        {% for k, label, sub in [("3s", "3초", "통로에서 멈춤"), ("30s", "30초", "시식·시연"), ("3min", "3분", "상담 테이블")] %}
+          {% if b.visitor_flow[k] %}<div class="card"><div class="card-header">VISITOR FLOW · {{ sub }}</div><div class="card-title">{{ label }}</div><div class="card-body">{{ b.visitor_flow[k] }}</div></div>{% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="card-grid">
+      {% if b.kpis %}<div class="card"><div class="card-header">KPI</div><ul class="points">{% for k in b.kpis %}<li>{{ k }}</li>{% endfor %}</ul></div>{% endif %}
+      {% if b.risks %}<div class="card"><div class="card-header" style="color:var(--red)">확인할 점</div><ul class="points">{% for x in b.risks %}<li>{{ x.text }} {{ basis(x) }}</li>{% endfor %}</ul></div>{% endif %}
+      {% if b.questions %}<div class="card"><div class="card-header" style="color:var(--amber)">기업에 확인하고 싶은 것</div><ul class="points">{% for q in b.questions %}<li>{{ q }}</li>{% endfor %}</ul></div>{% endif %}
+    </div>
+
+    {% if b.scores %}
+      <details class="review">
+        <summary>바이어 채점 ({{ b.revise_below }}점 미만 항목이 있으면 수정) · 검토 의견 {{ b.review.comments|length }}건{% if b.applied %} · 반영 {{ b.applied|length }}건{% endif %}</summary>
+        <div class="table-wrap" style="margin-top:10px"><table class="grid">
+          {% for x in b.scores %}<tr><td>{{ x.label }}</td><td class="score {{ 'low' if x.score is not none and x.score < b.revise_below }}">{{ x.score if x.score is not none else "-" }} / 5</td><td>{{ x.reason }}</td></tr>{% endfor %}
+        </table></div>
+        {% if b.review.overall %}<p><b>총평</b> {{ b.review.overall }}</p>{% endif %}
+        <ul>{% for c in b.review.comments %}<li>[{{ c.section }}] {{ c.issue }} → {{ c.suggestion }}</li>{% endfor %}</ul>
+        {% if b.applied %}<p style="margin-top:8px"><b>최종안에 반영</b></p><ul>{% for x in b.applied %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}
+      </details>
+    {% endif %}
+    <p class="muted" style="margin-top:10px">근거 표시: R번호 = OpenAI 자체 조사 메모(누르면 오른쪽에 열림) · 기업 = 입력한 제품 정보 · 기획 제안 = 조사 근거 없는 기획 아이디어 · 스킬: {{ b.skill.name }} · 모델: {{ b.model }}</p>
+  {% else %}
+    <div class="empty-panel">부스 컨셉을 만들지 못했습니다. {{ (r.booth_error if r else "") or data.research_error or "" }}</div>
+  {% endif %}
+
+  <details class="review" style="margin-top:30px"><summary>원본 데이터 (JSON)</summary><pre class="raw">{{ raw_json }}</pre></details>
+  {% endif %}
+</div>
+
+{# ============================ 사이드바: 근거 기사 · 조사 메모 ============================ #}
+{% if data and data.research %}
+{% set r = data.research %}
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="drawer-title" role="dialog">
+  <div class="drawer-head">
+    <div class="drawer-top"><h2 id="drawer-title">근거 기사</h2><button class="btn-close" type="button" id="drawer-close" aria-label="닫기">✕</button></div>
+    <div class="tabs" role="tablist">
+      {% for c in r.cards %}<button class="tab" type="button" role="tab" data-tab="{{ c.qid }}" aria-selected="false">{{ c.title }} ({{ data.view.articles[c.qid]|length }})</button>{% endfor %}
+      {% if r.booth %}<button class="tab" type="button" role="tab" data-tab="memo" aria-selected="false">OpenAI 조사 메모 ({{ r.booth.research.notes|length }})</button>{% endif %}
+    </div>
+  </div>
+  <div class="drawer-body">
+    {% for c in r.cards %}
+    <section class="tab-panel" role="tabpanel" data-panel="{{ c.qid }}" hidden>
+      <p class="muted" style="margin-bottom:10px">{{ c.question }}</p>
+      {% for a in data.view.articles[c.qid] %}
+      <article class="article" id="art-{{ a.id }}">
+        <div class="badges">
+          <span class="chip blue">{{ a.id }}</span>
+          <span class="chip">{{ a.scope_label }}</span>
+          <span class="chip {{ 'green' if a.market == 'country' else 'amber' }}">{{ a.market_label }}</span>
+          <span class="chip {{ 'green' if a.tier == 'main' else '' }}">{{ a.tier_label }}</span>
+          {% if a.is_stale %}<span class="chip red">오래된 자료 ({{ a.year }})</span>{% endif %}
+          {% if a.is_public_kr %}<span class="chip violet">한국 공공기관</span>{% endif %}
+        </div>
+        <div class="orig">“{{ a.quote }}”</div>
+        {% if a.translation_ko %}<div class="ko">{{ a.translation_ko }}</div>{% endif %}
+        <div class="src"><b>{{ a.domain }}</b>{{ a.title }} · {{ a.year or "연도 미상" }}{% if a.url %} · <a href="{{ a.url }}" target="_blank" rel="noopener noreferrer">원문 열기 ↗</a>{% endif %}</div>
+      </article>
+      {% else %}
+      <p class="muted">이 질문의 근거 기사가 없습니다.</p>
+      {% endfor %}
+    </section>
+    {% endfor %}
+    {% if r.booth %}
+    {% set rs = r.booth.research %}
+    <section class="tab-panel" role="tabpanel" data-panel="memo" hidden>
+      <p class="muted" style="margin-bottom:10px">부스 기획을 위해 OpenAI가 {{ {"web_search": "웹 검색으로", "knowledge": "모델 지식으로(웹 검색 없음)", "failed": ""}[rs.method] }} 직접 조사한 메모입니다. Tavily 조사와는 별개입니다.{% if rs.error %} ({{ rs.error }}){% endif %}</p>
+      {% for n in rs.notes %}
+      <article class="article" id="art-{{ n.id }}">
+        <div class="badges"><span class="chip violet">{{ n.id }}</span><span class="chip">{{ n.topic_label }}</span>
+          <span class="chip {{ 'green' if n.source_status == '웹 출처' else ('amber' if n.source_status == '출처 미확인' else '') }}">{{ n.source_status }}</span></div>
+        <div class="ko" style="margin-top:6px">{{ n.text }}</div>
+        <div class="src">{% if n.source_url %}<a href="{{ n.source_url }}" target="_blank" rel="noopener noreferrer">{{ n.source_title or n.source_url }} ↗</a>{% else %}출처 없음{% endif %}</div>
+      </article>
+      {% else %}
+      <p class="muted">조사 메모가 없습니다.</p>
+      {% endfor %}
+    </section>
+    {% endif %}
+  </div>
+</aside>
+{% endif %}
+
+<script>
+(function () {
+  var form = document.getElementById("analyze-form");
+  form.addEventListener("submit", function () {
+    var btn = document.getElementById("submit-btn");
+    btn.disabled = true;
+    btn.textContent = "분석 중… (트렌드·리테일·웹 조사·부스 기획 동시 진행, 2~4분)";
+  });
+
+  var drawer = document.getElementById("drawer");
+  if (!drawer) return;
+  var overlay = document.getElementById("overlay");
+  var lastFocus = null;
+
+  function selectTab(tab) {
+    drawer.querySelectorAll(".tab").forEach(function (t) {
+      t.setAttribute("aria-selected", t.dataset.tab === tab ? "true" : "false");
+    });
+    drawer.querySelectorAll(".tab-panel").forEach(function (p) {
+      p.hidden = p.dataset.panel !== tab;
+    });
+    document.getElementById("drawer-title").textContent = tab === "memo" ? "OpenAI 조사 메모" : "근거 기사";
+  }
+
+  function openDrawer(tab, target) {
+    lastFocus = document.activeElement;
+    selectTab(tab);
+    drawer.classList.add("open");
+    overlay.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+    document.getElementById("drawer-close").focus();
+    if (target) {
+      var el = document.getElementById("art-" + target);
+      if (el) {
+        el.scrollIntoView({block: "start"});
+        el.classList.add("flash");
+        setTimeout(function () { el.classList.remove("flash"); }, 1600);
+      }
+    } else {
+      drawer.querySelector(".drawer-body").scrollTop = 0;
+    }
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove("open");
+    overlay.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+    if (lastFocus) lastFocus.focus();
+  }
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-tab]");
+    if (!btn || btn.disabled) return;
+    if (btn.classList.contains("tab")) { selectTab(btn.dataset.tab); return; }
+    openDrawer(btn.dataset.tab, btn.dataset.target);
+  });
+  overlay.addEventListener("click", closeDrawer);
+  document.getElementById("drawer-close").addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && drawer.classList.contains("open")) closeDrawer(); });
+})();
+</script>
+</body>
+</html>

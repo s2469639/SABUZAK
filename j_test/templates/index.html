@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>시장 트렌드 & 리테일 벤치마킹 대시보드</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background-color: #0b111e; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 32px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    p.desc { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
+    
+    .form-container { background: #131c2e; border: 1px solid #1e293b; border-radius: 8px; padding: 20px; margin-bottom: 28px; }
+    .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 6px; }
+    .form-group input { width: 100%; background: #0b111e; border: 1px solid #334155; color: #fff; padding: 9px 12px; border-radius: 6px; font-size: 13px; }
+    .btn-submit { background: #2563eb; color: #fff; border: none; padding: 10px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+    .btn-submit:hover { background: #1d4ed8; }
+
+    .section-title { font-size: 16px; font-weight: 700; margin: 36px 0 14px 0; border-left: 4px solid #38bdf8; padding-left: 10px; }
+    .card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .card { background: #131c2e; border: 1px solid #1e293b; border-radius: 8px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+    .card-header { font-size: 11px; font-weight: 700; color: #38bdf8; text-transform: uppercase; margin-bottom: 8px; }
+    .card-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: #f8fafc; }
+    .card-body { font-size: 12px; color: #cbd5e1; line-height: 1.6; }
+    .card-body p { margin-bottom: 6px; }
+    .tag-label { color: #94a3b8; font-weight: 600; }
+    .converted-price { font-size: 12px; color: #94a3b8; margin-top: 4px; line-height: 1.4; }
+
+    /* 툴팁 스타일 */
+    .tooltip-wrapper { position: relative; display: inline-block; margin-top: 10px; cursor: pointer; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+    .badge-success { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #059669; }
+    .badge-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #d97706; }
+    .tooltip-text {
+      visibility: hidden; width: 260px; background-color: #030712; color: #e2e8f0; text-align: left;
+      border-radius: 6px; padding: 8px 12px; position: absolute; z-index: 10; bottom: 125%; left: 0;
+      opacity: 0; transition: opacity 0.2s; font-size: 11px; line-height: 1.5; border: 1px solid #334155;
+    }
+    .tooltip-wrapper:hover .tooltip-text { visibility: visible; opacity: 1; }
+    .channel-tag { display: inline-block; background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 3px 8px; font-size: 11px; margin: 4px 4px 0 0; color: #38bdf8; }
+
+    /* 부스 솔루션 그리드 */
+    .booth-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+    .booth-card { background: #131c2e; border: 1px solid #1e293b; border-radius: 8px; padding: 20px; }
+    .booth-card-title { font-size: 14px; font-weight: 700; color: #38bdf8; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .quote-box { background: rgba(56, 189, 248, 0.08); border-left: 3px solid #38bdf8; padding: 10px 12px; border-radius: 0 6px 6px 0; margin-bottom: 10px; font-size: 13px; font-weight: 600; color: #e0f2fe; }
+    .sub-copy-text { font-size: 12px; color: #94a3b8; line-height: 1.5; margin-bottom: 10px; }
+    .desc-text { font-size: 12px; color: #cbd5e1; line-height: 1.6; }
+    
+    /* 바이어 Q&A 카드 */
+    .qa-container { background: #131c2e; border: 1px solid #334155; border-radius: 8px; padding: 20px; margin-bottom: 36px; }
+    .qa-title { font-size: 14px; font-weight: 700; color: #f59e0b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .q-text { font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 8px; }
+    .a-text { font-size: 13px; color: #34d399; line-height: 1.6; background: rgba(16, 185, 129, 0.08); border-left: 3px solid #10b981; padding: 12px; border-radius: 0 6px 6px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>연관 검색어 기반 시장 트렌드 & USP 진단</h1>
+    <p class="desc">현지 소비자가 검색하는 Google 연관 검색어와 유통망 실측가를 기반으로 차별화 리포트 및 부스 피칭 솔루션을 생성합니다.</p>
+
+    <div class="form-container">
+      <form method="POST">
+        <div class="form-grid">
+          <div class="form-group"><label>제품명 *</label><input type="text" name="product_name" value="{{ inputs.product_name if submitted else '3색 혼합 돈육 소시지' }}" required></div>
+          <div class="form-group"><label>진출 대상 국가 *</label><input type="text" name="country" value="{{ inputs.country if submitted else '독일' }}" required></div>
+          <div class="form-group"><label>제품 강점</label><input type="text" name="strengths" value="{{ inputs.strengths if submitted else '순돈육 함량 90% 이상, 파프리카/시금치 천연 분말 착색, 나트륨 20% 저감' }}"></div>
+          <div class="form-group"><label>주요 원료</label><input type="text" name="raw_materials" value="{{ inputs.raw_materials if submitted else '국내산 돼지고기, 천일염, 천연 채소 분말' }}"></div>
+          <div class="form-group"><label>보유 인증</label><input type="text" name="certifications" value="{{ inputs.certifications if submitted else 'HACCP, ISO22000' }}"></div>
+          <div class="form-group"><label>가격대</label><input type="text" name="target_price" value="{{ inputs.target_price if submitted else '250g 팩당 3~4 EUR' }}"></div>
+        </div>
+        <button type="submit" class="btn-submit">분석 실행</button>
+      </form>
+    </div>
+
+    {% if submitted and retail %}
+      <div class="section-title">● 2. 현지 리테일 벤치마킹 & 경쟁 제품 가격 분석</div>
+      <div class="card-grid">
+        <div class="card">
+          <div>
+            <div class="card-header">TARGET PRODUCT</div>
+            <div class="card-title">{{ retail.target_product.title }}</div>
+            <div class="card-body">
+              <p><span class="tag-label">제품 스펙:</span> {{ retail.target_product.specs }}</p>
+              <p><span class="tag-label">시장 한계점:</span> {{ retail.target_product.complaints }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <div class="card-header">RETAIL PRICE</div>
+            <div class="card-title">{{ retail.retail_price.price }}</div>
+            <div class="converted-price">
+              {% if retail.retail_price.usd_price %}
+                <div>💵 {{ retail.retail_price.usd_price }}</div>
+                <div>₩ {{ retail.retail_price.krw_price }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div>
+            <div class="tooltip-wrapper">
+              {% if retail.retail_price.badge == '현지 유통 실측가' %}
+                <span class="badge badge-success">● {{ retail.retail_price.badge }}</span>
+              {% else %}
+                <span class="badge badge-warning">● {{ retail.retail_price.badge }}</span>
+              {% endif %}
+              <div class="tooltip-text">{{ retail.retail_price.badge_desc }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <div class="card-header">SALES CHANNELS</div>
+            <div class="card-title">진출 타깃 채널</div>
+            <div class="card-body">
+              <p><span class="tag-label">추천 매대:</span> {{ retail.sales_channels.shelf }}</p>
+              <div style="margin-top: 8px;">
+                {% for ch in retail.sales_channels.channels %}
+                  <span class="channel-tag">🏬 {{ ch }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <div class="card-header">PRICE & USP STRATEGY</div>
+            <div class="card-title">{{ retail.price_strategy.positioning }}</div>
+            <div class="card-body">
+              <p><span class="tag-label">바이어 피칭:</span> {{ retail.price_strategy.pitch }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 프로페셔널 박람회 솔루션 섹션 -->
+      {% if retail.booth_solution %}
+        <div class="section-title">● 3. 데이터 기반 박람회 부스 컨셉 & 바이어 킬러 피치</div>
+        <div class="booth-grid">
+          
+          <div class="booth-card">
+            <div class="booth-card-title">🎯 메인 비주얼 & B2B 슬로건</div>
+            <div class="quote-box">"{{ retail.booth_solution.main_slogan }}"</div>
+            <div class="sub-copy-text">{{ retail.booth_solution.sub_copy }}</div>
+            <div class="desc-text"><span class="tag-label">비주얼 연출:</span> {{ retail.booth_solution.visual_guide }}</div>
+          </div>
+
+          <div class="booth-card">
+            <div class="booth-card-title">🍽️ 시그니처 페어링 & 서빙 시연</div>
+            <div class="quote-box">{{ retail.booth_solution.pairing_title }}</div>
+            <div class="desc-text" style="margin-bottom: 8px;"><span class="tag-label">서빙 프로토콜:</span> {{ retail.booth_solution.serving_protocol }}</div>
+            <div class="desc-text"><span class="tag-label">클로징 멘트:</span> {{ retail.booth_solution.closing_pitch }}</div>
+          </div>
+
+          <div class="booth-card">
+            <div class="booth-card-title">📦 패키징 / 진열 가이드</div>
+            <div class="desc-text" style="margin-bottom: 10px;"><span class="tag-label">라벨/패키징:</span> {{ retail.booth_solution.packaging_tip }}</div>
+            <div class="desc-text"><span class="tag-label">매대 골든존:</span> {{ retail.booth_solution.shelf_position }}</div>
+          </div>
+
+        </div>
+
+        {% if retail.booth_solution.buyer_qa %}
+          <div class="qa-container">
+            <div class="qa-title">💼 현지 바이어 예상 압박 질문 & 킬러 피치 스크립트</div>
+            <div class="q-text">Q. "{{ retail.booth_solution.buyer_qa.question }}"</div>
+            <div class="a-text">A. {{ retail.booth_solution.buyer_qa.answer }}</div>
+          </div>
+        {% endif %}
+      {% endif %}
+
+    {% endif %}
+  </div>
+</body>
+</html>
