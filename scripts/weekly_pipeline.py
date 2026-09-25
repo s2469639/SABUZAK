@@ -27,6 +27,7 @@
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -85,19 +86,29 @@ def run_pipeline(skip_crawl=False):
             _log(f, f"\n[{i}/{len(steps)}] {label}")
             _log(f, f"$ {' '.join(cmd)}")
             try:
-                result = subprocess.run(
-                    cmd, cwd=str(BASE_DIR), capture_output=True, text=True, encoding="utf-8", errors="replace",
+                # PYTHONUNBUFFERED=1: 자식 스크립트가 파이프로 연결되면(터미널이
+                # 아니면) 파이썬이 stdout을 통째로 버퍼링해서, 예전엔 그 단계가
+                # 완전히 끝날 때까지 로그가 한 줄도 안 찍히고 "멈춘 것처럼" 보였다.
+                # 한 줄씩 바로바로 읽어서 콘솔+로그파일에 실시간으로 흘려보낸다.
+                env = {**os.environ, "PYTHONUNBUFFERED": "1"}
+                process = subprocess.Popen(
+                    cmd, cwd=str(BASE_DIR), env=env,
+                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                    text=True, encoding="utf-8", errors="replace", bufsize=1,
                 )
-                if result.stdout:
-                    f.write(result.stdout)
-                    print(result.stdout, end="")
-                    if i == 1 and not skip_crawl:
-                        crawl_summary = _parse_crawl_summary(result.stdout)
-                if result.returncode != 0:
-                    _log(f, f"  -> 실패 (종료코드 {result.returncode})")
-                    if result.stderr:
-                        f.write(result.stderr)
-                        print(result.stderr, end="", file=sys.stderr)
+                step_output = []
+                for line in process.stdout:
+                    print(line, end="")
+                    f.write(line)
+                    f.flush()
+                    step_output.append(line)
+                returncode = process.wait()
+
+                if i == 1 and not skip_crawl:
+                    crawl_summary = _parse_crawl_summary("".join(step_output))
+
+                if returncode != 0:
+                    _log(f, f"  -> 실패 (종료코드 {returncode})")
                     failed_steps.append(label)
                 else:
                     _log(f, f"  -> 완료")

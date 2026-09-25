@@ -44,7 +44,7 @@ from openai import OpenAI
 DEFAULT_DB_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "..", "..", "instance", "sabuzak.db"
 )
-DEFAULT_MODEL = "gpt-4o"
+DEFAULT_MODEL = "gpt-4o-mini"
 
 
 def get_client():
