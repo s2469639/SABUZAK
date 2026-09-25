@@ -1,0 +1,7 @@
+flask
+python-dotenv
+openai>=1.100
+pytrends
+pandas
+tavily-python
+brotli>=1.2.0
