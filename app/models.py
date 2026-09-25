@@ -82,6 +82,7 @@ class Exhibition(db.Model):
     keywords = db.Column(db.Text)
     intro_ko = db.Column(db.Text)
     classified_at = db.Column(db.Text)
+    classify_relevant_updated_at = db.Column(db.Text)  # AI 분류에 실제로 쓰이는 필드(name/country/audience_note/website/intro)가 바뀐 시각만 - 날짜/장소 등 무관한 필드 변경으론 안 바뀜
     is_active = db.Column(db.Integer, default=1)
     last_updated_at = db.Column(db.Text)
     country_ko = db.Column(db.Text)
