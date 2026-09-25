@@ -1,6 +1,7 @@
 import math
 import re
 from collections import Counter
+from urllib.parse import urlencode
 
 from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
@@ -311,6 +312,22 @@ def _keyword_tags_for(base_query, limit=15):
     return [kw for kw, _ in sorted(seen.items(), key=lambda x: -x[1])[:limit]]
 
 
+PAGE_SIZE = 50
+
+
+def _page_items(page, total_pages, page_url, span=2):
+    """페이지 번호 목록. 항상 첫/끝 페이지와 현재 페이지 앞뒤 span개를 보여주고,
+    사이가 비면 None(줄임표)을 끼운다. 예: 1 … 4 5 [6] 7 8 … 17"""
+    numbers = sorted({1, total_pages} | set(range(max(1, page - span), min(total_pages, page + span) + 1)))
+    items, prev = [], 0
+    for n in numbers:
+        if n - prev > 1:
+            items.append(None)
+        items.append({"n": n, "url": page_url(n)})
+        prev = n
+    return items
+
+
 def _build_list_context(base_query, title, list_endpoint, list_kwargs, continent):
     query, keyword_tag, food_only, search, date_from, date_to, scale_list, audience_list = (
         _apply_filters(base_query)
@@ -321,14 +338,39 @@ def _build_list_context(base_query, title, list_endpoint, list_kwargs, continent
         order = Exhibition.start_date.desc()
     else:
         order = Exhibition.start_date.asc()
-    expos = query.order_by(order).all()
+    ordered = query.order_by(order)
+
+    total = ordered.count()
+    total_pages = max(1, math.ceil(total / PAGE_SIZE))
+    page = min(max(request.args.get("page", 1, type=int), 1), total_pages)
+    expos = ordered.offset((page - 1) * PAGE_SIZE).limit(PAGE_SIZE).all()
     keyword_tags = _keyword_tags_for(base_query)
+
+    # 페이지 링크는 지금 적용된 필터/정렬(page 제외)을 그대로 유지한다
+    kept_params = [(k, v) for k, v in request.args.items(multi=True) if k != "page"]
+
+    def page_url(n):
+        params = kept_params + ([("page", n)] if n > 1 else [])
+        base = url_for(list_endpoint, **list_kwargs)
+        return base + ("?" + urlencode(params) if params else "")
+
+    pagination = None
+    if total_pages > 1:
+        pagination = {
+            "page": page,
+            "total_pages": total_pages,
+            "prev_url": page_url(page - 1) if page > 1 else None,
+            "next_url": page_url(page + 1) if page < total_pages else None,
+            "items": _page_items(page, total_pages, page_url),
+        }
 
     return {
         "title": title,
         "list_url": (list_endpoint, list_kwargs),
         "continent": continent,
         "expos": expos,
+        "total": total,
+        "pagination": pagination,
         "keyword_tags": keyword_tags,
         "selected_keyword_tag": keyword_tag,
         "food_only": food_only,
