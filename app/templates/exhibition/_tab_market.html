@@ -19,8 +19,6 @@
 
 <p class="page-desc">
   UN Comtrade(UN 공식 무역통계) + 한국 관세청 통계로 이 박람회 국가의 시장을 조사합니다.
-  여러 후보국과 비교하고 싶으신가요? →
-  <a href="{{ url_for('exhibition.market_matrix') }}?hscode={{ market_rows[0].hs6 if market_rows else '' }}">품목별 유망시장 매트릭스 비교</a>
 </p>
 
 <div class="un-page">
@@ -51,7 +49,7 @@
   {% else %}
   {% set result = row.result %}
   <div class="detail-head">
-    <h3>⑥ 국가 상세 조사: {{ result.target_country }}의 교역통계 (HS {{ result.hscode }})</h3>
+    <h3>{{ result.target_country }}의 교역통계 (HS {{ result.hscode }})</h3>
     <div class="detail-meta">
       {% if result.from_cache %}
         <span class="badge cache">저장된 결과 · {{ result.fetched_at | kst }}</span>
@@ -64,7 +62,11 @@
 
   {% if result.official_item_desc %}
   <div class="card item-card" style="box-shadow:none; border:1px solid var(--line); border-left:4px solid #f5b400;">
-    <div class="item-desc">📋 UN Comtrade 공식 품목 설명(HS {{ result.hscode }}): {{ result.official_item_desc }}</div>
+    <div class="item-desc">📋 UN Comtrade 공식 품목 설명(HS {{ result.hscode }}): {{ row.item_desc_ko or result.official_item_desc }}</div>
+    {% if row.item_desc_ko %}
+      <div class="desc-original">원문: {{ result.official_item_desc }}</div>
+      <div class="desc-note">※ 한국어는 AI 번역이라 관세청 공식 품목명과 표현이 다를 수 있습니다.</div>
+    {% endif %}
   </div>
   {% endif %}
 

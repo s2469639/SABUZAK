@@ -147,6 +147,61 @@ KOREAN_NAME_TO_ISO3 = {
 
 _numeric_code_cache = {}  # ISO3 -> Comtrade 숫자 코드 (프로세스 내에서만 캐싱, 반복 조회 시 API 재호출 방지)
 
+# 품목 설명 한국어 번역 캐시 (같은 HS코드를 다시 조회할 때 OpenAI를 또 부르지 않도록 파일에 저장).
+# un_v6/app.py의 _translate_item_desc() 그대로 이식.
+_DESC_CACHE_FILE = os.path.join(BASE_DIR, "instance", "item_desc_ko_cache.json")
+
+
+def _load_desc_cache():
+    try:
+        with open(_DESC_CACHE_FILE, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def _save_desc_cache(cache):
+    try:
+        os.makedirs(os.path.dirname(_DESC_CACHE_FILE), exist_ok=True)
+        with open(_DESC_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(cache, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass  # 캐시 저장 실패는 화면 표시에 영향 없음
+
+
+def translate_item_desc(text):
+    """UN Comtrade 영문 품목 설명을 한국어로 번역한다 (OpenAI 사용).
+    실패하면 None을 돌려주고, 화면에는 영문 원문이 그대로 나온다."""
+    if not text:
+        return None
+    cache = _load_desc_cache()
+    if text in cache:
+        return cache[text]
+
+    try:
+        client, _ = get_config()
+        model = os.getenv("OPENAI_TRANSLATE_MODEL", "gpt-4o-mini")
+        prompt = (
+            "다음은 HS코드 품목 분류 설명(영문)입니다. 무역 실무에서 쓰는 자연스러운 "
+            "한국어로 번역하세요. 'heading no. 1605'처럼 호 번호가 나오면 '제1605호'로 "
+            "쓰고, 'n.e.c.'는 '달리 분류되지 않은'으로 옮기세요. "
+            "번역문만 한 문단으로 출력하세요.\n\n" + text
+        )
+        resp = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0,
+        )
+        ko = (resp.choices[0].message.content or "").strip()
+    except Exception as e:
+        print(f"[품목 설명 번역 실패 - 영문으로 표시] {e}")
+        return None
+
+    if ko:
+        cache[text] = ko
+        _save_desc_cache(cache)
+    return ko or None
+
 
 def get_config():
     """OpenAI 클라이언트 + Comtrade 구독키를 준비한다.

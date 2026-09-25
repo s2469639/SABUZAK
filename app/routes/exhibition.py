@@ -417,7 +417,11 @@ def _build_market_rows(expo, linked_products):
     for product in linked_products:
         hs6 = _hs6(product.hs_code)
         cached = un_comtrade.get_cached_market_research(hs6, expo.country) if hs6 else None
-        rows.append({"product": product, "hs6": hs6, "result": cached})
+        item_desc_ko = (
+            un_comtrade.translate_item_desc(cached.get("official_item_desc"))
+            if cached and cached.get("official_item_desc") else None
+        )
+        rows.append({"product": product, "hs6": hs6, "result": cached, "item_desc_ko": item_desc_ko})
     return rows
 
 
@@ -587,6 +591,8 @@ def market_matrix():
         ctx["result"] = result
         if result:
             ctx["matrix"] = build_matrix(result["candidates"], result["thresholds"])
+            if result.get("official_item_desc"):
+                ctx["item_desc_ko"] = un_comtrade.translate_item_desc(result["official_item_desc"])
             try:
                 overview = un_comtrade.get_market_overview(hscode, top_n=top_n or 10, force=force)
                 ctx["overview"] = overview
