@@ -150,6 +150,9 @@ _numeric_code_cache = {}  # ISO3 -> Comtrade 숫자 코드 (프로세스 내에�
 # 품목 설명 한국어 번역 캐시 (같은 HS코드를 다시 조회할 때 OpenAI를 또 부르지 않도록 파일에 저장).
 # un_v6/app.py의 _translate_item_desc() 그대로 이식.
 _DESC_CACHE_FILE = os.path.join(BASE_DIR, "instance", "item_desc_ko_cache.json")
+# 번역 프롬프트(직역 -> 쉬운 풀어쓰기)를 바꿀 때마다 올려서, 예전 프롬프트로
+# 저장된 캐시를 자동으로 무시하고 새 프롬프트로 다시 번역하게 한다.
+_DESC_PROMPT_VERSION = "v2"
 
 
 def _load_desc_cache():
@@ -175,8 +178,9 @@ def translate_item_desc(text):
     if not text:
         return None
     cache = _load_desc_cache()
-    if text in cache:
-        return cache[text]
+    cache_key = f"{_DESC_PROMPT_VERSION}:{text}"
+    if cache_key in cache:
+        return cache[cache_key]
 
     try:
         client, _ = get_config()
@@ -203,7 +207,7 @@ def translate_item_desc(text):
         return None
 
     if ko:
-        cache[text] = ko
+        cache[cache_key] = ko
         _save_desc_cache(cache)
     return ko or None
 
