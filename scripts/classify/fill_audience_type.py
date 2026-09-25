@@ -90,7 +90,8 @@ def fetch_targets(conn, limit: int):
         """
         SELECT id, name, country, audience_note, intro
         FROM raw_exhibitions
-        WHERE is_active = 1 AND (audience_type IS NULL OR audience_type = '')
+        WHERE is_active = 1
+          AND (audience_type IS NULL OR audience_type = '' OR audience_type = '미상')
         ORDER BY id
         """
     )
