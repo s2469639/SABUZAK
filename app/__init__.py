@@ -7,13 +7,27 @@ from app.extensions import db, login_manager
 
 
 def format_kdate(value):
-    """YYYYMMDD(int/str) -> '2026.09.22'. 값이 없거나 형식이 다르면 원본 그대로 반환."""
+    """YYYYMMDD(int/str) -> '2026.09.22'. 값이 없거나 형식이 다르면 원본 그대로 반환.
+    크롤링 원본에 날짜가 없어서 UNKNOWN_DATE(99999999) 센티널로 저장된 경우
+    "9999.99.99"처럼 날짜인 척 보이는 걸 막기 위해 "일정 미정"으로 표시한다."""
     if not value:
         return ""
     s = str(value)
+    if s == "99999999":
+        return "일정 미정"
     if len(s) != 8 or not s.isdigit():
         return s
     return f"{s[:4]}.{s[4:6]}.{s[6:8]}"
+
+
+def format_kdate_range(start, end):
+    """start_date/end_date(YYYYMMDD) 쌍 -> '2026.09.22 ~ 2026.09.24'.
+    둘 다 UNKNOWN_DATE(99999999)이거나 비어있으면 "일정 미정 ~ 일정 미정"처럼
+    안 보이게 "일정 미정" 하나로 합쳐서 보여준다."""
+    start_s, end_s = str(start or ""), str(end or "")
+    if start_s in ("", "99999999") and end_s in ("", "99999999"):
+        return "일정 미정"
+    return f"{format_kdate(start)} ~ {format_kdate(end)}"
 
 
 def usd_short(value):
@@ -89,6 +103,7 @@ def create_app(config_object="config.Config"):
     app.config.from_object(config_object)
     app.config.setdefault("SECRET_KEY", "dev-secret-key-change-me")
     app.jinja_env.filters["kdate"] = format_kdate
+    app.jinja_env.globals["kdate_range"] = format_kdate_range
     app.jinja_env.filters["usd_short"] = usd_short
     app.jinja_env.filters["pct"] = pct
     app.jinja_env.filters["kst"] = kst
