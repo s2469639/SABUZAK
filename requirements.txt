@@ -18,3 +18,4 @@ cryptography
 comtradeapicall
 tavily-python
 pydantic
+openpyxl

@@ -2,6 +2,7 @@ __pycache__/
 *.pyc
 .env
 instance/
+*.csv
 .venv/
 venv/
 

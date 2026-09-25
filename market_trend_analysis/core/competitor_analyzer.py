@@ -8,7 +8,7 @@ def analyze_competitors(specs: dict, keywords: dict) -> dict:
 당신은 해외 식품 유통 전문 바이어입니다.
 아래 제품의 타깃 국가 유통 매대에 실제 입점된 2대 실존 경쟁 브랜드와 동등 식감 로컬 대체재를 분석하세요.
 
-- 출품 제품: {specs['product_name']} ({keywords['kw1']})
+- 출품 제품: {specs['product_name']} ({keywords['kw1']}), 브랜드: {specs.get('brand', '')}, 형태: {specs.get('product_form', '')}
 - 타깃 국가: {specs['country']}
 - 원재료 및 식감: {specs['ingredients']} / {specs['strengths']}
 - 로컬 대체재: {keywords['kw3']}

@@ -94,6 +94,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var editForm = document.getElementById("edit-product-form");
     var editName = document.getElementById("edit-name");
     var editHsCode = document.getElementById("edit-hs_code");
+    var editBrand = document.getElementById("edit-brand");
+    var editProductForm = document.getElementById("edit-product_form");
     var editIngredients = document.getElementById("edit-ingredients");
     var editTargetPrice = document.getElementById("edit-target_price");
     var editCertifications = document.getElementById("edit-certifications");
@@ -104,6 +106,8 @@ document.addEventListener("DOMContentLoaded", function () {
         editForm.action = btn.dataset.editUrl;
         editName.value = btn.dataset.editName;
         editHsCode.value = btn.dataset.editHscode;
+        editBrand.value = btn.dataset.editBrand || "";
+        editProductForm.value = btn.dataset.editProductForm || "";
         editIngredients.value = btn.dataset.editIngredients || "";
         editTargetPrice.value = btn.dataset.editTargetPrice || "";
         editCertifications.value = btn.dataset.editCertifications || "";
