@@ -22,12 +22,14 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from flask import Flask, render_template, request
+from markupsafe import escape
 
 from env_setup import ensure_required_keys
 from un_comtrade import (
     get_market_overview,
     get_market_research,
     get_multi_country_comparison,
+    has_detailed_ai,
 )
 
 app = Flask(__name__)
@@ -128,7 +130,7 @@ def _with_scatter_positions(candidates, thresholds):
         return [], 50, 50, [], []
 
     avg_cagr = thresholds["avg_cagr_pct"]
-    avg_share = thresholds["avg_korea_share_pct"]
+    avg_share = thresholds.get("share_threshold_pct", thresholds["avg_korea_share_pct"])
     cagrs = [c["cagr_pct"] for c in candidates]
     shares = [c["korea_share_pct"] for c in candidates]
 
@@ -167,7 +169,7 @@ def _quadrant_labels(candidates, thresholds):
     각 위치(오른쪽 위 등)에 있는 후보국들의 사분면 이름을 다수결로 정하고,
     후보국이 없는 위치는 기본 이름 중 아직 안 쓴 이름으로 채운다."""
     avg_cagr = thresholds["avg_cagr_pct"]
-    avg_share = thresholds["avg_korea_share_pct"]
+    avg_share = thresholds.get("share_threshold_pct", thresholds["avg_korea_share_pct"])
     votes = {pos: Counter() for pos in _QUADRANT_DEFAULTS}
     for c in candidates:
         if not c.get("quadrant"):
@@ -378,11 +380,98 @@ def _svg_line_series(share_trend, width=560, height=180,
     return base
 
 
+def _parse_form(form):
+    """폼 입력을 정리한다. 대시보드 첫 화면, ⑥ 부분 갱신, AI 요청이 모두 같은 규칙을 쓴다."""
+    hscode = _clean_hscode(form.get("hscode", ""))
+    candidates_raw = (form.get("candidates") or "").strip()
+    raw_top_n = (form.get("top_n") or "").strip()
+    try:
+        top_n = int(raw_top_n) if raw_top_n != "" else 10
+    except ValueError:
+        top_n = 10
+    top_n = max(0, min(top_n, 20))  # 0 = 관심 국가만 비교
+    # 쉼표뿐 아니라 한글 쉼표/세미콜론으로 구분해도 받아준다
+    candidate_list = [c.strip() for c in re.split(r"[,，;、]", candidates_raw) if c.strip()]
+    return {
+        "hscode": hscode,
+        "candidates_raw": candidates_raw,
+        "candidate_list": candidate_list,
+        "top_n": top_n,
+        "country": (form.get("country") or "").strip(),
+        "force": bool(form.get("force")),
+    }
+
+
+def _load_comparison(f, include_ai=False, retry_customs=False):
+    """③④⑤ 비교 분석. 결과 전체가 캐시되므로 두 번째부터는 즉시 돌아온다."""
+    if f["top_n"] == 0 and not f["candidate_list"]:
+        return None, "비교 국가 수가 0이면 관심 국가를 1개 이상 입력해주세요."
+    try:
+        result = get_multi_country_comparison(
+            f["hscode"], f["candidate_list"] or None, top_n=f["top_n"],
+            force=f["force"], include_ai=include_ai, retry_customs=retry_customs,
+        )
+        return result, None
+    except ValueError as e:
+        return None, str(e)
+    except Exception as e:
+        return None, f"비교 분석 중 오류가 발생했습니다: {e}"
+
+
+def _pick_detail_country(result, candidate_list):
+    """⑥에 먼저 보여줄 나라: 관심 국가(입력 순서) -> 비교 국가 중 수입 1위."""
+    candidates = (result or {}).get("candidates", [])
+    by_rank = sorted(candidates, key=lambda c: c.get("import_rank") or 999)
+    focus = sorted(
+        (c for c in by_rank if c.get("is_focus")),
+        key=lambda c: c.get("focus_order") if c.get("focus_order") is not None else 999,
+    )
+    if focus:
+        return focus[0]["label"], "관심 국가"
+    if by_rank:
+        return by_rank[0]["label"], "비교 국가 중 수입 1위"
+    if candidate_list:
+        return candidate_list[0], "관심 국가"  # 비교 분석이 실패해도 관심 국가 상세는 시도
+    return "", None
+
+
+def _load_detail(f, result, country, include_ai=False):
+    """⑥ 국가 상세. 비교 국가를 고른 경우 UN Comtrade 숫자 국가코드로 바로 조회한다
+    (자동 후보 이름이 "Austria"처럼 국가명 매핑표에 없어도 조회되도록)."""
+    reporter_code = None
+    iso3_hint = None
+    for c in (result or {}).get("candidates", []):
+        if c.get("label") == country:
+            reporter_code = c.get("reporter_code")
+            iso3_hint = c.get("iso3")
+            break
+    try:
+        detail = get_market_research(
+            f["hscode"], country, force=f["force"],
+            reporter_code=reporter_code, iso3_hint=iso3_hint, include_ai=include_ai,
+        )
+        return detail, None
+    except ValueError as e:
+        return None, str(e)
+    except Exception as e:
+        return None, f"국가 상세 조사 중 오류가 발생했습니다: {e}"
+
+
+def _detail_ai_pending(detail):
+    return bool(detail) and not has_detailed_ai(detail.get("ai_insight"))
+
+
 @app.route("/", methods=["GET", "POST"])
 @app.route("/matrix", methods=["GET", "POST"])
 def index():
-    """통합 화면: 매트릭스 비교(①~⑤) + 선택한 국가 상세 조사(⑥).
-    두 조사는 독립적이라 한쪽이 실패해도 다른 쪽 결과는 그대로 보여준다.
+    """통합 화면. 입력값이 어느 섹션에 쓰이는지:
+        - HS코드: 모든 섹션
+        - 비교 국가 수(N): ①② 세계시장 순위/점유율 추이의 표시 개수 + ③④⑤ 비교 대상(수입 상위 N개국)
+        - 관심 국가: ③④⑤ 비교 대상에 추가(상위 N개국과 합집합) + ⑥ 상세 조사를 자동으로 열 국가
+        - ⑥ 국가 상세: 탭/버블/표에서 고른 한 나라. 아무것도 고르지 않았으면
+          관심 국가(첫 번째) -> 없으면 수입 1위 국가를 자동으로 보여준다.
+    속도: 숫자 화면을 먼저 보여주고, 시간이 오래 걸리는 AI 해석(⑤, ⑥)은 화면이
+    /ai/matrix, /ai/detail로 따로 불러온다. 탭을 누르면 /detail로 ⑥만 바꾼다.
     GET 링크(/?hscode=...&country=...)로 들어오면 입력칸만 채우고 조사는 하지 않는다."""
     ctx = {
         "result": None,
@@ -399,79 +488,95 @@ def index():
         "country": request.args.get("country", "").strip(),
         "force": False,
         "item_desc_ko": None,
+        "detail_auto_reason": None,  # ⑥을 자동으로 연 이유 (화면 안내용)
+        "matrix_ai_pending": False,
+        "detail_ai_pending": False,
     }
 
     if request.method == "POST":
-        hscode = _clean_hscode(request.form.get("hscode", ""))
-        candidates_raw = request.form.get("candidates", "").strip()
-        try:
-            top_n = int(request.form.get("top_n") or 10)
-        except ValueError:
-            top_n = 10
-        top_n = max(2, min(top_n, 20))
-        country = request.form.get("country", "").strip()
-        force = bool(request.form.get("force"))  # 캐시 무시하고 새로 조사
+        f = _parse_form(request.form)
+        ctx.update(hscode=f["hscode"], candidates_raw=f["candidates_raw"], top_n=f["top_n"],
+                   country=f["country"], force=f["force"])
 
-        ctx["hscode"] = hscode
-        ctx["candidates_raw"] = candidates_raw
-        ctx["top_n"] = top_n
-        ctx["country"] = country
-        ctx["force"] = force
+        if not re.fullmatch(r"\d{6}", f["hscode"]):
+            ctx["matrix_error"] = "HS코드는 6자리 숫자로 입력해주세요 (예: 1905.90)."
+            return render_template("un_comtrade_dashboard.html", **ctx)
 
-        # 1) 매트릭스 비교 (여러 후보국)
-        candidate_list = [c.strip() for c in candidates_raw.split(",") if c.strip()]
-        candidate_list = candidate_list or None
-        try:
-            result = get_multi_country_comparison(
-                hscode, candidate_list, top_n=top_n, force=force
-            )
-            ctx["result"] = result
-            ctx["matrix"] = _build_matrix(
-                result["candidates"], result["thresholds"]
-            )
-        except ValueError as e:
-            ctx["matrix_error"] = str(e)
-        except Exception as e:
-            ctx["matrix_error"] = f"매트릭스 조사 중 오류가 발생했습니다: {e}"
+        # 1) 비교 분석 (AI 해석은 나중에 따로)
+        # 관세청 조회가 일시적으로 실패했던 나라는 "통합분석"을 누를 때만 다시 시도한다
+        # (탭 전환 때마다 재시도하면 관세청 장애 중에 탭이 느려지므로)
+        result, err = _load_comparison(f, include_ai=False, retry_customs=True)
+        ctx["result"], ctx["matrix_error"] = result, err
+        if result:
+            ctx["matrix"] = _build_matrix(result["candidates"], result["thresholds"])
+            ctx["matrix_ai_pending"] = not result.get("ai_summary")
 
-        # 2) 세계시장 교역순위/점유율 추이 (선택 기능 - 실패해도 나머지는 그대로)
-        if ctx["result"]:
+            # 2) 세계시장 교역순위/점유율 추이 (선택 기능 - 실패해도 나머지는 그대로)
             try:
-                overview = get_market_overview(hscode, top_n=top_n, force=force)
+                # 세계 순위 그래프는 비교 국가 수가 0이어도 상위 10개국은 보여준다
+                overview = get_market_overview(f["hscode"], top_n=f["top_n"] or 10, force=f["force"])
                 ctx["overview"] = overview
                 ctx["import_line"] = _svg_line_series(overview["import_share_trend"])
                 ctx["export_line"] = _svg_line_series(overview["export_share_trend"])
             except Exception as e:
                 ctx["overview"] = {"unavailable_reason": str(e)}
 
-        # 3) 단일 국가 상세 조사 (상세 조사 국가를 입력하거나 클릭했을 때만)
+        # 3) 국가 상세 (⑥). 고른 나라가 없으면 자동으로 고른다.
+        country = f["country"]
+        if not country:
+            country, ctx["detail_auto_reason"] = _pick_detail_country(result, f["candidate_list"])
+            ctx["country"] = country
         if country:
-            # 매트릭스 후보국을 클릭한 경우 UN Comtrade 숫자 국가코드로 바로 조회한다
-            # (자동 후보 이름이 "Austria"처럼 국가명 매핑표에 없어도 조회되도록)
-            reporter_code = None
-            if ctx["result"]:
-                for c in ctx["result"].get("candidates", []):
-                    if c.get("label") == country and c.get("reporter_code"):
-                        reporter_code = c["reporter_code"]
-                        break
-            try:
-                ctx["detail"] = get_market_research(
-                    hscode, country, force=force, reporter_code=reporter_code
-                )
-            except ValueError as e:
-                ctx["detail_error"] = str(e)
-            except Exception as e:
-                ctx["detail_error"] = f"국가 상세 조사 중 오류가 발생했습니다: {e}"
+            ctx["detail"], ctx["detail_error"] = _load_detail(f, result, country, include_ai=False)
+            ctx["detail_ai_pending"] = _detail_ai_pending(ctx["detail"])
 
         # 4) 품목 설명 한국어 번역 (실패해도 영문 원문으로 표시)
-        desc = None
-        if ctx["result"]:
-            desc = ctx["result"].get("official_item_desc")
-        if not desc and ctx["detail"]:
-            desc = ctx["detail"].get("official_item_desc")
+        desc = (result or {}).get("official_item_desc") or (ctx["detail"] or {}).get("official_item_desc")
         ctx["item_desc_ko"] = _translate_item_desc(desc)
 
     return render_template("un_comtrade_dashboard.html", **ctx)
+
+
+@app.route("/detail", methods=["POST"])
+def detail_partial():
+    """국가 탭/버블/표를 눌렀을 때 ⑥ 부분만 HTML 조각으로 돌려준다.
+    비교 결과는 캐시에서 바로 읽고(탭 목록·국가코드용), 국가 데이터도 한 번 조회한 나라는
+    캐시에서 읽으므로 보통 1초 안에 끝난다. AI 해석은 화면이 /ai/detail로 따로 요청한다."""
+    f = _parse_form(request.form)
+    f["force"] = False  # 탭 전환은 항상 캐시를 쓴다
+    result, _ = _load_comparison(f, include_ai=False)
+    country = f["country"]
+    detail, detail_error = _load_detail(f, result, country, include_ai=False) if country else (None, None)
+    desc = (result or {}).get("official_item_desc") or (detail or {}).get("official_item_desc")
+    return render_template(
+        "_country_detail.html",
+        result=result, detail=detail, detail_error=detail_error, country=country,
+        detail_auto_reason=None, item_desc_ko=_translate_item_desc(desc) if not result else None,
+        detail_ai_pending=_detail_ai_pending(detail),
+    )
+
+
+@app.route("/ai/matrix", methods=["POST"])
+def ai_matrix_partial():
+    """⑤ 비교 분석 AI 해석만 만들어 HTML 조각으로 돌려준다 (결과는 캐시에 저장)."""
+    f = _parse_form(request.form)
+    f["force"] = False
+    result, err = _load_comparison(f, include_ai=True)
+    if not result:
+        return f'<div class="ai-box empty">AI 해석을 만들 수 없습니다: {escape(err or "")}</div>'
+    return render_template("_ai_matrix.html", result=result, matrix_ai_pending=False)
+
+
+@app.route("/ai/detail", methods=["POST"])
+def ai_detail_partial():
+    """⑥ 국가 상세 AI 해석만 만들어 HTML 조각으로 돌려준다 (결과는 캐시에 저장)."""
+    f = _parse_form(request.form)
+    f["force"] = False
+    result, _ = _load_comparison(f, include_ai=False)
+    detail, err = _load_detail(f, result, f["country"], include_ai=True) if f["country"] else (None, "국가가 없습니다.")
+    if not detail:
+        return f'<div class="ai-box empty">AI 해석을 만들 수 없습니다: {escape(err or "")}</div>'
+    return render_template("_ai_detail.html", detail=detail, detail_ai_pending=False)
 
 
 if __name__ == "__main__":
