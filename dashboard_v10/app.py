@@ -7,7 +7,8 @@
   3. 현지 웹 자료 조사 요약 + 근거 기사 사이드바      (tavily_v9 · Tavily)
   4. 부스 컨셉 기획                                  (tavily_v9 · OpenAI 단독 기획)
 
-실행: python app.py  ->  http://127.0.0.1:5060
+실행: python app.py  ->  http://127.0.0.1:5065
+(5060·5061은 크롬 계열 브라우저가 SIP 전화용 포트라 차단(ERR_UNSAFE_PORT)하므로 쓰지 않음)
 """
 
 import json
@@ -21,7 +22,7 @@ from pipeline import INPUT_FIELDS, run_dashboard, tavily_env
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("sabuzak.dashboard_v10")
 
-PORT = int(os.getenv("DASHBOARD_V10_PORT", "5060"))
+PORT = int(os.getenv("DASHBOARD_V10_PORT", "5065"))
 QUESTION_LABELS = {"Q1": "CONSUMER", "Q2": "COMPETITION", "Q3": "BUYER & CHANNEL", "Q4": "TRADE SHOW & BOOTH"}
 
 app = Flask(__name__)

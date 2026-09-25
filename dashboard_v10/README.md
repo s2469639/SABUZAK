@@ -16,7 +16,10 @@
 ```bash
 cd dashboard_v10
 python -m pip install -r requirements.txt
-python app.py                 # http://127.0.0.1:5060 (포트 변경: DASHBOARD_V10_PORT=5061 python app.py)
+python app.py                 # http://127.0.0.1:5065 (포트 변경: DASHBOARD_V10_PORT=5066 python app.py)
+```
+5060·5061은 크롬 계열 브라우저가 전화(SIP)용 포트라 막아 두어(`ERR_UNSAFE_PORT`) 쓰지 않습니다. 포트를 바꿀 때도 이 두 번호는 피하세요.
+```
 python -m unittest discover -s tests -v    # 오프라인 테스트 (네트워크 불필요)
 ```
 `.env`(상위 `SABUZAK/.env` 공유)에 `OPENAI_API_KEY`, `TAVILY_API_KEY`가 필요합니다.
