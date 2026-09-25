@@ -132,7 +132,7 @@
           <strong>{{ row.product.hs_code }}</strong>
         </div>
 
-        {% if row.has_data %}
+        {% if row.has_data or row.mfn_rate %}
         <table class="tariff-regime-table">
           <thead>
             <tr>
@@ -141,6 +141,14 @@
             </tr>
           </thead>
           <tbody>
+            {% if row.mfn_rate %}
+            <tr class="mfn-row">
+              <td>MFN(기본세율)</td>
+              <td class="tariff-rate-cell {% if row.mfn_rate.tariff_ave == 0 %}zero{% endif %}">
+                {{ row.mfn_rate.display }}
+              </td>
+            </tr>
+            {% endif %}
             {% for regime in row.regimes %}
             <tr class="{% if regime.is_best %}best-row{% endif %}">
               <td>
@@ -155,7 +163,7 @@
           </tbody>
         </table>
         {% else %}
-        <p class="placeholder-note">이 국가·HS코드 조합의 협정관세 데이터가 없습니다 (해당 협정 미체결이거나 자료 미수록).</p>
+        <p class="placeholder-note">이 국가·HS코드 조합의 관세 데이터가 없습니다 (해당 협정 미체결이거나 자료 미수록).</p>
         {% endif %}
 
         {% if row.has_range and row.subitems %}
