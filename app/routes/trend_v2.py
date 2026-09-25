@@ -23,7 +23,10 @@ import os
 import sys
 
 from flask import Blueprint, jsonify, redirect, render_template, request
-from flask_login import login_required
+from flask_login import current_user, login_required
+
+from app.extensions import db
+from app.models import TrendResult
 
 _V15_ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "v15")
 if _V15_ROOT not in sys.path:
@@ -53,11 +56,11 @@ def _booth_link(form, booth_job_id=None):
     return "/booth?" + urlencode({k: v for k, v in form.items() if v})
 
 
-def _trend_page(form, data=None, error=None, force=False, booth_job_id=None, job_id=None, expo_id=None):
+def _trend_page(form, data=None, error=None, force=False, booth_job_id=None, job_id=None, expo_id=None, product_id=None):
     return render_template(
         "trend_v2/trend.html", form=form, data=data, error=error, force=force,
         question_labels=QUESTION_LABELS, booth_link=_booth_link(form, booth_job_id),
-        job_id=job_id, expo_id=expo_id,
+        job_id=job_id, expo_id=expo_id, product_id=product_id,
     )
 
 
@@ -79,15 +82,60 @@ def trend_index():
     꺼진 브라우저용(진행률 없이 끝날 때까지 기다림)."""
     if request.method == "GET":
         prefill = _form_from(request.args) if request.args else _empty_form()
-        return _trend_page(prefill, expo_id=request.args.get("expo_id"))
+        return _trend_page(prefill, expo_id=request.args.get("expo_id"), product_id=request.args.get("product_id"))
     form, force = _form_from(request.form), bool(request.form.get("force"))
     expo_id = request.form.get("expo_id")
+    product_id = request.form.get("product_id")
     try:
-        return _trend_page(form, run_trend(form, force=force), force=force, expo_id=expo_id)
+        return _trend_page(form, run_trend(form, force=force), force=force, expo_id=expo_id, product_id=product_id)
     except ValueError as e:
-        return _trend_page(form, error=str(e), force=force, expo_id=expo_id)
+        return _trend_page(form, error=str(e), force=force, expo_id=expo_id, product_id=product_id)
     except Exception as e:
-        return _trend_page(form, error=f"분석 중 오류가 발생했습니다: {e}", force=force, expo_id=expo_id)
+        return _trend_page(form, error=f"분석 중 오류가 발생했습니다: {e}", force=force, expo_id=expo_id, product_id=product_id)
+
+
+def _build_trend_summary(result):
+    """'작성 중인 박람회' 목록에 한 줄로 보여줄 요약. 리테일 가격대 + 대상
+    국가 정도만 뽑는다 (전체 조사 결과는 /trend/<job_id>에서 확인)."""
+    if not result:
+        return ""
+    s1 = result.get("section1") or {}
+    s2 = result.get("section2") or {}
+    rp = s2.get("retail_price") or {}
+    parts = []
+    if s1.get("country_ko"):
+        parts.append(s1["country_ko"])
+    if rp.get("price"):
+        parts.append(f"소매가 {rp['price']}")
+    return " · ".join(parts) or "분석 완료"
+
+
+def _persist_trend_result(job, job_id):
+    """트렌드 조사가 (박람회, 제품) 조합으로 시작된 경우, '작성 중인 박람회'
+    목록에서 보여줄 수 있게 가벼운 요약 포인터를 남긴다. expo_id/product_id가
+    없으면(예: v15 폼에서 직접 시작) 그냥 건너뛴다."""
+    links = job.get("links") or {}
+    expo_id, product_id = links.get("expo_id"), links.get("product_id")
+    if not expo_id or not product_id:
+        return
+    try:
+        expo_id, product_id = int(expo_id), int(product_id)
+    except (TypeError, ValueError):
+        return
+
+    existing = TrendResult.query.filter_by(
+        user_id=current_user.id, exhibition_id=expo_id, product_id=product_id,
+    ).first()
+    summary = _build_trend_summary(job.get("result"))
+    if existing:
+        existing.job_id, existing.summary = job_id, summary
+    else:
+        existing = TrendResult(
+            user_id=current_user.id, exhibition_id=expo_id, product_id=product_id,
+            job_id=job_id, summary=summary,
+        )
+        db.session.add(existing)
+    db.session.commit()
 
 
 @pages_bp.get("/trend/<job_id>")
@@ -96,6 +144,8 @@ def trend_result(job_id):
     job = jobs.get(job_id, "trend")
     if not job or job["status"] == "running":
         return redirect("/trend-research")
+    if job["status"] == "done":
+        _persist_trend_result(job, job_id)
     booth_job_id = job.get("links", {}).get("booth_job_id")
     return _trend_page(
         job["form"], job["result"], job["error"], job["force"],
@@ -146,13 +196,19 @@ def _progress_json(job):
 @api_bp.post("/trend/start")
 @login_required
 def api_trend_start():
+    raw = request.form or request.get_json(silent=True) or {}
     try:
-        ids = start_trend_job(
-            _form_from(request.form or request.get_json(silent=True) or {}),
-            force=bool(request.values.get("force")),
-        )
+        ids = start_trend_job(_form_from(raw), force=bool(request.values.get("force")))
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
+    # 박람회 상세의 "트렌드 조사" 탭에서 시작된 경우에만 딸려오는 값 - 나중에
+    # trend_result()가 "작성 중인 박람회" 목록용 요약을 남길 때 이 둘로 찾는다.
+    expo_id, product_id = raw.get("expo_id"), raw.get("product_id")
+    if expo_id and product_id:
+        job = jobs.get(ids["job_id"])
+        if job:
+            job["links"]["expo_id"] = expo_id
+            job["links"]["product_id"] = product_id
     return jsonify(ids)
 
 

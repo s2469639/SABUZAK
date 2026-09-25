@@ -1,6 +1,8 @@
 {# 입력 폼 (트렌드 조사·부스 컨셉 공통). form_action, submit_label을 set으로 넘긴다 #}
   <div class="form-container">
     <form method="POST" action="{{ form_action }}" id="analyze-form">
+      {% if expo_id %}<input type="hidden" name="expo_id" value="{{ expo_id }}">{% endif %}
+      {% if product_id %}<input type="hidden" name="product_id" value="{{ product_id }}">{% endif %}
       <div class="form-grid">
         <div class="form-group"><label for="name">제품명 *</label><input type="text" id="name" name="name" value="{{ form.name }}" placeholder="예: 멸치 칼국수 밀키트" required maxlength="100"></div>
         <div class="form-group"><label for="country">진출 대상 국가 *</label><input type="text" id="country" name="country" value="{{ form.country }}" placeholder="예: 말레이시아, 미국" required maxlength="100"></div>

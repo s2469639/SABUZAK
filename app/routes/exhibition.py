@@ -501,6 +501,7 @@ def _trend_v2_prefill(expo, product):
         "certifications": product.certifications or "",
         "price": product.target_price or "",
         "expo_id": expo.id,
+        "product_id": product.id,
     }
 
 
