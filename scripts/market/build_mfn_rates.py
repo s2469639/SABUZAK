@@ -21,6 +21,11 @@ Count.'(그 어떤 특혜 그룹에도 안 걸리는 국가용) 순으로 우선
 
 몽골은 사부작 박람회 목록에 없는 국가라 제외.
 
+관세청 원본 엑셀을 못 구한 국가는 WTO Tariff Download Facility의 CSV
+(컬럼: Reporter_ISO_N/ProductCode/SimpleAverage 등, HS 6자리 단순평균 MFN)로
+보충한다 - process_wto_csv(). 엑셀 원본(10자리 세부품목)보다는 거칠지만
+없는 것보다 낫다. Reporter_ISO_N은 UN M49 숫자코드라 pycountry로 ISO3 변환.
+
 실행: python scripts/market/build_mfn_rates.py
 """
 
@@ -30,6 +35,7 @@ import re
 from pathlib import Path
 
 import openpyxl
+import pycountry
 
 UPLOAD_DIR = "/root/.claude/uploads/138da99a-9f5c-50ea-b27d-c52753a83a9a"
 OUT_PATH = Path(__file__).resolve().parent / "mfn_base_rates.csv"
@@ -168,6 +174,42 @@ def process_turkey(path):
     return out_rows
 
 
+def _m49_to_iso3(numeric: str):
+    try:
+        return pycountry.countries.get(numeric=str(int(numeric)).zfill(3)).alpha_3
+    except (AttributeError, ValueError):
+        return None
+
+
+def process_wto_csv(path):
+    """WTO Tariff Download Facility CSV -> (country_iso3, [(hs6, '', 세율표시), ...]).
+    HS 6자리 단순평균(SimpleAverage) MFN 세율. 국가원본 엑셀이 없는 나라를
+    보충하는 용도라 6자리보다 세부적인 값은 애초에 없다."""
+    with open(path, encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        if not {"Reporter_ISO_N", "ProductCode", "SimpleAverage"} <= set(reader.fieldnames or []):
+            return None, []
+        rows = list(reader)
+
+    if not rows:
+        return None, []
+    iso3 = _m49_to_iso3(rows[0]["Reporter_ISO_N"])
+    if not iso3:
+        print(f"  건너뜀 (국가코드 변환 실패, M49={rows[0]['Reporter_ISO_N']}): {Path(path).name}")
+        return None, []
+
+    out_rows = []
+    for row in rows:
+        digits = re.sub(r"\D", "", row.get("ProductCode", ""))
+        if not digits or digits[:2] not in FOOD_CHAPTERS:
+            continue
+        avg = (row.get("SimpleAverage") or "").strip()
+        if not avg:
+            continue
+        out_rows.append((iso3, digits, "", f"{float(avg):g}%"))
+    return iso3, out_rows
+
+
 def main():
     files = sorted(glob.glob(f"{UPLOAD_DIR}/*.xlsx"))
     all_rows = []
@@ -201,6 +243,20 @@ def main():
             continue
         seen_countries.add(country)
         all_rows.extend(rows)
+
+    # WTO Tariff Download Facility CSV로 보충 (관세청 원본 엑셀이 없는 나라만 -
+    # 엑셀로 이미 받은 나라는 10자리 세부품목이 있는 엑셀 쪽이 더 정확하니 그대로 둔다)
+    for f in sorted(glob.glob(f"{UPLOAD_DIR}/*.csv")) + sorted(glob.glob(f"{UPLOAD_DIR}/*.CSV")):
+        name = Path(f).name
+        iso3, wto_rows = process_wto_csv(f)
+        if not iso3 or not wto_rows:
+            continue
+        if iso3 in seen_countries:
+            print(f"  건너뜀 (이미 엑셀 원본으로 커버됨: {iso3}): {name}")
+            continue
+        print(f"처리 중 (WTO CSV): {name} ({iso3})")
+        seen_countries.add(iso3)
+        all_rows.extend(wto_rows)
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(OUT_PATH, "w", encoding="utf-8", newline="") as out:
