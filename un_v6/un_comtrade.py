@@ -18,8 +18,8 @@ get_market_research() 하나만 알면 된다.
 흐름:
     1) 글로벌 수입 수요: 이 HS코드를 전 세계에서 어느 나라가 가장 많이
        수입하는지 순위 (World 수입 랭킹)
-    2) 한국의 경쟁력: 타깃 국가의 이 HS코드 수입 시장에서 한국/경쟁국들의
-       점유율 비교
+    2) 한국의 경쟁력: 타깃 국가의 이 HS코드 수입 시장에서 실제 상위 공급국
+       순위 + 한국의 순위/점유율 (+ 기존 주요 경쟁국 비교)
     3) 3개년 성장 트렌드: 타깃 국가의 이 HS코드 수입액이 최근 3개년 동안
        얼마나 늘거나 줄었는지 (CAGR)
     4) 위 수치 전체를 OpenAI에 주고 "주어진 숫자 안에서만" 전략적 시사점을
@@ -52,16 +52,20 @@ DEFAULT_DB_PATH = os.path.join(BASE_DIR, "un_comtrade_cache.db")
 DEFAULT_MODEL = "gpt-4o-mini"
 CACHE_TTL_DAYS = 30
 DEFAULT_COMPETITORS = ["KOR", "CHN", "JPN", "USA"]
+TOP_SUPPLIERS_N = 10  # 타깃국 수입시장의 "실제 상위 공급국" 몇 개국까지 보여줄지
 HSCODE_RE = re.compile(r"^\d{6}$")  # Comtrade는 국제 공통 6자리 HS코드를 씀
 
 # 한국의 주요 교역 상대국 위주로 채운 참고 매핑 (Korean/English -> ISO3).
+# UN Comtrade가 돌려주는 공식 영문 국가명(예: "Viet Nam", "Rep. of Korea")도
+# 함께 넣어서, 자동 후보국 이름으로 상세 조사를 할 때 인식 실패를 줄인다.
 # 여기 없는 국가는 3자리 ISO3 코드(예: VNM, PER)를 직접 입력하면 된다.
 KOREAN_NAME_TO_ISO3 = {
     "한국": "KOR", "대한민국": "KOR", "korea": "KOR", "south korea": "KOR",
+    "rep. of korea": "KOR", "republic of korea": "KOR",
     "중국": "CHN", "china": "CHN",
     "일본": "JPN", "japan": "JPN",
-    "미국": "USA", "united states": "USA", "usa": "USA",
-    "베트남": "VNM", "vietnam": "VNM",
+    "미국": "USA", "united states": "USA", "usa": "USA", "united states of america": "USA",
+    "베트남": "VNM", "vietnam": "VNM", "viet nam": "VNM",
     "독일": "DEU", "germany": "DEU",
     "영국": "GBR", "united kingdom": "GBR", "uk": "GBR",
     "프랑스": "FRA", "france": "FRA",
@@ -78,12 +82,39 @@ KOREAN_NAME_TO_ISO3 = {
     "이탈리아": "ITA", "italy": "ITA",
     "스페인": "ESP", "spain": "ESP",
     "네덜란드": "NLD", "netherlands": "NLD",
-    "러시아": "RUS", "russia": "RUS",
+    "벨기에": "BEL", "belgium": "BEL",
+    "오스트리아": "AUT", "austria": "AUT",
+    "스웨덴": "SWE", "sweden": "SWE",
+    "덴마크": "DNK", "denmark": "DNK",
+    "노르웨이": "NOR", "norway": "NOR",
+    "핀란드": "FIN", "finland": "FIN",
+    "아일랜드": "IRL", "ireland": "IRL",
+    "포르투갈": "PRT", "portugal": "PRT",
+    "그리스": "GRC", "greece": "GRC",
+    "폴란드": "POL", "poland": "POL",
+    "체코": "CZE", "czechia": "CZE", "czech republic": "CZE",
+    "헝가리": "HUN", "hungary": "HUN",
+    "루마니아": "ROU", "romania": "ROU",
+    "러시아": "RUS", "russia": "RUS", "russian federation": "RUS",
     "사우디아라비아": "SAU", "saudi arabia": "SAU",
-    "아랍에미리트": "ARE", "uae": "ARE",
-    "홍콩": "HKG", "hong kong": "HKG",
+    "아랍에미리트": "ARE", "uae": "ARE", "united arab emirates": "ARE",
+    "이스라엘": "ISR", "israel": "ISR",
+    "이집트": "EGY", "egypt": "EGY",
+    "남아프리카공화국": "ZAF", "south africa": "ZAF",
+    "나이지리아": "NGA", "nigeria": "NGA",
+    "홍콩": "HKG", "hong kong": "HKG", "china, hong kong sar": "HKG",
+    "대만": "TWN", "taiwan": "TWN", "other asia, nes": "TWN",
     "스위스": "CHE", "switzerland": "CHE",
-    "튀르키예": "TUR", "터키": "TUR", "turkey": "TUR",
+    "튀르키예": "TUR", "터키": "TUR", "turkey": "TUR", "türkiye": "TUR",
+    "뉴질랜드": "NZL", "new zealand": "NZL",
+    "칠레": "CHL", "chile": "CHL",
+    "페루": "PER", "peru": "PER",
+    "콜롬비아": "COL", "colombia": "COL",
+    "아르헨티나": "ARG", "argentina": "ARG",
+    "파키스탄": "PAK", "pakistan": "PAK",
+    "방글라데시": "BGD", "bangladesh": "BGD",
+    "카자흐스탄": "KAZ", "kazakhstan": "KAZ",
+    "몽골": "MNG", "mongolia": "MNG",
 }
 
 _numeric_code_cache = {}  # ISO3 -> Comtrade 숫자 코드 (프로세스 내에서만 캐싱, 반복 조회 시 API 재호출 방지)
@@ -204,6 +235,13 @@ def _find_column_optional(df, candidates):
         return None
 
 
+def _round_share(share):
+    """점유율 반올림. 소수점 첫째 자리로 반올림하면 0.003%(한국산이 조금이라도
+    있음)와 0%(전혀 없음)가 둘 다 0.0이 돼서 구분이 안 되던 문제가 있어,
+    소수점 넷째 자리까지 보관한다 (화면에서는 크기에 맞게 줄여서 표시)."""
+    return round(share, 4) if share is not None else None
+
+
 def get_global_import_ranking(subscription_key, hscode, year, top_n=10, proxy_url=None):
     """[1단계] 이 HS코드를 전 세계에서 가장 많이 수입하는 나라 순위.
     reporterCode를 비우면(None) '전체 국가', partnerCode='0'은 '세계 전체
@@ -239,6 +277,53 @@ def get_global_import_ranking(subscription_key, hscode, year, top_n=10, proxy_ur
     return out
 
 
+def _clean_text(value):
+    """DataFrame 셀 값을 문자열로. 비어 있거나 NaN이면 None."""
+    if value is None or value != value:  # value != value 는 NaN 판정
+        return None
+    text = str(value).strip()
+    return text or None
+
+
+def _supplier_table(df, value_col, code_col, label_col, iso_col, total, korea_codes, top_n):
+    """타깃국 수입시장의 "실제" 공급국 순위표를 만든다 (트라이빅 "수입지역 순위").
+    기존 breakdown은 미리 정해둔 경쟁국(KOR/CHN/JPN/USA)만 보여줘서, 실제 1위
+    공급국(예: 미국 시장의 캐나다)이 빠지고 한국이 1위처럼 보이는 문제가 있었다.
+    여기서는 모든 공급국을 금액순으로 정렬하고, 한국의 실제 순위도 함께 계산한다.
+    같은 국가 코드가 여러 행이면 기존 코드와 같은 기준(첫 행)으로 하나만 쓴다."""
+    cols = [code_col, value_col] + [c for c in (label_col, iso_col) if c]
+    rows = df[cols].dropna(subset=[code_col, value_col]).copy()
+    rows[code_col] = rows[code_col].astype(str)
+    rows = rows[(rows[code_col] != "0") & (rows[value_col] > 0)]
+    rows = rows.drop_duplicates(subset=[code_col], keep="first")
+    rows = rows.sort_values(value_col, ascending=False)
+
+    ranked = []
+    for rank, (_, row) in enumerate(rows.iterrows(), 1):
+        value = float(row[value_col])
+        code = row[code_col]
+        label = _clean_text(row[label_col]) if label_col else None
+        iso3 = _clean_text(row[iso_col]) if iso_col else None
+        label = label or code
+        ranked.append({
+            "rank": rank,
+            "label": label,
+            "iso3": iso3,
+            "code": code,
+            "import_value_usd": value,
+            "share_pct": _round_share(value / total * 100) if total else None,
+            "is_korea": code in korea_codes or iso3 == "KOR",
+        })
+
+    korea = next((r for r in ranked if r["is_korea"]), None)
+    return {
+        "top_suppliers": ranked[:top_n],
+        "korea_supplier": korea,  # 한국 행 (순위 밖이어도 따로 보관) - 없으면 None
+        "korea_rank": korea["rank"] if korea else None,
+        "supplier_ranked_count": len(ranked),
+    }
+
+
 def get_competitiveness(
     subscription_key, hscode, target_iso3, year, competitors=None, proxy_url=None,
     reporter_code=None,
@@ -246,6 +331,8 @@ def get_competitiveness(
     """[2단계] 타깃 국가의 이 HS코드 수입 시장에서 한국/경쟁국 점유율.
     reporterCode=타깃국, partnerCode를 비워서(None) 모든 파트너국(+World
     합계인 partner=0)을 한 번에 받은 뒤, 관심 국가들만 추려서 비중을 계산한다.
+    같은 응답으로 "실제 상위 공급국 순위"(top_suppliers)와 한국의 실제 순위도
+    함께 만든다 (추가 API 호출 없음).
 
     reporter_code: 이미 숫자 국가코드를 알고 있으면(예: 글로벌 순위표에서
     가져온 국가) 그대로 넘겨서 ISO3 변환을 건너뛸 수 있다. 이 경우
@@ -322,6 +409,8 @@ def get_competitiveness(
         return {
             "total_import_usd": None, "breakdown": [], "year": year, "item_desc": None,
             "supplier_country_count": None, "is_mirror_estimate": False,
+            "top_suppliers": [], "korea_supplier": None, "korea_rank": None,
+            "supplier_ranked_count": 0,
         }
 
     value_col = _find_column(df, ["primaryValue"], "수입액")
@@ -336,6 +425,8 @@ def get_competitiveness(
     if not is_mirror:
         # 일반 모드: "상대국"은 partnerCode 컬럼에, World 합계는 partnerCode='0' 행에 있다.
         country_code_col = _find_column(df, ["partnerCode"], "파트너국 코드")
+        label_col = _find_column_optional(df, ["partnerDesc"])
+        iso_col = _find_column_optional(df, ["partnerISO"])
         world_rows = df[df[country_code_col].astype(str) == "0"]
         total = float(world_rows[value_col].iloc[0]) if not world_rows.empty else None
         other_rows = df[df[country_code_col].astype(str) != "0"][value_col].dropna()
@@ -343,6 +434,8 @@ def get_competitiveness(
         # 미러 모드: 이제 "상대국"(=수출한 나라)은 reporterCode 컬럼에 있고,
         # World 합계 행 자체가 없으므로 모든 행의 값을 직접 더해서 총액을 만든다.
         country_code_col = _find_column(df, ["reporterCode"], "보고국 코드")
+        label_col = _find_column_optional(df, ["reporterDesc"])
+        iso_col = _find_column_optional(df, ["reporterISO"])
         clean_values = df[value_col].dropna()
         total = float(clean_values.sum()) if not clean_values.empty else None
         other_rows = clean_values
@@ -364,13 +457,22 @@ def get_competitiveness(
         breakdown.append({
             "country_iso3": iso3,
             "import_value_usd": value,
-            "share_pct": round(share, 1) if share is not None else None,
+            "share_pct": _round_share(share),
         })
-
     breakdown.sort(key=lambda x: x["import_value_usd"], reverse=True)
+
+    try:
+        korea_codes = set(candidate_reporter_codes("KOR", proxy_url=proxy_url))
+    except ValueError:
+        korea_codes = set()
+    suppliers = _supplier_table(
+        df, value_col, country_code_col, label_col, iso_col, total, korea_codes, TOP_SUPPLIERS_N,
+    )
+
     return {
         "total_import_usd": total, "breakdown": breakdown, "year": year, "item_desc": item_desc,
         "supplier_country_count": supplier_country_count, "is_mirror_estimate": is_mirror,
+        **suppliers,
     }
 
 
@@ -433,8 +535,8 @@ def get_growth_trend(subscription_key, hscode, target_iso3, years, proxy_url=Non
 
     if df is None or df.empty:
         return {
-            "by_year": [], "cagr_pct": None, "years_requested": years, "years_with_data": 0,
-            "is_mirror_estimate": False,
+            "by_year": [], "cagr_pct": None, "cagr_excl_latest_pct": None,
+            "years_requested": years, "years_with_data": 0, "is_mirror_estimate": False,
         }
 
     value_col = _find_column(df, ["primaryValue"], "수입액")
@@ -458,6 +560,8 @@ def get_growth_trend(subscription_key, hscode, target_iso3, years, proxy_url=Non
     # 걷힌 것"을 구분 못 하고 AI가 "역성장"이라고 단정할 위험이 있다 (JPN
     # 자기거래 버그와 같은 종류의 문제). 그래서 가장 최근 연도에는 항상
     # "미완성일 수 있음" 표시를 붙여서 AI/화면 양쪽에 넘긴다.
+    # ※ 이 표시는 "실제로 미완성인지 확인한 것"이 아니라 최신 연도에 항상 붙는
+    #    예방적 주의 문구다. 그래서 비교용으로 최신 연도를 뺀 CAGR도 함께 준다.
     latest_requested_year = max(years)
     for y in by_year:
         y["may_be_incomplete"] = (y["year"] == latest_requested_year)
@@ -467,9 +571,16 @@ def get_growth_trend(subscription_key, hscode, target_iso3, years, proxy_url=Non
         start, end = by_year[0], by_year[-1]
         cagr = calc_cagr(start["import_value_usd"], end["import_value_usd"], end["year"] - start["year"])
 
+    complete = [y for y in by_year if not y["may_be_incomplete"]]
+    cagr_excl_latest = None
+    if len(complete) >= 2:
+        s, e = complete[0], complete[-1]
+        cagr_excl_latest = calc_cagr(s["import_value_usd"], e["import_value_usd"], e["year"] - s["year"])
+
     return {
         "by_year": by_year,
         "cagr_pct": cagr,
+        "cagr_excl_latest_pct": cagr_excl_latest,  # 최신 연도(집계 중일 수 있음)를 뺀 참고용 CAGR
         "years_requested": years,      # 사용자가 요청한 연도 (실제로 데이터가 다 있으리라는 보장은 없음)
         "years_with_data": len(by_year),  # 실제로 응답에 들어있던 연도 수
         "is_mirror_estimate": is_mirror,
@@ -482,12 +593,15 @@ def interpret_with_llm(client, model, official_item_desc, hscode, target_country
     높지만, LLM이 프롬프트에 없는 숫자를 지어낼 위험은 똑같이 있으므로
     "주어진 수치만 사용하라"고 명시한다.
 
+    예전에는 경쟁국 정보로 미리 정한 KOR/CHN/JPN/USA만 넘겨서, AI가 실제
+    주요 공급국을 모른 채 "미국 시장의 경쟁국은 미국"처럼 지어낸 문장을 쓴
+    사례가 있었다. 이제는 실제 상위 공급국 순위(top_suppliers)와 한국의
+    실제 순위를 넘기고, 경쟁국은 그 목록에서만 고르게 한다.
+
     품목명은 사용자가 따로 타이핑하게 하지 않고, UN Comtrade가 HS코드
-    조회 결과로 직접 돌려준 cmdDesc(official_item_desc)를 쓴다. 사람이
-    입력하는 이름은 HS코드와 실제로 다른 품목을 가리킬 수 있어서(예:
-    HS코드는 감자칩인데 이름은 "김치"), 애초에 그런 입력을 받지 않으면
-    AI가 엉뚱한 품목으로 리포트를 쓰는 문제 자체가 구조적으로 발생하지
-    않는다."""
+    조회 결과로 직접 돌려준 cmdDesc(official_item_desc)를 쓴다."""
+    comp = dict(competitiveness)
+    comp.pop("item_desc", None)
     payload = {
         "official_item_desc_en": official_item_desc or "(UN Comtrade 응답에 설명 없음)",
         "hscode": hscode,
@@ -496,50 +610,54 @@ def interpret_with_llm(client, model, official_item_desc, hscode, target_country
         # 보고를 안 했으면 더 적을 수 있음) 개수를 명시해서, AI가 "10개국
         # 비교"라고 착각하지 않게 함
         "global_import_ranking": {"countries_returned": len(ranking), "top_countries": ranking},
-        "korea_competitiveness": competitiveness,
+        "target_market": comp,
         "growth_trend": growth,
     }
     prompt = f"""당신은 글로벌 무역 컨설턴트입니다. 아래 [데이터]는 UN Comtrade
 공식 무역통계에서 가져온 수치입니다. 이 안에 있는 수치만 사용하고, 여기
-없는 숫자나 통계는 절대 새로 만들어내지 마세요 (모르면 "데이터 없음"이라고
-쓰세요).
+없는 숫자나 통계, 사실(기업 규모, 소비자 성향, 규제 등)은 절대 새로 만들어내지
+마세요. 데이터로 알 수 없는 내용은 "데이터로 확인할 수 없음"이라고 쓰세요.
 
 품목명은 반드시 official_item_desc_en(UN Comtrade 공식 설명)을 기준으로
-판단하세요. 이건 HS코드로 조회해서 나온 공식 데이터이므로 가장 정확합니다.
+판단하세요.
+
+분석 대상 시장은 target_country({target_country})입니다.
+- target_country 자신은 절대 "경쟁국"이나 "공급국"으로 언급하지 마세요.
+- 경쟁 구도는 target_market.top_suppliers(이 시장의 실제 상위 공급국 순위,
+  rank/label/share_pct)만 근거로 설명하세요. 여기 없는 나라를 경쟁국으로
+  들지 마세요.
+- 한국의 위치는 target_market.korea_rank(전체 공급국 중 실제 순위, 없으면
+  한국산 수입 없음)와 target_market.korea_supplier.share_pct로 설명하세요.
+- target_market.breakdown은 참고용 고정 비교국(KOR/CHN/JPN/USA)이라 순위가
+  아닙니다. 경쟁 구도 판단에는 top_suppliers를 우선하세요.
 
 숫자를 읽을 때 주의할 점:
-- korea_competitiveness.total_import_usd가 이 시장(타깃 국가)의 실제 총
-  수입 규모입니다. 이 값이 0보다 크면 그 시장에는 수입 수요가 분명히
-  존재하는 것이니, breakdown에 나열된 개별 국가의 점유율이 낮다고 해서
-  "이 시장은 수입이 없다/수요가 없다"고 결론 내리면 안 됩니다.
-- breakdown은 total_import_usd 중 일부(주요 경쟁국)만 나열한 것이라
-  국가별 값을 다 더해도 total_import_usd보다 작을 수 있습니다(나머지는
-  다른 국가들 몫). 이것도 "수입이 적다"는 의미가 아닙니다.
-- growth_trend.by_year의 각 항목에 "may_be_incomplete": true가 있으면,
-  그 연도(대개 가장 최근 연도)는 많은 나라가 통계를 1~2년 늦게 제출하기
-  때문에 아직 집계가 안 끝났을 수 있습니다. 이 연도의 수치가 이전 연도보다
-  낮다고 해서 곧바로 "역성장/수요 감소"라고 단정하지 말고, "최신 연도는
-  아직 통계가 완전히 집계되지 않았을 수 있어 실제보다 낮게 보일 수 있다"는
-  가능성을 반드시 같이 언급하세요.
-- growth_trend.years_with_data가 growth_trend.years_requested의 개수보다
-  적으면 일부 연도 데이터가 아예 없다는 뜻입니다. 이때는 "N개년 성장률"이
-  아니라 실제로 데이터가 있는 연도 수를 기준으로 설명하세요.
-- korea_competitiveness.is_mirror_estimate 또는 growth_trend.is_mirror_estimate가
-  true이면, 타깃국이 직접 보고한 공식 수치가 아니라 "전세계 각국이 이
-  타깃국에 수출했다고 보고한 값들을 합산한 추정치"입니다. 이 경우 반드시
-  "이 수치는 타깃국의 공식 발표가 아니라 상대국들의 보고를 기반으로 한
-  추정치"라는 점을 언급하고, 정밀한 확정 수치처럼 단정적으로 말하지 마세요.
+- target_market.total_import_usd가 이 시장의 실제 총 수입 규모입니다. 이
+  값이 0보다 크면 수입 수요가 분명히 존재하는 것이니, 한국 점유율이 낮다고
+  해서 "수요가 없다"고 결론 내리면 안 됩니다.
+- share_pct는 % 단위이며 소수점이 매우 작을 수 있습니다(예: 0.003). 이런
+  값은 "0%"가 아니라 "0.01% 미만(극히 적음)"이라고 표현하세요.
+- growth_trend.by_year의 "may_be_incomplete": true는 가장 최근 연도에 항상
+  붙는 예방적 표시입니다. 그 연도 수치가 낮다고 곧바로 "역성장"이라 단정하지
+  말고, growth_trend.cagr_excl_latest_pct(최신 연도 제외 CAGR)가 있으면 함께
+  비교해서 설명하세요.
+- growth_trend.years_with_data가 years_requested 개수보다 적으면 실제로
+  데이터가 있는 연도 수를 기준으로 설명하세요.
+- is_mirror_estimate가 true이면 타깃국의 공식 발표가 아니라 "상대국들의
+  보고를 기반으로 한 추정치"라는 점을 반드시 언급하세요.
+- 금액은 달러 기준이며, 큰 금액은 "약 78억 달러"처럼 읽기 쉽게 반올림해서
+  쓰세요.
 
 [데이터]
 {json.dumps(payload, ensure_ascii=False, indent=2)}
 [데이터 끝]
 
-한국 중소기업 관점에서 아래 3가지를 한국어로 작성하세요:
-1) 시장 매력도: 이 시장(타깃 국가)이 이 품목에 있어 유망한 시장인지
-2) 경쟁 구도: 한국의 현재 점유율과 주요 경쟁국 대비 위치
-3) 전략적 제언: 성장률과 점유율을 종합했을 때 취해야 할 전략 (예: 성장률은
-   높은데 점유율이 낮으면 "진입 기회는 크나 차별화 필요", 특정 경쟁국
-   점유율이 압도적이면 "가격 경쟁보다 틈새 공략" 등)
+한국 중소기업 관점에서 아래 3가지를 한국어로 작성하세요 (각 2~4문장):
+1) 시장 매력도: 시장 규모와 성장률로 본 이 시장의 매력
+2) 경쟁 구도: 실제 상위 공급국과 그 점유율, 그 안에서 한국의 순위와 점유율
+3) 전략적 제언: 위 수치를 종합했을 때 취할 전략 (예: 성장률은 높은데
+   점유율이 낮으면 "진입 기회는 크나 차별화 필요", 1위 공급국 점유율이
+   압도적이면 "가격 경쟁보다 틈새 공략" 등)
 
 반드시 아래 JSON 형식으로만 응답하세요:
 {{"market_attractiveness": "...", "competitive_position": "...", "strategic_recommendation": "..."}}
@@ -549,6 +667,7 @@ def interpret_with_llm(client, model, official_item_desc, hscode, target_country
             model=model,
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"},
+            temperature=0.2,
         )
         return json.loads(response.choices[0].message.content)
     except Exception as e:
@@ -613,40 +732,53 @@ def get_market_research(
     ttl_days: int = CACHE_TTL_DAYS,
     force: bool = False,
     proxy_url: str | None = None,
+    reporter_code: str | None = None,
 ) -> dict:
     """공개 인터페이스. 다른 코드는 이 함수 하나만 알면 된다.
 
     UN Comtrade API는 HS코드로만 통계를 분류하고 자연어 제품명은 전혀
     이해하지 못하므로, 입력은 HS코드(6자리)만 받는다. 화면에 보여줄 품목
-    이름은 UN Comtrade가 직접 돌려주는 공식 설명(official_item_desc)을
-    쓴다 - 사용자가 이름을 따로 입력하게 하면 HS코드와 다른 품목을 적을
-    위험이 있어서, 애초에 그 입력 자체를 없앴다.
+    이름은 UN Comtrade가 직접 돌려주는 공식 설명(official_item_desc)을 쓴다.
+
+    reporter_code: 매트릭스 후보국처럼 UN Comtrade 숫자 국가코드를 이미 알고
+    있으면 넘긴다. 이때는 국가명 -> ISO3 변환을 건너뛰므로, 매핑표에 없는
+    나라(예: 자동 후보로 뽑힌 "Austria")도 상세 조사가 된다. target_country는
+    화면 표시용 이름으로만 쓰인다.
 
     반환 스키마:
         {
             "hscode": str, "target_country": str,
-            "official_item_desc": str | None,  # UN Comtrade 공식 품목 설명(영문) - 화면 제목과 AI 분석 둘 다 이 값을 씀
+            "official_item_desc": str | None,
             "years": [int, int, int],
             "global_import_ranking": [{"country", "import_value_usd"}, ...],  # 상위 10개국
-            "competitiveness": {"total_import_usd", "year", "breakdown": [
-                {"country_iso3", "import_value_usd", "share_pct"}, ...]},
+            "competitiveness": {
+                "total_import_usd", "year",
+                "breakdown": [{"country_iso3", "import_value_usd", "share_pct"}, ...],  # 고정 비교국
+                "top_suppliers": [{"rank", "label", "iso3", "code", "import_value_usd",
+                                   "share_pct", "is_korea"}, ...],  # 실제 상위 공급국
+                "korea_supplier": {...} | None, "korea_rank": int | None,
+                "supplier_ranked_count": int,
+            },
             "growth_trend": {
                 "by_year": [{"year", "import_value_usd", "may_be_incomplete"}, ...],
-                "cagr_pct", "years_requested", "years_with_data",
+                "cagr_pct", "cagr_excl_latest_pct", "years_requested", "years_with_data",
             },
             "ai_insight": {"market_attractiveness","competitive_position",
                             "strategic_recommendation"} | None,
             "fetched_at": ISO8601, "from_cache": bool,
         }
-
-    주의: UN Comtrade 데이터는 국가에 따라 보고가 1~2년씩 늦는 경우가
-    흔하다. years를 지정 안 하면 최근 3개년(재작년 기준 -2~-4년 전)을
-    기본값으로 쓰지만, 데이터가 없으면 --years로 더 이전 연도를 직접
-    지정해야 할 수 있다.
     """
     if not HSCODE_RE.match(hscode):
         raise ValueError(f"HS코드 형식이 올바르지 않습니다: {hscode!r} (국제 공통 6자리 숫자)")
-    target_iso3 = resolve_iso3(target_country)
+
+    if reporter_code:
+        target_iso3 = None
+        target_label = target_country.strip() or f"code:{reporter_code}"
+        cache_key = f"code:{reporter_code}"
+    else:
+        target_iso3 = resolve_iso3(target_country)
+        target_label = target_iso3
+        cache_key = target_iso3
 
     if years is None:
         base_year = datetime.now(timezone.utc).year - 2  # Comtrade 보고 지연 감안한 기본값
@@ -659,7 +791,6 @@ def get_market_research(
     conn = sqlite3.connect(db_path, timeout=10)
     ensure_schema(conn)
 
-    cache_key = target_iso3
     try:
         if not force:
             cached = _load_cache(conn, hscode, cache_key, ttl_days)
@@ -670,26 +801,27 @@ def get_market_research(
             openai_client, subscription_key = get_config()
             ranking = get_global_import_ranking(subscription_key, hscode, latest_year, proxy_url=proxy_url)
             competitiveness = get_competitiveness(
-                subscription_key, hscode, target_iso3, latest_year, competitors, proxy_url=proxy_url
+                subscription_key, hscode, target_iso3, latest_year, competitors,
+                proxy_url=proxy_url, reporter_code=reporter_code,
             )
-            growth = get_growth_trend(subscription_key, hscode, target_iso3, years, proxy_url=proxy_url)
+            growth = get_growth_trend(
+                subscription_key, hscode, target_iso3, years,
+                proxy_url=proxy_url, reporter_code=reporter_code,
+            )
 
-            # AI에게는 사용자가 타이핑한 product_name이 아니라 UN Comtrade가
-            # 공식으로 돌려준 품목 설명(cmdDesc)을 준다 -> 사용자가 HS코드와
-            # 다른 이름을 실수로 입력해도 AI 리포트가 엉뚱한 품목으로 안 새게 됨
             official_item_desc = competitiveness.get("item_desc")
             ai_insight = interpret_with_llm(
-                openai_client, model, official_item_desc, hscode, target_iso3,
+                openai_client, model, official_item_desc, hscode, target_label,
                 ranking, competitiveness, growth,
             )
         except Exception:
-            print(f"[un_comtrade] {hscode}/{target_iso3} 조사 중 오류:")
+            print(f"[un_comtrade] {hscode}/{target_label} 조사 중 오류:")
             traceback.print_exc()
             raise
 
         result = {
             "hscode": hscode,
-            "target_country": target_iso3,
+            "target_country": target_label,
             "official_item_desc": official_item_desc,  # UN Comtrade 공식 품목 설명 (AI가 실제로 쓰는 기준)
             "years": years,
             "global_import_ranking": ranking,
@@ -718,10 +850,6 @@ def get_market_research(
 #   우선순위 낮음        |   경쟁력 강화 필요
 #                        |
 #                 한국 점유율 낮음
-#
-# 이 방식은 부수적으로 기존 약점도 줄여준다: 매트릭스에는 "경쟁국이 누구냐"가
-# 필요 없고 "한국 점유율이 몇 %냐"만 있으면 되므로, DEFAULT_COMPETITORS를
-# 하드코딩해둔 문제의 영향이 작아진다 (한국 점유율은 항상 정확히 계산됨).
 # ---------------------------------------------------------------------------
 
 QUADRANT_LABELS = {
@@ -812,12 +940,26 @@ def _get_candidate_point(
         y.get("may_be_incomplete") for y in growth["by_year"] if y["year"] == latest_year
     )
 
+    by_year = growth["by_year"]
+    import_growth_usd = None
+    if len(by_year) >= 2:
+        import_growth_usd = by_year[-1]["import_value_usd"] - by_year[0]["import_value_usd"]
+
+    top = competitiveness.get("top_suppliers") or []
     return {
         "label": label,
         "total_import_usd": competitiveness["total_import_usd"],
         "korea_import_usd": korea_import_usd,
         "korea_share_pct": korea_share_pct,
         "cagr_pct": cagr_pct,
+        "cagr_excl_latest_pct": growth.get("cagr_excl_latest_pct"),
+        # 기간 동안 수입액이 "몇 달러" 늘었는지 (성장률 %만 보면 작은 시장이
+        # 과대평가되는 문제를 보완하기 위해 AI 판단에 함께 넘김)
+        "import_growth_usd": import_growth_usd,
+        "korea_rank": competitiveness.get("korea_rank"),
+        "top_supplier": (
+            {"label": top[0]["label"], "share_pct": top[0]["share_pct"]} if top else None
+        ),
         "years_with_data": growth["years_with_data"],
         "may_be_incomplete_latest_year": latest_incomplete,
         "item_desc": competitiveness.get("item_desc"),
@@ -831,39 +973,55 @@ def _get_candidate_point(
 
 
 def interpret_matrix_with_llm(client, model, official_item_desc, hscode, candidates, thresholds):
-    """4분면에 흩뿌려진 후보국들을 보고 우선순위와 이유를 한국어로 정리."""
+    """4분면에 흩뿌려진 후보국들을 보고 우선순위와 이유를 한국어로 정리.
+    예전에는 성장률(%)과 점유율만 보고 골라서, 한국산 수입이 연 3만 달러
+    수준인 작은 시장이 "우선 공략"으로 추천되는 문제가 있었다. 이제 시장
+    규모(total_import_usd)와 실제 증가 금액(import_growth_usd)도 함께 보게 한다."""
+    slim = []
+    for c in candidates:
+        slim.append({k: c.get(k) for k in (
+            "label", "quadrant", "total_import_usd", "import_growth_usd", "cagr_pct",
+            "cagr_excl_latest_pct", "korea_share_pct", "korea_import_usd", "korea_rank",
+            "top_supplier", "import_rank", "may_be_incomplete_latest_year", "is_mirror_estimate",
+        )})
     payload = {
         "official_item_desc_en": official_item_desc or "(UN Comtrade 응답에 설명 없음)",
         "hscode": hscode,
         "thresholds": thresholds,
-        "candidates": candidates,
+        "candidates": slim,
     }
     prompt = f"""당신은 글로벌 무역 컨설턴트입니다. 아래 [데이터]는 여러 후보
 국가에 대해 UN Comtrade 공식 무역통계로 계산한 "성장률 x 한국 점유율"
-매트릭스 좌표입니다. 이 안에 있는 수치만 사용하고 새 숫자를 지어내지 마세요.
+매트릭스 좌표입니다. 이 안에 있는 수치만 사용하고 새 숫자나 사실을 지어내지 마세요.
 
 각 후보국의 quadrant 필드는 이미 계산되어 있습니다:
 - "집중 공략": 시장 성장률도 평균 이상, 한국 점유율도 평균 이상
-- "경쟁력 강화 필요": 시장은 평균 이상으로 크는데 한국 점유율은 낮음 (기회는 있으나 아직 자리 못 잡음)
+- "경쟁력 강화 필요": 시장은 평균 이상으로 크는데 한국 점유율은 낮음
 - "현상 유지/수확": 한국 점유율은 높지만 시장 성장은 평균 이하로 둔화
 - "우선순위 낮음": 성장률도 점유율도 평균 이하
 
-may_be_incomplete_latest_year가 true인 후보국은 최신 연도 통계가 아직 다
-집계되지 않았을 수 있으니, CAGR이 낮게 보여도 곧바로 "역성장"이라 단정하지
-마세요. total_import_usd가 있는데 korea_share_pct가 낮거나 None이면 "한국이
-아직 거의 진출 못 한 시장"이지 "수요가 없는 시장"이 아닙니다.
+우선 공략 후보를 고를 때는 성장률(%)과 점유율만 보지 말고 반드시 아래도 함께 따지세요:
+- total_import_usd(시장 규모): 성장률이 높아도 시장이 작으면 실제 기회는 작습니다.
+- import_growth_usd(기간 중 실제로 늘어난 수입 금액): 성장률 %보다 실제 기회의 크기를 더 잘 보여줍니다.
+- korea_import_usd / korea_rank: 한국산이 이미 어느 정도 들어가 있는지(교두보 여부).
+- top_supplier: 1위 공급국 점유율이 압도적이면 진입 장벽이 높을 수 있습니다.
+한국산 수입이 극히 적고(예: 수만 달러) 시장 규모도 상대적으로 작은 나라를 추천한다면,
+그 한계를 이유에 분명히 적으세요.
 
-is_mirror_estimate가 true인 후보국은 그 나라가 직접 발표한 공식 수치가 아니라
-"전세계 각국이 그 나라에 수출했다고 보고한 값들을 합산한 추정치"입니다. 이런
-후보국을 언급할 때는 "공식 발표 수치가 아닌 추정치"라는 점을 짧게라도 밝히세요.
+cagr_excl_latest_pct는 최신 연도(집계 중일 수 있음)를 뺀 참고용 성장률입니다.
+may_be_incomplete_latest_year가 true면 CAGR이 낮게 보여도 곧바로 "역성장"이라 단정하지
+마세요. korea_share_pct는 % 단위이며 0.003처럼 매우 작을 수 있습니다 - 이는 "0%"가
+아니라 "0.01% 미만"입니다. is_mirror_estimate가 true인 후보국은 "공식 발표가 아닌
+추정치"라는 점을 짧게 밝히세요. 국가는 label 그대로 부르세요.
 
 [데이터]
 {json.dumps(payload, ensure_ascii=False, indent=2)}
 [데이터 끝]
 
 한국 중소기업 관점에서:
-1) top_priority_markets: 우선적으로 공략할 만한 국가 1~3개와 그 이유 (라벨 그대로 사용)
-2) overall_strategy: 전체 후보국을 종합했을 때 취할 전략 방향 (사분면별로 어떻게 다르게 접근해야 하는지 포함)
+1) top_priority_markets: 우선적으로 공략할 만한 국가 1~3개와 그 이유 (이유에 시장 규모·
+   증가 금액·한국 현황 중 근거가 된 수치를 1~2개 포함, 2문장 이내)
+2) overall_strategy: 전체 후보국을 종합했을 때 취할 전략 방향 (사분면별 접근 차이 포함, 4문장 이내)
 
 반드시 아래 JSON 형식으로만 응답하세요:
 {{"top_priority_markets": [{{"label": "...", "reason": "..."}}], "overall_strategy": "..."}}
@@ -873,6 +1031,7 @@ is_mirror_estimate가 true인 후보국은 그 나라가 직접 발표한 공식
             model=model,
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"},
+            temperature=0.2,
         )
         return json.loads(response.choices[0].message.content)
     except Exception as e:
@@ -898,21 +1057,18 @@ def get_multi_country_comparison(
     candidate_countries:
         - 직접 지정: ["VNM", "태국", "Philippines"] 처럼 ISO3/국가명 리스트.
         - None(기본값): 글로벌 수입 순위 상위 top_n개국을 자동으로 후보로 삼는다.
-          이때는 UN Comtrade가 돌려준 국가명/국가코드를 그대로 쓰므로 ISO3
-          매핑이 없는 나라도 자동 후보에는 포함될 수 있다 (화면 표시는
-          UN 공식 영문 국가명으로 나옴).
 
     반환 스키마:
         {
             "hscode", "official_item_desc", "years",
             "thresholds": {"avg_cagr_pct", "avg_korea_share_pct"},
             "candidates": [
-                {"label", "total_import_usd", "korea_import_usd",
-                 "korea_share_pct", "cagr_pct", "quadrant",
+                {"label", "iso3", "reporter_code", "total_import_usd", "korea_import_usd",
+                 "korea_share_pct", "cagr_pct", "cagr_excl_latest_pct", "import_growth_usd",
+                 "korea_rank", "top_supplier", "quadrant", "import_rank",
                  "years_with_data", "may_be_incomplete_latest_year"},
                 ...
-            ],  # cagr_pct 또는 korea_share_pct가 없어(데이터 부족) 매트릭스에
-                # 올릴 수 없는 후보는 "excluded" 리스트로 따로 뺀다.
+            ],
             "excluded": [{"label", "reason"}, ...],
             "ai_summary": {"top_priority_markets", "overall_strategy"} | None,
             "fetched_at", "from_cache",
@@ -936,9 +1092,6 @@ def get_multi_country_comparison(
     try:
         openai_client, subscription_key = get_config()
 
-        # 후보국 목록 준비: 직접 지정했으면 ISO3로 정규화, 아니면 글로벌
-        # 순위표 상위 top_n개국을 그대로 후보로 삼는다 (reporterCode를 그대로
-        # 재사용해서 이름 매칭 실패 위험을 없앤다).
         targets = []  # [{"label", "iso3"|None, "reporter_code"|None}]
         if candidate_countries:
             for c in candidate_countries:
@@ -974,6 +1127,11 @@ def get_multi_country_comparison(
                 point["fetched_at"] = datetime.now(timezone.utc).isoformat()
                 _save_point_cache(conn, hscode, candidate_key, years_key, point)
 
+            # 화면에서 이 후보국을 클릭해 상세 조사할 때 국가명 매칭 없이 바로
+            # 조회할 수 있도록 식별 정보를 붙여둔다 (예전 캐시에도 적용됨).
+            point["iso3"] = t["iso3"]
+            point["reporter_code"] = t["reporter_code"]
+
             if official_item_desc is None and point.get("item_desc"):
                 official_item_desc = point["item_desc"]
 
@@ -991,14 +1149,13 @@ def get_multi_country_comparison(
             )
 
         avg_cagr = round(sum(c["cagr_pct"] for c in candidates) / len(candidates), 1)
-        avg_share = round(sum(c["korea_share_pct"] for c in candidates) / len(candidates), 1)
+        avg_share = round(sum(c["korea_share_pct"] for c in candidates) / len(candidates), 2)
         for c in candidates:
             c["quadrant"] = _classify_quadrant(c["cagr_pct"], c["korea_share_pct"], avg_cagr, avg_share)
 
         # 트라이빅 "유망시장 순위" 버블차트의 X축(수입금액 순위)에 대응.
-        # ⚠️ 트라이빅이 실제로 이 순위를 어떤 공식(단순 수입액순? 성장률/점유율을
-        # 섞은 자체 점수?)으로 매기는지는 공개돼 있지 않아서 그대로 재현할 수
-        # 없다. 우리는 정직하게 "수입금액이 큰 순"으로만 매긴다.
+        # 트라이빅의 실제 순위 공식은 공개돼 있지 않아서, 우리는 정직하게
+        # "수입금액이 큰 순"으로만 매긴다.
         ranked_by_import = sorted(candidates, key=lambda c: (c["total_import_usd"] or 0), reverse=True)
         for i, c in enumerate(ranked_by_import, 1):
             c["import_rank"] = i
@@ -1121,7 +1278,7 @@ def world_share_trend_from_flow(flow_stats, years, top_n=6, always_include_codes
             row = rows_by_key_year.get((key, y))
             total = by_year_total.get(y) or 0
             if row and total:
-                pts.append({"year": y, "share_pct": round(row["value_usd"] / total * 100, 1)})
+                pts.append({"year": y, "share_pct": round(row["value_usd"] / total * 100, 2)})
             else:
                 pts.append({"year": y, "share_pct": None})
         series[label] = pts
