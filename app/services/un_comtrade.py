@@ -594,9 +594,9 @@ def get_market_research(
         # 관세청(한국 -> 이 나라) 실제 수출 통계. UN Comtrade 실패와 별개로
         # 다루고, 키가 없거나 호출이 실패해도 나머지 결과는 그대로 저장한다.
         try:
-            kr_export_trend = kr_customs.get_kr_export_trend(hscode, target_iso3, years)
+            korea_exports_customs = kr_customs.get_korea_exports(hscode, target_iso3, years)
         except Exception:
-            kr_export_trend = {"available": False, "reason": "관세청 자료를 불러오지 못했습니다.", "by_year": []}
+            korea_exports_customs = {"available": False, "reason": "관세청 자료를 불러오지 못했습니다."}
 
         result = {
             "hscode": hscode,
@@ -606,7 +606,7 @@ def get_market_research(
             "global_import_ranking": ranking,
             "competitiveness": competitiveness,
             "growth_trend": growth,
-            "kr_export_trend": kr_export_trend,
+            "korea_exports_customs": korea_exports_customs,
             "ai_insight": ai_insight,
             "fetched_at": datetime.now(timezone.utc).isoformat(),
             "from_cache": False,

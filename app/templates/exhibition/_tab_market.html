@@ -177,12 +177,17 @@
   {% endif %}
 
   <h3 class="section-label">④ 한국의 {{ expo.country_ko or expo.country }} 수출 추이 <span class="placeholder-note" style="font-weight:400;">(관세청 기준, FOB)</span></h3>
-  {% set kr_trend = result.kr_export_trend %}
-  {% if kr_trend and kr_trend.available %}
+  {% set kr_trend = result.korea_exports_customs %}
+  {% if kr_trend and kr_trend.available and kr_trend.by_year %}
     <div class="un-chart-unit">단위: USD</div>
-    {{ un_bar_chart(kr_trend.by_year, 'export_value_usd') }}
-    {% if kr_trend.cagr_pct is not none %}
-    <p class="un-cagr {{ 'up' if kr_trend.cagr_pct >= 0 else 'down' }}">CAGR (연평균 성장률): {{ kr_trend.cagr_pct }}%</p>
+    {{ un_bar_chart(kr_trend.by_year, 'export_usd') }}
+    {% if kr_trend.ytd %}
+    <p class="page-desc">
+      {{ kr_trend.ytd.year }}년 1~{{ kr_trend.ytd.months }}월 누적: <strong>${{ "{:,.0f}".format(kr_trend.ytd.export_usd) }}</strong>
+      {% if kr_trend.ytd.yoy_pct is not none %}
+      <span class="un-cagr {{ 'up' if kr_trend.ytd.yoy_pct >= 0 else 'down' }}">(전년 동기 대비 {{ '▲' if kr_trend.ytd.yoy_pct >= 0 else '▼' }} {{ kr_trend.ytd.yoy_pct | abs }}%)</span>
+      {% endif %}
+    </p>
     {% endif %}
   {% else %}
   <p class="placeholder-note">{{ kr_trend.reason if kr_trend and kr_trend.reason else '관세청 자료를 불러오지 못했습니다.' }}</p>
