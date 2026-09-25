@@ -218,7 +218,9 @@ class TrendResult(db.Model):
     fetched_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship("User", backref=db.backref("trend_results", lazy=True))
-    product = db.relationship("Product", backref=db.backref("trend_results", lazy=True))
+    product = db.relationship(
+        "Product", backref=db.backref("trend_results", lazy=True, cascade="all, delete-orphan")
+    )
 
     def __repr__(self):
         return f"<TrendResult expo={self.exhibition_id} product={self.product_id}>"
