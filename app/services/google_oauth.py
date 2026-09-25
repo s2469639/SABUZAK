@@ -6,6 +6,11 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 
+# 로컬 개발은 http://localhost로만 돌아가서(HTTPS 없음) oauthlib의 기본
+# "OAuth2는 HTTPS에서만" 체크를 꺼야 한다. 운영 배포 시 GOOGLE_REDIRECT_URI가
+# https:// 주소가 되면 이 값과 무관하게 정상적으로 HTTPS로 통신한다.
+os.environ.setdefault("OAUTHLIB_INSECURE_TRANSPORT", "1")
+
 # gmail.send는 발송 전용 최소 권한 (읽기/삭제 불가)
 SCOPES = [
     "openid",
