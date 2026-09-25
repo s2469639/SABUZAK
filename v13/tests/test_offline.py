@@ -164,7 +164,16 @@ class BoothTest(Base):
         self.assertIsNone(d["booth_error"])
         self.assertEqual(b["source_mode"], "openai_self_research")
         self.assertEqual(len(fakes.RESEARCH_CALLS), 1)        # OpenAI 자체 조사
-        self.assertEqual(b["key_actions"][0], "흰 장갑 시식으로 끈적임 없음 증명")
+        self.assertEqual(b["key_actions"][0]["title"], "흰 장갑 시식으로 끈적임 없음 증명")
+        self.assertNotIn("근거:", b["key_actions"][0]["detail"])           # 본문에 붙은 근거 표기는 떼어냄
+        self.assertEqual(b["key_actions"][0]["quote_ids"], ["R2"])
+        self.assertEqual(b["key_actions"][2]["title"], "케이스 단가표로 상담 전환")   # 예전 형식 호환
+        self.assertEqual(b["kpis"][0]["target"], "80건")
+        self.assertEqual(b["kpis"][1], {"metric": "샘플 요청 20건", "target": "", "how": ""})
+        # 화면용 짧은 요약: 긴 문장만, 원문은 그대로
+        self.assertTrue(b["short"]["action.0"].startswith("요약: "))
+        self.assertIn("kpi.0", b["short"])
+        self.assertNotIn("action.1", b["short"])                      # 짧은 문장은 요약하지 않음
         vf = b["visitor_flow"]
         self.assertEqual(vf["3s"]["props"], ["흰 장갑", "꿀 방울 백월"])
         self.assertEqual(vf["30s"]["headline"], "커피와 한입 시식")     # 예전 형식 호환
@@ -269,7 +278,7 @@ class AppTest(Base):
         html = self.client.get(f"/trend/{ids['job_id']}").get_data(as_text=True)
         for s in ["<h1>트렌드 조사</h1>", f'href="/booth/{ids["booth_job_id"]}">부스 컨셉 기획 →',
                   "1. 연관 검색어 기반 시장 트렌드 4단계 클러스터링", "cluster-num",
-                  "2. 현지 리테일 벤치마킹", '<div class="k">제품 스펙</div>', '<span class="pill">400g</span>',
+                  "2. 현지 리테일 벤치마킹", '<div class="k">제품 스펙</div>', '<span class="tag">400g</span>',
                   "소비자 페인 포인트", '<ul class="pain">', 'class="price-big"', 'class="pitch"', "추천 매대",
                   "3. 현지 시장 트렌드 분석", 'class="stat-pill"', "자세히 보기", 'id="art-E1"', 'data-title="근거 기사"',
                   "박람회 준비부터 바이어 관리까지."]:
@@ -282,20 +291,42 @@ class AppTest(Base):
         self.assertIn(f"booth_{ids['booth_job_id']}.json", saved)
         self.assertIn("scores", json.load(open(os.path.join(self.tmp.name, "results", f"booth_{ids['booth_job_id']}.json")))["booth"])
 
+    def test_long_specs_as_list_and_empty_cluster_card(self):
+        long_specs = "냉장 생면과 닭 육수 소스를 함께 구성한 약 2인분 라멘 키트다. 면은 유탕 건면이 아닌 냉장 생면이다."
+        empty_first = lambda d: {**d, "section1": {**d["section1"], "clusters": [
+            {**d["section1"]["clusters"][0], "keywords": []}] + d["section1"]["clusters"][1:]}}
+        with mock.patch.dict(ANALYSIS, {"competitor_specs": long_specs}):
+            d = empty_first(services.run_trend(FORM))
+        import app as web
+        with web.app.test_request_context():
+            html = web._trend_page(FORM, d)
+        self.assertIn('<ul class="fact-list">', html)
+        self.assertIn("<li>면은 유탕 건면이 아닌 냉장 생면이다</li>", html)
+        self.assertNotIn('<span class="tag">냉장 생면', html)
+        self.assertIn('<div class="card empty">', html)                 # 검색어가 없어도 01 카드 유지
+        self.assertIn('<span class="cluster-num">01</span>', html)
+        self.assertEqual(html.count('<span class="cluster-num">'), 4)
+        self.assertNotIn("검색 신호가 확인되지 않은 분류", html)
+
     def test_booth_page(self):
         job_id = self.client.post("/api/booth/start", data=FORM).get_json()["job_id"]
         self.wait("booth", job_id)
         html = self.client.get(f"/booth/{job_id}").get_data(as_text=True)
         for s in ["<h1 style=\"margin-top:6px\">부스 컨셉 기획</h1>", "약과 · 미국 · Summer Fancy Food Show 2027",
-                  'id="ev-toggle"', "근거 표시", "Executive Summary", "BIG IDEA", "KEY ACTIONS", "흰 장갑 시식으로 끈적임 없음 증명",
-                  "🎯 바이어 명함 80장", "전략 근거 (Fact → Insight → Implication)", "IMPLICATION",
+                  'class="slogan-hero"', "SLOGAN", "“Sweet Heritage, Zero Sticky Fingers”", "끈적임 없는 전통 단맛",
+                  "Executive Summary", "BIG IDEA", "TARGET &amp; MESSAGE", "1순위",
+                  "Key Actions", '<div class="title">흰 장갑 시식으로 끈적임 없음 증명</div>',
+                  '<div class="target">80건</div>', '<div class="metric">유효 바이어 상담</div>',
+                  "자세히</summary>", 'class="full"',
+                  "전략 근거 · Fact → Insight → Implication", "IMPLICATION",
                   "Execution Plan", 'data-panel="plan-main_visual"', "“Honey Heritage, No Sticky Fingers”", "1개 존 구성",
-                  "Visitor Journey", "3초 · 통로에서 멈춤", "흰 장갑 백월로 시선 고정", "목표 · 통로 방문객 멈추기", "소품·연출",
-                  "커피와 한입 시식", "운영 리스크 점검", "추가 확인 요청 사항", 'type="checkbox" data-check-key=',
-                  'class="evi"', 'data-tab="memo" data-target="R2"', 'id="art-R2"']:
+                  "Visitor Journey", '>3초</button>', '>30초</button>', '>3분</button>', "흰 장갑 백월로 시선 고정",
+                  "<b>목표</b>", "소품·연출", "커피와 한입 시식", "KEY MESSAGE",
+                  "운영 리스크 점검", "추가 확인 요청 사항", 'type="checkbox" data-check-key=',
+                  'data-tab="memo" data-target="R2"', 'id="art-R2"', '<span class="ev company">기업: 강점</span>']:
             self.assertIn(s, html, s)
         for s in ["OpenAI 단독 기획", "gpt-6-astra", "위 1~3번 조사를 쓰지 않고", "바이어 채점", "원본 데이터",
-                  "배치도", "1. 연관 검색어"]:
+                  "배치도", "1. 연관 검색어", "ev-toggle", "근거 표시", "통로에서 멈춤", "근거: R2"]:
             self.assertNotIn(s, html, s)
 
     def test_booth_page_while_running_keeps_waiting(self):

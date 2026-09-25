@@ -295,13 +295,18 @@ def booth_payload(stage):
         "merchandising": {"zones": [{"name": "Hero Zone", "position": "중앙", "purpose": "대표 제품", "basis": ["R1"]},
                                    {"name": "", "position": "우측", "purpose": "이름 없는 존은 버림"}],
                           "bullets": [{"text": "눈높이 진열", "basis": []}]},
-        "key_actions": ["흰 장갑 시식으로 끈적임 없음 증명", "커피 페어링 바 운영", "케이스 단가표로 상담 전환"],
+        "key_actions": [{"title": "흰 장갑 시식으로 끈적임 없음 증명",
+                         "detail": "10월 2일까지 운영 담당이 흰 장갑 200켤레와 시식 동선을 확정하고, 첫날 오전 리허설로 10초 안에 시식이 끝나는지 확인한다. 근거: R2·R3, 기획.",
+                         "basis": ["R2", "기업:강점"]},
+                        {"title": "커피 페어링 바 운영", "detail": "아메리카노 옆 한입 약과", "basis": ["R2"]},
+                        "케이스 단가표로 상담 전환"],
         "visitor_flow": {"3s": {"headline": "흰 장갑 백월로 시선 고정", "goal": "통로 방문객 멈추기",
                                 "visitor": ["5m 밖에서 No Sticky Fingers 문구가 보임"], "staff": ["눈 마주치면 샘플 권유"],
                                 "props": ["흰 장갑", "꿀 방울 백월"], "message": "손에 안 묻는 꿀과자"},
                          "30s": "커피와 한입 시식",      # 예전 형식(문장 하나)도 받아야 함
                          "3min": {"headline": "원페이저 상담", "staff": "케이스 단가·MOQ 안내"}},
-        "kpis": ["바이어 명함 80장", "샘플 요청 20건"],
+        "kpis": [{"metric": "유효 바이어 상담", "target": "80건", "how": "명함을 받고 3분 이상 상담한 바이어 수를 부스 태블릿에 기록해 매일 저녁 집계한다."},
+                 "샘플 요청 20건"],
         "risks": [{"text": "화기 사용 허가 확인", "basis": []}],
         "questions": ["유통기한은 몇 개월인가요?"],
         "applied": ["시연을 10초 언박싱으로 단축"] if stage == "revised" else [],
@@ -310,6 +315,9 @@ def booth_payload(stage):
 
 def fake_ask_json(client, prompt, temperature=0.0, model=None, system=None):
     p = prompt
+    if "화면에 먼저 보여줄 짧은 요약" in p:
+        items = json.loads(p[p.index("["):p.index("\n\nJSON:")])
+        return {"items": [{"id": it["id"], "short": "요약: " + it["text"][:12]} for it in items]}
     if "알고 있는 지식으로 정리하세요" in p:
         BOOTH_CALLS.append(("knowledge", model, system))
         return {"notes": [{"topic": "consumer", "text": "모델 지식 메모", "source_url": "https://should-be-dropped"}]}

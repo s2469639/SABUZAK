@@ -34,7 +34,14 @@
     {% if s1.reliability_note_ko %}<div class="slim-banner" role="note"><span class="ico info" aria-hidden="true">i</span>{{ s1.reliability_note_ko }}</div>{% endif %}
     {% for w in s1.warnings %}<div class="slim-banner" role="note"><span class="ico">⚠️</span>{{ w }}</div>{% endfor %}
     <div class="cluster-grid">
-      {% for c in s1.clusters %}{% if c.keywords %}
+      {% for c in s1.clusters %}
+      {% if not c.keywords %}
+      <div class="card empty">
+        <div class="card-header"><span><span class="cluster-num">{{ "%02d"|format(loop.index) }}</span>{{ c.label }}</span></div>
+        <div class="card-title">{{ c.title_ko }}</div>
+        <div class="empty-note"><span class="ico info" aria-hidden="true" style="flex:none">i</span><span>현지에서 {{ c.short_ko or "이 단계" }} 관련 검색 신호가 확인되지 않았어요. 아직 검색 수요가 작거나, 다른 표현으로 검색되고 있을 수 있어요.</span></div>
+      </div>
+      {% else %}
       <div class="card">
         <div class="card-header"><span><span class="cluster-num">{{ "%02d"|format(loop.index) }}</span>{{ c.label }}</span>{% if c.tag %}<span class="chip">{{ c.tag }}</span>{% endif %}</div>
         <div class="card-title">{{ c.title_ko }}</div>
@@ -53,8 +60,6 @@
       </div>
       {% endif %}{% endfor %}
     </div>
-    {% set empty = s1.clusters|rejectattr("keywords")|map(attribute="short_ko")|list %}
-    {% if empty %}<p class="muted" style="margin-top:10px">검색 신호가 확인되지 않은 분류: {{ empty|join(", ") }}</p>{% endif %}
   {% else %}
     <div class="empty-panel">검색어 트렌드를 불러오지 못했습니다. {{ data.section1_error }}</div>
   {% endif %}
@@ -69,7 +74,10 @@
         <div class="card-header">TARGET PRODUCT</div>
         <div class="card-title">{{ s2.target_product.title }}</div>
         {% set specs = s2.target_product.specs|chips %}
-        {% if specs %}<div class="field"><div class="k">제품 스펙</div>{% for x in specs %}<span class="pill">{{ x }}</span>{% endfor %}</div>{% endif %}
+        {% if specs %}<div class="field"><div class="k">제품 스펙</div>
+          {% if specs|map("length")|max <= 15 %}{% for x in specs %}<span class="tag">{{ x }}</span>{% endfor %}
+          {% else %}<ul class="fact-list">{% for x in s2.target_product.specs|split_points %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}
+        </div>{% endif %}
         {% set pains = s2.target_product.complaints|split_points %}
         {% if pains %}<div class="field"><div class="k">소비자 페인 포인트</div><ul class="pain">{% for x in pains %}<li>{{ x }}</li>{% endfor %}</ul></div>{% endif %}
       </div>

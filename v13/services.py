@@ -35,8 +35,8 @@ TREND_SECTIONS = [  # (키, 로딩 화면 라벨, 진행률 비중, 단계 수)
     ("retail", "리테일 가격", 15, retail_research.RETAIL_STEPS),
     ("research", "시장 자료", 55, research.RESEARCH_STEPS),
 ]
-BOOTH_SECTIONS = [("booth", "부스 기획", 100, research.BOOTH_STEPS)]
-BOOTH_STAGE_CHIPS = ["자료 수집", "전략 수립", "기획안 작성", "바이어 관점 점검", "최종 확정"]
+BOOTH_SECTIONS = [("booth", "부스 기획", 100, research.BOOTH_STEPS + 1)]   # + 화면용 요약 단계
+BOOTH_STAGE_CHIPS = ["자료 수집", "전략 수립", "기획안 작성", "바이어 관점 점검", "최종 확정", "핵심 요약"]
 
 
 def trend_progress():
@@ -150,6 +150,13 @@ def _plan_booth(inputs, force, progress=None):
                                                 inputs["exhibition_website"] or None, profile, progress=progress)
         if booth is None:
             raise RuntimeError("부스 기획안을 만들지 못했습니다.")
+        if progress:
+            progress("핵심 요약 정리")
+        try:
+            research.add_short_texts(client, booth)   # 화면에 먼저 보여줄 짧은 요약 (원문은 그대로)
+        except Exception as e:
+            booth["short"] = {}
+            booth["short_error"] = str(e)
         booth["from_cache"] = False
         conn.execute("INSERT OR REPLACE INTO booth_cache VALUES (?, ?, ?)",
                      (key, json.dumps(booth, ensure_ascii=False), time.time()))

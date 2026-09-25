@@ -44,6 +44,14 @@ python -m unittest discover -s tests -v         # 오프라인 테스트
 - 부스 기획 AI 출력에 `key_actions`(3개)와 단계별 Visitor Journey(`headline·goal·visitor·staff·props·message`) 추가
 - 로딩 문구를 사용자용 쉬운 문구로 (`jobs.FRIENDLY`)
 
+## v13.1 변경 (디자인 개편)
+- 글자 크기: 업무용 화면 기준 본문 14px · 보조 13px · 라벨 12px 이상 · 카드 제목 16px · 섹션 제목 20px
+- 부스: 슬로건을 맨 위 큰 배너로, Big Idea / Target & Message, Key Actions(제목·세부·근거), KPI(목표 수치 강조), 근거 뱃지 항상 표시
+- Visitor Journey 탭은 3초 / 30초 / 3분만
+- 부스 AI 출력: key_actions = {title, detail, basis}, kpis = {metric, target, how}. 본문에 붙은 '근거: R3' 표기는 자동 제거
+- **화면용 요약 단계**: 최종 기획안의 긴 문장마다 25자 안팎 요약을 따로 만들어(gpt-5.6-terra 1회) 먼저 보여주고, '자세히'로 원문 전체를 펼침. 기획 단계에는 길이 제한 없음
+- 트렌드 조사: 검색 신호 없는 분류도 카드 유지(2×2), 제품 스펙은 짧으면 태그·문장이면 목록
+
 ## 모델
 v12와 같습니다: 부스 `gpt-6-astra`(V13에서도 `.env`의 `V12_BOOTH_MODEL`/`V12_BOOTH_EFFORT`로 변경), 나머지 `gpt-5.6-terra`(`V12_TASK_MODEL`).
 

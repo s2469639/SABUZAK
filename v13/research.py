@@ -90,7 +90,7 @@ apply_brotli_workaround()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_DB_PATH = os.path.join(BASE_DIR, "research_cache.db")
 
-VERSION = "v13.0"              # 질문·프롬프트·규칙을 바꾸면 올려서 리포트 캐시 무효화
+VERSION = "v13.1"              # 질문·프롬프트·규칙을 바꾸면 올려서 리포트 캐시 무효화
 MODEL = model_upgrade.TASK_MODEL        # 발췌·요약 등 일반 작업 (.env V12_TASK_MODEL)
 # v7: 부스 컨셉 기획(초안·검토·수정)만 상위 모델. .env로 바꿀 수 있음
 BOOTH_MODEL = model_upgrade.BOOTH_MODEL  # 부스 기획 (.env V12_BOOTH_MODEL)
@@ -1139,7 +1139,8 @@ BOOTH_SCHEMA = """{
   "packaging": {"direction": "", "bullets": [{"text": "", "basis": []}]},
   "merchandising": {"zones": [{"name": "", "position": "", "purpose": "", "basis": []}],
                     "bullets": [{"text": "진열 팁", "basis": []}]},
-  "key_actions": ["부스에서 반드시 실행할 핵심 행동 1", "핵심 행동 2", "핵심 행동 3"],
+  "key_actions": [{"title": "핵심 행동을 한 줄로 (예: 흰 장갑 시식으로 끈적임 없음 증명)",
+                   "detail": "누가·언제·어떻게 실행하는지 세부 설명", "basis": ["R3", "기업:강점"]}],
   "visitor_flow": {
     "3s": {"headline": "통로에서 3초: 눈을 멈추게 하는 장치 한 줄", "goal": "이 단계의 목표",
            "visitor": ["방문객이 보고 느끼는 것"], "staff": ["직원이 할 일"], "props": ["필요한 소품·연출물"],
@@ -1147,7 +1148,8 @@ BOOTH_SCHEMA = """{
     "30s": {"headline": "30초: 시식·시연", "goal": "", "visitor": [], "staff": [], "props": [], "message": ""},
     "3min": {"headline": "3분: 상담 테이블", "goal": "", "visitor": [], "staff": [], "props": [], "message": ""}
   },
-  "kpis": ["부스 성과 지표"],
+  "kpis": [{"metric": "지표 이름 (예: 바이어 상담 전환율)", "target": "목표 수치 (예: 35%)",
+            "how": "측정 방법·정의"}],
   "risks": [{"text": "부스 운영·입점 시 확인할 점", "basis": []}],
   "questions": ["기업에 확인하고 싶은 것"]
 }"""
@@ -1199,7 +1201,7 @@ def _clean_bullets(items, quote_index, profile):
             b = {"text": b, "basis": []}
         if not isinstance(b, dict) or not str(b.get("text") or "").strip():
             continue
-        out.append({"text": str(b["text"]).strip(), **_classify_basis(b.get("basis"), quote_index, profile)})
+        out.append({"text": _strip_evidence(b["text"]), **_classify_basis(b.get("basis"), quote_index, profile)})
     return out
 
 
@@ -1241,11 +1243,114 @@ def normalize_booth(data, quote_index, profile):
         "positioning": {"target_buyer": text(pos, "target_buyer"), "core_message": text(pos, "core_message")},
         "sections": sections,
         "visitor_flow": normalize_visitor_flow(data.get("visitor_flow")),
-        "key_actions": [str(k).strip() for k in data.get("key_actions") or [] if str(k).strip()][:3],
-        "kpis": [str(k).strip() for k in data.get("kpis") or [] if str(k).strip()][:4],
+        "key_actions": normalize_key_actions(data.get("key_actions"), quote_index, profile),
+        "kpis": normalize_kpis(data.get("kpis")),
         "risks": _clean_bullets(data.get("risks"), quote_index, profile),
         "questions": [str(q).strip() for q in data.get("questions") or [] if str(q).strip()][:3],
     }
+
+
+EVIDENCE_IN_TEXT = re.compile(r"\s*[\(\[]?\s*근거\s*[:：][^\)\]\n]*[\)\]]?\.?\s*$")
+
+
+def _strip_evidence(text):
+    """모델이 본문 끝에 붙인 '근거: R11·R12, 기획' 같은 표기를 뗀다 (근거는 basis 뱃지로 보여줌)."""
+    return EVIDENCE_IN_TEXT.sub("", str(text or "")).strip()
+
+
+def normalize_key_actions(items, quote_index, profile):
+    """[{title, detail, 근거 분류}]. 예전 형식(문장 하나)은 title로."""
+    out = []
+    for a in items or []:
+        if isinstance(a, str):
+            a = {"title": a}
+        if not isinstance(a, dict) or not str(a.get("title") or "").strip():
+            continue
+        out.append({"title": _strip_evidence(a["title"]), "detail": _strip_evidence(a.get("detail")),
+                    **_classify_basis(a.get("basis"), quote_index, profile)})
+    return out[:3]
+
+
+def normalize_kpis(items):
+    """[{metric, target, how}]. 예전 형식(문장 하나)은 metric으로."""
+    out = []
+    for k in items or []:
+        if isinstance(k, str):
+            k = {"metric": k}
+        if isinstance(k, dict) and str(k.get("metric") or "").strip():
+            out.append({"metric": str(k["metric"]).strip(), "target": str(k.get("target") or "").strip(),
+                        "how": str(k.get("how") or "").strip()})
+    return out[:4]
+
+
+# ---------------------------------------------------------------
+# v13: 화면용 짧은 요약 (원문은 그대로 두고 요약본을 따로 만든다)
+# ---------------------------------------------------------------
+SHORT_MIN_CHARS = 45     # 이보다 짧은 문장은 요약하지 않음
+SHORT_MAX_CHARS = 45     # 요약본 최대 길이 (넘으면 버리고 원문을 보여줌)
+
+
+def short_targets(booth):
+    """요약할 문장 목록: [(경로, 원문)]. 화면(booth.html)이 같은 경로로 요약본을 찾는다."""
+    out = []
+
+    def add(path, text):
+        if isinstance(text, str) and len(text.strip()) >= SHORT_MIN_CHARS:
+            out.append((path, text.strip()))
+
+    add("summary", booth.get("summary"))
+    add("core_message", (booth.get("positioning") or {}).get("core_message"))
+    brief = booth.get("brief") or {}
+    add("big_idea_why", (brief.get("big_idea") or {}).get("why"))
+    for i, ins in enumerate(brief.get("insights") or []):
+        for f in ("fact", "insight", "implication"):
+            add(f"insight.{i}.{f}", ins.get(f))
+    for i, a in enumerate(booth.get("key_actions") or []):
+        add(f"action.{i}", a.get("detail"))
+    for i, k in enumerate(booth.get("kpis") or []):
+        add(f"kpi.{i}", k.get("how"))
+    for key, sec in (booth.get("sections") or {}).items():
+        for i, b in enumerate(sec.get("bullets") or []):
+            add(f"bullet.{key}.{i}", b.get("text"))
+        for i, z in enumerate(sec.get("zones") or []):
+            add(f"zone.{key}.{i}", z.get("purpose"))
+        add(f"key_message.{key}", sec.get("key_message"))
+    for stage, st in (booth.get("visitor_flow") or {}).items():
+        add(f"journey.{stage}.goal", st.get("goal"))
+        add(f"journey.{stage}.message", st.get("message"))
+        for f in ("visitor", "staff", "props"):
+            for i, x in enumerate(st.get(f) or []):
+                add(f"journey.{stage}.{f}.{i}", x)
+    for i, r in enumerate(booth.get("risks") or []):
+        add(f"risk.{i}", r.get("text"))
+    for i, q in enumerate(booth.get("questions") or []):
+        add(f"question.{i}", q)
+    return out
+
+
+def add_short_texts(client, booth):
+    """최종 기획안의 긴 문장마다 짧은 요약본을 만들어 booth["short"] = {경로: 요약}에 넣는다.
+    기획 단계에는 길이 제한을 두지 않고(판단 품질 유지), 저렴한 모델로 요약만 따로 한다. 실패해도 원문은 그대로."""
+    targets = short_targets(booth)
+    booth["short"] = {}
+    if not targets:
+        return booth
+    items = [{"id": f"s{i}", "text": t} for i, (_, t) in enumerate(targets)]
+    data = _ask_json(client, f"""아래 부스 기획 문장들을 화면에 먼저 보여줄 짧은 요약으로 만드세요.
+- 각 문장을 한국어 25자 안팎(최대 {SHORT_MAX_CHARS}자)의 한 구절로. 명사형으로 끝내도 됩니다.
+- 핵심 행동·대상·수치를 남기고, 수식어·절차 설명은 뺍니다. 브랜드·수치는 원문 표기 유지.
+- 원문에 없는 내용을 더하지 마세요. 근거 표기(R3 등)는 쓰지 마세요.
+
+{json.dumps(items, ensure_ascii=False, indent=1)}
+
+JSON: {{"items": [{{"id": "s0", "short": ""}}]}}""", temperature=0.2, model=MODEL)
+    shorts = {str(x.get("id")): _strip_evidence(x.get("short")) for x in (data or {}).get("items") or []
+              if isinstance(x, dict)}
+    for i, (path, original) in enumerate(targets):
+        s = shorts.get(f"s{i}", "")
+        if s and len(s) <= SHORT_MAX_CHARS and len(s) < len(original):
+            booth["short"][path] = s
+    return booth
 
 
 def _str_list(value, limit=4):
@@ -1355,9 +1460,11 @@ JSON 형식:
 {brief_block}
 
 {BOOTH_RULES}
-- key_actions: 부스 성과를 좌우하는 핵심 행동 3개.
+- key_actions: 부스 성과를 좌우하는 핵심 행동 3개. title은 한 줄, 세부 내용은 detail에.
+- kpis: 2~3개. metric(지표 이름)·target(목표 수치)·how(측정 방법)를 나눠서.
+- 근거 id(R3 등)나 "근거:" 문구는 본문(title·detail·text)에 쓰지 말고 basis에만 적으세요.
 - visitor_flow: 3초·30초·3분 단계마다 headline(한 줄), goal, visitor·staff·props(각 1~3개), message를 채우세요.
-- kpis: 부스 성과 지표 2~3개.
+
 
 JSON 형식:
 {BOOTH_SCHEMA}""", temperature=0.6, model=BOOTH_MODEL, system=planner)
