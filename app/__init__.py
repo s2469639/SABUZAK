@@ -102,6 +102,16 @@ def create_app(config_object="config.Config"):
     app = Flask(__name__)
     app.config.from_object(config_object)
     app.config.setdefault("SECRET_KEY", "dev-secret-key-change-me")
+    if app.config["SECRET_KEY"] == "dev-secret-key-change-me" and not app.debug:
+        # 배포 환경에서 SECRET_KEY 환경변수를 안 넣으면 로그인 세션이 누구나
+        # 아는 키로 서명돼서 위조 가능해진다. 조용히 넘어가지 않고 로그에
+        # 크게 경고를 남긴다 (서버 기동 자체는 막지 않음 - 로컬 테스트 등
+        # SECRET_KEY 없이도 돌려봐야 하는 경우가 있어서).
+        app.logger.warning(
+            "!!! SECRET_KEY 환경변수가 설정되지 않아 기본값을 쓰고 있습니다. "
+            "배포 환경이라면 지금 바로 SECRET_KEY를 랜덤 값으로 설정하세요 "
+            "(예: python -c \"import secrets; print(secrets.token_hex(32))\")."
+        )
     app.jinja_env.filters["kdate"] = format_kdate
     app.jinja_env.globals["kdate_range"] = format_kdate_range
     app.jinja_env.filters["usd_short"] = usd_short
