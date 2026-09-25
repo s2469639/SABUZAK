@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>페어메이트 박람회 대시보드</title>
+<style>
+  :root {
+    --bg: #ffffff; --panel: #ffffff; --panel-2: #f8fafc; --line: #e5e7eb; --line-2: #cbd5e1;
+    --text: #0f172a; --body: #334155; --muted: #64748b; --accent: #2563eb; --accent-2: #1d4ed8; --accent-bg: #eff6ff;
+    --green: #047857; --green-bg: #ecfdf5; --red: #b91c1c; --red-bg: #fef2f2;
+    --amber: #b45309; --amber-bg: #fffbeb; --violet: #6d28d9; --violet-bg: #f5f3ff;
+    --shadow: 0 1px 2px rgba(15,23,42,.05), 0 1px 3px rgba(15,23,42,.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, sans-serif; font-size: 14px; line-height: 1.55; }
+  .container { max-width: 1240px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  p.desc { font-size: 13px; color: var(--muted); margin-bottom: 22px; }
+  a { color: var(--accent); }
+
+  /* 입력 폼 */
+  .form-container { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 16px; margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+  .form-group input { width: 100%; background: #fff; border: 1px solid var(--line-2); color: var(--text); padding: 9px 12px; border-radius: 6px; font-size: 13px; }
+  .form-group input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  details.opt { margin: 4px 0 14px; }
+  details.opt summary { cursor: pointer; font-size: 13px; color: var(--accent); margin-bottom: 12px; }
+  .actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .btn-submit { background: var(--accent); color: #fff; border: none; padding: 10px 24px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 14px; }
+  .btn-submit:hover { background: var(--accent-2); }
+  .btn-submit:disabled { opacity: .6; cursor: progress; }
+  .check { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+  .alert.error { background: var(--red-bg); border: 1px solid #fecaca; color: var(--red); border-radius: 8px; padding: 12px 14px; margin-top: 14px; font-size: 13px; }
+
+  /* 섹션 공통 */
+  .section-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: 44px 0 12px; }
+  .section-title { font-size: 17px; font-weight: 800; border-left: 4px solid var(--accent); padding-left: 10px; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); gap: 16px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; box-shadow: var(--shadow); }
+  .card-header { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: .04em; display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+  .card-title { font-size: 15px; font-weight: 800; color: var(--text); }
+  .card-body { font-size: 13px; color: var(--body); line-height: 1.6; }
+  .card-body p { margin-bottom: 6px; }
+  .tag-label { color: var(--muted); font-weight: 700; }
+  .muted { color: var(--muted); font-size: 12px; }
+  .chip { display: inline-block; font-size: 11px; border-radius: 4px; padding: 2px 7px; border: 1px solid var(--line-2); color: var(--muted); white-space: nowrap; background: #fff; }
+  .chip.green { background: var(--green-bg); color: var(--green); border-color: transparent; }
+  .chip.red { background: var(--red-bg); color: var(--red); border-color: transparent; }
+  .chip.amber { background: var(--amber-bg); color: var(--amber); border-color: transparent; }
+  .chip.blue { background: var(--accent-bg); color: var(--accent); border-color: transparent; }
+  .chip.violet { background: var(--violet-bg); color: var(--violet); border-color: transparent; }
+  .empty-panel { background: var(--panel-2); border: 1px dashed var(--line-2); border-radius: 10px; padding: 18px; color: var(--muted); font-size: 13px; }
+  details.more > summary { cursor: pointer; list-style: none; font-size: 12px; font-weight: 700; color: var(--accent); display: inline-flex; align-items: center; gap: 4px; user-select: none; }
+  details.more > summary::-webkit-details-marker { display: none; }
+  details.more > summary::after { content: "▾"; transition: transform .15s; }
+  details.more[open] > summary::after { transform: rotate(180deg); }
+  details.more > summary .when-open { display: none; }
+  details.more[open] > summary .when-open { display: inline; }
+  details.more[open] > summary .when-closed { display: none; }
+  details.more > .more-body { margin-top: 8px; }
+  details.more.caution > summary { color: var(--amber); }
+
+  /* 섹션 1 */
+  .meta-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .meta { display: inline-flex; align-items: center; gap: 6px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; font-size: 12px; color: var(--muted); }
+  .meta b { color: var(--text); font-weight: 700; }
+  .meta b.lv-high { color: var(--green); } .meta b.lv-medium { color: var(--amber); } .meta b.lv-low { color: var(--red); }
+  .meta-legend { font-size: 11.5px; color: var(--muted); }
+  .slim-banner { display: flex; align-items: center; gap: 8px; background: var(--amber-bg); border-left: 3px solid #f59e0b; border-radius: 6px; padding: 6px 12px; font-size: 12px; color: var(--amber); margin-bottom: 8px; }
+  .slim-banner .ico { flex: none; }
+  .cluster-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 12px; }
+  @media (max-width: 760px) { .cluster-grid { grid-template-columns: 1fr; } }
+  .cluster-num { color: var(--accent); font-weight: 800; margin-right: 6px; }
+  .kw { background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+  .kw-orig { font-family: ui-monospace, Menlo, monospace; font-size: 12px; word-break: break-word; color: var(--text); }
+  .kw-ko { color: var(--muted); font-size: 11px; }
+  .kw-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr)); gap: 6px; }
+  .badge-num { font-size: 12px; font-weight: 800; border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
+  .badge-num.up { background: var(--green-bg); color: var(--green); }
+  .badge-num.down { background: var(--red-bg); color: var(--red); }
+  .badge-num.flat, .badge-num.rising { background: #f1f5f9; color: var(--body); }
+  .callout { margin-top: auto; display: flex; gap: 8px; align-items: flex-start; background: linear-gradient(135deg, #eef2ff, #eff6ff); border: 1px solid #c7d2fe; border-radius: 8px; padding: 10px 12px; font-size: 13px; font-weight: 700; color: #3730a3; }
+  .callout .ico { flex: none; }
+
+  /* 섹션 2 */
+  .converted-price { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .tooltip-wrapper { position: relative; display: inline-block; cursor: help; }
+  .price-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 800; }
+  .price-badge.tavily { background: var(--green-bg); color: var(--green); border: 1px solid #a7f3d0; }
+  .price-badge.openai_web { background: var(--accent-bg); color: var(--accent); border: 1px solid #bfdbfe; }
+  .price-badge.estimate { background: var(--amber-bg); color: var(--amber); border: 1px solid #fde68a; }
+  .tooltip-text { visibility: hidden; opacity: 0; width: 260px; background: #0f172a; color: #f8fafc; border-radius: 6px; padding: 8px 12px; position: absolute; z-index: 10; bottom: 125%; left: 0; font-size: 11px; line-height: 1.5; transition: opacity .2s; }
+  .tooltip-wrapper:hover .tooltip-text, .tooltip-wrapper:focus-within .tooltip-text { visibility: visible; opacity: 1; }
+  .price-src { font-size: 11.5px; color: var(--muted); word-break: break-all; }
+  .channel-tag { display: inline-block; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 3px 8px; font-size: 11px; margin: 4px 4px 0 0; color: var(--accent); }
+
+  /* 섹션 3 */
+  .stat-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 6px; padding: 4px 10px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .stat-pill b { color: var(--text); }
+  .stat-pill .sep { color: var(--line-2); }
+  .research-card .card-footer { margin-top: auto; border-top: 1px solid var(--line); padding-top: 10px; display: flex; justify-content: flex-end; }
+  .conclusion { font-size: 14px; font-weight: 800; color: var(--text); line-height: 1.5; }
+  .points { padding-left: 18px; font-size: 12.5px; color: var(--body); display: flex; flex-direction: column; gap: 5px; }
+  .interp { background: var(--accent-bg); border: 1px solid #bfdbfe; border-left: 3px solid var(--accent); border-radius: 6px; padding: 9px 11px; font-size: 12.5px; color: #1e3a8a; }
+  .interp b { color: var(--accent); }
+  .notice { font-size: 12px; color: var(--amber); }
+  .caution-text { font-size: 12px; color: var(--amber); background: var(--amber-bg); border-radius: 6px; padding: 8px 10px; }
+  .btn-more { background: #fff; border: 1px solid var(--line-2); color: var(--accent); border-radius: 6px; padding: 6px 10px; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .btn-more:hover { background: var(--accent-bg); }
+  .btn-more:disabled { color: var(--muted); cursor: default; background: #fff; }
+  /* 출처 번호 뱃지: 작게, 누를 수 있다는 걸 보이게 */
+  .ref { position: relative; display: inline-block; background: var(--accent-bg); color: var(--accent); border: 0; border-radius: 3px; padding: 0 3px; font-size: 10px; line-height: 1.5; font-weight: 700; cursor: pointer; margin-left: 2px; vertical-align: 1px; font-family: inherit; }
+  .ref:hover, .ref:focus-visible { text-decoration: underline; background: #dbeafe; }
+  .ref:hover::after { content: "원문 보기"; position: absolute; left: 50%; bottom: 140%; transform: translateX(-50%); background: #0f172a; color: #fff; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; white-space: nowrap; pointer-events: none; }
+
+  /* 섹션 4 */
+  .booth-summary { background: var(--violet-bg); border: 1px solid #ddd6fe; border-radius: 8px; padding: 14px 16px; font-size: 14px; font-weight: 700; color: #4c1d95; margin-bottom: 14px; }
+  .big-idea { background: var(--panel-2); border-left: 4px solid var(--violet); border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 14px; }
+  .big-idea .en { font-size: 17px; font-weight: 800; }
+  .big-idea .ko { color: var(--muted); font-size: 13px; }
+  table.grid { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.grid th, table.grid td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--body); }
+  table.grid th { color: var(--muted); font-weight: 700; background: var(--panel-2); }
+  .table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 14px; }
+  .booth-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 16px; margin-bottom: 16px; }
+  .booth-card .card-header { color: var(--violet); }
+  .quote-box { background: var(--violet-bg); border-left: 3px solid var(--violet); padding: 9px 12px; border-radius: 0 6px 6px 0; font-size: 13px; font-weight: 700; color: #4c1d95; }
+  .quote-box .ko { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+  .ev { font-size: 10px; border-radius: 3px; padding: 0 4px; margin-left: 2px; white-space: nowrap; }
+  .ev.company { background: var(--violet-bg); color: var(--violet); }
+  .ev.idea { border: 1px solid var(--line-2); color: var(--muted); }
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 12px; margin-bottom: 16px; }
+  .flow .card-title { font-size: 20px; color: var(--violet); }
+  .score.low { color: var(--red); font-weight: 800; }
+  details.review { margin-top: 12px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: 12.5px; color: var(--body); }
+  details.review summary { cursor: pointer; color: var(--muted); }
+  details.review ul { padding-left: 18px; margin-top: 8px; }
+  pre.raw { white-space: pre-wrap; word-break: break-word; font-size: 11px; color: var(--muted); max-height: 420px; overflow: auto; }
+
+  /* 사이드바: 본문을 충분히 어둡게 덮어 글씨가 겹쳐 보이지 않게 */
+  .overlay { position: fixed; inset: 0; background: rgba(15,23,42,.78); backdrop-filter: blur(2px); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 40; cursor: pointer; }
+  .overlay.open { opacity: 1; pointer-events: auto; }
+  aside.drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(520px, 100vw); background: #fff; border-left: 1px solid var(--line);
+                 transform: translateX(100%); transition: transform .25s ease; z-index: 50; display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(15,23,42,.18); }
+  aside.drawer.open { transform: translateX(0); }
+  .drawer-head { padding: 16px 18px 0; border-bottom: 1px solid var(--line); }
+  .drawer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .drawer-top h2 { font-size: 16px; }
+  .btn-close { background: #fff; border: 1px solid var(--line-2); color: var(--body); border-radius: 6px; width: 32px; height: 32px; cursor: pointer; font-size: 16px; }
+  .tabs { display: flex; gap: 4px; overflow-x: auto; }
+  .tab { background: transparent; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: 8px 10px; cursor: pointer; font-size: 13px; white-space: nowrap; font-family: inherit; }
+  .tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); font-weight: 800; }
+  .drawer-body { overflow-y: auto; padding: 14px 18px 40px; flex: 1; background: var(--panel-2); }
+  .tab-panel[hidden] { display: none; }
+  .article { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin-bottom: 10px; scroll-margin-top: 12px; }
+  .article.flash { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,.2); }
+  .article .orig { font-style: italic; color: var(--text); font-size: 13px; margin: 6px 0 4px; }
+  .article .ko { color: var(--body); font-size: 12.5px; }
+  .article .src { font-size: 11.5px; color: var(--muted); margin-top: 6px; word-break: break-all; }
+  .article .src b { color: var(--accent); margin-right: 6px; }
+  .badges { display: flex; gap: 4px; flex-wrap: wrap; }
+
+  /* 로딩 화면 */
+  .loading { position: fixed; inset: 0; z-index: 100; background: #ffffff; display: none; align-items: center; justify-content: center; padding: 24px; }
+  .loading.show { display: flex; }
+  .loading-box { text-align: center; max-width: 440px; width: 100%; }
+  .ring { position: relative; width: 168px; height: 168px; margin: 0 auto 22px; }
+  .ring svg { transform: rotate(-90deg); }
+  .ring .track { stroke: #e5e7eb; }
+  .ring .bar { stroke: url(#ringGrad); stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+  .ring .pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 800; color: var(--text); letter-spacing: -.02em; }
+  .ring .pct small { font-size: 16px; color: var(--muted); margin-left: 2px; }
+  .loading-msg { font-size: 15px; font-weight: 700; color: var(--text); min-height: 24px; }
+  .loading-sub { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+  .loading-steps { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin: 16px 0 26px; }
+  .loading-steps .chip.run::before { content: "● "; color: var(--accent); }
+  .loading-steps .chip.done::before { content: "✓ "; }
+  .slogan { border-top: 1px solid var(--line); padding-top: 20px; }
+  .slogan .line1 { font-size: 15px; color: var(--body); font-weight: 600; }
+  .slogan .line2 { font-size: 22px; font-weight: 800; color: var(--text); margin-top: 2px; }
+  .slogan .brand { background: linear-gradient(90deg, #2563eb, #7c3aed); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .loading-error { color: var(--red); font-size: 13px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>해외 박람회 준비 통합 대시보드</h1>
+  <p class="desc">현지 검색어 트렌드 · 리테일 가격 벤치마킹 · 현지 시장 트렌드 분석 · 부스 컨셉 기획을 한 화면에서 제공합니다.</p>
+
+  <div class="form-container">
+    <form method="POST" action="/" id="analyze-form">
+      <div class="form-grid">
+        <div class="form-group"><label for="name">제품명 *</label><input type="text" id="name" name="name" value="{{ form.name }}" placeholder="예: 멸치 칼국수 밀키트" required maxlength="100"></div>
+        <div class="form-group"><label for="country">진출 대상 국가 *</label><input type="text" id="country" name="country" value="{{ form.country }}" placeholder="예: 말레이시아, 미국" required maxlength="100"></div>
+        <div class="form-group"><label for="strengths">제품 강점</label><input type="text" id="strengths" name="strengths" value="{{ form.strengths }}" placeholder="예: 진하게 우려낸 멸치 육수와 부드러운 생면"></div>
+        <div class="form-group"><label for="ingredients">주요 원료</label><input type="text" id="ingredients" name="ingredients" value="{{ form.ingredients }}" placeholder="예: 밀가루, 멸치추출물, 건다시마, 애호박"></div>
+        <div class="form-group"><label for="certifications">보유 인증</label><input type="text" id="certifications" name="certifications" value="{{ form.certifications }}" placeholder="예: HACCP"></div>
+        <div class="form-group"><label for="price">가격대</label><input type="text" id="price" name="price" value="{{ form.price }}" placeholder="예: 2인분 소매가 5~7달러"></div>
+      </div>
+      <details class="opt" {% if form.exhibition_name or form.exhibition_website %}open{% endif %}>
+        <summary>박람회 정보 (선택)</summary>
+        <div class="form-grid">
+          <div class="form-group"><label for="exhibition_name">박람회명</label><input type="text" id="exhibition_name" name="exhibition_name" value="{{ form.exhibition_name }}" placeholder="예: Summer Fancy Food Show 2027" maxlength="100"></div>
+          <div class="form-group"><label for="exhibition_website">박람회 사이트</label><input type="text" id="exhibition_website" name="exhibition_website" value="{{ form.exhibition_website }}" placeholder="예: specialtyfood.com" maxlength="100"></div>
+        </div>
+      </details>
+      <div class="actions">
+        <button type="submit" class="btn-submit" id="submit-btn">분석 실행</button>
+        <label class="check"><input type="checkbox" name="force" {% if force %}checked{% endif %}> 캐시 무시하고 새로 조사</label>
+      </div>
+    </form>
+  </div>
+
+  <div class="alert error" id="form-error" {% if not error %}hidden{% endif %}>{{ error or "" }}</div>
+
+  {% if data %}
+  {% set r = data.research %}
+  {% set b = data.booth %}
+
+  {# ============================ 1. 트렌드 ============================ #}
+  <div class="section-head"><div class="section-title">1. 연관 검색어 기반 시장 트렌드 4단계 클러스터링</div></div>
+  {% set s1 = data.section1 %}
+  {% if s1 %}
+    <div class="meta-row">
+      <span class="meta">대상 시장 <b>{{ s1.country_ko }} ({{ s1.geo }})</b></span>
+      <span class="meta">검색 언어 <b>{{ s1.languages|join(", ") }}</b></span>
+      <span class="meta">데이터 <b>{{ s1.data_level_label_ko }}</b></span>
+      <span class="meta">Google 데이터 신뢰도 <b class="lv-{{ s1.reliability }}">{{ s1.reliability_label_ko }}</b></span>
+      <span class="meta">바이어 언어 <b>{{ s1.buyer_language }}</b></span>
+      <span class="meta">조회 <b>{{ data.fetched_at }}</b></span>
+      <span class="meta-legend">% = 작년 같은 기간 대비 검색량 변화</span>
+    </div>
+    {% if s1.reliability_note_ko %}<div class="slim-banner" role="note"><span class="ico">ℹ️</span>{{ s1.reliability_note_ko }}</div>{% endif %}
+    {% for w in s1.warnings %}<div class="slim-banner" role="note"><span class="ico">⚠️</span>{{ w }}</div>{% endfor %}
+    <div class="cluster-grid">
+      {% for c in s1.clusters %}{% if c.keywords %}
+      <div class="card">
+        <div class="card-header"><span><span class="cluster-num">{{ "%02d"|format(loop.index) }}</span>{{ c.label }}</span>{% if c.tag %}<span class="chip">{{ c.tag }}</span>{% endif %}</div>
+        <div class="card-title">{{ c.title_ko }}</div>
+        {% if c.summary %}<div class="card-body">{{ c.summary }}</div>{% endif %}
+        <div class="kw-list">
+          {% for kw in c.keywords %}
+          <div class="kw">
+            <div><div class="kw-orig">{{ kw.keyword }}</div>{% if kw.ko %}<div class="kw-ko">{{ kw.ko }}</div>{% endif %}
+              {% if kw.is_breakout %}<div class="badges" style="margin-top:3px"><span class="chip red">급등</span></div>{% endif %}</div>
+            {% if kw.badge and kw.badge.kind == 'yoy' %}<span class="badge-num {{ 'up' if kw.badge.pct > 0 else ('down' if kw.badge.pct < 0 else 'flat') }}">{{ '+' if kw.badge.pct > 0 }}{{ kw.badge.pct }}%</span>
+            {% elif kw.badge and kw.badge.kind == 'rising' %}<span class="badge-num rising">급상승 +{{ kw.badge.pct }}%</span>{% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% if c.insight %}<div class="callout"><span class="ico">💡</span><span>{{ c.insight }}</span></div>{% endif %}
+      </div>
+      {% endif %}{% endfor %}
+    </div>
+    {% set empty = s1.clusters|rejectattr("keywords")|map(attribute="short_ko")|list %}
+    {% if empty %}<p class="muted" style="margin-top:10px">검색 신호가 확인되지 않은 분류: {{ empty|join(", ") }}</p>{% endif %}
+  {% else %}
+    <div class="empty-panel">검색어 트렌드를 불러오지 못했습니다. {{ data.section1_error }}</div>
+  {% endif %}
+
+  {# ============================ 2. 리테일 ============================ #}
+  <div class="section-head"><div class="section-title">2. 현지 리테일 벤치마킹 & 경쟁 제품 가격 분석</div></div>
+  {% set s2 = data.section2 %}
+  {% if s2 %}
+    {% set rp = s2.retail_price %}
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-header">TARGET PRODUCT</div>
+        <div class="card-title">{{ s2.target_product.title }}</div>
+        <div class="card-body">
+          <p><span class="tag-label">제품 스펙:</span> {{ s2.target_product.specs }}</p>
+          <p><span class="tag-label">시장 한계점:</span> {{ s2.target_product.complaints }}</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">RETAIL PRICE</div>
+        <div class="card-title">{{ rp.price }}</div>
+        {% if rp.usd_price %}<div class="converted-price"><div>💵 {{ rp.usd_price }}</div><div>₩ {{ rp.krw_price }}</div></div>{% endif %}
+        <div class="tooltip-wrapper" tabindex="0">
+          <span class="price-badge {{ rp.method or 'estimate' }}">● {{ rp.badge }}</span>
+          <div class="tooltip-text">{{ rp.badge_desc }}</div>
+        </div>
+        {% if rp.sources %}<div class="price-src">출처: {% for s in rp.sources %}<a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">{{ s.title or s.url }} ↗</a>{% if not loop.last %} · {% endif %}{% endfor %}</div>{% endif %}
+      </div>
+      <div class="card">
+        <div class="card-header">SALES CHANNELS</div>
+        <div class="card-title">진출 타깃 채널</div>
+        <div class="card-body">
+          <p><span class="tag-label">추천 매대:</span> {{ s2.sales_channels.shelf }}</p>
+          <div>{% for ch in s2.sales_channels.channels %}<span class="channel-tag">🏬 {{ ch }}</span>{% endfor %}</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">PRICE &amp; USP STRATEGY</div>
+        <div class="card-title">{{ s2.price_strategy.positioning }}</div>
+        <div class="card-body"><p><span class="tag-label">바이어 피칭:</span> {{ s2.price_strategy.pitch }}</p></div>
+      </div>
+    </div>
+  {% else %}
+    <div class="empty-panel">리테일 벤치마킹을 불러오지 못했습니다. {{ data.section2_error }}</div>
+  {% endif %}
+
+  {# ============================ 3. 현지 시장 트렌드 분석 ============================ #}
+  <div class="section-head">
+    <div class="section-title">3. 현지 시장 트렌드 분석</div>
+    {% if r %}{% set st = r.stats %}
+      <span class="stat-pill" title="{{ '저장된 결과 (' ~ r.fetched_at[:10] ~ ')' if r.from_cache else '새로 조사한 결과' }}">출처: <b>{{ st.sources_found }}곳</b><span class="sep">|</span>원문: <b>{{ st.quotes_used }}건</b> (주요 {{ st.main_quotes }}, 일반 {{ st.open_quotes }})</span>
+    {% endif %}
+  </div>
+  {% if r %}
+    <div class="card-grid">
+      {% for c in r.cards %}
+      {% set n = data.view.articles[c.qid]|length %}
+      <div class="card research-card">
+        <div class="card-header"><span>{{ question_labels[c.qid] }}</span><span class="chip">{{ c.qid }}</span></div>
+        <div class="card-title">{{ c.title }}</div>
+        <div class="muted">{{ c.question }}</div>
+        {% if c.notice %}<div class="notice">{{ c.notice }}</div>{% endif %}
+        {% if c.conclusion %}
+          <div class="conclusion">{{ c.conclusion.text }}{% for i in c.conclusion.quote_ids %}<button class="ref" type="button" data-tab="{{ c.qid }}" data-target="{{ i }}" aria-label="{{ i }} 원문 보기">{{ i }}</button>{% endfor %}</div>
+        {% endif %}
+        {% if c.points %}
+          <details class="more">
+            <summary><span class="when-closed">자세히 보기 ({{ c.points|length }})</span><span class="when-open">접기</span></summary>
+            <div class="more-body"><ul class="points">{% for p in c.points %}<li>{{ p.text }}{% for i in p.quote_ids %}<button class="ref" type="button" data-tab="{{ c.qid }}" data-target="{{ i }}" aria-label="{{ i }} 원문 보기">{{ i }}</button>{% endfor %}</li>{% endfor %}</ul></div>
+          </details>
+        {% endif %}
+        {% if c.interpretation %}<div class="interp"><b>AI 해석</b> · {{ c.interpretation|replace("AI 해석:", "")|trim }}</div>{% endif %}
+        {% if c.gaps %}
+          <details class="more caution">
+            <summary><span class="when-closed">⚠️ 확인 필요</span><span class="when-open">⚠️ 접기</span></summary>
+            <div class="more-body caution-text">{{ c.gaps }}</div>
+          </details>
+        {% endif %}
+        <div class="card-footer">
+          <button class="btn-more" type="button" data-tab="{{ c.qid }}" {% if not n %}disabled{% endif %}>기사 {{ n }}건 보기 →</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-panel">현지 시장 트렌드 분석을 불러오지 못했습니다. {{ data.research_error }}</div>
+  {% endif %}
+
+  {# ============================ 4. 부스 컨셉 ============================ #}
+  <div class="section-head"><div class="section-title">4. 부스 컨셉 기획 <span class="chip violet" style="vertical-align:2px">OpenAI 단독 기획 · {{ data.models.booth }}</span></div></div>
+  {% macro basis(x) -%}
+    {%- for i in x.quote_ids %}<button class="ref" type="button" data-tab="memo" data-target="{{ i }}" aria-label="{{ i }} 조사 메모 보기">{{ i }}</button>{% endfor -%}
+    {%- for c in x.company %}<span class="ev company">기업: {{ c }}</span>{% endfor -%}
+    {%- if x.is_idea %}<span class="ev idea">기획 제안</span>{% endif -%}
+  {%- endmacro %}
+  {% if b %}
+    {% set rs = b.research %}
+    <p class="muted" style="margin-bottom:12px">위 1~3번 조사를 쓰지 않고, 입력한 정보와 OpenAI가 스스로 조사한 내용으로 {{ "기획자 초안 → 바이어 채점 → " ~ ("수정" if b.stage == "revised" else "기준 통과") if b.mode == "B" else "기획자 1회" }} 과정을 거쳐 만든 기획안입니다.
+      <button class="btn-more" type="button" data-tab="memo" style="margin-left:6px">OpenAI 조사 메모 {{ rs.notes|length }}건 보기 →</button></p>
+    {% if b.summary %}<div class="booth-summary">요약 · {{ b.summary }}</div>{% endif %}
+
+    {% set br = b.brief %}
+    {% if br.big_idea.line_en %}
+      <div class="big-idea"><div class="muted">BIG IDEA</div><div class="en">“{{ br.big_idea.line_en }}”</div><div class="ko">{{ br.big_idea.line_ko }}</div>
+        {% if br.big_idea.why %}<div class="card-body" style="margin-top:6px">{{ br.big_idea.why }} {{ basis(br.big_idea) }}</div>{% endif %}</div>
+    {% endif %}
+    {% if br.insights %}
+      <div class="table-wrap"><table class="grid">
+        <tr><th>사실</th><th>인사이트</th><th>우리 부스가 할 일</th></tr>
+        {% for i in br.insights %}<tr><td>{{ i.fact }} {{ basis(i) }}</td><td>{{ i.insight }}</td><td>{{ i.implication }}</td></tr>{% endfor %}
+      </table></div>
+    {% endif %}
+    {% if br.target_buyers or b.positioning.core_message %}
+      <p class="card-body" style="margin-bottom:14px">
+        {% if br.target_buyers %}<span class="tag-label">타깃 바이어</span> {% for t in br.target_buyers %}{{ t.priority or loop.index }}순위 {{ t.type }} ({{ t.job }}){% if not loop.last %} · {% endif %}{% endfor %}<br>{% endif %}
+        {% if b.positioning.core_message %}<span class="tag-label">핵심 메시지</span> {{ b.positioning.core_message }}{% endif %}
+      </p>
+    {% endif %}
+
+    {% set titles = [("main_visual", "MAIN VISUAL", "메인 비주얼"), ("slogan", "SLOGAN", "슬로건"), ("signature_pairing", "SIGNATURE PAIRING", "시그니처 페어링"),
+                     ("demonstration", "LIVE DEMO", "시연"), ("packaging", "PACKAGING", "패키징"), ("merchandising", "MERCHANDISING", "진열 가이드")] %}
+    <div class="booth-grid">
+      {% for key, en, ko in titles %}
+      {% set sec = b.sections[key] %}
+      <div class="card booth-card">
+        <div class="card-header"><span>{{ en }}</span></div>
+        <div class="card-title">{{ ko }}</div>
+        {% if sec.concept_en %}<div class="quote-box">“{{ sec.concept_en }}”<span class="ko">{{ sec.concept_ko }}</span></div>{% endif %}
+        {% if sec.main_en %}<div class="quote-box">“{{ sec.main_en }}”<span class="ko">{{ sec.main_ko }}</span></div>{% endif %}
+        {% if sec.sub_en %}<div class="quote-box" style="font-weight:500">“{{ sec.sub_en }}”<span class="ko">{{ sec.sub_ko }}</span></div>{% endif %}
+        <div class="card-body">
+          {% if sec.item %}<p><span class="tag-label">페어링:</span> {{ sec.item }}</p>{% endif %}
+          {% if sec.intent %}<p><span class="tag-label">기획 의도:</span> {{ sec.intent }}</p>{% endif %}
+          {% if sec.title %}<p><span class="tag-label">시연:</span> {{ sec.title }}</p>{% endif %}
+          {% if sec.direction %}<p><span class="tag-label">방향:</span> {{ sec.direction }}</p>{% endif %}
+          {% for z in sec.zones %}<p><span class="tag-label">{{ loop.index }}. {{ z.name }}</span>{% if z.position %} ({{ z.position }}){% endif %} {{ z.purpose }} {{ basis(z) }}</p>{% endfor %}
+        </div>
+        {% if sec.bullets %}<ul class="points">{% for x in sec.bullets %}<li>{{ x.text }} {{ basis(x) }}</li>{% endfor %}</ul>{% endif %}
+        {% if sec.key_message %}<div class="callout"><span class="ico">💡</span><span>{{ sec.key_message }}</span></div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if b.visitor_flow["3s"] or b.visitor_flow["30s"] or b.visitor_flow["3min"] %}
+      <div class="flow">
+        {% for k, label, sub in [("3s", "3초", "통로에서 멈춤"), ("30s", "30초", "시식·시연"), ("3min", "3분", "상담 테이블")] %}
+          {% if b.visitor_flow[k] %}<div class="card"><div class="card-header">VISITOR FLOW · {{ sub }}</div><div class="card-title">{{ label }}</div><div class="card-body">{{ b.visitor_flow[k] }}</div></div>{% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="card-grid">
+      {% if b.kpis %}<div class="card"><div class="card-header">KPI</div><ul class="points">{% for k in b.kpis %}<li>{{ k }}</li>{% endfor %}</ul></div>{% endif %}
+      {% if b.risks %}<div class="card"><div class="card-header" style="color:var(--red)">확인할 점</div><ul class="points">{% for x in b.risks %}<li>{{ x.text }} {{ basis(x) }}</li>{% endfor %}</ul></div>{% endif %}
+      {% if b.questions %}<div class="card"><div class="card-header" style="color:var(--amber)">기업에 확인하고 싶은 것</div><ul class="points">{% for q in b.questions %}<li>{{ q }}</li>{% endfor %}</ul></div>{% endif %}
+    </div>
+
+    {% if b.scores %}
+      <details class="review">
+        <summary>바이어 채점 ({{ b.revise_below }}점 미만 항목이 있으면 수정) · 검토 의견 {{ b.review.comments|length }}건{% if b.applied %} · 반영 {{ b.applied|length }}건{% endif %}</summary>
+        <div class="table-wrap" style="margin-top:10px"><table class="grid">
+          {% for x in b.scores %}<tr><td>{{ x.label }}</td><td class="score {{ 'low' if x.score is not none and x.score < b.revise_below }}">{{ x.score if x.score is not none else "-" }} / 5</td><td>{{ x.reason }}</td></tr>{% endfor %}
+        </table></div>
+        {% if b.review.overall %}<p><b>총평</b> {{ b.review.overall }}</p>{% endif %}
+        <ul>{% for c in b.review.comments %}<li>[{{ c.section }}] {{ c.issue }} → {{ c.suggestion }}</li>{% endfor %}</ul>
+        {% if b.applied %}<p style="margin-top:8px"><b>최종안에 반영</b></p><ul>{% for x in b.applied %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}
+      </details>
+    {% endif %}
+    <p class="muted" style="margin-top:10px">근거 표시: R번호 = OpenAI 자체 조사 메모(누르면 오른쪽에 열림) · 기업 = 입력한 제품 정보 · 기획 제안 = 조사 근거 없는 기획 아이디어 · 모델: {{ data.models.booth }} (추론 깊이 {{ data.models.booth_effort }}) · 섹션 1~3 모델: {{ data.models.task }} ({{ data.models.task_effort }}){% if b.from_cache %} · 저장된 결과{% endif %}</p>
+  {% else %}
+    <div class="empty-panel">부스 컨셉을 만들지 못했습니다. {{ data.booth_error or "" }}</div>
+  {% endif %}
+
+  <details class="review" style="margin-top:30px"><summary>원본 데이터 (JSON)</summary><pre class="raw">{{ raw_json }}</pre></details>
+  {% endif %}
+</div>
+
+{# ============================ 사이드바: 근거 기사 · 조사 메모 ============================ #}
+{% if data and (data.research or data.booth) %}
+{% set r = data.research %}
+{% set b = data.booth %}
+<div class="overlay" id="overlay" title="눌러서 닫기"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="drawer-title" role="dialog">
+  <div class="drawer-head">
+    <div class="drawer-top"><h2 id="drawer-title">근거 기사</h2><button class="btn-close" type="button" id="drawer-close" aria-label="닫기">✕</button></div>
+    <div class="tabs" role="tablist">
+      {% if r %}{% for c in r.cards %}<button class="tab" type="button" role="tab" data-tab="{{ c.qid }}" aria-selected="false">{{ c.title }} ({{ data.view.articles[c.qid]|length }})</button>{% endfor %}{% endif %}
+      {% if b %}<button class="tab" type="button" role="tab" data-tab="memo" aria-selected="false">OpenAI 조사 메모 ({{ b.research.notes|length }})</button>{% endif %}
+    </div>
+  </div>
+  <div class="drawer-body">
+    {% for c in (r.cards if r else []) %}
+    <section class="tab-panel" role="tabpanel" data-panel="{{ c.qid }}" hidden>
+      <p class="muted" style="margin-bottom:10px">{{ c.question }}</p>
+      {% for a in data.view.articles[c.qid] %}
+      <article class="article" id="art-{{ a.id }}">
+        <div class="badges">
+          <span class="chip blue">{{ a.id }}</span>
+          <span class="chip">{{ a.scope_label }}</span>
+          <span class="chip {{ 'green' if a.market == 'country' else 'amber' }}">{{ a.market_label }}</span>
+          <span class="chip {{ 'green' if a.tier == 'main' else '' }}">{{ a.tier_label }}</span>
+          {% if a.is_stale %}<span class="chip red">오래된 자료 ({{ a.year }})</span>{% endif %}
+          {% if a.is_public_kr %}<span class="chip violet">한국 공공기관</span>{% endif %}
+        </div>
+        <div class="orig">“{{ a.quote }}”</div>
+        {% if a.translation_ko %}<div class="ko">{{ a.translation_ko }}</div>{% endif %}
+        <div class="src"><b>{{ a.domain }}</b>{{ a.title }} · {{ a.year or "연도 미상" }}{% if a.url %} · <a href="{{ a.url }}" target="_blank" rel="noopener noreferrer">원문 열기 ↗</a>{% endif %}</div>
+      </article>
+      {% else %}
+      <p class="muted">이 질문의 근거 기사가 없습니다.</p>
+      {% endfor %}
+    </section>
+    {% endfor %}
+    {% if b %}
+    {% set rs = b.research %}
+    <section class="tab-panel" role="tabpanel" data-panel="memo" hidden>
+      <p class="muted" style="margin-bottom:10px">부스 기획을 위해 OpenAI가 {{ {"web_search": "웹 검색으로", "knowledge": "모델 지식으로(웹 검색 없음)"}.get(rs.method, "") }} 직접 조사한 메모입니다. 1~3번 조사와는 별개입니다.{% if rs.error %} ({{ rs.error }}){% endif %}</p>
+      {% for n in rs.notes %}
+      <article class="article" id="art-{{ n.id }}">
+        <div class="badges"><span class="chip violet">{{ n.id }}</span><span class="chip">{{ n.topic_label }}</span>
+          <span class="chip {{ 'green' if n.source_status == '웹 출처' else ('amber' if n.source_status == '출처 미확인' else '') }}">{{ n.source_status }}</span></div>
+        <div class="ko" style="margin-top:6px">{{ n.text }}</div>
+        <div class="src">{% if n.source_url %}<a href="{{ n.source_url }}" target="_blank" rel="noopener noreferrer">{{ n.source_title or n.source_url }} ↗</a>{% else %}출처 없음{% endif %}</div>
+      </article>
+      {% else %}
+      <p class="muted">조사 메모가 없습니다.</p>
+      {% endfor %}
+    </section>
+    {% endif %}
+  </div>
+</aside>
+{% endif %}
+
+{# ============================ 로딩 화면 ============================ #}
+<div class="loading" id="loading" role="status" aria-live="polite">
+  <div class="loading-box">
+    <div class="ring">
+      <svg width="168" height="168" viewBox="0 0 168 168" aria-hidden="true">
+        <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>
+        <circle class="track" cx="84" cy="84" r="72" fill="none" stroke-width="12"/>
+        <circle class="bar" id="ring-bar" cx="84" cy="84" r="72" fill="none" stroke-width="12" stroke-dasharray="452.39" stroke-dashoffset="452.39"/>
+      </svg>
+      <div class="pct"><span id="ring-pct">0</span><small>%</small></div>
+    </div>
+    <div class="loading-msg" id="loading-msg">분석을 준비하고 있습니다</div>
+    <div class="loading-sub">네 가지 분석을 동시에 진행합니다. 보통 3~6분 걸려요.</div>
+    <div class="loading-steps" id="loading-steps"></div>
+    <div class="loading-error" id="loading-error" hidden></div>
+    <div class="slogan">
+      <div class="line1">박람회 준비부터 바이어 관리까지.</div>
+      <div class="line2"><span class="brand">페어메이트</span>와 함께</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  /* ---------- 분석 실행: 백그라운드 작업 + 진행률 ---------- */
+  var form = document.getElementById("analyze-form");
+  var loading = document.getElementById("loading");
+  var CIRC = 452.39;
+
+  function render(p) {
+    var pct = Math.max(0, Math.min(100, p.percent || 0));
+    document.getElementById("ring-pct").textContent = pct;
+    document.getElementById("ring-bar").style.strokeDashoffset = CIRC * (1 - pct / 100);
+    document.getElementById("loading-msg").textContent = p.message || "";
+    document.getElementById("loading-steps").innerHTML = (p.sections || []).map(function (s) {
+      var cls = s.failed ? "chip red" : (s.done ? "chip green done" : "chip blue run");
+      return '<span class="' + cls + '">' + s.name + '</span>';
+    }).join("");
+  }
+
+  function fail(msg) {
+    var el = document.getElementById("loading-error");
+    el.hidden = false;
+    el.textContent = msg + " 잠시 후 다시 시도해 주세요.";
+    setTimeout(function () { loading.classList.remove("show"); document.getElementById("submit-btn").disabled = false; }, 4000);
+  }
+
+  function poll(id) {
+    fetch("/progress/" + id).then(function (res) { return res.json(); }).then(function (p) {
+      render(p);
+      if (p.status === "done") { window.location.href = "/result/" + id; return; }
+      if (p.status === "error" || p.status === "missing") { fail(p.error || "분석 중 오류가 발생했습니다."); return; }
+      setTimeout(function () { poll(id); }, 1000);
+    }).catch(function () { setTimeout(function () { poll(id); }, 2000); });
+  }
+
+  form.addEventListener("submit", function (e) {
+    if (!window.fetch) return;           // 오래된 브라우저는 일반 제출(진행률 없이 결과 화면)
+    e.preventDefault();
+    var errBox = document.getElementById("form-error");
+    errBox.hidden = true;
+    document.getElementById("submit-btn").disabled = true;
+    document.getElementById("loading-error").hidden = true;
+    render({percent: 0, message: "분석을 준비하고 있습니다", sections: []});
+    loading.classList.add("show");
+    fetch("/start", {method: "POST", body: new FormData(form)})
+      .then(function (res) { return res.json().then(function (j) { return {ok: res.ok, body: j}; }); })
+      .then(function (r) {
+        if (!r.ok) {
+          loading.classList.remove("show");
+          document.getElementById("submit-btn").disabled = false;
+          errBox.textContent = r.body.error || "요청을 처리하지 못했습니다.";
+          errBox.hidden = false;
+          return;
+        }
+        poll(r.body.job_id);
+      })
+      .catch(function () { fail("서버에 연결하지 못했습니다."); });
+  });
+
+  /* ---------- 사이드바 ---------- */
+  var drawer = document.getElementById("drawer");
+  if (!drawer) return;
+  var overlay = document.getElementById("overlay");
+  var lastFocus = null;
+
+  function selectTab(tab) {
+    drawer.querySelectorAll(".tab").forEach(function (t) {
+      t.setAttribute("aria-selected", t.dataset.tab === tab ? "true" : "false");
+    });
+    drawer.querySelectorAll(".tab-panel").forEach(function (p) {
+      p.hidden = p.dataset.panel !== tab;
+    });
+    document.getElementById("drawer-title").textContent = tab === "memo" ? "OpenAI 조사 메모" : "근거 기사";
+  }
+
+  function openDrawer(tab, target) {
+    lastFocus = document.activeElement;
+    selectTab(tab);
+    drawer.classList.add("open");
+    overlay.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    document.getElementById("drawer-close").focus();
+    if (target) {
+      var el = document.getElementById("art-" + target);
+      if (el) {
+        el.scrollIntoView({block: "start"});
+        el.classList.add("flash");
+        setTimeout(function () { el.classList.remove("flash"); }, 1600);
+      }
+    } else {
+      drawer.querySelector(".drawer-body").scrollTop = 0;
+    }
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove("open");
+    overlay.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    if (lastFocus) lastFocus.focus();
+  }
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-tab]");
+    if (!btn || btn.disabled) return;
+    if (btn.classList.contains("tab")) { selectTab(btn.dataset.tab); return; }
+    openDrawer(btn.dataset.tab, btn.dataset.target);
+  });
+  overlay.addEventListener("click", closeDrawer);
+  document.getElementById("drawer-close").addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && drawer.classList.contains("open")) closeDrawer(); });
+})();
+</script>
+</body>
+</html>
