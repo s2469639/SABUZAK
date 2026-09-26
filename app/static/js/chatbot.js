@@ -27,10 +27,33 @@
   });
   closeBtn.addEventListener("click", close);
 
+  function escapeHtml(str) {
+    var div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // 답변에 포함된 URL(절대경로 http(s)://, 또는 /exhibitions, /mypage, /dashboard로
+  // 시작하는 사이트 내부 경로)을 클릭 가능한 링크로 바꿔준다.
+  function linkify(text) {
+    var escaped = escapeHtml(text);
+    return escaped.replace(
+      /(https?:\/\/[^\s<]+|\/(?:exhibitions|mypage|dashboard)[^\s<]*)/g,
+      function (url) {
+        var trimmed = url.replace(/[.,)]+$/, "");
+        return '<a href="' + trimmed + '" target="_blank" rel="noopener">' + trimmed + "</a>";
+      }
+    );
+  }
+
   function addMessage(role, text) {
     var el = document.createElement("div");
     el.className = "chatbot-msg " + (role === "user" ? "chatbot-msg-user" : "chatbot-msg-bot");
-    el.textContent = text;
+    if (role === "user") {
+      el.textContent = text;
+    } else {
+      el.innerHTML = linkify(text);
+    }
     messagesBox.appendChild(el);
     messagesBox.scrollTop = messagesBox.scrollHeight;
     return el;
@@ -58,12 +81,12 @@
       .then(function (data) {
         loadingEl.classList.remove("chatbot-msg-loading");
         var reply = data.reply || data.error || "답변을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.";
-        loadingEl.textContent = reply;
+        loadingEl.innerHTML = linkify(reply);
         history.push({ role: "assistant", content: reply });
       })
       .catch(function () {
         loadingEl.classList.remove("chatbot-msg-loading");
-        loadingEl.textContent = "네트워크 오류로 답변을 받지 못했습니다. 잠시 후 다시 시도해주세요.";
+        loadingEl.innerHTML = linkify("네트워크 오류로 답변을 받지 못했습니다. 잠시 후 다시 시도해주세요.");
       });
   }
 

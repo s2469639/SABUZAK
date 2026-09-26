@@ -2423,6 +2423,7 @@ p.page-desc:not(:last-child) {
 .chatbot-msg-bot { background: #f5f6f8; color: #333; align-self: flex-start; }
 .chatbot-msg-user { background: #f3743c; color: #fff; align-self: flex-end; }
 .chatbot-msg-loading { color: #9ca3af; font-style: italic; }
+.chatbot-msg-bot a { color: #d9661f; font-weight: 600; text-decoration: underline; }
 
 .chatbot-examples { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 10px; }
 .chatbot-example-btn {
