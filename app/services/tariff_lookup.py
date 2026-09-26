@@ -352,7 +352,15 @@ def _load_mfn_rows():
 
 def find_mfn_rows(hs_code: str, country_iso3: str):
     """등록된 HS코드(자릿수 상관없이) -> 그 나라 MFN표에서 그 코드로
-    시작하는 모든 세부품목 (HS코드, 품명, 세율원문) 리스트."""
+    시작하는 모든 세부품목 (HS코드, 품명, 세율원문) 리스트.
+
+    나라마다 관세율표의 세분류 자릿수가 우리 관세청 10자리 기준과 다를 수
+    있다. 예를 들어 한국 관세청은 "1212211010"(김, 건조한 것)처럼 10자리로
+    세분화하지만, 미국 관세율표는 같은 품목을 "1212210000"(식용 김 전체)
+    한 줄로만 관리한다 - 앞 6자리(HS6, 국제 공통 부분)까지만 같고 그 뒤는
+    양쪽 다 0으로 채워져 있어 서로 startswith로는 안 걸린다. 그래서 정확히
+    일치/앞부분 일치가 둘 다 실패하면 마지막으로 HS6(앞 6자리) 일치로
+    한 번 더 시도한다."""
     digits = re.sub(r"\D", "", hs_code or "")
     if not digits:
         return []
@@ -360,10 +368,20 @@ def find_mfn_rows(hs_code: str, country_iso3: str):
     if digits in country_data:
         name_ko, rate = country_data[digits]
         return [(digits, name_ko, rate)]
-    return [
+
+    matches = [
         (code, name_ko, rate)
         for code, (name_ko, rate) in country_data.items()
         if code.startswith(digits)
+    ]
+    if matches or len(digits) < 6:
+        return matches
+
+    hs6 = digits[:6]
+    return [
+        (code, name_ko, rate)
+        for code, (name_ko, rate) in country_data.items()
+        if code[:6] == hs6
     ]
 
 
