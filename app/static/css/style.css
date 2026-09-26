@@ -725,9 +725,7 @@ p.page-desc:not(:last-child) {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 12px;
 }
-.keyword-filter-list[hidden] { display: none; }
 
 .expo-list-toolbar {
   display: flex;
@@ -2222,12 +2220,14 @@ p.page-desc:not(:last-child) {
    넓어져도 지도 밑의 "해외 박람회 목록" 검색창까지는 항상 스크롤 없이
    보이게 한다. (전에 폭%로 키웠더니 가로가 넓은 화면에서 세로도 같이
    커져서 검색창이 화면 밖으로 밀려났었음) */
+/* "박람회 검색창까지만" 첫 화면 보장 대상이고, 그 아래 정렬/초기화/
+   키워드 태그/목록은 스크롤해도 되는 영역이라 지도를 더 키울 수 있다. */
 .world-map {
   padding: 4px 8px;
   background: transparent;
-  height: 42vh;
-  max-height: 460px;
-  min-height: 240px;
+  height: 50vh;
+  max-height: 540px;
+  min-height: 260px;
   width: auto;
   aspect-ratio: 800 / 460;
   margin: 0 auto;
