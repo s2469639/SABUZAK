@@ -27,3 +27,6 @@ class Config:
     }
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # 메일 첨부(합계 15MB 제한)보다 여유 있게, 이보다 큰 업로드는 요청 자체를 거부한다
+    MAX_CONTENT_LENGTH = 30 * 1024 * 1024

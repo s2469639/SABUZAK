@@ -1,11 +1,12 @@
 import json
+import os
 
-from flask import Blueprint, redirect, render_template, url_for
+from flask import Blueprint, current_app, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.models import ConceptDraft, Exhibition, Product
-from app.services.booth_concept import generate_booth_concept
+from app.services.booth_concept import generate_booth_concept, generate_booth_image
 
 bp = Blueprint("concept", __name__, url_prefix="/concept")
 
@@ -84,6 +85,34 @@ def generate(draft_id):
     draft.events = json.dumps(result.get("event_plans", []), ensure_ascii=False)
     draft.target_buyers = json.dumps(result.get("target_buyers", []), ensure_ascii=False)
     draft.image_prompt = result.get("image_generation", {}).get("prompt", "")
+    draft.image_path = None  # 컨셉이 바뀌었으니 이전 프롬프트로 만든 이미지는 무효
     db.session.commit()
+
+    return redirect(url_for("concept.detail", draft_id=draft.id))
+
+
+@bp.route("/<int:draft_id>/generate-image", methods=["POST"])
+@login_required
+def generate_image(draft_id):
+    draft = ConceptDraft.query.filter_by(id=draft_id, user_id=current_user.id).first_or_404()
+    if not draft.image_prompt:
+        flash("먼저 컨셉을 생성해주세요.", "danger")
+        return redirect(url_for("concept.detail", draft_id=draft.id))
+
+    try:
+        image_bytes = generate_booth_image(draft.image_prompt)
+    except Exception as e:
+        flash(f"이미지 생성에 실패했습니다: {e}", "danger")
+        return redirect(url_for("concept.detail", draft_id=draft.id))
+
+    rel_path = f"generated/concept/{draft.id}.png"
+    abs_path = os.path.join(current_app.static_folder, rel_path)
+    os.makedirs(os.path.dirname(abs_path), exist_ok=True)
+    with open(abs_path, "wb") as f:
+        f.write(image_bytes)
+
+    draft.image_path = rel_path
+    db.session.commit()
+    flash("부스 예상 이미지를 생성했습니다.", "success")
 
     return redirect(url_for("concept.detail", draft_id=draft.id))

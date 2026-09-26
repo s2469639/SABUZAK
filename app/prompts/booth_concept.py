@@ -32,21 +32,36 @@ booth_theme, selling_points, event_plans를 기획할 때 아래 5가지를 전�
 - 방향: 현지 시장성 검증(시식·투표), 현지 SNS 바이럴, 현장 번들 혜택, B2B 상담 특전 등 해당 국가·박람회 성격에 맞춘 실무 전략
 
 [3D 부스 이미지 생성 프롬프트]
-Midjourney/DALL-E 즉시 사용 가능한 완성형 영문 프롬프트 1개를 작성하세요. 실제 식품 박람회 부스는 아래 요소들의 조합으로 구성됩니다 (실제 해외 식품 박람회 부스 사진 분석 기반):
+Midjourney/DALL-E 즉시 사용 가능한 완성형 영문 프롬프트 1개를 작성하세요.
 
+[톤앤매너 — 반드시 지킬 것]
+실제 부스 시공사가 클라이언트에게 제안하는 "카탈로그용 3D 디자인 렌더링" 톤이어야 합니다. 영화 포스터 같은 어둡고 극적인 시네마틱 렌더링이 아닙니다.
+- 조명은 밝고 균일해야 합니다. 배경이 어둡거나(dark background), 부스만 스포트라이트로 빛나고 주변이 암전된 극적 연출은 절대 금지입니다.
+- 배경은 밝은 회색/화이트 스튜디오 배경이거나, 정상적으로 밝은 조명의 실제 전시장 홀이어야 합니다.
+- 실제로 시공 가능한 재질만 쓰세요: MDF/합판 패널, 알루미늄 프레임 구조, 인쇄 그래픽 패널(포맥스/현수막), LED 라이트박스. SF적이거나 비현실적인 유기적 건축 형태는 금지.
+
+[사람 등장 금지]
+부스 안에 사람(스태프, 방문객 등)을 절대 등장시키지 마세요. 빈 부스 상태의 디자인 렌더링이어야 합니다.
+
+[항상 포함해야 하는 요소]
+아래 3가지는 실제 박람회 부스의 기본 구성이므로 스타일과 무관하게 항상 포함하세요:
+- 팜플렛/브로슈어 거치대(a brochure/pamphlet display stand with printed catalogs)
+- 시식대(Tasting counter): 유리 스니즈가드가 있는 화이트 또는 우드톤 카운터. 시식용 소량 접시/컵이 놓여있는 디테일 포함.
+- 제품 전시 칸(Product display shelf/section): 실제 제품 패키지가 보기 좋게 진열된 선반이나 별도 디스플레이 구역 — 클로즈업 이미지 백월이 아니라 실물 제품처럼 보이는 진열대여야 함.
+
+[구성 요소 — 이 중 2~3개를 추가로 조합]
+위 필수 요소에 더해, 아래 중 이번 기획(브랜드 컬러, 제품 특성, 개최국 정서)에 가장 잘 어울리는 요소 2~3개를 골라 자연스럽게 결합하세요 (실제 해외 식품 박람회 부스 사진 분석 기반):
 - 상단 구조물(Overhead structure): 브랜드명/로고가 크게 들어간 조명 박스 사인, 아치형 캐노피, 또는 둥근 곡선형 천장 구조물. 부스의 메인 브랜드 컬러로 통일.
 - 포인트 백월(Feature backwall): 제품 클로즈업 비주얼, 라이프스타일 이미지, 브랜드 스토리 그래픽, 지도/문화 모티프 패널 등을 대형 스크린이나 백라이트 패널로 연출.
-- 시식/판매 카운터(Tasting counter): 유리 스니즈가드가 있는 화이트 또는 우드톤 전면 카운터. 스태프가 시식·시연을 제공하는 동선.
-- 제품 디스플레이(Product display wall): 컬러풀하게 쌓인 제품 패키지, 백라이트 선반, 또는 하나의 "제품 월"을 형성하는 진열대.
 - 인터랙티브 요소(Interactive corner): 룰렛/경품휠, 디지털 스크린, 포토존 등 방문객의 체류·참여를 유도하는 장치.
 - 바닥재(Flooring accent): 레드카펫 또는 브랜드 컬러 바닥 스트립.
 - 라운지 존(Seating nook): 하이탑 원형 테이블 + 스툴로 구성된 캐주얼 시식·미팅 공간.
-- 조명(Lighting): 매립 스팟라이트, 백라이트 사인, LED 스트립 액센트 — 어두운 전시장 배경 속에서 부스만 환하게 빛나는 느낌.
+- 조명(Lighting): 매립 다운라이트, 백라이트 사인, LED 스트립 액센트 — 부스 전체가 고르게 밝은 느낌 (어둡게 만들지 말 것).
 
-이 중 이번 기획(브랜드 컬러, 제품 특성, 개최국 정서)에 가장 잘 어울리는 요소 3~4개를 골라 하나의 매끄러운 영문 문장으로 자연스럽게 결합하세요 (전부 나열하거나 과도하게 복잡하게 만들지 말 것 — negative_prompt의 "cluttered, messy"에 해당하지 않도록 절제할 것).
+전부 나열하거나 과도하게 복잡하게 만들지 말 것 — negative_prompt의 "cluttered, messy"에 해당하지 않도록 절제할 것.
 
 기본 구조:
-"A realistic 3D architectural rendering of a food exhibition booth for [제품명] at [박람회명], photorealistic, 8k, octane render, wide angle view, [선택된 3~4개 요소를 브랜드 컬러·제품 특성과 결합해 서술]"
+"A bright, clean 3D exhibition booth design rendering for [제품명] at [박람회명], evenly lit with soft even lighting, light gray studio background (or a well-lit exhibition hall), realistic buildable trade show materials, professional booth design proposal visualization, wide angle view, no people, empty booth, a brochure/pamphlet display stand with printed catalogs, a tasting counter with sample plates, a product display shelf showcasing the actual product packaging, [선택된 2~3개 요소를 브랜드 컬러·제품 특성과 결합해 서술]"
 
 [출력]
 설명이나 서론 없이, 아래 스키마를 따르는 유효한 JSON만 반환하세요.
@@ -68,15 +83,16 @@ Midjourney/DALL-E 즉시 사용 가능한 완성형 영문 프롬프트 1개를 
   "target_buyers": ["string", "string", "string", "string"],
   "image_generation": {
     "prompt": "string",
-    "negative_prompt": "cluttered, messy, dark, cartoon, 3d glitch, low quality, blurry, distorted, cheap plastic, dim lighting"
+    "negative_prompt": "people, staff, person, crowd, cluttered, messy, dark background, dim lighting, moody, dramatic shadows, cinematic, black void background, spotlight glow, cartoon, 3d glitch, low quality, blurry, distorted, cheap plastic, unrealistic sci-fi architecture"
   }
 }
 
 selling_points는 정확히 3개(핵심 2, 보조 1), event_plans는 3~4개, target_buyers는 정확히 4개여야 합니다."""
 
 NEGATIVE_PROMPT = (
-    "cluttered, messy, dark, cartoon, 3d glitch, low quality, blurry, "
-    "distorted, cheap plastic, dim lighting"
+    "people, staff, person, crowd, cluttered, messy, dark background, dim lighting, moody, "
+    "dramatic shadows, cinematic, black void background, spotlight glow, cartoon, 3d glitch, "
+    "low quality, blurry, distorted, cheap plastic, unrealistic sci-fi architecture"
 )
 
 

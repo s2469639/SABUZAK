@@ -1,16 +1,44 @@
+import re
+from datetime import datetime, timedelta, timezone
+
 from flask import Flask, redirect, url_for
 from sqlalchemy import inspect, text
 
 from app.extensions import db, login_manager
 
 
+def split_points(text_, limit=4):
+    """v15(트렌드 조사/부스 컨셉)의 리테일 분석 긴 문장을 불릿용으로 나눈다
+    (문장 끝·쉼표 기준, 너무 짧게 쪼개지면 원문 그대로). v15/app.py 원본 그대로."""
+    text_ = str(text_ or "").strip()
+    if not text_:
+        return []
+    parts = [p.strip(" .·-") for p in re.split(r"(?<=[.!?。])\s+|(?<=다)\.\s*|\s*[;·•]\s*|\n+", text_)]
+    parts = [p for p in parts if p]
+    if len(parts) <= 1:
+        parts = [p.strip() for p in text_.split(", ") if p.strip()]
+    if len(parts) <= 1 or any(len(p) < 4 for p in parts):
+        return [text_]
+    return parts[:limit]
+
+
+def chips(text_, limit=6):
+    """'400g, 밀키트, 멸치 육수와 생면 포함' -> 칩 목록. v15/app.py 원본 그대로."""
+    parts = [p.strip() for p in re.split(r"[,/·]|\s+\+\s+", str(text_ or "")) if p.strip()]
+    return parts[:limit]
+
+
 def format_kdate(value):
     """YYYYMMDD(int/str) -> '2026.09.22'. 값이 없거나 형식이 다르면 원본 그대로 반환.
-    크롤러가 정확한 날짜를 못 구했을 때 일(day)에 채워두는 32는 실제 날짜가 아니므로
+    크롤링 원본에 날짜가 없어서 UNKNOWN_DATE(99999999) 센티널로 저장된 경우
+    "9999.99.99"처럼 날짜인 척 보이는 걸 막기 위해 "일정 미정"으로 표시하고,
+    연/월은 있지만 정확한 날(day)을 못 구해 32로 채워둔 경우는
     '2026.09 예정'처럼 연/월만 보여준다."""
     if not value:
         return ""
     s = str(value)
+    if s == "99999999":
+        return "일정 미정"
     if len(s) != 8 or not s.isdigit():
         return s
     if s[6:8] == "32":
@@ -19,13 +47,58 @@ def format_kdate(value):
 
 
 def format_kdate_range(start, end):
-    """start_date~end_date를 'YYYY.MM.DD ~ YYYY.MM.DD'로 합쳐 보여준다.
-    day=32(날짜 미정) 처리로 두 값이 같은 문구가 되면 한 번만 보여준다."""
-    s = format_kdate(start)
-    e = format_kdate(end)
+    """start_date/end_date(YYYYMMDD) 쌍 -> '2026.09.22 ~ 2026.09.24'.
+    둘 다 UNKNOWN_DATE(99999999)이거나 비어있으면 "일정 미정" 하나로,
+    day=32 처리 등으로 두 값이 같은 문구가 되면 그 값 하나로만 보여준다."""
+    start_s, end_s = str(start or ""), str(end or "")
+    if start_s in ("", "99999999") and end_s in ("", "99999999"):
+        return "일정 미정"
+    s, e = format_kdate(start), format_kdate(end)
     if not s or not e or s == e:
         return s or e
     return f"{s} ~ {e}"
+
+
+def usd_short(value):
+    """차트 눈금/막대 위에 쓸 짧은 금액 표기 (예: 7,829,826,046 -> $7.8B).
+    un_v6/app.py의 usd_short 필터 그대로."""
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return "N/A"
+    a = abs(v)
+    for div, suffix in ((1e12, "T"), (1e9, "B"), (1e6, "M"), (1e3, "K")):
+        if a >= div:
+            return f"${v / div:,.1f}{suffix}"
+    return f"${v:,.0f}"
+
+
+def pct(value):
+    """점유율 표시. 1% 미만은 소수점을 더 보여주고, 아주 작으면 '<0.01%'로 표시해
+    "0.0%(없음)"와 "조금 있음"이 구분되게 한다. un_v6/app.py의 pct 필터 그대로."""
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return "N/A"
+    if v == 0:
+        return "0%"
+    a = abs(v)
+    if a < 0.01:
+        return "<0.01%"
+    if a < 1:
+        return f"{v:.2f}%"
+    return f"{v:.1f}%"
+
+
+def kst(value):
+    """ISO 시각(UTC) -> '2026-09-23 20:36 (한국시간)'. un_v6/app.py의 kst 필터 그대로."""
+    try:
+        dt = datetime.fromisoformat(str(value))
+    except (TypeError, ValueError):
+        return value
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone(timedelta(hours=9))).strftime("%Y-%m-%d %H:%M (한국시간)")
 
 
 def _sync_missing_columns(db):
@@ -58,8 +131,23 @@ def create_app(config_object="config.Config"):
     app = Flask(__name__)
     app.config.from_object(config_object)
     app.config.setdefault("SECRET_KEY", "dev-secret-key-change-me")
+    if app.config["SECRET_KEY"] == "dev-secret-key-change-me" and not app.debug:
+        # 배포 환경에서 SECRET_KEY 환경변수를 안 넣으면 로그인 세션이 누구나
+        # 아는 키로 서명돼서 위조 가능해진다. 조용히 넘어가지 않고 로그에
+        # 크게 경고를 남긴다 (서버 기동 자체는 막지 않음 - 로컬 테스트 등
+        # SECRET_KEY 없이도 돌려봐야 하는 경우가 있어서).
+        app.logger.warning(
+            "!!! SECRET_KEY 환경변수가 설정되지 않아 기본값을 쓰고 있습니다. "
+            "배포 환경이라면 지금 바로 SECRET_KEY를 랜덤 값으로 설정하세요 "
+            "(예: python -c \"import secrets; print(secrets.token_hex(32))\")."
+        )
     app.jinja_env.filters["kdate"] = format_kdate
     app.jinja_env.globals["kdate_range"] = format_kdate_range
+    app.jinja_env.filters["usd_short"] = usd_short
+    app.jinja_env.filters["pct"] = pct
+    app.jinja_env.filters["kst"] = kst
+    app.jinja_env.filters["split_points"] = split_points
+    app.jinja_env.filters["chips"] = chips
 
     @app.route("/")
     def root():
@@ -91,6 +179,10 @@ def create_app(config_object="config.Config"):
 
     from app.routes.drafts import bp as drafts_bp
     app.register_blueprint(drafts_bp)
+
+    from app.routes.trend_v2 import api_bp as trend_v2_api_bp, pages_bp as trend_v2_pages_bp
+    app.register_blueprint(trend_v2_pages_bp)
+    app.register_blueprint(trend_v2_api_bp)
 
     from app.routes.buyers import (
         buyer_gmail_bp,

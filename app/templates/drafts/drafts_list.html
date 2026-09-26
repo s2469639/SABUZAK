@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}작성 중인 박람회 | 사부작{% endblock %}
+{% block title %}작성 중인 박람회 | FairMate{% endblock %}
 
 {% block content %}
 <div class="page-header">
   <div>
     <h1>작성 중인 박람회</h1>
-    <p class="page-desc">부스 컨셉·기안서 작성 진행 상태를 관리합니다</p>
+    <p class="page-desc">부스 컨셉·기안서 작성 진행 상태를 관리합니다.</p>
   </div>
 </div>
 
@@ -19,6 +19,13 @@
       <p class="ingredients">{{ status_labels.get(draft.status, draft.status) }} · 마지막 수정 {{ draft.updated_at.strftime('%Y-%m-%d') }}</p>
     </div>
     <div class="draft-row-actions">
+      {% set trend = trend_by_expo.get(draft.id) %}
+      {% if trend and trend.job_id %}
+      <a href="/trend/{{ trend.job_id }}" class="btn-chip">트렌드 분석</a>
+      {% endif %}
+      {% if trend and trend.booth_job_id %}
+      <a href="/booth/{{ trend.booth_job_id }}" class="btn-chip">부스 컨셉(v15)</a>
+      {% endif %}
       <a href="{{ url_for('concept.detail', draft_id=draft.id) }}" class="btn-secondary">이어서 작성</a>
       <form method="post" action="{{ url_for('drafts.delete', draft_id=draft.id) }}">
         <button type="submit" class="btn-text-danger" onclick="return confirm('이 박람회의 컨셉 기획을 삭제하시겠습니까?')">삭제</button>

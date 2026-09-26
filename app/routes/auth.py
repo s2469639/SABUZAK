@@ -91,3 +91,12 @@ def logout():
     logout_user()
     flash("로그아웃되었습니다.", "info")
     return redirect(url_for("auth.login"))
+
+
+@bp.route("/google/callback")
+@login_required
+def google_callback_redirect():
+    """Google Cloud Console에 /auth/google/callback으로 등록된 경우를 위한 별칭.
+    실제 처리 로직은 buyer_gmail_bp.callback(/buyers/gmail/callback)에 있고,
+    여기서는 쿼리 파라미터(state, code 등)를 그대로 넘겨주기만 한다."""
+    return redirect(url_for("buyer_gmail.callback", **request.args))

@@ -1,0 +1,201 @@
+{% extends "trend_v2/base.html" %}
+{% block title %}트렌드 조사 · 페어메이트{% endblock %}
+{% block start_url %}/api/trend/start{% endblock %}
+{% block kind %}trend{% endblock %}
+{% block result_base %}/trend/{% endblock %}
+{% block loading_sub %}세 가지 분석을 동시에 진행해요. 보통 3~5분 걸려요.{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>트렌드 조사</h1>
+      <p class="desc">현지 검색 트렌드 · 리테일 가격 · 현지 시장 트렌드를 한 화면에서 확인하세요.</p>
+    </div>
+    {% if data %}<a class="btn-orange" href="{{ booth_link }}">부스 컨셉 기획 →</a>{% endif %}
+  </div>
+
+  {% set form_action = "/trend-research" %}{% set submit_label = "분석 실행" %}
+  {% include "trend_v2/_form.html" %}
+
+  {% if data %}
+  {% set r = data.research %}
+  {# ============================ 1. 트렌드 ============================ #}
+  <div class="section-head"><div class="section-title">1. 연관 검색어 기반 시장 트렌드 4단계 클러스터링</div></div>
+  {% set s1 = data.section1 %}
+  {% if s1 %}
+    <div class="meta-row">
+      <span class="meta">대상 시장 <b>{{ s1.country_ko }} ({{ s1.geo }})</b></span>
+      <span class="meta">검색 언어 <b>{{ s1.languages|join(", ") }}</b></span>
+      <span class="meta">데이터 <b>{{ s1.data_level_label_ko }}</b></span>
+      <span class="meta">Google 데이터 신뢰도 <b class="lv-{{ s1.reliability }}">{{ s1.reliability_label_ko }}</b></span>
+      <span class="meta">바이어 언어 <b>{{ s1.buyer_language }}</b></span>
+      <span class="meta">조회 <b>{{ data.fetched_at }}</b></span>
+      <span class="meta-legend">% = 작년 같은 기간 대비 검색량 변화</span>
+    </div>
+    {% if s1.reliability_note_ko %}<div class="slim-banner" role="note"><span class="ico info" aria-hidden="true">i</span>{{ s1.reliability_note_ko }}</div>{% endif %}
+    {% for w in s1.warnings %}<div class="slim-banner" role="note"><span class="ico">⚠️</span>{{ w }}</div>{% endfor %}
+    <div class="cluster-grid">
+      {% for c in s1.clusters %}
+      {% if not c.keywords %}
+      <div class="card empty">
+        <div class="card-header"><span><span class="cluster-num">{{ "%02d"|format(loop.index) }}</span>{{ c.label }}</span></div>
+        <div class="card-title">{{ c.title_ko }}</div>
+        <div class="empty-note"><span class="ico info" aria-hidden="true" style="flex:none">i</span><span>현지에서 {{ c.short_ko or "이 단계" }} 관련 검색 신호가 확인되지 않았어요. 아직 검색 수요가 작거나, 다른 표현으로 검색되고 있을 수 있어요.</span></div>
+      </div>
+      {% else %}
+      <div class="card">
+        <div class="card-header"><span><span class="cluster-num">{{ "%02d"|format(loop.index) }}</span>{{ c.label }}</span>{% if c.tag %}<span class="chip">{{ c.tag }}</span>{% endif %}</div>
+        <div class="card-title">{{ c.title_ko }}</div>
+        {% if c.summary %}<div class="card-body">{{ c.summary }}</div>{% endif %}
+        <div class="kw-list">
+          {% for kw in c.keywords %}
+          <div class="kw">
+            <div><div class="kw-orig">{{ kw.keyword }}</div>{% if kw.ko %}<div class="kw-ko">{{ kw.ko }}</div>{% endif %}
+              {% if kw.is_breakout %}<div class="badges" style="margin-top:3px"><span class="chip red tip" tabindex="0" data-tip="Google 트렌드에서 검색량이 짧은 기간에 크게 급증(Breakout)한 검색어예요">급등</span></div>{% endif %}</div>
+            {% if kw.badge and kw.badge.kind == 'yoy' %}
+              {% set p = kw.badge.pct %}
+              {% set tip = "최근 3개월 '" ~ kw.keyword ~ "' 검색 관심도가 " ~ (("작년 같은 기간보다 " ~ p|abs ~ "% " ~ ("높아요" if p > 0 else "낮아요")) if p != 0 else "작년 같은 기간과 비슷해요") ~ " (Google 트렌드 상대 지수)" %}
+              <span class="badge-num tip {{ 'up' if p > 0 else ('down' if p < 0 else 'flat') }}" tabindex="0" data-tip="{{ tip }}" aria-label="{{ tip }}">{{ '+' if p > 0 }}{{ p }}%</span>
+            {% elif kw.badge and kw.badge.kind == 'rising' %}
+              {% set tip = "'" ~ kw.keyword ~ "'은(는) 최근 검색량이 빠르게 늘어난 연관 검색어예요 (+" ~ kw.badge.pct ~ "%, Google 트렌드 급상승 지표)" %}
+              <span class="badge-num tip rising" tabindex="0" data-tip="{{ tip }}" aria-label="{{ tip }}">급상승 +{{ kw.badge.pct }}%</span>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% if c.insight %}<div class="callout"><span class="ico">💡</span><span>{{ c.insight }}</span></div>{% endif %}
+      </div>
+      {% endif %}{% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-panel">검색어 트렌드를 불러오지 못했습니다. {{ data.section1_error }}</div>
+  {% endif %}
+
+  {# ============================ 2. 리테일 ============================ #}
+  <div class="section-head"><div class="section-title">2. 현지 리테일 벤치마킹 & 경쟁 제품 가격 분석</div></div>
+  {% set s2 = data.section2 %}
+  {% if s2 %}
+    {% set rp = s2.retail_price %}
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-header">TARGET PRODUCT</div>
+        <div class="card-title">{{ s2.target_product.title }}</div>
+        {% set specs = s2.target_product.specs|chips %}
+        {% if specs %}<div class="field"><div class="k">제품 스펙</div>
+          {% if specs|map("length")|max <= 15 %}{% for x in specs %}<span class="tag">{{ x }}</span>{% endfor %}
+          {% else %}<ul class="fact-list">{% for x in s2.target_product.specs|split_points %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}
+        </div>{% endif %}
+        {% set pains = s2.target_product.complaints|split_points %}
+        {% if pains %}<div class="field"><div class="k">소비자 페인 포인트</div><ul class="pain">{% for x in pains %}<li>{{ x }}</li>{% endfor %}</ul></div>{% endif %}
+      </div>
+      <div class="card">
+        <div class="card-header">RETAIL PRICE</div>
+        <div class="price-big">{{ rp.price }}</div>
+        {% if rp.usd_price %}<div class="converted-price">{{ rp.usd_price }}{% if rp.krw_price %} · {{ rp.krw_price }}{% endif %}</div>{% endif %}
+        <div class="tooltip-wrapper" tabindex="0">
+          <span class="price-badge {{ rp.method or 'estimate' }}">● {{ rp.badge }}</span>
+          <div class="tooltip-text">{{ rp.badge_desc }}</div>
+        </div>
+        {% if rp.search_error %}{% include "trend_v2/_search_error.html" with context %}{% endif %}
+        {% if rp.sources %}<div class="price-src">출처: {% for s in rp.sources %}<a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">{{ s.title or s.url }} ↗</a>{% if not loop.last %} · {% endif %}{% endfor %}</div>{% endif %}
+      </div>
+      <div class="card">
+        <div class="card-header">SALES CHANNELS</div>
+        <div class="card-title">진출 타깃 채널</div>
+        {% if s2.sales_channels.shelf %}<div class="field"><div class="k">추천 매대</div><div class="v">{{ s2.sales_channels.shelf }}</div></div>{% endif %}
+        {% if s2.sales_channels.channels %}<div class="field"><div class="k">유통몰</div>{% for ch in s2.sales_channels.channels %}<span class="pill">🏬 {{ ch }}</span>{% endfor %}</div>{% endif %}
+      </div>
+      <div class="card">
+        <div class="card-header">PRICE &amp; USP STRATEGY</div>
+        <div class="card-title">{{ s2.price_strategy.positioning }}</div>
+        {% if s2.price_strategy.pitch %}<div class="field"><div class="k">바이어 피칭</div><div class="pitch">“{{ s2.price_strategy.pitch }}”</div></div>{% endif %}
+      </div>
+    </div>
+  {% else %}
+    <div class="empty-panel">리테일 벤치마킹을 불러오지 못했습니다. {{ data.section2_error }}</div>
+  {% endif %}
+
+  {# ============================ 3. 현지 시장 트렌드 분석 ============================ #}
+  <div class="section-head">
+    <div class="section-title">3. 현지 시장 트렌드 분석</div>
+    {% if r %}{% set st = r.stats %}
+      <span class="stat-pill" title="{{ '저장된 결과 (' ~ r.fetched_at[:10] ~ ')' if r.from_cache else '새로 조사한 결과' }}">출처: <b>{{ st.sources_found }}곳</b><span class="sep">|</span>원문: <b>{{ st.quotes_used }}건</b> (주요 {{ st.main_quotes }}, 일반 {{ st.open_quotes }})</span>
+    {% endif %}
+  </div>
+  {% if r %}
+    {% if r.search_error %}{% set rp = {"search_error": r.search_error} %}{% include "trend_v2/_search_error.html" with context %}{% endif %}
+    <div class="card-grid">
+      {% for c in r.cards %}
+      {% set n = data.view.articles[c.qid]|length %}
+      <div class="card research-card">
+        <div class="card-header"><span>{{ question_labels[c.qid] }}</span><span class="chip">{{ c.qid }}</span></div>
+        <div class="card-title">{{ c.title }}</div>
+        <div class="muted">{{ c.question }}</div>
+        {% if c.notice %}<div class="notice">{{ c.notice }}</div>{% endif %}
+        {% if c.conclusion %}
+          <div class="conclusion">{{ c.conclusion.text }}{% for i in c.conclusion.quote_ids %}<button class="ref" type="button" data-tab="{{ c.qid }}" data-target="{{ i }}" aria-label="{{ i }} 원문 보기">{{ i }}</button>{% endfor %}</div>
+        {% endif %}
+        {% if c.points %}
+          <details class="more">
+            <summary><span class="when-closed">자세히 보기 ({{ c.points|length }})</span><span class="when-open">접기</span></summary>
+            <div class="more-body"><ul class="points">{% for p in c.points %}<li>{{ p.text }}{% for i in p.quote_ids %}<button class="ref" type="button" data-tab="{{ c.qid }}" data-target="{{ i }}" aria-label="{{ i }} 원문 보기">{{ i }}</button>{% endfor %}</li>{% endfor %}</ul></div>
+          </details>
+        {% endif %}
+        {% if c.interpretation %}<div class="interp"><b>AI 해석</b> · {{ c.interpretation|replace("AI 해석:", "")|trim }}</div>{% endif %}
+        {% if c.gaps %}
+          <details class="more caution">
+            <summary><span class="when-closed">⚠️ 확인 필요</span><span class="when-open">⚠️ 접기</span></summary>
+            <div class="more-body caution-text">{{ c.gaps }}</div>
+          </details>
+        {% endif %}
+        <div class="card-footer">
+          <button class="btn-more" type="button" data-tab="{{ c.qid }}" {% if not n %}disabled{% endif %}>기사 {{ n }}건 보기 →</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-panel">현지 시장 트렌드 분석을 불러오지 못했습니다. {{ data.research_error }}</div>
+  {% endif %}
+
+  {% endif %}
+{% endblock %}
+{% block drawer %}
+{# ============================ 사이드바: 근거 기사 · 조사 메모 ============================ #}
+{% if data and data.research %}
+{% set r = data.research %}
+<div class="overlay" id="overlay" title="눌러서 닫기"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="drawer-title" role="dialog">
+  <div class="drawer-head">
+    <div class="drawer-top"><h2 id="drawer-title">근거 기사</h2><button class="btn-close" type="button" id="drawer-close" aria-label="닫기">✕</button></div>
+    <div class="tabs" role="tablist">
+      {% for c in r.cards %}<button class="tab" type="button" role="tab" data-tab="{{ c.qid }}" data-title="근거 기사" aria-selected="false">{{ c.title }} ({{ data.view.articles[c.qid]|length }})</button>{% endfor %}
+    </div>
+  </div>
+  <div class="drawer-body">
+    {% for c in r.cards %}
+    <section class="tab-panel" role="tabpanel" data-panel="{{ c.qid }}" hidden>
+      <p class="muted" style="margin-bottom:10px">{{ c.question }}</p>
+      {% for a in data.view.articles[c.qid] %}
+      <article class="article" id="art-{{ a.id }}">
+        <div class="badges">
+          <span class="chip blue">{{ a.id }}</span>
+          <span class="chip">{{ a.scope_label }}</span>
+          <span class="chip {{ 'green' if a.market == 'country' else 'amber' }}">{{ a.market_label }}</span>
+          <span class="chip {{ 'green' if a.tier == 'main' else '' }}">{{ a.tier_label }}</span>
+          {% if a.is_stale %}<span class="chip red">오래된 자료 ({{ a.year }})</span>{% endif %}
+          {% if a.is_public_kr %}<span class="chip violet">한국 공공기관</span>{% endif %}
+        </div>
+        <div class="orig">“{{ a.quote }}”</div>
+        {% if a.translation_ko %}<div class="ko">{{ a.translation_ko }}</div>{% endif %}
+        <div class="src"><b>{{ a.domain }}</b>{{ a.title }} · {{ a.year or "연도 미상" }}{% if a.url %} · <a href="{{ a.url }}" target="_blank" rel="noopener noreferrer">원문 열기 ↗</a>{% endif %}</div>
+      </article>
+      {% else %}
+      <p class="muted">이 질문의 근거 기사가 없습니다.</p>
+      {% endfor %}
+    </section>
+    {% endfor %}
+  </div>
+</aside>
+{% endif %}
+
+{% endblock %}

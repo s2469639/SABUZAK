@@ -43,6 +43,8 @@ class Product(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     name = db.Column(db.String(150), nullable=False)
     hs_code = db.Column(db.String(20), nullable=False)
+    brand = db.Column(db.String(150))  # 브랜드명
+    product_form = db.Column(db.String(100))  # 제품 형태 (예: 냉동, 분말, 병조림)
     ingredients = db.Column(db.Text)
     target_price = db.Column(db.String(100))  # 목표 소매 가격대/단위중량 (예: "4.99 GBP / 350g")
     certifications = db.Column(db.String(200))  # 보유 인증 (예: "비건, 코셔, HACCP")
@@ -80,6 +82,7 @@ class Exhibition(db.Model):
     keywords = db.Column(db.Text)
     intro_ko = db.Column(db.Text)
     classified_at = db.Column(db.Text)
+    classify_relevant_updated_at = db.Column(db.Text)  # AI 분류에 실제로 쓰이는 필드(name/country/audience_note/website/intro)가 바뀐 시각만 - 날짜/장소 등 무관한 필드 변경으론 안 바뀜
     is_active = db.Column(db.Integer, default=1)
     last_updated_at = db.Column(db.Text)
     country_ko = db.Column(db.Text)
@@ -187,6 +190,7 @@ class ConceptDraft(db.Model):
     events = db.Column(db.Text)  # JSON: [{id, tag, title, schedule, description}, ...]
     target_buyers = db.Column(db.Text)  # JSON: ["...", ...]
     image_prompt = db.Column(db.Text)  # 3D 렌더링용 완성형 영문 프롬프트
+    image_path = db.Column(db.Text)  # 생성된 이미지의 static 상대경로 (예: generated/concept/12.png)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -194,6 +198,33 @@ class ConceptDraft(db.Model):
 
     def __repr__(self):
         return f"<ConceptDraft {self.exhibition_name} ({self.status})>"
+
+
+class TrendResult(db.Model):
+    """v15(트렌드 조사) 완료 결과 요약을 (박람회, 제품) 단위로 남겨두는 기록.
+    실제 분석 원문은 v15/ 자체 job/캐시(cache.db, results/*.json)에 있고,
+    여기는 "작성 중인 박람회" 목록에서 트렌드 조사를 이미 했는지/요약이
+    뭐였는지 보여주기 위한 가벼운 포인터만 저장한다."""
+
+    __bind_key__ = "app_data"
+    __tablename__ = "trend_results"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    exhibition_id = db.Column(db.Integer, nullable=False)  # raw_exhibitions.id (다른 DB라 FK 불가)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
+    job_id = db.Column(db.String(64), nullable=False)  # v15 트렌드 job id (/trend/<job_id> 결과 화면으로 바로 이동 가능)
+    booth_job_id = db.Column(db.String(64))  # v15 부스 컨셉 job id (/booth/<job_id>) - 아직 안 돌렸으면 None
+    summary = db.Column(db.Text)
+    fetched_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", backref=db.backref("trend_results", lazy=True))
+    product = db.relationship(
+        "Product", backref=db.backref("trend_results", lazy=True, cascade="all, delete-orphan")
+    )
+
+    def __repr__(self):
+        return f"<TrendResult expo={self.exhibition_id} product={self.product_id}>"
 
 
 class EmailTemplate(db.Model):
@@ -267,6 +298,33 @@ class FollowupEmail(db.Model):
     # "새 메일 작성"으로 새 초안을 만들어도 언제 마지막으로 발송했는지 기록은 그대로 남겨두기 위한 필드.
     # sent_at/status는 지금 작성 중인 초안 상태를 나타내고, last_sent_at은 발송 이력을 나타낸다.
     last_sent_at = db.Column(db.DateTime)
+
+
+class FollowupAttachment(db.Model):
+    """팔로업 메일에 첨부한 파일. 실제 파일은 instance/attachments/<followup_id>/ 아래에
+    (웹으로 직접 접근 불가한 위치) 저장하고, 여기엔 원본 파일명과 저장된 이름만 기록한다."""
+
+    __bind_key__ = "app_data"  # instance/app_data.db (유저 데이터 전용)
+    __tablename__ = "followup_attachments"
+
+    id = db.Column(db.Integer, primary_key=True)
+    followup_id = db.Column(db.Integer, db.ForeignKey("followup_emails.id"), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)  # 원본 파일명 (한글 가능, 메일에 이 이름으로 첨부)
+    stored_name = db.Column(db.String(100), nullable=False)  # 디스크에 저장된 이름 (uuid)
+    content_type = db.Column(db.String(150))
+    size = db.Column(db.Integer, nullable=False, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    followup = db.relationship(
+        "FollowupEmail",
+        backref=db.backref("attachments", cascade="all, delete-orphan", order_by="FollowupAttachment.id"),
+    )
+
+    @property
+    def size_label(self):
+        if self.size >= 1024 * 1024:
+            return f"{self.size / (1024 * 1024):.1f}MB"
+        return f"{max(1, round(self.size / 1024))}KB"
 
 
 # ProposalDraft 등 나머지 모델은
