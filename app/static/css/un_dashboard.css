@@ -43,6 +43,8 @@
 .un-page .notice { font-size: 13px; font-weight: 500; line-height: 1.8; color: var(--sub); }
 .un-page .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
 .un-page .card-head h3 { margin: 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+.un-page .card-head h3 .hs-tag,
+.un-page .card-head h3 .note { margin: 0; font-size: inherit; line-height: inherit; }
 .un-page .unit { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
 .un-page .source { font-size: 11px; color: var(--muted); text-align: right; margin-top: 8px; }
 .un-page .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }

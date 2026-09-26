@@ -38,7 +38,7 @@
 {% if active_version %}
 <p class="page-desc">
   현재 <a href="{{ url_for('mail_template.edit_template', version=active_version) }}">{{ template_labels.get(active_version) or ('버전 ' ~ active_version) }}</a>이(가) 발송용으로 지정되어 있습니다.
-  체크한 바이어에게 이름·회사·박람회명만 자동 치환해서 그 자리에서 바로 발송됩니다.
+  체크한 바이어에게 이름·회사·박람회명만 자동 치환해 일괄 발송됩니다.
 </p>
 {% endif %}
 

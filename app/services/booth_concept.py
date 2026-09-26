@@ -30,6 +30,22 @@ def _format_date(value):
     return f"{s[:4]}.{s[4:6]}.{s[6:8]}"
 
 
+def _company_name(company, products):
+    """부스 간판에 쓸 이름: 기업명 > 제품 브랜드명 > 첫 제품명."""
+    name = (company or "").strip()
+    if not name:
+        name = next((p.brand.strip() for p in products if p.brand and p.brand.strip()), "")
+    if not name:
+        name = next((p.name.strip() for p in products if p.name and p.name.strip()), "")
+    return name
+
+
+SIGN_SUFFIX = (
+    'The fascia sign and main backwall read exactly "{name}" in bold clean sans-serif lettering, '
+    "no other readable text, no gibberish text"
+)
+
+
 def _build_expo_text(expo):
     country = expo.country_ko or expo.country or "-"
     intro = (expo.intro_ko or expo.intro or "-").strip()
@@ -44,10 +60,10 @@ def _build_expo_text(expo):
     )
 
 
-def _build_product_text(products):
+def _build_product_text(products, company=""):
     if not products:
         return "등록된 제품 없음"
-    blocks = []
+    blocks = [f"[출품 기업명] {_company_name(company, products) or '-'}"]
     for p in products:
         blocks.append(
             f"- 제품명: {p.name}\n"
@@ -187,7 +203,7 @@ def _call_llm(expo_text, product_text, trends_text):
         try:
             response = client.chat.completions.create(
                 model=OPENAI_MODEL,
-                max_tokens=2500,
+                max_tokens=4000,
                 response_format={"type": "json_object"},
                 messages=messages,
             )
@@ -208,11 +224,12 @@ def _call_llm(expo_text, product_text, trends_text):
     return None
 
 
-def _fallback_generate(expo, products):
+def _fallback_generate(expo, products, company=""):
     """API 키가 없거나 호출/검증에 실패했을 때 쓰는 규칙 기반 생성기."""
     product_names = [p.name for p in products] or ["FairMate 제품"]
     names_joined = ", ".join(product_names)
     country = expo.country_ko or expo.country or "해당 시장"
+    sign_name = _company_name(company, products) or product_names[0]
 
     return BoothConcept.model_validate({
         "booth_theme": {
@@ -238,8 +255,6 @@ def _fallback_generate(expo, products):
              "schedule": "상시", "description": "포토존에서 사진 촬영 후 해시태그 인증 시 소정의 경품 추첨."},
             {"id": "03", "title": "현장 번들 샘플 팩 증정", "tag": "현장 혜택",
              "schedule": "수량 소진 시", "description": "바이어 대상 수출용 샘플 팩 현장 한정 배포."},
-            {"id": "04", "title": "도매 바이어 상담", "tag": "B2B 상담",
-             "schedule": "예약제", "description": "현지 도매상 대상 MOQ·납기·가격 협의 집중 상담."},
         ],
         "target_buyers": [
             f"{country} 프리미엄 식품 수입업체",
@@ -287,31 +302,43 @@ def _fallback_generate(expo, products):
         },
         "image_generation": {
             "prompt": (
-                f"A bright, clean 3D exhibition booth design rendering for {product_names[0]} at {expo.name}, "
-                f"evenly lit with soft even lighting, light gray studio background, realistic buildable trade show materials, "
-                f"professional booth design proposal visualization, wide angle view, no people, empty booth, "
-                f"a brochure/pamphlet display stand with printed catalogs, a tasting counter with sample plates, "
-                f"a product display shelf showcasing the actual product packaging, warm wood accents and branded signage"
+                f"A realistic photograph-style 3D rendering of a buildable trade show booth for {product_names[0]} at {expo.name}, "
+                f"inside a bright, well-lit exhibition hall with ceiling trusses, grey hall carpet and neighboring booth walls softly visible, "
+                f"eye-level wide-angle view from the aisle, evenly lit, natural soft shadows, "
+                f"realistic materials (MDF panels, aluminum frame, printed fabric graphics, LED lightbox), standard 6x3 meter booth, "
+                f"{SIGN_SUFFIX.format(name=sign_name)}, no people, empty booth, "
+                f"a brochure/pamphlet display stand with printed catalogs, a tasting counter with glass sneeze guard and sample plates, "
+                f"a product display shelf showcasing the actual product packaging, a small meeting table with chairs, warm wood accents"
             ),
             "negative_prompt": NEGATIVE_PROMPT,
         },
     })
 
 
-def generate_booth_concept(expo, products, trends_data=None) -> dict:
+def generate_booth_concept(expo, products, trends_data=None, company="") -> dict:
     """expo(Exhibition), products(list[Product]) -> dict (app.schemas.booth_concept.BoothConcept 형태)."""
     if trends_data is None:
         trends_data = fetch_trends_data(expo, products)
 
     expo_text = _build_expo_text(expo)
-    product_text = _build_product_text(products)
+    product_text = _build_product_text(products, company)
     trends_text = _build_trends_text(trends_data)
 
     result = _call_llm(expo_text, product_text, trends_text)
     if result is None:
-        result = _fallback_generate(expo, products)
+        result = _fallback_generate(expo, products, company)
 
-    return result.model_dump()
+    data = result.model_dump()
+
+    # LLM이 회사명을 빠뜨렸을 때를 대비해 간판 문구를 프롬프트에 보장한다.
+    sign_name = _company_name(company, products)
+    image_gen = data.get("image_generation") or {}
+    prompt = image_gen.get("prompt") or ""
+    if sign_name and prompt and sign_name not in prompt:
+        image_gen["prompt"] = f"{prompt.rstrip('. ')}. {SIGN_SUFFIX.format(name=sign_name)}."
+        data["image_generation"] = image_gen
+
+    return data
 
 
 def generate_booth_image(prompt: str, negative_prompt: str = NEGATIVE_PROMPT) -> bytes:

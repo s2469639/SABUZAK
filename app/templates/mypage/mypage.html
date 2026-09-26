@@ -36,7 +36,7 @@
       {% endif %}
     </div>
     <div class="action-buttons">
-      <a class="btn-chip" href="{{ url_for('exhibition.market_matrix', hscode=product.hs_code) }}">유망시장 조사</a>
+      <a class="btn-chip" href="{{ url_for('exhibition.market_matrix', hscode=product.hs_code) }}" data-market-loading>유망시장 조사</a>
       <button type="button" class="btn-chip" data-modal-open="edit-product-modal" data-edit-product
               data-edit-url="{{ url_for('mypage.edit_product', product_id=product.id) }}"
               data-edit-name="{{ product.name }}"
@@ -202,4 +202,110 @@
     </form>
   </div>
 </div>
+
+{# "유망시장 조사" 로딩 화면: market_matrix는 UN Comtrade를 동기로 호출해서 응답이
+   올 때까지 진행률을 받을 수 없으므로, 링크 클릭 시 이 화면을 띄우고 진행률은
+   시간에 따라 추정해서 보여준다. 단계 칩은 유망시장 조사 화면의 ①~⑤ 섹션 기준. #}
+<style>
+  .mm-loading { position: fixed; inset: 0; z-index: 1000; background: #fff; display: none; align-items: center; justify-content: center; padding: 24px; }
+  .mm-loading.show { display: flex; }
+  .mm-loading-box { text-align: center; max-width: 440px; width: 100%; }
+  .mm-ring { position: relative; width: 168px; height: 168px; margin: 0 auto 22px; }
+  .mm-ring svg { transform: rotate(-90deg); }
+  .mm-ring .track { stroke: #e5e7eb; }
+  .mm-ring .bar { stroke: url(#mmRingGrad); stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+  .mm-ring .pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 800; color: #0f172a; letter-spacing: -.02em; }
+  .mm-ring .pct small { font-size: 16px; color: #64748b; margin-left: 2px; }
+  .mm-loading-msg { font-size: 16px; font-weight: 700; color: #0f172a; min-height: 24px; }
+  .mm-loading-sub { font-size: 14px; color: #64748b; margin-top: 4px; }
+  .mm-loading-steps { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin: 16px 0 26px; }
+  .mm-chip { display: inline-block; font-size: 12px; border-radius: 4px; padding: 2px 7px; border: 1px solid #cbd5e1; color: #64748b; white-space: nowrap; background: #fff; }
+  .mm-chip.run { background: #fdf3ec; color: #ea580c; border-color: transparent; }
+  .mm-chip.run::before { content: "● "; }
+  .mm-chip.done { background: #ecfdf5; color: #047857; border-color: transparent; }
+  .mm-chip.done::before { content: "✓ "; }
+  .mm-slogan { border-top: 1px solid #e5e7eb; padding-top: 20px; }
+  .mm-slogan .line1 { font-size: 16px; color: #334155; font-weight: 600; }
+  .mm-slogan .line2 { font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 2px; }
+  .mm-slogan .brand { background: linear-gradient(90deg, #ea580c, #d95400); -webkit-background-clip: text; background-clip: text; color: transparent; }
+</style>
+
+<div class="mm-loading" id="mm-loading" role="status" aria-live="polite">
+  <div class="mm-loading-box">
+    <div class="mm-ring">
+      <svg width="168" height="168" viewBox="0 0 168 168" aria-hidden="true">
+        <defs><linearGradient id="mmRingGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ea580c"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>
+        <circle class="track" cx="84" cy="84" r="72" fill="none" stroke-width="12"/>
+        <circle class="bar" id="mm-ring-bar" cx="84" cy="84" r="72" fill="none" stroke-width="12" stroke-dasharray="452.39" stroke-dashoffset="452.39"/>
+      </svg>
+      <div class="pct"><span id="mm-ring-pct">0</span><small>%</small></div>
+    </div>
+    <div class="mm-loading-msg" id="mm-loading-msg">유망시장 조사를 준비하고 있어요</div>
+    <div class="mm-loading-sub">UN Comtrade 통계를 분석해요. 보통 몇 분 걸려요.</div>
+    <div class="mm-loading-steps" id="mm-loading-steps"></div>
+    <div class="mm-slogan">
+      <div class="line1">박람회 준비부터 바이어 팔로업까지.</div>
+      <div class="line2"><span class="brand">페어메이트</span>와 함께</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var overlay = document.getElementById("mm-loading");
+  if (!overlay) return;
+  var CIRC = 452.39;
+  var STEPS = [
+    {name: "세계시장 현황", msg: "세계시장 교역 현황을 불러오고 있어요", until: 30},
+    {name: "유망시장 매트릭스", msg: "유망시장 매트릭스를 계산하고 있어요", until: 60},
+    {name: "후보국별 상세", msg: "후보국별 상세 데이터를 정리하고 있어요", until: 85},
+    {name: "AI 분석", msg: "AI 분석 결과를 준비하고 있어요", until: 100}
+  ];
+  var timer = null;
+
+  function render(pct) {
+    document.getElementById("mm-ring-pct").textContent = pct;
+    document.getElementById("mm-ring-bar").style.strokeDashoffset = CIRC * (1 - pct / 100);
+    var current = 0;
+    while (current < STEPS.length - 1 && pct >= STEPS[current].until) current++;
+    document.getElementById("mm-loading-msg").textContent = STEPS[current].msg;
+    var box = document.getElementById("mm-loading-steps");
+    box.innerHTML = "";
+    STEPS.forEach(function (step, i) {
+      var chip = document.createElement("span");
+      chip.className = "mm-chip" + (i < current ? " done" : (i === current ? " run" : ""));
+      chip.textContent = step.name;
+      box.appendChild(chip);
+    });
+  }
+
+  function show() {
+    // 실제 진행률을 알 수 없으므로 95%까지 점점 느려지게 올린다.
+    var started = Date.now();
+    render(0);
+    overlay.classList.add("show");
+    clearInterval(timer);
+    timer = setInterval(function () {
+      var sec = (Date.now() - started) / 1000;
+      render(Math.floor(95 * (1 - Math.exp(-sec / 45))));
+    }, 500);
+  }
+
+  function hide() {
+    clearInterval(timer);
+    overlay.classList.remove("show");
+  }
+
+  document.querySelectorAll("a[data-market-loading]").forEach(function (link) {
+    link.addEventListener("click", function (e) {
+      // 새 탭으로 열 때는 현재 페이지를 가리지 않는다.
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+      show();
+    });
+  });
+
+  // 뒤로가기로 돌아왔을 때(bfcache) 로딩 화면이 남아 있지 않게 한다.
+  window.addEventListener("pageshow", function (e) { if (e.persisted) hide(); });
+})();
+</script>
 {% endblock %}
