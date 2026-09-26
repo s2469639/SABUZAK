@@ -32,11 +32,7 @@
     </h3>
     {% if row.hs6 %}
     <form method="post" action="{{ url_for('exhibition.market_research', expo_id=expo.id, product_id=row.product.id) }}">
-      {% if row.result %}
-      <label class="checkbox-inline">
-        <input type="checkbox" name="force" value="1"> 저장된 결과 무시하고 새로 조사
-      </label>
-      {% endif %}
+      {% if row.result %}<input type="hidden" name="force" value="1">{% endif %}
       <button type="submit" class="btn-secondary">{{ '다시 조사하기' if row.result else '지금 조사하기' }}</button>
     </form>
     {% else %}
@@ -132,7 +128,7 @@
             <p class="note">상위 {{ comp.top_suppliers | length }}개국만 표시 (전체 {{ comp.supplier_ranked_count }}개국)</p>
           {% endif %}
         {% else %}
-          <div class="banner">이 결과는 예전 방식으로 저장된 결과라 실제 수입지역 순위가 아니라 고정 비교국만 보여줍니다. "저장된 결과 무시하고 새로 조사"로 다시 조회하면 실제 상위 공급국 순위가 나옵니다.</div>
+          <div class="banner">이 결과는 예전 방식으로 저장된 결과라 실제 수입지역 순위가 아니라 고정 비교국만 보여줍니다. "다시 조사하기"로 다시 조회하면 실제 상위 공급국 순위가 나옵니다.</div>
           <div class="tbl-wrap">
             <table class="tbl">
               <tr><th>비교국</th><th>수입금액(USD)</th><th>비중</th></tr>
@@ -187,7 +183,7 @@
   {% elif ke %}
     <div class="empty">관세청 자료를 불러오지 못했습니다 ({{ ke.reason }})</div>
   {% else %}
-    <div class="empty">이 결과는 관세청 연동 이전에 저장된 결과입니다. "저장된 결과 무시하고 새로 조사"로 다시 조회하면 표시됩니다.</div>
+    <div class="empty">이 결과는 관세청 연동 이전에 저장된 결과입니다. "다시 조사하기"로 다시 조회하면 표시됩니다.</div>
   {% endif %}
 
   {% set dv = result.derived %}

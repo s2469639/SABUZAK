@@ -9,9 +9,7 @@
     <div>
       <h1>트렌드 조사</h1>
       <p class="desc">현지 검색 트렌드 · 리테일 가격 · 현지 시장 트렌드를 한 화면에서 확인하세요.</p>
-    </div>
-    {% if data %}<a class="btn-orange" href="{{ booth_link }}">부스 컨셉 기획 →</a>{% endif %}
-  </div>
+    </div>  </div>
 
   {% set form_action = "/trend-research" %}{% set submit_label = "분석 실행" %}
   {% include "trend_v2/_form.html" %}
