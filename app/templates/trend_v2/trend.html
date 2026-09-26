@@ -59,7 +59,8 @@
       <span class="meta-legend">% = 작년 같은 기간 대비 검색량 변화</span>
     </div>
     {% if s1.reliability_note_ko %}<div class="slim-banner" role="note"><span class="ico info" aria-hidden="true">i</span>{{ s1.reliability_note_ko }}</div>{% endif %}
-    {% for w in s1.warnings %}<div class="slim-banner" role="note"><span class="ico">⚠️</span>{{ w }}</div>{% endfor %}
+    {# "연관 검색어가 적어 … 데이터를 함께 사용했습니다." 안내는 숨긴다 (저장된 예전 결과 포함) #}
+    {% for w in s1.warnings if not w.startswith("연관 검색어가 적어") %}<div class="slim-banner" role="note"><span class="ico">⚠️</span>{{ w }}</div>{% endfor %}
     <div class="cluster-grid">
       {% for c in s1.clusters %}
       {% if not c.keywords %}
