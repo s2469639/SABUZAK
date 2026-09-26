@@ -795,9 +795,71 @@ DETAIL_AI_KEYS = (
 )
 
 
+AI_PROMPT_VERSION = 3  # 프롬프트를 바꾸면 올린다 -> 예전 버전으로 저장된 AI 해석은 자동으로 다시 만든다
+
+
 def has_detailed_ai(ai):
-    """새 형식(자세한 버전)의 AI 해석인지. 예전 3문단짜리 캐시는 다시 만든다."""
-    return bool(ai) and all(k in ai for k in ("summary", "korea_position", "action_items"))
+    """최신 형식의 AI 해석인지. 예전 형식(3문단짜리, 또는 실행 과제가 나라와
+    무관하게 비슷하게 나오던 v1)으로 저장된 캐시는 다시 만든다."""
+    return (
+        bool(ai)
+        and all(k in ai for k in ("summary", "korea_position", "action_items"))
+        and ai.get("prompt_version") == AI_PROMPT_VERSION
+    )
+
+
+def _country_name_for_ai(target_country):
+    """AI에게는 'SAU' 같은 코드 대신 '사우디아라비아(SAU)'처럼 이름을 준다.
+    코드만 받으면 어느 나라인지 제대로 떠올리지 못해 일반론으로 흐르기 쉽다."""
+    raw = (target_country or "").strip()
+    if len(raw) == 3 and raw.isascii() and raw.isalpha():
+        iso3 = raw.upper()
+        for name, code in KOREAN_NAME_TO_ISO3.items():
+            if code == iso3 and not name.isascii():
+                return f"{name}({iso3})"
+    return raw
+
+
+def _situation_flags(derived):
+    """이 나라 시장이 어떤 상황인지 파이썬에서 미리 분류해서 AI에 준다.
+    나라마다 상황이 다르면 실행 과제도 달라지도록 하기 위함."""
+    market = (derived or {}).get("market") or {}
+    korea = (derived or {}).get("korea") or {}
+    flags = []
+
+    cagr = market.get("cagr_pct")
+    if cagr is not None:
+        if cagr >= 5:
+            flags.append(f"시장 성장 중 (CAGR {cagr}%)")
+        elif cagr <= -3:
+            flags.append(f"시장 축소 중 (CAGR {cagr}%)")
+        else:
+            flags.append(f"시장 정체 (CAGR {cagr}%)")
+
+    top1 = market.get("top1_supplier") or {}
+    top3 = market.get("top3_suppliers_combined_share_pct")
+    if top1.get("share_pct") is not None and top1["share_pct"] >= 40:
+        flags.append(f"1위 공급국 {top1.get('label')} 독주 (점유율 {top1['share_pct']}%)")
+    elif top3 is not None and top3 < 50:
+        flags.append(f"공급국 분산 시장 (상위 3개국 합계 {top3}%)")
+
+    rank = korea.get("rank_among_suppliers")
+    share = korea.get("share_pct_partner_reported") or 0
+    if not rank and not share:
+        flags.append("한국산 수입 기록 없음 (신규 진입 단계)")
+    elif rank and rank <= 3:
+        flags.append(f"한국이 이미 상위 공급국 ({rank}위, 점유율 {share}%)")
+    else:
+        flags.append(f"한국 존재감 작음 ({rank or '-'}위, 점유율 {share}%)")
+
+    ytd = korea.get("customs_ytd") or {}
+    if ytd.get("yoy_pct") is not None:
+        direction = "증가" if ytd["yoy_pct"] >= 0 else "감소"
+        flags.append(f"올해 한국 수출 누계 전년 동기 대비 {ytd['yoy_pct']}% {direction}")
+
+    if market.get("is_mirror_estimate"):
+        flags.append("상대국 보고 기반 추정치 (이 나라가 직접 보고한 통계 없음)")
+    return flags
 
 
 def interpret_with_llm(client, model, official_item_desc, hscode, target_country, ranking, competitiveness, growth,
@@ -806,15 +868,26 @@ def interpret_with_llm(client, model, official_item_desc, hscode, target_country
     - 주어진 수치만 쓰게 하고(할루시네이션 방지), 증감률·집중도 같은 계산값은
       derive_detail_metrics()가 미리 계산해서 넘긴다.
     - 경쟁국은 실제 상위 공급국 순위(top_suppliers)에서만 고르게 한다.
-    - 품목명은 UN Comtrade 공식 설명(official_item_desc)을 기준으로 한다."""
+    - 품목명은 UN Comtrade 공식 설명(official_item_desc)을 기준으로 한다.
+    - 실행 과제는 이 나라의 수치·공급국 이름·상황(situation_flags)에 근거하게 해서
+      나라마다 같은 일반론이 반복되지 않게 한다."""
     comp = dict(competitiveness)
     comp.pop("item_desc", None)
     comp.pop("breakdown", None)  # 고정 비교국 표는 순위가 아니라 혼동만 줘서 AI에는 넘기지 않음
     derived = derived or {}
+    country = _country_name_for_ai(target_country)
+    situation = _situation_flags(derived)
+    # 수입 통계가 실제로 있는 가장 최신 연도 (AI가 "최근 연도"를 엉뚱하게 부르지 않도록 명시)
+    rows = derived.get("yearly_rows") or []
+    import_years = [r["year"] for r in rows if r.get("import_usd") is not None]
+    latest_year = ((derived.get("market") or {}).get("data_year")
+                   or (max(import_years) if import_years else None))
     payload = {
         "official_item_desc_en": official_item_desc or "(UN Comtrade 응답에 설명 없음)",
         "hscode": hscode,
-        "target_country": target_country,
+        "target_country": country,
+        "latest_data_year": latest_year,
+        "situation_flags": situation,
         "computed_metrics": {k: derived.get(k) for k in ("market", "korea")},
         "yearly_table": derived.get("yearly_rows"),
         "top_suppliers": comp.get("top_suppliers"),
@@ -823,7 +896,7 @@ def interpret_with_llm(client, model, official_item_desc, hscode, target_country
     }
     prompt = f"""당신은 KOTRA 무역관 수준의 시장 분석가입니다. 아래 [데이터]는 UN Comtrade 공식 무역통계와
 한국 관세청 수출 통계입니다. 한국 중소 수출기업 담당자가 바로 의사결정에 쓸 수 있도록
-"{target_country}" 시장 분석 보고서를 자세하게 작성하세요.
+"{country}" 시장 분석 보고서를 자세하게 작성하세요.
 
 [반드시 지킬 규칙]
 1. [데이터]에 있는 수치만 사용하세요. 기업명, 소비자 성향, 규제, 관세율, 유통 구조처럼 데이터에
@@ -831,7 +904,7 @@ def interpret_with_llm(client, model, official_item_desc, hscode, target_country
 2. 각 문단은 근거 수치를 2개 이상 인용하세요. 금액은 "약 23억 달러", "약 4,500만 달러"처럼 읽기 쉽게,
    비율은 소수점 한두 자리까지 쓰세요. 0.01보다 작은 점유율은 "0.01% 미만"이라고 쓰세요.
 3. 성장률을 말할 때는 기간(computed_metrics.market.cagr_period)을 함께 밝히세요.
-4. 경쟁 구도는 top_suppliers(이 시장의 실제 수입 상대국 순위)만 근거로 하세요. {target_country}
+4. 경쟁 구도는 top_suppliers(이 시장의 실제 수입 상대국 순위)만 근거로 하세요. {country}
    자신은 절대 경쟁국으로 언급하지 마세요. top3_suppliers_combined_share_pct로 시장 집중도를 평가하세요.
 5. 한국 현황은 두 출처를 구분하세요: 상대국이 신고한 한국산 수입(CIF, computed_metrics.korea의
    partner_reported 값)과 한국 관세청 수출(FOB, yearly_table.korea_export_usd, customs_ytd).
@@ -839,6 +912,30 @@ def interpret_with_llm(client, model, official_item_desc, hscode, target_country
 6. yearly_table의 note가 있는 연도는 집계 미완 가능성이 있으니 그 연도만으로 "역성장"이라 단정하지 마세요.
 7. is_mirror_estimate가 true면 "상대국 보고 기반 추정치"라는 점을 시장 매력도 문단에서 밝히세요.
 8. 과장된 표현(예: "엄청난", "반드시 성공")을 쓰지 말고, 담당자에게 보고하는 담백한 문체로 쓰세요.
+9. 나라 이름은 "{country}"의 이름 부분으로 쓰고, "DEU 시장"처럼 3자리 코드만 쓰지 마세요.
+10. yearly_table과 computed_metrics의 모든 연도 값은 이미 집계가 끝난 "실제 통계"입니다.
+    "~로 예상된다", "~할 것으로 전망된다", "~로 보인다"처럼 추측하는 표현을 절대 쓰지 말고
+    "~였다", "~로 집계됐다"처럼 확정된 사실로 쓰세요.
+11. "최근 연도"는 반드시 latest_data_year({latest_year}년)를 가리킵니다. 다른 연도를 최근 연도라고 부르지 마세요.
+    올해 수출 누계(customs_ytd)를 말할 때는 "{{연도}}년 1~{{월}}월 누계"처럼 기간을 밝히세요.
+12. yearly_table.korea_export_usd가 0인 연도는 관세청 기준 "수출 실적이 없던 해"입니다.
+    데이터 오류로 해석하지 말고, 그 해를 기준으로 한 증감률(예: -100%)은 인용하지 마세요.
+
+[실행 과제(action_items) 작성 규칙 - 특히 중요]
+A. 각 과제는 반드시 이 나라 데이터의 구체적 근거를 1개 이상 포함하세요:
+   공급국 이름과 점유율, 한국 순위·점유율, 성장률과 기간, 수입 금액, 올해 누계 증감 중에서 고르세요.
+B. situation_flags에 적힌 이 나라의 상황에 맞춰 과제를 고르세요. 예:
+   - "한국산 수입 기록 없음"이면 첫 거래처 발굴·샘플 테스트처럼 진입 단계 과제
+   - "한국이 이미 상위 공급국"이면 기존 물량 유지·점유율 방어·확대 과제
+   - "1위 공급국 독주"면 그 1위 국가 제품과의 가격·품질 비교처럼 1위를 겨냥한 과제
+   - "시장 축소 중"이면 무리한 확대보다 리스크 관리·선별 진입 과제
+   - "올해 누계 증가/감소"가 있으면 그 변화의 원인을 확인하는 과제
+C. "심층 시장 조사를 실시한다", "유통 파트너 협력 가능성을 검토한다", "경쟁사 분석을 통해 전략을 수립한다"처럼
+   어느 나라에나 그대로 쓸 수 있는 문장은 쓰지 마세요. 나라 이름만 바꿔 다른 나라 보고서에 붙여도
+   말이 되는 과제라면 다시 쓰세요.
+D. 좋은 예: "1위 공급국 중국(점유율 42.3%)과 한국산의 가격 차이를 확인하기 위해 중국산 동일 품목의 현지 도매가를 조사한다"
+   좋은 예: "관세청 기준 올해 1~8월 수출이 전년 동기 대비 219% 늘었으므로, 늘어난 물량이 신규 거래처인지 기존 거래처 재주문인지 확인한다"
+   나쁜 예: "시장 조사를 통해 소비자 선호도를 파악한다"
 
 [데이터]
 {json.dumps(payload, ensure_ascii=False, indent=2)}
@@ -851,8 +948,8 @@ def interpret_with_llm(client, model, official_item_desc, hscode, target_country
   "competitive_position": "상위 공급국과 점유율, 상위 3개국 집중도, 공급국 수, 1위와 한국의 격차를 4~6문장으로",
   "korea_position": "한국의 공급국 순위와 점유율, 관세청 기준 수출 추이와 연평균 증감, 올해 누계(전년 동기 대비)를 3~5문장으로",
   "risks": ["데이터로 확인되는 위험 요인 또는 주의점 2~4개 (각 1문장, 근거 수치 포함)"],
-  "strategic_recommendation": "위 분석을 종합한 진출 전략 방향 3~5문장",
-  "action_items": ["담당자가 다음에 할 구체적 실행 과제 3~5개 (각 1문장)"]
+  "strategic_recommendation": "위 분석을 종합한 진출 전략 방향 3~5문장 (situation_flags의 상황을 반영)",
+  "action_items": ["이 나라 수치·공급국 이름에 근거한 실행 과제 3~5개 (각 1문장, 위 실행 과제 규칙 A~D 준수)"]
 }}
 """
     try:
@@ -870,6 +967,7 @@ def interpret_with_llm(client, model, official_item_desc, hscode, target_country
         for k in ("summary", "market_attractiveness", "competitive_position", "korea_position",
                   "strategic_recommendation"):
             data.setdefault(k, "")
+        data["prompt_version"] = AI_PROMPT_VERSION
         return data, None
     except Exception as e:
         print(f"AI 해석 생성 실패: {e}")
