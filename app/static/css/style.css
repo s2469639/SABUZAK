@@ -2385,22 +2385,31 @@ p.page-desc:not(:last-child) {
 .un-bubble-detail strong { display: block; font-size: 13px; margin-bottom: 4px; }
 .un-bubble-detail a { color: #8ab4f8; pointer-events: auto; }
 
-/* 플로팅 챗봇 위젯: 평소엔 우하단 로봇 얼굴 아이콘, 클릭하면 팝업 채팅창 */
+/* 플로팅 챗봇 위젯: 평소엔 우하단 로봇 얼굴 아이콘, 클릭하면 팝업 채팅창.
+   기본 위치는 right/bottom이고, 드래그를 시작하면 JS가 left/top으로
+   전환해서 화면 어디로든 옮길 수 있게 한다 (position: 좌/우/상/하 자유). */
 .chatbot-widget { position: fixed; right: 24px; bottom: 24px; z-index: 200; }
 
 .chatbot-fab {
-  width: 58px; height: 58px; border-radius: 50%; border: none; cursor: pointer;
+  width: 58px; height: 58px; border-radius: 50%; border: none; cursor: grab;
   background: #fde9d9; color: #d9661f;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 6px 16px rgba(217, 102, 31, 0.22);
   transition: transform 0.15s ease;
+  touch-action: none; /* 드래그 중 모바일 스크롤과 충돌 방지 */
 }
 .chatbot-fab:hover { transform: scale(1.06); }
 .chatbot-fab svg { width: 34px; height: 34px; }
 .chatbot-fab.is-open { background: #eef0f3; color: #6b7280; }
+.chatbot-widget.dragging .chatbot-fab { cursor: grabbing; transform: scale(1.08); }
+
+/* 왼쪽으로 스냅됐을 때는 패널도 아이콘 오른쪽(화면 안쪽)으로 펼쳐지게 */
+.chatbot-widget.side-left .chatbot-panel { right: auto; left: 0; }
+/* 화면 위쪽으로 옮겼을 때는 패널을 아이콘 아래로 펼쳐지게 */
+.chatbot-widget.open-below .chatbot-panel { bottom: auto; top: 68px; }
 
 .chatbot-panel {
-  position: absolute; right: 0; bottom: 72px; width: 340px; max-height: 480px;
+  position: absolute; right: 0; bottom: 72px; width: 380px; max-height: 560px;
   background: #fff; border-radius: 14px; box-shadow: 0 10px 28px rgba(20, 20, 20, 0.14);
   display: flex; flex-direction: column; overflow: hidden;
 }
@@ -2414,12 +2423,15 @@ p.page-desc:not(:last-child) {
 }
 .chatbot-panel-header button { background: none; border: none; color: #fff; cursor: pointer; font-size: 14px; }
 
-.chatbot-messages { flex: 1 1 auto; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-height: 160px; max-height: 260px; }
+.chatbot-messages { flex: 1 1 auto; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-height: 200px; max-height: 340px; }
 
 /* white-space:pre-wrap이었을 때 템플릿 들여쓰기 공백까지 그대로 렌더링돼
    메시지가 어중간하게 가운데로 쏠려 보였던 문제 -> pre-line으로 교체해
    불필요한 공백/들여쓰기는 접고, 줄바꿈만 유지 + 항상 왼쪽 정렬 */
-.chatbot-msg { font-size: 13px; line-height: 1.55; padding: 9px 12px; border-radius: 12px; max-width: 82%; white-space: pre-line; word-break: break-word; text-align: left; }
+/* word-break:break-word는 단어 중간에서도 그냥 잘라버려서 가독성이 떨어졌다.
+   word-break:keep-all(한글은 어절 단위로만 줄바꿈) + overflow-wrap:break-word
+   (너무 긴 단일 단어/URL일 때만 예외적으로 잘림)로 교체 */
+.chatbot-msg { font-size: 13px; line-height: 1.6; padding: 9px 12px; border-radius: 12px; max-width: 82%; white-space: pre-line; word-break: keep-all; overflow-wrap: break-word; text-align: left; }
 .chatbot-msg-bot { background: #f5f6f8; color: #333; align-self: flex-start; }
 .chatbot-msg-user { background: #f3743c; color: #fff; align-self: flex-end; }
 .chatbot-msg-loading { color: #9ca3af; font-style: italic; }
