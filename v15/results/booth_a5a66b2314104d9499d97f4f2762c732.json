@@ -1,0 +1,860 @@
+{
+  "inputs": {
+    "name": "참치살코기캔",
+    "country": "Germany",
+    "exhibition_name": "HerbstZeit",
+    "exhibition_website": "",
+    "strengths": "",
+    "ingredients": "",
+    "certifications": "",
+    "price": "",
+    "country_en": "Germany"
+  },
+  "booth": {
+    "summary": "以“在熟悉的两道菜中确认这款金枪鱼的采用理由”为单一核心，分别设计HerbstZeit的消费者体验·购买动线与受邀买家的评估·样品申请动线。由于缺少企业产品资料，现阶段仅作为产品适格性验证展位运营；在确认差异化特点、交易数据及进口资格前，不承诺产品优势或可上架性。",
+    "positioning": {
+      "target_buyer": "1순위는 독일 수산물·상온식품 수입·유통사로, EU 수입 적격성·추적성·도착원가·공급 안정성을 확인하는 것이 일이다. 2순위는 슈퍼마켓 수산 통조림 MD로, 기존 SKU 대비 채택 이유·매출총이익률·잔여 유통기한을 판단하는 것이 일이다. 두 유형 모두 HerbstZeit 자연 유입이 확인되지 않았으므로 별도 초청한다.",
+      "core_message": "익숙한 두 메뉴에서 이 참치의 채택 이유를 확인한다. 이는 내부 검증용 빅 아이디어이며, 자사 근거가 없는 ‘믿고 쓰는’, ‘더 촉촉한’, ‘더 경제적인’ 판매 약속은 보류한다. 시장 적합성 근거는 R1, 품질 평가 항목의 근거는 R2이며, 제품 자체의 RTB는 실측 고형량·메뉴 적용 결과·수입 및 공급 증빙 확보 후 확정한다."
+    },
+    "sections": {
+      "main_visual": {
+        "concept_en": "One Tuna, Two Everyday Uses",
+        "concept_ko": "참치 하나, 익숙한 두 가지 쓰임",
+        "key_message": "Thunfisch für Salat und Pasta. Entscheiden Sie selbst. — 샐러드와 파스타용 참치, 직접 판단해 보세요.",
+        "bullets": [
+          {
+            "text": "백월은 실제 캔과 실제 샐러드를 함께 촬영한 사진 한 장으로 구성한다. 상단 품목명 ‘THUNFISCH IN DER DOSE’, 중앙 독일어 메인 슬로건, 하단 작은 파스타 활용 사진만 배치한다. 제품 확보 전 이미지는 ‘Entwurf / 시안’으로 표시하며 실제 제품인 것처럼 출력하지 않는다.",
+            "quote_ids": [
+              "R1"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "통로 쪽에는 ‘Dose → Portion → Gericht / 캔 → 사용량 → 한 접시’ 실물 받침대를 둔다. 미개봉 캔, 시식 레시피 기준 참치 8g의 밀폐 전시 샘플, 완성 샐러드 사진을 나란히 놓는다. 8g은 한입 시식 배합이지 한 끼 권장량이나 제품 우수성 수치가 아니다.",
+            "quote_ids": [
+              "R1",
+              "R4"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "오프화이트·짙은 청색과 중성광 조명으로 제품에 시선을 모은다. 헤드라인 글자 높이 10cm를 시작값으로 삼아 5m 판독 테스트를 한다. 실제 살코기 형태·배액 편의·메뉴 사용량 중 경쟁품과 구별되는 특성이 검증되면 그 근거 하나만 헤드라인과 실물 받침대에 함께 반영하며, 차이가 없으면 우위 문구를 만들지 않는다.",
+            "quote_ids": [
+              "R2",
+              "R3",
+              "R4"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "slogan": {
+        "main_en": "Thunfisch für Salat und Pasta. Entscheiden Sie selbst.",
+        "main_ko": "샐러드와 파스타용 참치, 직접 판단해 보세요.",
+        "sub_en": "In Deutschland gehört Thunfisch in Salate und Pasta.",
+        "sub_ko": "독일에서 참치는 샐러드와 파스타에 쓰입니다.",
+        "bullets": [
+          {
+            "text": "지정된 main_en·sub_en 필드에는 현지어인 독일어를 기입했다. 메인은 9단어 문구이므로 실제 백월 출력에는 8단어 이내인 ‘Salat oder Pasta? Entscheiden Sie mit diesem Thunfisch.’ 대신 ‘Thunfisch für Salat und Pasta. Selbst probieren.’의 8단어 버전을 사용한다. 출력 문구의 한국어 뜻은 ‘샐러드와 파스타용 참치, 직접 맛보세요’다.",
+            "quote_ids": [
+              "R1",
+              "R9"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "독일어를 백월·시식 메뉴·가격표의 주언어로 사용하고, 영어 ‘Tuna for salads and pasta. Try it yourself.’는 상담 자료에만 보조로 둔다. 서브 문구는 R1의 제품군 활용 근거이지 자사 품질의 RTB가 아니므로, 제품 강점처럼 표시하지 않는다.",
+            "quote_ids": [
+              "R1"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "현재 슬로건은 경쟁품에도 적용되는 검증용 초대 문구이며 고유 차별화 기준을 충족한 판매 슬로건은 아니다. 동일 충전액·동일 배액 조건의 비교와 실제 규격 확인 후 입증된 특성 하나로 교체한다. 차이가 확인되지 않으면 입점 제안을 확대하지 않고 가격·규격·공급 조건의 적합성 검토에 집중한다.",
+            "quote_ids": [
+              "R2",
+              "R3",
+              "R4"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "signature_pairing": {
+        "item": "현장 제공은 참치·잎채소·토마토 샐러드 한 종류, 파스타는 실제 조리 테스트 사진과 레시피 카드로 제시",
+        "intent": "익숙한 점심 샐러드에서 맛을 평가하고, 저녁 파스타 활용은 별도 테스트 자료로 보여준다. 차가운 파스타를 따뜻한 저녁 메뉴의 대리 시식으로 제공하지 않는다.",
+        "bullets": [
+          {
+            "text": "샐러드는 참치 고형분 8g·채소 12g·드레싱 1g의 한입 배합을 리허설 시작안으로 한다. 드레싱은 제품 식감을 가리지 않도록 동일하게 적용한다. 소비자용과 바이어용 배합을 같게 유지하며, 참치 단독 시식은 바이어에게만 별도로 5g 제공한다.",
+            "quote_ids": [
+              "R1",
+              "R2"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "파스타 카드는 실제 제품으로 사전 조리한 사진, 1인분당 실측 참치 사용량, 배액·조립·전체 조리시간을 구분해 싣는다. 미실시 상태에서는 ‘레시피 제안·미검증’으로 표시한다. 샐러드 채소·드레싱, 건면·토마토소스 옆의 교차 진열을 바이어에게 제안하되 판매 효과는 가설로 남긴다.",
+            "quote_ids": [
+              "R1"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "냉장·노출·폐기 수치는 법정 공통 기준으로 단정하지 않는다. 운영 초안은 준비 재료 5℃ 이하 유지, 한 번에 10접시만 소분, 진열 후 15분 이내 미제공분 폐기, 회수품 재사용 금지다. 위생 담당자가 온도와 소분·폐기 시각을 기록하며, 실제 제품 조건과 감독기관 지침에 따라 확정·수정한 뒤 제공한다.",
+            "quote_ids": [
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "승인된 외부 식기 세척 서비스를 기본으로 재사용 접시·포크 각 80개를 시작 재고로 확보한다. 30분마다 오염 식기를 밀폐 회수하고, 깨끗한 식기가 30세트 이하가 되면 보충한다. 청결·오염 운반함은 분리한다. 세척·재공급 계약이나 대체 승인 설비가 없으면 시식을 중단한다. 독일어 메뉴별 알레르겐표에는 Fisch와 실제 드레싱의 추가 알레르겐을 표시한다.",
+            "quote_ids": [
+              "R11",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "demonstration": {
+        "title": "30초 샐러드 조립 → 3분 제품 평가 → 별도 10분 거래 상담",
+        "bullets": [
+          {
+            "text": "30초 시연은 캔 제시 5초 → 사전 소분 참치 8g 확인 5초 → 채소 위에 얹기 10초 → 시식과 질문 안내 10초로 구성한다. 기본은 냉장 사전 소분이며 운영 시작 전 10회 리허설로 처리량과 온도 유지 여부를 확인한다. 개봉·배액·준비 시간이 빠진 조립 시연이므로 ‘30초 완성 식사’라고 광고하지 않는다.",
+            "quote_ids": [
+              "R1",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "바이어용 3분은 0~45초 단독 참치 5g 평가, 45~105초 동일 배합 샐러드 시식, 105~150초 촉촉함·살코기 형태·짠맛 기록, 150~180초 파스타 사진과 후속 테스트 의향 확인으로 끝낸다. 가격·물류·인증 설명과 예약 입력은 넣지 않으며, 관심 바이어를 별도 10분 상담 또는 온라인 미팅으로 연결한다.",
+            "quote_ids": [
+              "R1",
+              "R2"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "완전 운영일 1일의 준비 상한은 소비자 샐러드 120회×8g=960g, 바이어 단독 10회×5g=50g, 바이어 샐러드 10회×8g=80g, 파스타 현장 시식 0회다. 총 참치 고형분 1,090g에 투입량 대비 손실률 10%를 적용하면 필요량은 1,090÷0.90=1,211.12g이다. 실제 캔 고형량을 d g으로 확인한 뒤 시식 캔 수를 ceil(1,211.12÷d)로 발주한다. 밀봉 바이어 샘플 최대 10캔과 판매 재고는 별도이며, 이는 실수요 예측이 아닌 준비 상한이다.",
+            "quote_ids": [
+              "R4"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "소비자는 레시피·평가 QR을, 바이어는 제품 스펙과 샘플 요청 QR을 가져간다. 샘플 팩에는 적법한 배포가 확인된 밀봉 캔 1개, 로트 기록, 레시피 카드, 평가 양식을 넣는다. 적법성 미확인 시 캔 대신 자료만 제공한다. 준비 장비는 냉장고, 탐침·냉장고 온도계, 저울, 뚜껑 있는 식품용 용기, 집게, 손 위생 설비, 청결·오염 식기함이며 화기와 현장 가열은 사용하지 않는다.",
+            "quote_ids": [
+              "R6",
+              "R7",
+              "R11",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "packaging": {
+        "direction": "두 메뉴 활용을 한눈에 보여주되 실제 규격과 독일 판매 적격성을 먼저 확인하는 패키지",
+        "bullets": [
+          {
+            "text": "전면 핵심 메시지는 ‘Für Salat & Pasta / 샐러드와 파스타용’ 하나로 제한한다. 실제 규격에 맞는 독일어 판매명칭과 제품 실물 사진을 배치한다. 영양·저지방·MSC·안전성 우위는 자사 성분·인증·시험 자료 확인 전 표시하지 않는다.",
+            "quote_ids": [
+              "R1",
+              "R4",
+              "R5",
+              "R6"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "측면·후면에 독일어 원재료, 강조된 알레르겐, 내용량과 해당 고형량, 영양정보, 책임사업자 명칭·주소, 최소품질유지기한, 보관조건, 로트 표시 공간을 확보한다. R7·R12는 출처 미확인 메모이므로 최신 공식 원문과 수입자 검토를 거친 뒤 인쇄한다. 최소품질유지기한 표시와 독일 입고 시 보장 잔여기간은 별도로 관리한다.",
+            "quote_ids": [
+              "R6",
+              "R7",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "사이즈는 생산 가능한 기존 단일 캔 1종을 먼저 확정하고, 동일 캔 3개 묶음 슬리브를 구매 의향 조사용 목업으로 추가한다. 중량을 임의로 만들거나 ‘3끼용’이라고 표현하지 않는다. 외박스에는 SKU·입수·로트·기한 라벨을 붙이고 진열형 트레이는 제조 가능 여부 확인 후 개발한다.",
+            "quote_ids": [
+              "R4"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "merchandising": {
+        "bullets": [
+          {
+            "text": "신규 제작 도면은 통로 접면 4m×깊이 3m, 12㎡를 가정한다. 작업대 1.2×0.6m, 냉장고 약 0.6×0.6m, 회수함 0.4×0.4m, 후면 보관장 0.8×0.4m를 반영하고 중앙 이동 폭 1.2m 확보를 목표로 실물 테이핑한다. 구조물 높이는 2.5m로 계획한다. 실제 면적·출입 조건·피난 및 접근성 기준이 다르면 재배치하며, 작으면 시선·규격 존을 합치고 상담석을 없애 예약 상담으로 전환한다.",
+            "quote_ids": [
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "상담 전 최소 1개 SKU의 총중량·고형량, 견적·통화·인코텀즈·유효기간, MOQ, 리드타임, 총 보관기간·독일 입고 보장 잔여기간, 박스 입수·치수·중량·팔레트 적재량을 증빙 연결 원페이저로 확보한다. 승인시설·원료 추적성·인증 범위도 문서명과 유효일을 붙인다. 현재는 모두 미제공이므로 상업적 입점 제안을 할 수 없으며, 빈칸을 ‘확인 중’으로 채우는 것으로 준비 완료를 대체하지 않는다.",
+            "quote_ids": [
+              "R4",
+              "R5",
+              "R6",
+              "R7",
+              "R8"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "경제성 시트는 동일 유통 단계와 동일 세금 기준으로 계산한다. 리테일러 예상 매출총이익률은 ‘부가세 제외 판매가－리테일러 도착 매입원가’를 부가세 제외 판매가로 나눈 값으로 표시한다. 도착 매입원가에는 해당 단계가 부담하는 운송·관세·취급비 등을 명시하고 공제 가능한 부가세를 섞지 않는다. 수입사 마진은 별도 단계로 계산한다. 실견적 없이는 숫자를 제시하지 않으며, R3·R4의 소매가격을 도매원가 대신 사용하지 않는다.",
+            "quote_ids": [
+              "R3",
+              "R4"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "판매 가능 시 단일 캔 소비자가와 고형량 기준 비교 단위를 표시하고 카드 결제 단말기·영수증·기초 재고표를 준비한다. 판매 재고 S는 실제 승인 물량으로 확정하고 판매 캔·유상 묶음·무료 샘플·폐기·잔여 재고를 분리 집계한다. 소비자는 결제 후 재구매 QR을 받으며, 연결 가능한 독일 판매처가 없으면 재구매 가능하다고 안내하지 않는다.",
+            "quote_ids": [
+              "R4",
+              "R9",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ],
+        "zones": [
+          {
+            "name": "1존: 시선·상품 규격 검토 존",
+            "position": "가정 도면 기준 후면 왼쪽, 폭 1.2m×깊이 0.35m 선반과 백월",
+            "purpose": "캔·사용량·샐러드 사진으로 용도를 보여주고 단일 캔 3페이싱과 묶음 목업 2페이싱으로 매대 형태를 재현한다. 자료 미확보 상태에서는 리테일 레디라고 부르지 않는다. 판매 적격성과 거래 자료 확보 후 가격표·바코드·진열 트레이를 갖춘 리테일 레디 존으로 전환한다.",
+            "quote_ids": [
+              "R1",
+              "R4",
+              "R6"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "name": "2존: 한입 체험·소비자 구매 존",
+            "position": "전면 왼쪽의 폭 1.2m×깊이 0.6m 작업대, 후면 왼쪽 냉장고, 오른쪽 전면의 독립 식기 회수함",
+            "purpose": "샐러드 시식 후 평가 QR로 연결하고, 판매가 승인된 경우에만 가격표 확인→결제→미개봉 상품 수령으로 이어진다. 시식 대기는 부스 안 최대 2명으로 제한하며, 더 늘면 시간 안내 후 분산한다.",
+            "quote_ids": [
+              "R9",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "name": "3존: 바이어 평가·예약 상담 존",
+            "position": "후면 오른쪽 약 1.8m×1.5m 구역, 폭 1.0m×깊이 0.6m 테이블과 의자 2개",
+            "purpose": "3분 제품 평가와 예약된 10분 거래 상담을 시간대로 나눠 운영한다. 수입·거래 자료가 없으면 사전 적격성 검토만 진행하며, 소비자 결제 줄과 상담 대기 줄은 만들지 않는다.",
+            "quote_ids": [
+              "R5",
+              "R6",
+              "R9"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      }
+    },
+    "visitor_flow": {
+      "3s": {
+        "headline": "통로에서 3초: 실제 캔과 한입 사용량을 함께 본다",
+        "goal": "참치캔과 샐러드·파스타 용도를 즉시 이해하고 체험대로 들어오게 한다.",
+        "visitor": [
+          "독일어 품목명과 실제 제품을 본다",
+          "캔→8g 시식량→샐러드의 연결을 확인한다"
+        ],
+        "staff": [
+          "통로를 막지 않고 샐러드 시식을 제안한다",
+          "미확인 원산지·식감·인증 우위를 말하지 않는다"
+        ],
+        "props": [
+          "실제 캔과 밀폐 전시 샘플",
+          "큰 독일어 헤드라인",
+          "샐러드 사진과 파스타 활용 카드"
+        ],
+        "message": "샐러드와 파스타용 참치, 직접 판단해 보세요."
+      },
+      "30s": {
+        "headline": "같은 배합으로 한입 먹고 짧게 답한다",
+        "goal": "샐러드 적합성을 체험시키고 소비자와 바이어 동선을 나눈다.",
+        "visitor": [
+          "알레르겐을 확인하고 샐러드를 시식한다",
+          "촉촉함·짠맛·활용 의향에 답한다",
+          "유통 관계자는 회사·직무·취급 채널을 밝힌다"
+        ],
+        "staff": [
+          "사전 소분 재료로 30초 조립을 보여준다",
+          "긍정 답변을 유도하지 않고 반응을 기록한다",
+          "소비자는 평가·구매대로, 바이어는 3분 평가로 안내한다"
+        ],
+        "props": [
+          "한입 샐러드와 재사용 식기",
+          "독일어 알레르겐표",
+          "소비자 평가 QR·바이어 요청 QR"
+        ],
+        "message": "평소 샐러드에 쓰고 싶은 맛인지 알려 주세요."
+      },
+      "3min": {
+        "headline": "바이어는 제품 평가, 소비자는 구매 여부 결정",
+        "goal": "제품 평가를 끝내고 거래 상담·샘플 신청 또는 소비자 구매로 연결한다.",
+        "visitor": [
+          "바이어는 단독 참치와 샐러드를 평가하고 파스타 테스트 자료를 본다",
+          "거래 관심이 있으면 평가 종료 후 별도 상담을 신청한다",
+          "소비자는 판매 가능한 상품의 가격을 확인하고 구매 여부를 정한다"
+        ],
+        "staff": [
+          "3분에는 제품·메뉴 평가만 진행한다",
+          "거래조건은 별도 10분 상담 또는 후속 온라인 미팅에서 설명한다",
+          "판매 승인 상품만 결제·인도하고 판매 캔 수를 기록한다"
+        ],
+        "props": [
+          "단독 참치 5g·샐러드 한입",
+          "메뉴 평가표와 파스타 카드",
+          "별도 상담용 원페이저·예약표",
+          "승인된 판매 상품·가격표·결제 단말기"
+        ],
+        "message": "맛과 쓰임을 먼저 평가하고, 거래 조건은 별도로 확인하겠습니다."
+      }
+    },
+    "key_actions": [
+      {
+        "title": "자료의 사실을 세 가지 운영 결정으로 번역한다",
+        "detail": "R1의 익숙한 참치 요리라는 사실은 ‘낯선 원산지보다 실제 쓰임을 먼저 확인한다’는 인사이트로 해석해 샐러드 시식·파스타 테스트 카드로 연결한다. R3·R4의 기존 가격·인증·영양 경쟁은 ‘새 SKU에는 체감 차이와 경제성이 필요하다’로 해석해 동일 조건 비교와 거래 시트를 준비한다. R9·R11의 소비자 쇼핑·판매 가능 행사라는 사실은 ‘소비자 반응은 현장에서, 바이어 접점은 초청으로 확보한다’로 해석해 구매 동선과 상담 예약을 분리한다. 이 해석들은 기획 가설이며 독일 전체의 선호로 일반화하지 않는다.",
+        "quote_ids": [
+          "R1",
+          "R3",
+          "R4",
+          "R9",
+          "R11"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      {
+        "title": "2026년 잔여 운영과 차기 신규 제작을 분리한다",
+        "detail": "현재 2026-09-26 기준 행사가 진행 중이므로 잔여 일정에는 승인된 기존 설비·메뉴만 사용하고, 독일어 안내 교체·기존 연락망 초청·자료 검토 예약을 우선한다. 9월 27일을 완전 운영일 1일 기준으로 준비하되, 26일 추가 시식 수량은 실제 남은 운영시간 비율로 산정해 캔 수를 올림한다. 미승인 시식·판매·구조 변경은 시행하지 않는다. 4×3m 신규 도면과 식기 계약은 차기 참가일·면적 확인 후 적용한다.",
+        "quote_ids": [
+          "R9",
+          "R11"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      {
+        "title": "세 명의 역할과 시식 중단 조건을 고정한다",
+        "detail": "운영 인력은 A 시식·레시피·알레르겐 안내, B 위생 기록·냉장 보충·외부 식기 회수 조정, C 바이어 선별·상담·결제로 배치한다. B가 오염 식기를 취급한 뒤에는 위생 절차 없이 식품 작업으로 복귀하지 않는다. C의 예약 상담 시간에는 B가 포장 상품 결제를 맡고 재료 보충·식기 회수와 겹치면 시식을 잠시 멈춘다. 결원·냉장 이탈·깨끗한 식기 부족·알레르겐 문서 미비 시 시식을 중단한다. 개장 전 시식 2명 대기·식기 회수·2인 상담 동시 상황을 리허설한다.",
+        "quote_ids": [
+          "R11",
+          "R12"
+        ],
+        "company": [],
+        "is_idea": false
+      }
+    ],
+    "kpis": [
+      {
+        "metric": "바이어 평가→후속 검토 전환",
+        "target": "완전 운영일당 유효 바이어 접점 5건 중 제품 평가 3건, 샘플 평가 요청 2건, 후속 미팅 확정 1건",
+        "how": "회사·직무·취급 채널이 확인된 고유 바이어를 접점으로 정의한다. 단순 연락 시도는 제외하며 사전 초청과 자연 유입을 구분한다. 샘플 요청은 제품·수량·목적·수령지가 기재된 건, 후속 미팅은 날짜·담당자·의제가 상대와 확정된 건만 센다. 발송 적격성 미확인 요청은 보류로 별도 표시한다. 수치는 시장 예측이 아닌 내부 목표다."
+      },
+      {
+        "metric": "소비자 시식 평가 완료율",
+        "target": "완전 운영일 소비자 시식 120명 중 평가 완료 72명, 완료율 60%",
+        "how": "바이어 시식은 제외하고 소비자 고유 시식자 수를 분모로 삼는다. 촉촉함·짠맛·샐러드 활용 의향의 필수 질문에 답한 사람을 완료자로 센다. 실제 응답 수와 행사 표본의 한계를 함께 표시한다."
+      },
+      {
+        "metric": "소비자 시식 후 구매 전환율·판매 캔 수",
+        "target": "적법한 판매가 가능한 완전 운영일에 시식자 구매 전환율 15%, 시식 120명 기준 구매 18건·유상 판매 18캔 이상",
+        "how": "시식 후 받은 익명 번호나 결제 확인 질문으로 시식자 구매를 구분한다. 구매한 고유 시식자를 분자로, 소비자 고유 시식자를 분모로 삼는다. 묶음은 실제 캔 수로 환산하고 무료 샘플·직원 사용분을 제외한다. 비시식 구매는 별도 집계하며, 판매 적격성이나 재고 미확보 시 이 지표는 미실시로 표시한다."
+      }
+    ],
+    "risks": [
+      {
+        "text": "수입·제품 적격성: 제조국·승인 제조시설·위생증명서·제품 유통기준·어종·추적성과 해당 어획증명 절차를 확인한다. R8의 CATCH 관련 내용은 출처 미확인 메모이므로 적용 범위와 최신 공식 절차를 수입자와 재확인한다. 공급사의 리콜·회수 및 공식 경보 이력, 제품별 수은·포장재 적합성 자료도 확보한다. MSC는 법정 공통 의무가 아니라 보유 여부·범위와 바이어 요구를 확인할 사항이다.",
+        "quote_ids": [
+          "R2",
+          "R5",
+          "R6",
+          "R8"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      {
+        "text": "운영 승인·위생: 무료 시식도 음식 제공 규정과 재사용 식기 요건을 확인한다. 도면·냉장 전력·손 위생·메뉴·세척 서비스·회수 동선은 주최 측과 필요한 감독기관 절차에 따라 확정한다. 제안 치수·온도·노출 시간은 승인된 기준이 아니며 실제 현장 조건에 맞춰야 한다. 준비가 미완료이면 합법적으로 반입된 미개봉 전시품과 자료 상담만 운영한다.",
+        "quote_ids": [
+          "R11",
+          "R12"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      {
+        "text": "표시·판매·물류: R7·R12는 공식 원문 재확인이 필요하다. 독일어 라벨·알레르겐·현장 판매 책임·결제 및 세무 처리·포장 의무를 확인하고, 총 보관기간과 입고 보장 잔여기간, 운송 조건·파손·반품 책임을 계약에 명시한다. R3의 2025년 발표 가격과 R4의 2026년 조회 가격을 현재 동일 조건 가격처럼 비교하지 않는다.",
+        "quote_ids": [
+          "R3",
+          "R4",
+          "R7",
+          "R11",
+          "R12"
+        ],
+        "company": [],
+        "is_idea": false
+      }
+    ],
+    "questions": [
+      "최소 1개 SKU의 실제 샘플, 총중량·고형량·충전액·어종·원재료·영양성분·알레르겐·살코기 형태, 총 보관기간·개봉 후 조건·독일 입고 보장 잔여기간과 제품 고유 강점을 입증할 자료를 제공할 수 있나요?",
+      "견적의 통화·인코텀즈·유효기간, MOQ·리드타임·생산능력, 박스 입수·치수·중량·팔레트 적재량은 무엇인가요? 제조국·승인시설·위생증명서·추적성·어획증명 경로·인증 범위·시험성적서·리콜 이력과 독일 수입자 담당자도 확인할 수 있나요?",
+      "2026년 잔여 운영과 차기 참가 중 어느 범위인가요? 실제 부스 치수·예산·운영시간·3인 인력·전력·냉장 및 손 위생 설비·식기 세척 서비스·시식과 판매 승인 상태·판매 가능 재고·독일 판매처는 어디까지 확보됐나요?"
+    ],
+    "brief": {
+      "insights": [
+        {
+          "fact": "MSC 보고서는 참치캔의 구매 이유로 간편한 사용·긴 보관기간·상대적으로 저렴한 가격을 제시하고, 독일의 선호 참치 요리로 샐러드·피자·파스타를 소개한다.",
+          "insight": "새로운 참치캔도 낯선 요리법보다 이미 먹는 식사에 얼마나 쉽게 활용할 수 있는지가 구매 판단의 출발점이 될 수 있다.",
+          "implication": "제품 소개와 상담의 중심을 한국산이라는 배경보다 익숙한 식사에서의 활용 적합성에 둔다. 단, 자사 제품의 가격 경쟁력과 보관기간은 확인 전 약속하지 않는다.",
+          "quote_ids": [
+            "R1"
+          ],
+          "company": [],
+          "is_idea": false
+        },
+        {
+          "fact": "Lidl은 2025년 발표에서 고형량 150g 참치캔을 1.29유로로 소개하며 품질평가와 MSC 인증을 강조했다. Deutsche See는 참치캔 제품군에 단백질·저탄수화물 메시지를 사용한다. 두 가격 자료는 확인 시점이 다르다.",
+          "insight": "인증이나 영양 메시지만으로는 기존 제품 대신 새 제품을 입점시킬 이유가 부족하다. 바이어에게는 소비자가 체감할 차이와 비교 가능한 경제성이 필요하다.",
+          "implication": "차별성 검토 기준을 식감·고형량·용도별 사용량·가격으로 정한다. 경쟁품보다 촉촉하거나 경제적이라는 주장은 비교 검증 전 사용하지 않는다.",
+          "quote_ids": [
+            "R3",
+            "R4"
+          ],
+          "company": [],
+          "is_idea": false
+        },
+        {
+          "fact": "독일 참치 판매의 주 채널은 슈퍼마켓이며, MSC의 2025년 조사에서는 거의 모든 주요 유통체인의 참치캔 PB가 MSC 인증 원료로 전환된 것으로 나타났다. EU 수산물 수입에는 수출국·제조시설 승인과 위생증명서 등 확인이 필요하다.",
+          "insight": "유통 바이어는 새로운 맛의 가능성뿐 아니라 실제로 수입하고 지속적으로 판매할 수 있는 상품인지 먼저 확인해야 한다.",
+          "implication": "상담에서 상품성 평가와 수입 적격성 확인을 분리한다. 제조국·시설 승인·원료 추적성·인증 범위를 확인하기 전에는 EU 공급 가능이나 MSC 보유를 확정적으로 설명하지 않는다.",
+          "quote_ids": [
+            "R5",
+            "R6"
+          ],
+          "company": [],
+          "is_idea": false
+        },
+        {
+          "fact": "HerbstZeit는 생활용품·미식·수공예 중심의 소비자 쇼핑 성격이 강한 행사이며 현장 판매를 허용한다. 주최 측의 2025년 방문자 24,260명은 동시 개최 행사 합산 수치다.",
+          "insight": "전체 방문 규모를 전문 바이어 접점으로 해석하면 상담 성과를 과대평가할 수 있다. 이 행사의 강점은 소비자 반응 확인이며, 바이어 접점은 별도로 확보해야 한다.",
+          "implication": "소비자 반응 검증과 바이어 상담을 별도 과제로 설정한다. 아래 타깃은 자연 유입이 보장된 방문객이 아니라 별도 접촉·초청할 대상으로 정의하고, 상담·샘플 요청 성과를 일반 방문객 반응과 구분한다.",
+          "quote_ids": [
+            "R9",
+            "R11"
+          ],
+          "company": [],
+          "is_idea": false
+        }
+      ],
+      "target_buyers": [
+        {
+          "priority": 1,
+          "type": "독일 수산물·상온식품 수입·유통사",
+          "job": "EU 수입 적격성, 원료 추적성, 인증 범위, 공급 안정성, MOQ, 도착원가와 유통마진을 확인하고 기존 참치캔 포트폴리오에 추가할 이유를 판단한다. 기업 정보가 없는 현재 단계에서는 시장 진입 가능성을 검토할 우선 접촉 대상이라는 기획 가설이다."
+        },
+        {
+          "priority": 2,
+          "type": "독일 슈퍼마켓 체인의 수산 통조림 카테고리 MD",
+          "job": "기존 PB·브랜드 대비 소비자 선택 이유, 고형량 기준 가격, 예상 마진, 유통기한과 공급 조건을 확인한다. 수입·공급 요건이 확인된 뒤 입점 적합성을 검토할 별도 접촉 대상으로 설정하며, HerbstZeit 참석 여부는 확인되지 않았다."
+        }
+      ],
+      "big_idea": {
+        "line_en": "For German buyers who need a reason to add another canned tuna, our proposed promise is a dependable ingredient for everyday salads and pasta, grounded in familiar uses and subject to product-level taste, value and supply verification.",
+        "line_ko": "새 참치캔을 추가할 이유가 필요한 독일 바이어에게 우리 참치살코기캔은 익숙한 샐러드·파스타 활용을 근거로 일상 식사에 믿고 쓰는 재료를 약속하되, 제품별 맛·경제성·공급 검증을 전제로 한다.",
+        "why": "현지의 익숙한 취식 상황에서 채택 이유를 찾고, 인증·영양 메시지가 이미 존재하는 경쟁 시장에서는 실제 사용가치를 검증하려는 방향이다. 기업 정보가 없어 현재 문장은 차별성이 입증된 판매 주장이 아니라 검증용 가설이다. 특히 '믿고 쓰는' 약속은 자사 품질과 수입·공급 자료 확보 전 확정할 수 없으며, 경쟁품과 구별되는 제품 강점이 확인되면 구체화해야 한다.",
+        "quote_ids": [
+          "R1",
+          "R3",
+          "R4",
+          "R5",
+          "R6"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      "rtb": [
+        {
+          "text": "시장 적합성",
+          "quote_ids": [
+            "R1"
+          ],
+          "company": [],
+          "is_idea": false
+        },
+        {
+          "text": "품질 검증 방향의",
+          "quote_ids": [
+            "R2"
+          ],
+          "company": [],
+          "is_idea": false
+        },
+        {
+          "text": "공급 신뢰 근거는 확보 필요: 제조국·승인 제조시설·제품 규격·위생증명서 발급 가능 여부와 원료 추적성·인증 범위를 확인해야 한다. 현재 기업 자료가 없으므로 공급 신뢰는 보유한 강점이 아니라 빅 아이디어 확정에 필요한 검증 조건이다.",
+          "quote_ids": [
+            "R5",
+            "R6"
+          ],
+          "company": [],
+          "is_idea": false
+        }
+      ]
+    },
+    "mode": "B",
+    "stage": "revised",
+    "revise_below": 4,
+    "scores": [
+      {
+        "id": "insight",
+        "label": "인사이트 연결",
+        "score": 4,
+        "reason": "익숙한 메뉴·경쟁 환경·수입 요건을 실행안에 연결했으나, 소비자 쇼핑 행사라는 핵심 인사이트가 구매 동선과 KPI에는 충분히 반영되지 않았다."
+      },
+      {
+        "id": "single_minded",
+        "label": "빅 아이디어 일관성",
+        "score": 3,
+        "reason": "6개 실행 항목은 메뉴 적합성 검증으로 묶이지만, 빅 아이디어가 긴 조건부 설명이며 ‘믿고 쓰는 재료’를 증명할 자사 근거가 없다."
+      },
+      {
+        "id": "buyer_value",
+        "label": "바이어 가치",
+        "score": 2,
+        "reason": "바이어 필수 질문 목록은 충실하지만 가격·마진·잔여 유통기한·인증·공급 조건의 실제 답이 없어 입점 판단이 불가능하다."
+      },
+      {
+        "id": "specificity",
+        "label": "구체성",
+        "score": 3,
+        "reason": "시연 시간·배합·페이싱은 구체적이나 부스 치수·인력 배치·장비·총 샘플 수량·판매 운영이 미정이라 바로 실행할 수 없다."
+      },
+      {
+        "id": "distinctiveness",
+        "label": "차별성",
+        "score": 2,
+        "reason": "샐러드·파스타 활용, 키친 연출, 시식 초대 문구 모두 옆 참치캔 부스에 그대로 적용할 수 있고 제품 고유의 채택 이유가 없다."
+      },
+      {
+        "id": "feasibility",
+        "label": "실행 가능성",
+        "score": 3,
+        "reason": "냉제공·알레르겐·재사용 식기와 미승인 시 대안은 적절하지만 공간·세척·냉장·인력 확보가 확인되지 않았고 3분 상담에 과업이 과밀하다."
+      }
+    ],
+    "skill": {
+      "name": "booth_marketing",
+      "folder": "booth_marketing",
+      "files": [
+        "SKILL.md",
+        "examples.md",
+        "rubric.md"
+      ],
+      "chars": 5249,
+      "fingerprint": "52255d5798cb",
+      "warnings": []
+    },
+    "planner_persona": "당신은 해외 식품 박람회 부스 기획 15년차 마케터입니다. Summer Fancy Food Show, ANUGA, FOODEX Japan 등에서 K-푸드 부스를 30회 이상 총괄했고, 부스 방문 바이어의 상담 전환율을 끌어올린 경험이 있습니다. 미국·유럽 대형 유통 바이어와 입점 협상을 해 봤습니다. 조사 자료로 확인된 사실과 기획 아이디어를 구분해서 쓰고, 실제 부스에서 바로 실행할 수 있게 구체적으로 제안합니다.",
+    "reviewer_persona": "당신은 미국 대형 유통 식품 MD 10년차입니다. 박람회에서 하루 50개 부스를 도는 바이어 입장에서, 입점 판단에 필요한 정보(가격, 유통기한, 인증, 물류, 진열 형태)가 빠졌거나 과장된 곳, 바이어 눈에 띄지 않을 연출, 실제 부스에서 실행하기 어려운 계획을 날카롭게 지적합니다.",
+    "review": {
+      "overall": "17/30점, 수정 필요. 과장 방지와 조사 연결은 좋지만 현재는 ‘검증 계획’이지 입점 제안이 아니며, 하루 50개 부스를 도는 바이어를 붙잡을 제품 고유 근거와 거래 숫자가 없다.",
+      "comments": [
+        {
+          "section": "overall",
+          "issue": "빅 아이디어가 가치 제안보다 검증 조건 설명에 가깝고, 소비자 중심 행사임을 인정하면서도 성과지표는 바이어 상담에만 집중돼 있다.",
+          "suggestion": "검증 단계의 내부 빅 아이디어는 ‘익숙한 두 메뉴에서 이 참치의 채택 이유를 확인한다’처럼 한 문장으로 줄이고 ‘믿고 쓰는’ 약속은 증빙 확보 전 보류하라. 소비자 설문 완료율과, 적법한 판매가 가능한 경우 구매 전환율·판매 캔 수를 별도로 설정하라. 현재 회차의 잔여 운영과 다음 회차 신규 제작 계획도 분리하라."
+        },
+        {
+          "section": "진열 가이드",
+          "issue": "원페이저에 들어갈 항목만 있고 실제 거래 정보는 없다. ‘확인 중’과 회신일은 후속 관리 수단이지 가격·마진·물류 질문에 대한 답이 아니다.",
+          "suggestion": "상담 전 최소 1개 SKU의 총중량·고형량, 견적과 통화·인코텀즈·유효기간, MOQ, 리드타임, 총 보관기간·독일 입고 보장 잔여기간, 박스 입수·치수·중량·팔레트 적재량을 확보하라. 동일 유통 단계의 원가와 세금 기준을 맞춘 판매가 시나리오로 예상 매출총이익률을 제시하고, 승인시설·추적성·인증 범위는 증빙과 연결하라. 미확보 시 ‘리테일 레디 존’은 ‘상품 규격 검토 존’으로 바꾸고 입점 상담 대신 사전 적격성 검토로 한정하라."
+        },
+        {
+          "section": "슬로건",
+          "issue": "‘Your Salad. Your Pasta. Test Our Tuna.’는 어떤 참치에도 붙일 수 있고, 독일 소비자 중심 행사에서 주목 문구가 영어인 점도 불리하다.",
+          "suggestion": "독일어를 주언어로 두고 영어는 보조로 내려라. 당장은 검증용 초대 문구로만 사용하되, 비교 시식과 규격 확인 후 살코기 형태·배액 편의·실제 사용량 등 입증된 제품 특성 하나를 헤드라인과 실물 연출에 함께 반영하라. 차이가 확인되지 않으면 문구만으로 차별성을 만들려 하지 말라."
+        },
+        {
+          "section": "시연",
+          "issue": "3분에 단독 시식·두 메뉴 조립·관능평가·규격 확인을 끝내도록 해놓고 방문 동선에서는 거래조건 설명과 후속 예약까지 추가한다. 샘플 계산도 샐러드 고형분 960g 외에는 확정되지 않았다.",
+          "suggestion": "3분은 제품·메뉴 평가까지만 사용하고 거래조건 및 예약은 별도 상담으로 분리하라. 소비자 시식, 바이어 단독 시식, 파스타 시식의 일별 목표 수와 각각의 참치 사용량을 합산한 뒤 손실률·실제 캔 고형량으로 필요 캔 수를 올림 계산하라. 현장 반복 계량과 사전 소분 중 어느 방식이 위생·처리량에 적합한지 리허설로 결정하라."
+        },
+        {
+          "section": "시그니처 페어링",
+          "issue": "화기 없는 냉제공은 현실적이지만 토마토 파스타를 차갑게 제공하면 ‘빠른 저녁 파스타’ 제안과 평가 조건이 어긋난다. 재사용 식기 회수 이후의 세척·재공급 체계도 없다.",
+          "suggestion": "기본 시식을 샐러드 하나로 확정하고 파스타는 레시피·완성 사진으로 보여주거나, 냉제공에 맞는 파스타 샐러드로 명확히 바꿔라. 실제 메뉴별 냉장·노출·폐기 기준과 기록 담당자를 정하고, 식기 서비스 또는 승인된 세척 설비, 회수 주기, 깨끗한 식기 재고를 운영표에 넣어라."
+        },
+        {
+          "section": "메인 비주얼",
+          "issue": "큰 품목명은 읽히겠지만 캔과 두 접시 사진만으로는 멈출 이유가 약하다. 부스 면적 없이 4개 존과 상담 테이블을 배치해 시식 대기·식기 회수·상담 동선의 충돌 여부도 판단할 수 없다.",
+          "suggestion": "확정된 부스 규격에 선반·작업대·냉장고·식기 회수함·상담석·대기 위치를 치수로 표시하라. 좁으면 시선 존과 리테일 존을 합치고 예약 상담으로 전환하라. 백월에는 실제 제품과 검증된 채택 근거 하나만 크게 배치하고, 시식·회수·상담이 동시에 발생하는 상황으로 인력 배치와 통로 간섭을 점검하라."
+        }
+      ]
+    },
+    "applied": [
+      "빅 아이디어를 ‘익숙한 두 메뉴에서 이 참치의 채택 이유를 확인한다’로 줄이고 자사 근거가 없는 신뢰·품질 우위 약속을 보류했다. 소비자 구매 동선과 설문·판매 KPI를 추가했다.",
+      "실제 거래 숫자를 임의로 만들라는 방식은 채택하지 않았다. 대신 최소 SKU 자료 확보 기준·동일 단계 마진 계산·증빙 연결을 명시하고, 미확보 상태에서는 리테일 레디와 입점 상담을 상품 규격·사전 적격성 검토로 낮췄다.",
+      "독일어를 주언어로 전환하고 현재 슬로건의 범용성을 명시했다. 비교 시식과 규격 확인 후 입증된 특성 하나를 문구와 실물 연출에 함께 반영하도록 했다.",
+      "3분 제품 평가와 별도 거래 상담을 분리하고 파스타 현장 시식을 제거했다. 소비자·바이어별 사용량, 손실률, 캔 수 산식, 3인 역할, 식기 재공급과 시식 중단 조건을 구체화했다.",
+      "12㎡ 가정 도면에 장비·가구 치수를 제시하되 확정 면적으로 오인하지 않도록 했다. 2026년 잔여 운영의 승인된 범위와 차기 신규 제작 계획을 분리했다."
+    ],
+    "has_profile": false,
+    "has_product_evidence": null,
+    "model": "gpt-6-astra",
+    "research": {
+      "method": "web_search",
+      "notes": [
+        {
+          "id": "R1",
+          "topic": "consumer",
+          "topic_label": "소비자",
+          "text": "[확인] MSC Thunfisch Bericht 2025는 참치캔의 구매 이유로 간편한 사용·긴 보관기간·상대적으로 저렴한 가격을 제시하며, 독일의 선호 참치 요리로 샐러드·피자·파스타를 소개한다. [기획 시사점] 낯선 한국 요리만 제시하기보다 ‘간단한 점심 샐러드’와 ‘빠른 저녁 파스타’처럼 익숙한 식사 상황에서 제품 활용성을 검증하는 것이 적절하다. ([msc.org](https://www.msc.org/docs/default-source/de-files/studien-berichte/thunfischbericht-pressetexte/msc-thunfischbericht-2025.pdf))",
+          "source_url": "https://www.msc.org/docs/default-source/de-files/studien-berichte/thunfischbericht-pressetexte/msc-thunfischbericht-2025.pdf",
+          "source_title": "MSC Thunfisch Bericht 2025",
+          "source_status": "웹 출처"
+        },
+        {
+          "id": "R2",
+          "topic": "consumer",
+          "topic_label": "소비자",
+          "text": "[확인] ARD Marktcheck의 2025-03-18 전문가 블라인드 시식에서는 일부 제품의 건조함·강한 짠맛·쓴맛이 지적됐고, 수은·Bisphenol A와 지속가능성도 평가 항목이었다는 점에서 맛과 신뢰가 함께 비교되지만 이는 소비자 대표조사는 아니다. [실무 제안] 시식 설문에 촉촉함·살코기 크기·짠맛을 넣고, 안전성 질문에는 해당 제품의 시험성적서로 답할 수 있도록 준비한다. ([swr.de](https://www.swr.de/leben/verbraucher/ard-marktcheck/thunfisch-aus-der-dose-wie-gut-ist-er-wirklich-106.html))",
+          "source_url": "https://www.swr.de/leben/verbraucher/ard-marktcheck/thunfisch-aus-der-dose-wie-gut-ist-er-wirklich-106.html",
+          "source_title": "Thunfisch aus der Dose - wie gut ist er wirklich?",
+          "source_status": "웹 출처"
+        },
+        {
+          "id": "R3",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[확인] Lidl은 2025-08-01 발표에서 Nixe Thunfisch Filets in eigenem Saft를 1,29 Euro/캔, Abtropfgewicht 150 Gramm으로 소개하고 ÖKO-TEST ‘Sehr gut’와 MSC-Siegel을 강조했으며, 이 가격은 당시 발표 가격으로 2026-09-26 현재 판매가는 확인되지 않았다. [기획 시사점] 저가 경쟁품도 품질평가·인증을 내세우므로 ‘수입품’이나 ‘지속가능성’만으로 가격 프리미엄을 설명하지 말고 식감·사용 편의의 차이를 제시해야 한다. ([unternehmen.lidl.de](https://unternehmen.lidl.de/pressemitteilungen/2025/250801_oekotest-nixe-thunfisch))",
+          "source_url": "https://unternehmen.lidl.de/pressemitteilungen/2025/250801_oekotest-nixe-thunfisch",
+          "source_title": "ÖKO-TEST: Lidl-Thunfisch überzeugt mit \"Sehr gut\"",
+          "source_status": "웹 출처"
+        },
+        {
+          "id": "R4",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[확인] 2026-09-26 조회한 Deutsche See 공식 온라인몰에서 Thunfisch in Aufguss는 185g·Abtropfgewicht 약 140g에 2,79 €로 표시되며, 참치캔 제품군은 ‘Powerfood’, ‘23% Eiweiß’, ‘Low-Carb-Küche’를 핵심 메시지로 사용한다. [실무 제안] 경쟁표에는 캔 총중량과 고형량을 구분하고, 자사 단백질·저지방 메시지는 기업 영양성분 자료를 확보한 뒤 사용한다. ([deutschesee.de](https://www.deutschesee.de/shop/thunfischdosen))",
+          "source_url": "https://www.deutschesee.de/shop/thunfischdosen",
+          "source_title": "Thunfisch-Dosen von Deutsche See",
+          "source_status": "웹 출처"
+        },
+        {
+          "id": "R5",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "[확인] MSC의 2025 보고서에 따르면 독일 참치 판매의 주 채널은 슈퍼마켓이며 2024년 식품소매 참치 판매량의 거의 ¾이 통조림이고, 2025년 3월 자체 조사에서는 거의 모든 주요 유통체인의 참치캔 PB가 MSC 인증 원료로 전환된 것으로 나타났다. [실무 제안] 슈퍼마켓·디스카운터 상담자료에는 원료 어종·어획수역·추적성·MSC 보유 여부와 인증 범위를 명시하되, 이러한 유통 관행을 모든 수입품의 법정 MSC 의무로 설명하지 않는다. ([msc.org](https://www.msc.org/docs/default-source/de-files/studien-berichte/thunfischbericht-pressetexte/msc-thunfischbericht-2025.pdf))",
+          "source_url": "https://www.msc.org/docs/default-source/de-files/studien-berichte/thunfischbericht-pressetexte/msc-thunfischbericht-2025.pdf",
+          "source_title": "MSC Thunfisch Bericht 2025",
+          "source_status": "웹 출처"
+        },
+        {
+          "id": "R6",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "[확인] EU Access2Markets는 식용 수산물 수입 시 수출국 승인·승인 제조시설·위생증명서·수입 위생검사를 확인하도록 안내하며, 참치·가다랑어 통조림에는 어종·내용물의 균일성·충전액·판매명칭 관련 별도 유통기준도 적용된다고 명시한다. [실무 제안] 기업 정보가 없으므로 EU 수출 가능 여부를 단정하지 말고 제조국·공장 승인번호·제품 규격·증명서 발급 가능 여부를 상담 전 필수 확인 항목으로 둔다. ([trade.ec.europa.eu](https://trade.ec.europa.eu/access-to-markets/en/content/health-and-consumer-protection-animal-and-plant-product))",
+          "source_url": "https://trade.ec.europa.eu/access-to-markets/en/content/health-and-consumer-protection-animal-and-plant-product",
+          "source_title": "Health and consumer protection for animal and plant product | Access2Markets",
+          "source_status": "웹 출처"
+        },
+        {
+          "id": "R7",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "[확인] 독일 판매용 포장식품은 원칙적으로 독일어 표시가 필요하며, 원재료·강조된 알레르겐·내용량·영양정보·책임사업자 명칭과 주소·Mindesthaltbarkeitsdatum 등 의무정보를 갖춰야 한다. [실무 제안] 독일어 라벨 초안과 함께 총 보관기간·독일 입고 시 보장 잔여기간·개봉 후 보관조건을 별도로 준비하고, 바이어의 최소 잔여기간은 확인 전 임의의 개월 수로 약속하지 않는다. ([bmel.de](https://www.bmel.de/DE/themen/ernaehrung/lebensmittel-kennzeichnung/pflichtangaben/lebensmittelkennzeichnung-wichtigsten-vorgaben-lmiv.html?utm_source=openai))",
+          "source_url": "https://www.bmel.de/DE/themen/ernaehrung/lebensmittel-kennzeichnung/pflichtangaben/lebensmittelkennzeichnung-wichtigsten-vorgaben-lmiv.html",
+          "source_title": "EU-weit einheitliche Lebensmittel-Kennzeichnung",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R8",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "[확인] 2026-01-10부터 EU 수입자는 IUU 규정 적용 수산물의 어획증명서 제출에 CATCH를 의무적으로 사용하므로, 종이 증명서 전달만을 전제로 한 수입 준비는 충분하지 않다. [실무 제안] 참치캔 바이어 상담자료에 어획증명서 확보 경로·원료와 생산 로트의 연결자료·EU 수입자 측 CATCH 담당자를 확인하는 체크리스트를 넣는다. ([oceans-and-fisheries.ec.europa.eu](https://oceans-and-fisheries.ec.europa.eu/international/illegal-fishing_en?utm_source=openai))",
+          "source_url": "https://oceans-and-fisheries.ec.europa.eu/international/illegal-fishing_en",
+          "source_title": "Illegal fishing - Oceans and fisheries",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R9",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "[확인] HerbstZeit는 MESSE BREMEN에서 2026-09-25~27 열리는 고급 생활용품·미식·수공예 중심의 Indoor-Landpartie로, 주최 측이 제시한 2025년 방문자 24.260명은 동시 개최 행사까지 합산한 수치다. [기획 시사점] 전문 식품 바이어 전용 전시회보다는 소비자 쇼핑 행사 성격이 강하므로 시식→현장 구매·재구매 동선을 우선 설계하고, 유통 바이어 상담은 별도 사전 초청으로 보완하는 편이 적절하다. ([herbstzeit-bremen.de](https://herbstzeit-bremen.de/ausstellen/))",
+          "source_url": "https://herbstzeit-bremen.de/ausstellen/",
+          "source_title": "Ausstellen - HerbstZeit Bremen",
+          "source_status": "웹 출처"
+        },
+        {
+          "id": "R10",
+          "topic": "trend",
+          "topic_label": "트렌드",
+          "text": "[확인] 2026년 공식 프로그램은 9월 25일 17:00~20:00 After-Work 행사에 시식·와인·칵테일·음악을 결합했고, 최근 보도자료는 지역 제조자와 제품 이야기를 강조해 단순 진열보다 체험형 소비에 무게를 둔다. [기획 시사점] 향후 참가 기획에서는 긴 제품 설명보다 한입 시식과 짧은 원료·제조 설명을 결합하되, 한국산이라는 이유만으로 지역 생산품이나 수공예품처럼 표현하지 않는다. ([herbstzeit-bremen.de](https://herbstzeit-bremen.de/pressdetails/vier-messen-viele-geschichten/?utm_source=openai))",
+          "source_url": "https://herbstzeit-bremen.de/pressdetails/vier-messen-viele-geschichten/",
+          "source_title": "Vier Messen, viele Geschichten - HerbstZeit Presse",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R11",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "[확인] HerbstZeit 2026 특별 참가규정은 현장 소비자 판매를 허용하며, 3 m 초과 부스에는 서면 승인을 요구하고 음식·음료 제공에는 무료 시식까지 포함해 식품감독기관 지침과 Bremisches Mehrweggebot 준수를 요구한다. [실무 제안] 부스 도면·시식 메뉴·세척 및 냉장 계획·사용 식기를 주최 측에 사전 제출해 확인받고, 일회용 시식컵 사용이 자동 허용된다고 가정하지 않는다. ([m3b-bremen.de](https://www.m3b-bremen.de/content/uploads/sites/10/2025/12/HZ26_Besondere-Teilnahmebedingungen.pdf))",
+          "source_url": "https://www.m3b-bremen.de/content/uploads/sites/10/2025/12/HZ26_Besondere-Teilnahmebedingungen.pdf",
+          "source_title": "Besondere Teilnahmebedingungen HerbstZeit – 25.–27.09.2026",
+          "source_status": "웹 출처"
+        },
+        {
+          "id": "R12",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "[확인] 독일은 비포장 제공 식품에도 알레르겐 정보 제공을 요구하며, 구두 안내를 선택하더라도 요청 시 열람 가능한 서면·전자 기록과 안내 표지가 있어야 한다. [실무 제안] 참치 시식에는 Fisch를 표시하고 마요네즈·빵·간장 등 실제 레시피에 따른 추가 알레르겐을 확인해 독일어 메뉴별 알레르겐표와 직원용 동일 문서를 준비한다. ([bmel.de](https://www.bmel.de/DE/themen/ernaehrung/lebensmittel-kennzeichnung/pflichtangaben/allergenkennzeichnung.html?utm_source=openai))",
+          "source_url": "https://www.bmel.de/DE/themen/ernaehrung/lebensmittel-kennzeichnung/pflichtangaben/allergenkennzeichnung.html",
+          "source_title": "Allergenkennzeichnung ist Pflicht",
+          "source_status": "출처 미확인"
+        }
+      ],
+      "citations": [
+        {
+          "url": "https://www.msc.org/docs/default-source/de-files/studien-berichte/thunfischbericht-pressetexte/msc-thunfischbericht-2025.pdf",
+          "title": "MSC Thunfisch Bericht 2025"
+        },
+        {
+          "url": "https://www.swr.de/leben/verbraucher/ard-marktcheck/thunfisch-aus-der-dose-wie-gut-ist-er-wirklich-106.html",
+          "title": "Thunfisch aus der Dose - wie gut ist er wirklich? - ARD Marktcheck"
+        },
+        {
+          "url": "https://unternehmen.lidl.de/pressemitteilungen/2025/250801_oekotest-nixe-thunfisch",
+          "title": "ÖKO-TEST: Lidl-Thunfisch überzeugt mit \"Sehr gut\""
+        },
+        {
+          "url": "https://www.deutschesee.de/shop/thunfischdosen",
+          "title": "Thunfisch-Dosen von Deutsche See"
+        },
+        {
+          "url": "https://trade.ec.europa.eu/access-to-markets/en/content/health-and-consumer-protection-animal-and-plant-product",
+          "title": "Health and consumer protection for animal and plant product | Access2Markets"
+        },
+        {
+          "url": "https://www.bmel.de/DE/themen/ernaehrung/lebensmittel-kennzeichnung/pflichtangaben/lebensmittelkennzeichnung-wichtigsten-vorgaben-lmiv.html?utm_source=openai",
+          "title": "BMLEH - Pflichtangaben - EU-weit einheitliche Lebensmittel-Kennzeichnung"
+        },
+        {
+          "url": "https://oceans-and-fisheries.ec.europa.eu/international/illegal-fishing_en?utm_source=openai",
+          "title": "Illegal fishing"
+        },
+        {
+          "url": "https://herbstzeit-bremen.de/ausstellen/",
+          "title": "Ausstellen - herbstzeit bremen"
+        },
+        {
+          "url": "https://herbstzeit-bremen.de/pressdetails/vier-messen-viele-geschichten/?utm_source=openai",
+          "title": "News - herbstzeit bremen"
+        },
+        {
+          "url": "https://www.m3b-bremen.de/content/uploads/sites/10/2025/12/HZ26_Besondere-Teilnahmebedingungen.pdf",
+          "title": ""
+        },
+        {
+          "url": "https://www.bmel.de/DE/themen/ernaehrung/lebensmittel-kennzeichnung/pflichtangaben/allergenkennzeichnung.html?utm_source=openai",
+          "title": "BMLEH - Pflichtangaben - Allergenkennzeichnung ist Pflicht"
+        }
+      ],
+      "error": ""
+    },
+    "source_mode": "openai_self_research",
+    "short": {
+      "summary": "두 메뉴 기반 소비자·바이어 적합성 검증",
+      "core_message": "두 메뉴 참치 채택 이유 내부 검증",
+      "big_idea_why": "현지 취식 상황 기반 사용가치 검증",
+      "insight.0.fact": "참치캔 구매 이유와 독일 선호 요리",
+      "insight.0.implication": "익숙한 식사 활용 적합성 중심 상담",
+      "insight.1.fact": "Lidl 150g 1.29유로·MSC 강조",
+      "insight.1.insight": "신규 입점 위한 체감 차이·경제성",
+      "insight.2.fact": "슈퍼마켓 중심·EU 수입 요건 확인",
+      "insight.2.implication": "상품성 평가와 수입 적격성 분리",
+      "insight.3.fact": "HerbstZeit 소비자 쇼핑·현장 판매 행사",
+      "insight.3.insight": "소비자 반응 검증과 바이어 접점 분리",
+      "insight.3.implication": "소비자 반응·바이어 상담 별도 관리",
+      "action.0": "현장 소비자 검증·초청 바이어 상담",
+      "action.1": "승인 설비·메뉴로 잔여 일정 운영",
+      "action.2": "시식·위생·바이어 상담 인력 배치",
+      "kpi.0": "확인된 고유 바이어·샘플 요청 집계",
+      "kpi.1": "소비자 고유 시식자 기반 평가 완료율",
+      "kpi.2": "고유 시식자 기준 구매 전환율 집계",
+      "bullet.main_visual.0": "실제 캔·샐러드 촬영 백월 구성",
+      "bullet.main_visual.1": "캔·참치 8g·샐러드 전시",
+      "bullet.main_visual.2": "검증된 차별 특성만 헤드라인 반영",
+      "key_message.main_visual": "샐러드와 파스타용 참치, 직접 판단",
+      "bullet.slogan.0": "백월용 8단어 독일어 시식 문구",
+      "bullet.slogan.1": "독일어 주언어·영어 상담 보조 활용",
+      "bullet.slogan.2": "입증 특성 확인 전 검증용 슬로건",
+      "bullet.signature_pairing.0": "샐러드 참치 8g 한입 시식 배합",
+      "bullet.signature_pairing.1": "실측 사용량 기반 파스타 카드",
+      "bullet.signature_pairing.2": "5℃ 이하·15분 내 폐기 운영 초안",
+      "bullet.signature_pairing.3": "재사용 식기 80세트·알레르겐 표시",
+      "bullet.demonstration.0": "참치 8g 활용 30초 시연",
+      "bullet.demonstration.1": "바이어 3분 참치·샐러드 평가",
+      "bullet.demonstration.2": "1일 참치 고형분 준비 상한 1,211.12g",
+      "bullet.demonstration.3": "소비자·바이어 QR 및 샘플 팩",
+      "bullet.packaging.0": "‘Für Salat & Pasta’ 전면 메시지",
+      "bullet.packaging.1": "독일어 라벨 필수 정보 공간 확보",
+      "bullet.packaging.2": "기존 단일 캔·3개 묶음 목업",
+      "bullet.merchandising.0": "4m×3m·12㎡ 부스 도면 가정",
+      "bullet.merchandising.1": "SKU 거래·수입 증빙 원페이저 확보",
+      "bullet.merchandising.2": "동일 조건 기준 경제성 시트 계산",
+      "bullet.merchandising.3": "판매 재고·결제·재구매 QR 관리",
+      "zone.merchandising.0": "캔·샐러드 기반 매대 형태 재현",
+      "zone.merchandising.1": "시식 평가 QR·승인 시 결제 동선",
+      "zone.merchandising.2": "3분 평가·10분 거래 상담 분리",
+      "risk.0": "수입 적격성·추적성·리콜 자료 확인",
+      "risk.1": "시식 운영 승인·위생 요건 확인",
+      "risk.2": "독일 라벨·판매·물류 계약 확인",
+      "question.0": "SKU 실물·규격·강점 증빙 요청",
+      "question.1": "견적·공급·수입 증빙 정보 확인",
+      "question.2": "운영 범위·부스·승인·재고 현황 확인"
+    },
+    "from_cache": true
+  },
+  "booth_error": null,
+  "models": {
+    "booth": "gpt-6-astra",
+    "booth_effort": "medium",
+    "task": "gpt-5.6-terra",
+    "task_effort": "low"
+  },
+  "fetched_at": "2026-09-26 20:21"
+}

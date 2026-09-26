@@ -24,7 +24,7 @@
     <h3>
       <span class="hs-tag">{{ row.product.name }}</span>
       <strong>{{ row.hs6 or row.product.hs_code }}</strong>
-      <span class="note" style="display:inline;">→ {{ expo.country_ko or expo.country }}</span>
+      <span class="note" style="display:inline;">→ {{ row.country_ko or expo.country_ko or expo.country }}</span>
     </h3>
     {% if row.hs6 %}
     <form method="post" class="research-form" action="{{ url_for('exhibition.market_research', expo_id=expo.id, product_id=row.product.id) }}">
@@ -40,7 +40,8 @@
   <div class="empty">아직 조사한 적 없습니다. "지금 조사하기"를 눌러주세요 (UN Comtrade + 관세청 + AI 분석, 몇 초~수십 초 걸릴 수 있어요).</div>
   {% else %}
   {% set result = row.result %}
-  {% set country_label = expo.country_ko or expo.country or result.target_country %}
+  {# 나라 이름은 한글로 통일 (row.country_ko: exhibition.py가 영문 국가명을 한글로 바꿔서 넘겨줌) #}
+  {% set country_label = row.country_ko or expo.country_ko or expo.country or result.target_country %}
   <div class="detail-head">
     <h3>{{ country_label }}의 교역통계 (HS {{ result.hscode }})</h3>
     <div class="detail-meta">
@@ -89,7 +90,7 @@
         {% if comp.is_mirror_estimate %}
           <p><span class="badge mirror">상대국 보고 기반 추정치</span></p>
           <p class="note">
-            {{ country_label }}이(가) 이 API에 직접 보고한 공식 수치가 없어서,
+            이 나라가 UN Comtrade에 직접 보고한 공식 수치가 없어서,
             전세계 각국이 "{{ country_label }}에 수출했다"고 보고한 값들을 합산한
             <strong>추정치</strong>입니다.
           </p>
@@ -184,7 +185,7 @@
   {% set dv = result.derived %}
   {% if dv and dv.yearly_rows %}
     <div class="section-divider">연도별 교역 현황
-      <span class="info" tabindex="0">i<span class="info-pop">수입액은 {{ country_label }}가 신고한 CIF 기준, 한국 수출액은 한국 관세청 FOB 기준이라<br>두 값을 직접 나눠 비교하면 안 됩니다.<br>{{ country_label }} 수입: UN Comtrade · 한국 수출: 관세청</span></span>
+      <span class="info" tabindex="0">i<span class="info-pop">수입액은 {{ country_label }} 측 신고(CIF) 기준, 한국 수출액은 한국 관세청(FOB) 기준이라<br>두 값을 직접 나눠 비교하면 안 됩니다.<br>{{ country_label }} 수입: UN Comtrade · 한국 수출: 관세청</span></span>
     </div>
     <div class="tbl-wrap">
       <table class="tbl">
@@ -204,8 +205,16 @@
             <td class="num">{{ ('$' ~ '{:,.0f}'.format(r.import_usd)) if r.import_usd is not none else '-' }}</td>
             <td class="num">{{ yoy(r.import_yoy_pct) }}</td>
             {% if dv.has_customs %}
-              <td class="num">{{ ('$' ~ '{:,.0f}'.format(r.korea_export_usd)) if r.korea_export_usd is not none else '-' }}</td>
-              <td class="num">{{ yoy(r.korea_export_yoy_pct) }}</td>
+              {# 관세청에서 "해당 기간 실적 없음(NODATA)"으로 온 해는 $0 대신 "실적 없음"으로 표시 #}
+              {% if r.korea_export_usd is none %}
+                <td class="num">-</td><td class="num">{{ yoy(none) }}</td>
+              {% elif r.korea_export_usd == 0 %}
+                <td class="num"><span class="sub-num" style="display:inline" title="관세청 조회 결과 이 해에는 수출 신고 실적이 없습니다">실적 없음</span></td>
+                <td class="num">{{ yoy(none) }}</td>
+              {% else %}
+                <td class="num">{{ '$' ~ '{:,.0f}'.format(r.korea_export_usd) }}</td>
+                <td class="num">{{ yoy(r.korea_export_yoy_pct) }}</td>
+              {% endif %}
             {% endif %}
             {% if dv.has_notes %}<td>{% if r.note %}<span class="badge warn">{{ r.note }}</span>{% endif %}</td>{% endif %}
           </tr>

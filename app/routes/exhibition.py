@@ -552,11 +552,37 @@ def _split_paragraphs(text):
     return paragraphs
 
 
+def _country_ko(expo):
+    """시장개요 탭에 쓸 한글 국가명. expo.country_ko가 비어 있거나 영어면
+    영문 국가명(예: 'Germany')을 un_comtrade의 국가명 표로 한글('독일')로 바꾼다.
+    표에 없는 나라는 원래 값을 그대로 쓴다."""
+    ko = (expo.country_ko or "").strip()
+    if ko and not ko.isascii():
+        return ko
+    raw = (expo.country or ko or "").strip()
+    if not raw:
+        return None
+    mapping = getattr(un_comtrade, "KOREAN_NAME_TO_ISO3", {})
+    iso3 = mapping.get(raw) or mapping.get(raw.lower())
+    if not iso3:
+        try:
+            guess = resolve_country_iso(raw)
+            iso3 = guess.upper() if guess and len(guess) == 3 else None
+        except Exception:
+            iso3 = None
+    if iso3:
+        for name, code in mapping.items():
+            if code == iso3 and not name.isascii():
+                return name
+    return ko or raw
+
+
 def _build_market_rows(expo, linked_products):
     """시장 개요 탭에 쓸 제품별 UN Comtrade 조사 현황. 네트워크 호출 없이
     캐시만 읽는다 (실제 조회는 "조사하기" 버튼 -> market_research 라우트가
     담당 - UNCTAD TRAINS 탭과 동일한 패턴으로, 페이지 열 때마다 외부 API를
     부르면 느리고 API 한도도 금방 닳기 때문)."""
+    country_ko = _country_ko(expo)
     rows = []
     for product in linked_products:
         hs6 = _hs6(product.hs_code)
@@ -565,7 +591,10 @@ def _build_market_rows(expo, linked_products):
             un_comtrade.translate_item_desc(cached.get("official_item_desc"))
             if cached and cached.get("official_item_desc") else None
         )
-        rows.append({"product": product, "hs6": hs6, "result": cached, "item_desc_ko": item_desc_ko})
+        rows.append({
+            "product": product, "hs6": hs6, "result": cached,
+            "item_desc_ko": item_desc_ko, "country_ko": country_ko,
+        })
     return rows
 
 

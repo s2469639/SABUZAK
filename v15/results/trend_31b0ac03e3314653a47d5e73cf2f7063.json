@@ -1,0 +1,1199 @@
+{
+  "inputs": {
+    "name": "참치살코기캔",
+    "country": "Germany",
+    "exhibition_name": "HerbstZeit",
+    "exhibition_website": "",
+    "strengths": "",
+    "ingredients": "",
+    "certifications": "",
+    "price": "",
+    "country_en": "Germany"
+  },
+  "section1": {
+    "clusters": [
+      {
+        "key": "culture_trigger",
+        "label": "CULTURE TRIGGER",
+        "title_ko": "미디어 유입 원인 분석",
+        "short_ko": "미디어 유입",
+        "summary": "한국산 참치캔 자체에 대한 관심이 급상승해 K-푸드 원산지·제품 탐색 유입이 확인됩니다.",
+        "tag": "K푸드 관심",
+        "insight": "한국산 정체성과 활용법을 함께 노출",
+        "keywords": [
+          {
+            "id": 7,
+            "keyword": "korean canned tuna",
+            "source": "both",
+            "rising_value": 110,
+            "top_value": 7,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "한국산 참치캔",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": false,
+            "vs_anchor": null,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": {
+              "kind": "rising",
+              "pct": 110
+            }
+          },
+          {
+            "id": 25,
+            "keyword": "TikTok Thunfisch Pasta",
+            "source": "probe",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "probe",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": true,
+            "ko": "틱톡 참치 파스타",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": true,
+            "vs_anchor": 0.6,
+            "anchor_zero": false,
+            "evidence": "probe",
+            "badge": null
+          },
+          {
+            "id": 26,
+            "keyword": "Thunfisch Reis Bowl",
+            "source": "probe",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "probe",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": true,
+            "ko": "참치 라이스볼",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": true,
+            "vs_anchor": 0.0,
+            "anchor_zero": false,
+            "evidence": "probe",
+            "badge": null
+          }
+        ]
+      },
+      {
+        "key": "intent_funnel",
+        "label": "INTENT FUNNEL",
+        "title_ko": "소비자 구매 성숙도 추이",
+        "short_ko": "구매 의도",
+        "summary": "독일 소비자는 단백질·열량뿐 아니라 수은과 임신 중 섭취 안전성까지 확인하며 건강성을 검토합니다.",
+        "tag": "건강 검토",
+        "insight": "영양성분·수은 안내를 독일어로 제공",
+        "keywords": [
+          {
+            "id": 3,
+            "keyword": "canned tuna protein per 100g",
+            "source": "both",
+            "rising_value": 700,
+            "top_value": 24,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "참치캔 100g당 단백질",
+            "stage": "consideration",
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": false,
+            "vs_anchor": null,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": {
+              "kind": "rising",
+              "pct": 700
+            }
+          },
+          {
+            "id": 6,
+            "keyword": "canned tuna mercury",
+            "source": "both",
+            "rising_value": 120,
+            "top_value": 66,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "참치캔 수은 함량",
+            "stage": "consideration",
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": true,
+            "vs_anchor": 0.9,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": {
+              "kind": "rising",
+              "pct": 120
+            }
+          },
+          {
+            "id": 8,
+            "keyword": "canned tuna calories",
+            "source": "both",
+            "rising_value": 80,
+            "top_value": 56,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "참치캔 칼로리",
+            "stage": "consideration",
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": false,
+            "vs_anchor": null,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": {
+              "kind": "rising",
+              "pct": 80
+            }
+          },
+          {
+            "id": 17,
+            "keyword": "canned tuna pregnancy",
+            "source": "top",
+            "rising_value": null,
+            "top_value": 26,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "임신 중 참치캔 섭취",
+            "stage": "consideration",
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": true,
+            "vs_anchor": 0.4,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": null
+          }
+        ]
+      },
+      {
+        "key": "category_perception",
+        "label": "PERCEPTION",
+        "title_ko": "현지 인접 경쟁군 인식",
+        "short_ko": "경쟁 인식",
+        "summary": "소비자는 참치캔을 일반 참치 생선과 구분하고, 이미 익힌 단백질 식품이자 건강식인지 판단합니다.",
+        "tag": "카테고리 인식",
+        "insight": "조리 완료·고단백 편의식을 명확히 표기",
+        "keywords": [
+          {
+            "id": 13,
+            "keyword": "tuna fish",
+            "source": "top",
+            "rising_value": null,
+            "top_value": 70,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "참치 생선",
+            "stage": null,
+            "yoy_pct": 622,
+            "yoy_status": "ok",
+            "has_volume": true,
+            "vs_anchor": 45.0,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": {
+              "kind": "yoy",
+              "pct": 622
+            }
+          },
+          {
+            "id": 9,
+            "keyword": "is canned tuna cooked",
+            "source": "both",
+            "rising_value": 70,
+            "top_value": 7,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "참치캔은 조리된 제품인지",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": true,
+            "vs_anchor": 0.5,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": {
+              "kind": "rising",
+              "pct": 70
+            }
+          },
+          {
+            "id": 15,
+            "keyword": "is canned tuna healthy",
+            "source": "top",
+            "rising_value": null,
+            "top_value": 47,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "seed",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "참치캔은 건강한지",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": true,
+            "vs_anchor": 0.6,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": null
+          },
+          {
+            "id": 10,
+            "keyword": "canned tuna nutrition",
+            "source": "both",
+            "rising_value": 50,
+            "top_value": 48,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "참치캔 영양정보",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": true,
+            "vs_anchor": 1.1,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": {
+              "kind": "rising",
+              "pct": 50
+            }
+          }
+        ]
+      },
+      {
+        "key": "consumption_habit",
+        "label": "HABIT & TPO",
+        "title_ko": "취식 상황 및 번들 소비",
+        "short_ko": "취식 상황",
+        "summary": "레시피 활용, 특히 파스타·스시 같은 간편 한 끼 메뉴와 개봉 후 냉장 보관법에 대한 수요가 높습니다.",
+        "tag": "활용·보관",
+        "insight": "파스타 레시피와 개봉 후 보관법 제시",
+        "keywords": [
+          {
+            "id": 12,
+            "keyword": "canned tuna recipes",
+            "source": "top",
+            "rising_value": null,
+            "top_value": 98,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "seed",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "참치캔 레시피",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": false,
+            "vs_anchor": null,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": null
+          },
+          {
+            "id": 18,
+            "keyword": "canned tuna pasta",
+            "source": "top",
+            "rising_value": null,
+            "top_value": 25,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "참치캔 파스타",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": false,
+            "vs_anchor": null,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": null
+          },
+          {
+            "id": 20,
+            "keyword": "canned tuna sushi",
+            "source": "top",
+            "rising_value": null,
+            "top_value": 11,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "참치캔 스시",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": false,
+            "vs_anchor": null,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": null
+          },
+          {
+            "id": 2,
+            "keyword": "how long does canned tuna last in the fridge",
+            "source": "both",
+            "rising_value": 38200,
+            "top_value": 3,
+            "is_breakout": true,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "DE",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "참치캔 냉장 보관 기간",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": false,
+            "vs_anchor": null,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": null
+          }
+        ]
+      }
+    ],
+    "country_ko": "독일",
+    "geo": "DE",
+    "languages": [
+      "German"
+    ],
+    "buyer_language": "German",
+    "reliability": "high",
+    "reliability_label_ko": "높음",
+    "reliability_note_ko": "",
+    "data_level": "extended",
+    "data_level_label_ko": "현지 검색어 기준 실측 (기간 5년으로 확장)",
+    "seed_keywords": [
+      "Thunfischfilet Dose",
+      "Thunfisch Konserve",
+      "canned tuna"
+    ],
+    "warnings": [
+      "연관 검색어가 적어 현지 검색어 기준 실측 (기간 5년으로 확장) 데이터를 함께 사용했습니다."
+    ]
+  },
+  "section1_error": null,
+  "section2": {
+    "kw_seed": {
+      "primary_category": "상온 보관 수산 통조림",
+      "kw1": "Thunfisch Filets in eigenem Saft",
+      "kw2": "Fischkonserven",
+      "kw3": "John West Thunfischfilets in eigenem Saft",
+      "retail_domains": [
+        "rewe.de",
+        "edeka24.de"
+      ],
+      "category_anchors": "Thunfisch, Thunfischfilets, Fischkonserven, Dose, eigener Saft",
+      "negative_anchors": "-Thunfischsalat -Katzenfutter -Sushi -Tiefkühl -Aufstrich",
+      "min_price": 1.79,
+      "max_price": 2.99,
+      "currency_symbol": "EUR",
+      "competitor_product": "John West Thunfischfilets in eigenem Saft, 존 웨스트 참치 필레 자체 육즙 제품",
+      "competitor_specs": "순중량 160그램, 고형량 112그램의 단일 금속 캔 제품이다. 자체 육즙에 담근 참치 필레 조각 제형이며, 개봉 전 실온 보관한다.",
+      "consumer_complaints": "독일 소비자는 참치 통조림에서 캔을 열었을 때 물이 많아 고형량이 적게 느껴지는 점, 샐러드와 파스타에 넣으면 살코기가 너무 잘게 부서지는 점, 자체 육즙 제품인데도 살코기가 퍽퍽한 점, 기름 담금 제품은 기름을 버려야 하는 점을 자주 불만으로 든다.",
+      "shelf_location": "Fischkonserven / Thunfisch",
+      "value_pitch": "입력 정보상 확인되는 원료 사실은 참치 살코기이며, 별도 주요 원료와 제품 강점은 제공되지 않았다. 따라서 입점 전 라벨로 참치 원산지, 고형량, 담금액, 소금 함량을 확정해야 한다. 매대에서는 일반 참치 조각 캔과 참치 필레 사이에 참치 살코기캔을 배치해 샐러드, 파스타, 샌드위치용 참치를 찾는 고객에게 더 높은 가격 선택지를 만든다. 1.79유로부터 2.99유로 구간은 저가 자체 상표 참치캔보다 높은 객단가를 만들면서도 필레형 경쟁 제품과 직접 비교 가능한 가격대다."
+    },
+    "target_product": {
+      "title": "John West Thunfischfilets in eigenem Saft, 존 웨스트 참치 필레 자체 육즙 제품",
+      "specs": "순중량 160그램, 고형량 112그램의 단일 금속 캔 제품이다. 자체 육즙에 담근 참치 필레 조각 제형이며, 개봉 전 실온 보관한다.",
+      "complaints": "독일 소비자는 참치 통조림에서 캔을 열었을 때 물이 많아 고형량이 적게 느껴지는 점, 샐러드와 파스타에 넣으면 살코기가 너무 잘게 부서지는 점, 자체 육즙 제품인데도 살코기가 퍽퍽한 점, 기름 담금 제품은 기름을 버려야 하는 점을 자주 불만으로 든다."
+    },
+    "retail_price": {
+      "price": "1.5 ~ 3.4 EUR",
+      "usd_price": "$1.6 ~ $3.7 USD",
+      "krw_price": "약 2,160 ~ 4,995원",
+      "badge": "타깃 세그먼트 추정가",
+      "badge_desc": "현지 매장 웹 차단이나 비정상 단가 노이즈를 방지하기 위해, 입력하신 목표 가격대를 기준으로 현지 동급 세그먼트의 시장 유효 진입 범위(±15%)를 역산한 가격입니다.",
+      "unit_price": "규격 단가 환산 (EUR)",
+      "method": "estimate",
+      "search_error": "credits",
+      "sources": []
+    },
+    "sales_channels": {
+      "channels": [
+        "rewe.de",
+        "edeka24.de"
+      ],
+      "shelf": "Fischkonserven / Thunfisch"
+    },
+    "price_strategy": {
+      "pitch": "입력 정보상 확인되는 원료 사실은 참치 살코기이며, 별도 주요 원료와 제품 강점은 제공되지 않았다. 따라서 입점 전 라벨로 참치 원산지, 고형량, 담금액, 소금 함량을 확정해야 한다. 매대에서는 일반 참치 조각 캔과 참치 필레 사이에 참치 살코기캔을 배치해 샐러드, 파스타, 샌드위치용 참치를 찾는 고객에게 더 높은 가격 선택지를 만든다. 1.79유로부터 2.99유로 구간은 저가 자체 상표 참치캔보다 높은 객단가를 만들면서도 필레형 경쟁 제품과 직접 비교 가능한 가격대다.",
+      "positioning": "현지 물가 대비 프리미엄/기능성 타깃 포지셔닝"
+    }
+  },
+  "section2_error": null,
+  "research": {
+    "product_name": "참치살코기캔",
+    "country": "Germany",
+    "exhibition_name": "HerbstZeit",
+    "terms": {
+      "product_terms": [
+        {
+          "term": "Thunfischfilet in der Dose",
+          "hits": 0
+        },
+        {
+          "term": "Thunfischstücke in der Dose",
+          "hits": 0
+        },
+        {
+          "term": "canned tuna chunks",
+          "hits": 0
+        },
+        {
+          "term": "solid tuna",
+          "hits": 0
+        }
+      ],
+      "selected": [],
+      "is_verified": false,
+      "product_match": [
+        "참치살코기캔",
+        "Thunfischfilet in der Dose",
+        "Thunfischstücke in der Dose",
+        "canned tuna chunks",
+        "solid tuna",
+        "Chamchi Salkogi Can"
+      ],
+      "category_terms": [
+        "Fischkonserven",
+        "Thunfischkonserven",
+        "canned fish products"
+      ],
+      "kfood_terms": [
+        "koreanische Lebensmittel",
+        "Korean food",
+        "koreanische Spezialitäten"
+      ],
+      "country_names": [
+        "Germany",
+        "Deutschland",
+        "Bundesrepublik Deutschland",
+        "deutsch",
+        "German",
+        "독일"
+      ],
+      "country_ko": "독일",
+      "local_country": "Deutschland",
+      "category_ko": "생선 통조림",
+      "category_en": "Canned Fish Products",
+      "words": {
+        "review": "Bewertungen",
+        "trend": "Trends",
+        "price": "Preis",
+        "brands": "Marken",
+        "distributors": "Importeure und Vertriebshändler",
+        "booth": "Messestand"
+      },
+      "tld": "de",
+      "region_key": "europe",
+      "region_en": "Europe",
+      "region_ko": "유럽",
+      "region_terms": [
+        "europe",
+        "european",
+        "eu market"
+      ],
+      "exhibition_names": [
+        "HerbstZeit"
+      ],
+      "main_domains": [
+        "spiegel.de",
+        "zeit.de",
+        "faz.net",
+        "sueddeutsche.de",
+        "welt.de",
+        "chefkoch.de",
+        "lebensmittelzeitung.net",
+        "lebensmittelpraxis.de",
+        "rundschau.de",
+        "horizont.net",
+        "rewe.de",
+        "edeka.de",
+        "amazon.de",
+        "kaufland.de",
+        "bvl.bund.de",
+        "bmel.de",
+        "verbraucherzentrale.de",
+        "gtai.de"
+      ]
+    },
+    "queries": [
+      "Thunfischfilet in der Dose Bewertungen",
+      "Thunfischfilet in der Dose Trends Deutschland",
+      "koreanische Lebensmittel Trends Deutschland",
+      "Thunfischfilet in der Dose Marken Preis Deutschland",
+      "Fischkonserven Marken Deutschland",
+      "Thunfischfilet in der Dose Importeure und Vertriebshändler Deutschland",
+      "koreanische Lebensmittel Importeure und Vertriebshändler Deutschland",
+      "독일 참치살코기캔",
+      "독일 생선 통조림 시장 동향",
+      "HerbstZeit Canned Fish Products Messestand",
+      "Thunfischfilet in der Dose Bewertungen",
+      "Thunfischfilet in der Dose Trends Deutschland",
+      "koreanische Lebensmittel Trends Deutschland",
+      "Thunfischfilet in der Dose Marken Preis Deutschland",
+      "Fischkonserven Marken Deutschland",
+      "Thunfischfilet in der Dose Importeure und Vertriebshändler Deutschland",
+      "koreanische Lebensmittel Importeure und Vertriebshändler Deutschland",
+      "Thunfischfilet in der Dose Thunfisch Konsumanlass Deutschland",
+      "Thunfischfilet in der Dose Thunfisch Kaufmotive Deutschland",
+      "Thunfischfilet in der Dose Thunfisch Dose Marken Deutschland",
+      "Thunfischfilet in der Dose Thunfisch Dose Preis Deutschland",
+      "Thunfischfilet in der Dose Thunfisch Import Zertifizierung Deutschland",
+      "Thunfischfilet in der Dose Lebensmittel Einkaufspreis Konditionen Deutschland",
+      "Thunfischfilet in der Dose Lebensmittelmesse Trends Deutschland",
+      "Thunfischfilet in der Dose Messe Standkonzept Lebensmittel Deutschland",
+      "HerbstZeit Messestand exhibitors"
+    ],
+    "query_details": [
+      {
+        "qid": "Q1",
+        "query": "Thunfischfilet in der Dose Bewertungen",
+        "tier": "main",
+        "include_domains": [
+          "spiegel.de",
+          "zeit.de",
+          "faz.net",
+          "sueddeutsche.de",
+          "welt.de",
+          "chefkoch.de"
+        ]
+      },
+      {
+        "qid": "Q1",
+        "query": "Thunfischfilet in der Dose Trends Deutschland",
+        "tier": "main",
+        "include_domains": [
+          "spiegel.de",
+          "zeit.de",
+          "faz.net",
+          "sueddeutsche.de",
+          "welt.de",
+          "chefkoch.de"
+        ]
+      },
+      {
+        "qid": "Q1",
+        "query": "koreanische Lebensmittel Trends Deutschland",
+        "tier": "main",
+        "include_domains": [
+          "spiegel.de",
+          "zeit.de",
+          "faz.net",
+          "sueddeutsche.de",
+          "welt.de",
+          "chefkoch.de"
+        ]
+      },
+      {
+        "qid": "Q2",
+        "query": "Thunfischfilet in der Dose Marken Preis Deutschland",
+        "tier": "main",
+        "include_domains": [
+          "rewe.de",
+          "edeka.de",
+          "amazon.de",
+          "kaufland.de",
+          "lebensmittelzeitung.net",
+          "lebensmittelpraxis.de",
+          "rundschau.de",
+          "horizont.net"
+        ]
+      },
+      {
+        "qid": "Q2",
+        "query": "Fischkonserven Marken Deutschland",
+        "tier": "main",
+        "include_domains": [
+          "rewe.de",
+          "edeka.de",
+          "amazon.de",
+          "kaufland.de",
+          "lebensmittelzeitung.net",
+          "lebensmittelpraxis.de",
+          "rundschau.de",
+          "horizont.net"
+        ]
+      },
+      {
+        "qid": "Q3",
+        "query": "Thunfischfilet in der Dose Importeure und Vertriebshändler Deutschland",
+        "tier": "main",
+        "include_domains": [
+          "lebensmittelzeitung.net",
+          "lebensmittelpraxis.de",
+          "rundschau.de",
+          "horizont.net",
+          "bvl.bund.de",
+          "bmel.de",
+          "verbraucherzentrale.de",
+          "gtai.de"
+        ]
+      },
+      {
+        "qid": "Q3",
+        "query": "koreanische Lebensmittel Importeure und Vertriebshändler Deutschland",
+        "tier": "main",
+        "include_domains": [
+          "lebensmittelzeitung.net",
+          "lebensmittelpraxis.de",
+          "rundschau.de",
+          "horizont.net",
+          "bvl.bund.de",
+          "bmel.de",
+          "verbraucherzentrale.de",
+          "gtai.de"
+        ]
+      },
+      {
+        "qid": "KR",
+        "query": "독일 참치살코기캔",
+        "tier": "main",
+        "include_domains": [
+          "kotra.or.kr",
+          "dream.kotra.or.kr",
+          "kati.net"
+        ]
+      },
+      {
+        "qid": "KR",
+        "query": "독일 생선 통조림 시장 동향",
+        "tier": "main",
+        "include_domains": [
+          "kotra.or.kr",
+          "dream.kotra.or.kr",
+          "kati.net"
+        ]
+      },
+      {
+        "qid": "Q4",
+        "query": "HerbstZeit Canned Fish Products Messestand",
+        "tier": "main",
+        "include_domains": [
+          "lebensmittelzeitung.net",
+          "lebensmittelpraxis.de",
+          "rundschau.de",
+          "horizont.net"
+        ]
+      },
+      {
+        "qid": "Q1",
+        "query": "Thunfischfilet in der Dose Bewertungen",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q1",
+        "query": "Thunfischfilet in der Dose Trends Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q1",
+        "query": "koreanische Lebensmittel Trends Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q2",
+        "query": "Thunfischfilet in der Dose Marken Preis Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q2",
+        "query": "Fischkonserven Marken Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q3",
+        "query": "Thunfischfilet in der Dose Importeure und Vertriebshändler Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q3",
+        "query": "koreanische Lebensmittel Importeure und Vertriebshändler Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q1",
+        "query": "Thunfischfilet in der Dose Thunfisch Konsumanlass Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q1",
+        "query": "Thunfischfilet in der Dose Thunfisch Kaufmotive Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q2",
+        "query": "Thunfischfilet in der Dose Thunfisch Dose Marken Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q2",
+        "query": "Thunfischfilet in der Dose Thunfisch Dose Preis Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q3",
+        "query": "Thunfischfilet in der Dose Thunfisch Import Zertifizierung Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q3",
+        "query": "Thunfischfilet in der Dose Lebensmittel Einkaufspreis Konditionen Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q4",
+        "query": "Thunfischfilet in der Dose Lebensmittelmesse Trends Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q4",
+        "query": "Thunfischfilet in der Dose Messe Standkonzept Lebensmittel Deutschland",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q4",
+        "query": "HerbstZeit Messestand exhibitors",
+        "tier": "open",
+        "include_domains": []
+      }
+    ],
+    "site_profile": {
+      "source": "curated",
+      "reviewed": false,
+      "groups": {
+        "media": [
+          "spiegel.de",
+          "zeit.de",
+          "faz.net",
+          "sueddeutsche.de",
+          "welt.de",
+          "chefkoch.de"
+        ],
+        "trade": [
+          "lebensmittelzeitung.net",
+          "lebensmittelpraxis.de",
+          "rundschau.de",
+          "horizont.net"
+        ],
+        "retail": [
+          "rewe.de",
+          "edeka.de",
+          "amazon.de",
+          "kaufland.de"
+        ],
+        "public": [
+          "bvl.bund.de",
+          "bmel.de",
+          "verbraucherzentrale.de",
+          "gtai.de"
+        ]
+      },
+      "dropped": []
+    },
+    "cards": [
+      {
+        "qid": "Q1",
+        "title": "소비자",
+        "question": "현지 소비자는 이 제품군을 언제, 왜 먹고, 무엇에 불만이 있는가",
+        "quote_ids": [],
+        "source_count": 0,
+        "product_quotes": 0,
+        "country_quotes": 0,
+        "conclusion": null,
+        "points": [],
+        "interpretation": null,
+        "gaps": "독일 시장에서 이 질문에 답하는 자료를 찾지 못했습니다. 바이어 상담이나 KOTRA 무역관 문의로 확인이 필요합니다.",
+        "dropped": [],
+        "notice": "참치살코기캔에 대한 독일 현지 자료를 찾지 못했습니다.",
+        "diagnostics": {},
+        "criteria": [
+          {
+            "id": "Q1-1",
+            "label_ko": "섭취 상황",
+            "essential": true,
+            "search_hint": "Thunfisch Konsumanlass"
+          },
+          {
+            "id": "Q1-2",
+            "label_ko": "구매 동기",
+            "essential": false,
+            "search_hint": "Thunfisch Kaufmotive"
+          },
+          {
+            "id": "Q1-3",
+            "label_ko": "소비자 불만",
+            "essential": false,
+            "search_hint": "Thunfisch Kundenbewertungen"
+          }
+        ],
+        "search": {
+          "used": true,
+          "stage": "code",
+          "reasons": [
+            "원문 확인 발췌 0건 (기준 2건)",
+            "출처 0곳 (기준 2곳)"
+          ],
+          "covered": {},
+          "missing": [
+            "섭취 상황",
+            "구매 동기",
+            "소비자 불만"
+          ],
+          "followup_queries": [
+            "Thunfischfilet in der Dose Thunfisch Konsumanlass Deutschland",
+            "Thunfischfilet in der Dose Thunfisch Kaufmotive Deutschland"
+          ]
+        },
+        "main_quotes": 0,
+        "open_quotes": 0
+      },
+      {
+        "qid": "Q2",
+        "title": "경쟁 제품",
+        "question": "현지에서 팔리는 경쟁 제품은 무엇이고, 얼마에, 어떤 메시지로 파는가",
+        "quote_ids": [],
+        "source_count": 0,
+        "product_quotes": 0,
+        "country_quotes": 0,
+        "conclusion": null,
+        "points": [],
+        "interpretation": null,
+        "gaps": "독일 시장에서 이 질문에 답하는 자료를 찾지 못했습니다. 바이어 상담이나 KOTRA 무역관 문의로 확인이 필요합니다.",
+        "dropped": [],
+        "notice": "참치살코기캔에 대한 독일 현지 자료를 찾지 못했습니다.",
+        "diagnostics": {},
+        "criteria": [
+          {
+            "id": "Q2-1",
+            "label_ko": "경쟁 상품군",
+            "essential": false,
+            "search_hint": "Thunfisch Dose Marken"
+          },
+          {
+            "id": "Q2-2",
+            "label_ko": "판매 가격",
+            "essential": true,
+            "search_hint": "Thunfisch Dose Preis"
+          },
+          {
+            "id": "Q2-3",
+            "label_ko": "제품 홍보문구",
+            "essential": false,
+            "search_hint": "Thunfisch Werbung nachhaltig"
+          }
+        ],
+        "search": {
+          "used": true,
+          "stage": "code",
+          "reasons": [
+            "원문 확인 발췌 0건 (기준 2건)",
+            "출처 0곳 (기준 2곳)"
+          ],
+          "covered": {},
+          "missing": [
+            "경쟁 상품군",
+            "판매 가격",
+            "제품 홍보문구"
+          ],
+          "followup_queries": [
+            "Thunfischfilet in der Dose Thunfisch Dose Marken Deutschland",
+            "Thunfischfilet in der Dose Thunfisch Dose Preis Deutschland"
+          ]
+        },
+        "main_quotes": 0,
+        "open_quotes": 0
+      },
+      {
+        "qid": "Q3",
+        "title": "바이어·유통",
+        "question": "바이어·유통사는 무엇을 보고 제품을 들여오는가 (인증, 가격, 패키지, 유통기한, 채널)",
+        "quote_ids": [],
+        "source_count": 0,
+        "product_quotes": 0,
+        "country_quotes": 0,
+        "conclusion": null,
+        "points": [],
+        "interpretation": null,
+        "gaps": "독일 시장에서 이 질문에 답하는 자료를 찾지 못했습니다. 바이어 상담이나 KOTRA 무역관 문의로 확인이 필요합니다.",
+        "dropped": [],
+        "notice": null,
+        "diagnostics": {},
+        "criteria": [
+          {
+            "id": "Q3-1",
+            "label_ko": "인증·수입요건",
+            "essential": true,
+            "search_hint": "Thunfisch Import Zertifizierung"
+          },
+          {
+            "id": "Q3-2",
+            "label_ko": "납품가격 조건",
+            "essential": false,
+            "search_hint": "Lebensmittel Einkaufspreis Konditionen"
+          },
+          {
+            "id": "Q3-3",
+            "label_ko": "포장·유통 조건",
+            "essential": false,
+            "search_hint": "Konserven Verpackung Mindesthaltbarkeit"
+          }
+        ],
+        "search": {
+          "used": true,
+          "stage": "code",
+          "reasons": [
+            "원문 확인 발췌 0건 (기준 2건)",
+            "출처 0곳 (기준 2곳)"
+          ],
+          "covered": {},
+          "missing": [
+            "인증·수입요건",
+            "납품가격 조건",
+            "포장·유통 조건"
+          ],
+          "followup_queries": [
+            "Thunfischfilet in der Dose Thunfisch Import Zertifizierung Deutschland",
+            "Thunfischfilet in der Dose Lebensmittel Einkaufspreis Konditionen Deutschland"
+          ]
+        },
+        "main_quotes": 0,
+        "open_quotes": 0
+      },
+      {
+        "qid": "Q4",
+        "title": "박람회·부스",
+        "question": "이 박람회의 트렌드와 부스 운영·시식 사례는 무엇인가",
+        "quote_ids": [],
+        "source_count": 0,
+        "product_quotes": 0,
+        "country_quotes": 0,
+        "conclusion": null,
+        "points": [],
+        "interpretation": null,
+        "gaps": "독일 시장에서 이 질문에 답하는 자료를 찾지 못했습니다. 바이어 상담이나 KOTRA 무역관 문의로 확인이 필요합니다.",
+        "dropped": [],
+        "notice": null,
+        "diagnostics": {},
+        "criteria": [
+          {
+            "id": "Q4-1",
+            "label_ko": "박람회 트렌드",
+            "essential": true,
+            "search_hint": "Lebensmittelmesse Trends"
+          },
+          {
+            "id": "Q4-2",
+            "label_ko": "부스 운영사례",
+            "essential": false,
+            "search_hint": "Messe Standkonzept Lebensmittel"
+          },
+          {
+            "id": "Q4-3",
+            "label_ko": "시식 운영사례",
+            "essential": false,
+            "search_hint": "Messe Verkostung Lebensmittel"
+          }
+        ],
+        "search": {
+          "used": true,
+          "stage": "code",
+          "reasons": [
+            "원문 확인 발췌 0건 (기준 2건)",
+            "출처 0곳 (기준 2곳)"
+          ],
+          "covered": {},
+          "missing": [
+            "박람회 트렌드",
+            "부스 운영사례",
+            "시식 운영사례"
+          ],
+          "followup_queries": [
+            "Thunfischfilet in der Dose Lebensmittelmesse Trends Deutschland",
+            "Thunfischfilet in der Dose Messe Standkonzept Lebensmittel Deutschland"
+          ]
+        },
+        "main_quotes": 0,
+        "open_quotes": 0
+      }
+    ],
+    "booth": null,
+    "booth_error": null,
+    "quotes": [],
+    "sources": [],
+    "excluded_sources": [],
+    "stats": {
+      "sources_found": 0,
+      "quotes_used": 0,
+      "excluded_source": 0,
+      "market_other": 0,
+      "not_in_source": 0,
+      "off_scope": 0,
+      "country_quotes": 0,
+      "region_quotes": 0,
+      "stale_quotes": 0,
+      "translation_warnings": 0,
+      "main_quotes": 0,
+      "open_quotes": 0,
+      "main_sources": 0,
+      "open_sources": 0,
+      "fallback_questions": [
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4"
+      ]
+    },
+    "failed_queries": [
+      "Thunfischfilet in der Dose Bewertungen",
+      "Thunfischfilet in der Dose Trends Deutschland",
+      "koreanische Lebensmittel Trends Deutschland",
+      "Thunfischfilet in der Dose Marken Preis Deutschland",
+      "Fischkonserven Marken Deutschland",
+      "Thunfischfilet in der Dose Importeure und Vertriebshändler Deutschland",
+      "koreanische Lebensmittel Importeure und Vertriebshändler Deutschland",
+      "독일 참치살코기캔",
+      "독일 생선 통조림 시장 동향",
+      "HerbstZeit Canned Fish Products Messestand",
+      "Thunfischfilet in der Dose Bewertungen",
+      "Thunfischfilet in der Dose Trends Deutschland",
+      "koreanische Lebensmittel Trends Deutschland",
+      "Thunfischfilet in der Dose Marken Preis Deutschland",
+      "Fischkonserven Marken Deutschland",
+      "Thunfischfilet in der Dose Importeure und Vertriebshändler Deutschland",
+      "koreanische Lebensmittel Importeure und Vertriebshändler Deutschland",
+      "Thunfischfilet in der Dose Thunfisch Konsumanlass Deutschland",
+      "Thunfischfilet in der Dose Thunfisch Kaufmotive Deutschland",
+      "Thunfischfilet in der Dose Thunfisch Dose Marken Deutschland",
+      "Thunfischfilet in der Dose Thunfisch Dose Preis Deutschland",
+      "Thunfischfilet in der Dose Thunfisch Import Zertifizierung Deutschland",
+      "Thunfischfilet in der Dose Lebensmittel Einkaufspreis Konditionen Deutschland",
+      "Thunfischfilet in der Dose Lebensmittelmesse Trends Deutschland",
+      "Thunfischfilet in der Dose Messe Standkonzept Lebensmittel Deutschland",
+      "HerbstZeit Messestand exhibitors"
+    ],
+    "search_error": "credits",
+    "fetched_at": "2026-09-26T11:05:04.953702+00:00",
+    "from_cache": false,
+    "version": "v14.0"
+  },
+  "research_error": null,
+  "view": {
+    "articles": {
+      "Q1": [],
+      "Q2": [],
+      "Q3": [],
+      "Q4": []
+    }
+  },
+  "models": {
+    "booth": "gpt-6-astra",
+    "booth_effort": "medium",
+    "task": "gpt-5.6-terra",
+    "task_effort": "low"
+  },
+  "fetched_at": "2026-09-26 20:05"
+}
