@@ -7,8 +7,9 @@ from flask import Blueprint, abort, flash, redirect, render_template, request, u
 from flask_login import current_user, login_required
 
 from app.extensions import db
-from app.models import Exhibition, NtmMeasure, Product
+from app.models import Exhibition, NtmMeasure, Product, TrendResult
 from app.routes.dashboard import CONTINENT_DB_VALUES, is_pipeline_running, pop_pipeline_banner
+from app.routes.trend_v2 import _get_job as get_trend_job
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
 from app.services.exchange import get_exchange_info
@@ -505,12 +506,30 @@ def _trend_v2_prefill(expo, product):
     }
 
 
+def _saved_trend_job_id(expo, product):
+    """이 박람회+제품으로 이미 끝낸 트렌드 조사가 있으면 그 job_id를 돌려준다
+    (trend_v2가 결과 화면을 열 때 TrendResult에 남겨둔 것). 결과 파일이
+    지워져서 다시 열 수 없는 job이면 None -> 입력 화면부터 보여준다."""
+    saved = TrendResult.query.filter_by(
+        user_id=current_user.id, exhibition_id=expo.id, product_id=product.id,
+    ).first()
+    if not saved or not saved.job_id:
+        return None
+    job = get_trend_job(saved.job_id, "trend")
+    return saved.job_id if job and job["status"] == "done" else None
+
+
 def _build_trend_rows(expo, linked_products):
     """트렌드 조사 탭에 쓸 제품별 진입 정보(v15 시스템으로 넘어갈 때 미리
     채울 쿼리스트링). 실제 분석/캐시는 이제 app.routes.trend_v2(v15)가
-    독자적으로 관리한다."""
+    독자적으로 관리한다. 이미 조사한 결과가 있으면 trend_job_id로 넘겨서
+    페이지를 다시 그려도 탭이 입력 화면 대신 결과 화면을 보여주게 한다."""
     return [
-        {"product": product, "prefill": _trend_v2_prefill(expo, product)}
+        {
+            "product": product,
+            "prefill": _trend_v2_prefill(expo, product),
+            "trend_job_id": _saved_trend_job_id(expo, product),
+        }
         for product in linked_products
     ]
 
