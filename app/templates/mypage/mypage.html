@@ -2,10 +2,28 @@
 {% block title %}내 제품 관리 | FairMate{% endblock %}
 
 {% block content %}
+{% set checked_count = products | selectattr("is_checked") | list | length %}
+{% set all_checked = products and checked_count == products | length %}
+<style>
+  .check-all-form { margin-top: -6px; display: flex; align-items: center; gap: 6px; font-size: 14px; color: #374151; }
+  .check-all-form label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; }
+  .check-all-count { color: #6b7280; }
+  .product-group-title { margin: 8px 0 0; font-size: 13px; font-weight: 700; color: #6b7280; }
+  .product-group-title:first-child { margin-top: 0; }
+  .bulk-template-link { display: inline-flex; align-items: center; }
+</style>
 <div class="page-header">
   <div>
     <h1>내 제품 관리</h1>
     <p class="page-desc">체크된 제품만 시장 분석·부스 컨셉에 반영됩니다.</p>
+    {% if products %}
+    {# 전부 체크돼 있으면 체크 표시, 일부만/하나도 없으면 빈 칸. 누르면 전체 선택 <-> 전체 해제 #}
+    <form method="post" action="{{ url_for('mypage.check_all_products') }}" class="check-all-form">
+      <input type="hidden" name="checked" value="{{ '0' if all_checked else '1' }}">
+      <label><input type="checkbox" onchange="this.form.submit()" {% if all_checked %}checked{% endif %}> 전체 선택</label>
+      <span class="check-all-count">({{ checked_count }}/{{ products | length }}개 선택됨)</span>
+    </form>
+    {% endif %}
   </div>
   <button type="button" class="btn-primary" data-modal-open="add-product-modal">
     + 제품 추가
@@ -15,6 +33,12 @@
 {% if products %}
 <div class="product-list">
   {% for product in products %}
+  {# 체크된 제품이 위로 정렬돼 오므로, 그룹이 바뀌는 곳에 제목을 넣는다 #}
+  {% if loop.first or loop.previtem.is_checked != product.is_checked %}
+  <p class="product-group-title">
+    {% if product.is_checked %}선택된 제품 ({{ checked_count }}){% else %}선택 안 된 제품 ({{ products | length - checked_count }}){% endif %}
+  </p>
+  {% endif %}
   <div class="product-row">
     <form method="post" action="{{ url_for('mypage.toggle_product', product_id=product.id) }}" class="product-toggle">
       <input type="checkbox" onchange="this.form.submit()" {% if product.is_checked %}checked{% endif %}>
@@ -138,6 +162,7 @@
       <input type="file" name="bulk_file" accept=".xlsx,.xlsm" required>
     </div>
     <div class="form-actions" style="margin:0;">
+      <a class="btn-secondary bulk-template-link" href="{{ url_for('mypage.download_bulk_template') }}">엑셀 양식 다운로드</a>
       <button type="submit" class="btn-primary">엑셀 업로드</button>
     </div>
   </form>
