@@ -31,11 +31,11 @@ def _client_config():
     }
 
 
-def build_flow() -> Flow:
+def build_flow(redirect_uri=None) -> Flow:
     return Flow.from_client_config(
         _client_config(),
         scopes=SCOPES,
-        redirect_uri=os.environ["GOOGLE_REDIRECT_URI"],
+        redirect_uri=redirect_uri or os.environ["GOOGLE_REDIRECT_URI"],
     )
 
 

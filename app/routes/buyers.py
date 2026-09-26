@@ -8,11 +8,12 @@
 
 from datetime import datetime, timedelta
 
-from flask import Blueprint, flash, redirect, render_template, request, session, url_for
+from flask import Blueprint, abort, flash, redirect, render_template, request, send_file, session, url_for
 from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.models import Contact, ConceptDraft, EmailTemplate, Exhibition, FollowupEmail
+from app.services import attachments as mail_attachments
 from app.services.card_scan import scan_business_card
 from app.services.google_oauth import build_flow, encrypt_token, fetch_userinfo
 from app.services.mail_llm import revise_email_template, revise_individual_email
@@ -194,6 +195,7 @@ def edit_contact(contact_id):
 @login_required
 def delete_contact(contact_id):
     contact = Contact.query.filter_by(id=contact_id, user_id=current_user.id).first_or_404()
+    mail_attachments.purge_files(contact.followup)
     db.session.delete(contact)
     db.session.commit()
     flash("삭제되었습니다.", "info")
@@ -337,7 +339,53 @@ def save(contact_id):
     followup.body = request.form["body"]
     followup.status = "edited"
     db.session.commit()
-    flash("내용이 저장되었습니다.", "success")
+
+    try:
+        items = mail_attachments.read_uploads(
+            request.files.getlist("attachments"), mail_attachments.existing_total(followup)
+        )
+    except ValueError as exc:
+        flash(f"내용은 저장됐지만 파일은 첨부되지 않았습니다. {exc}", "danger")
+        return redirect(url_for("followup.view_followup", contact_id=contact.id))
+
+    mail_attachments.save_uploads(followup, items)
+    flash(
+        f"내용이 저장되고 파일 {len(items)}개가 첨부되었습니다." if items else "내용이 저장되었습니다.",
+        "success",
+    )
+    return redirect(url_for("followup.view_followup", contact_id=contact.id))
+
+
+def _get_owned_attachment(contact_id, attachment_id):
+    contact = _get_owned_contact(contact_id)
+    followup = contact.followup
+    attachment = next((a for a in (followup.attachments if followup else []) if a.id == attachment_id), None)
+    if attachment is None:
+        abort(404)
+    return contact, followup, attachment
+
+
+@followup_bp.route("/contacts/<int:contact_id>/followup/attachments/<int:attachment_id>")
+@login_required
+def download_attachment(contact_id, attachment_id):
+    _, _, attachment = _get_owned_attachment(contact_id, attachment_id)
+    return send_file(
+        mail_attachments.path_for(attachment),
+        as_attachment=True,
+        download_name=attachment.filename,
+        mimetype=attachment.content_type or "application/octet-stream",
+    )
+
+
+@followup_bp.route("/contacts/<int:contact_id>/followup/attachments/<int:attachment_id>/delete", methods=["POST"])
+@login_required
+def delete_attachment(contact_id, attachment_id):
+    contact, followup, attachment = _get_owned_attachment(contact_id, attachment_id)
+    if followup.status == "sent":
+        flash("이미 발송된 메일의 첨부는 지울 수 없습니다.", "warning")
+    else:
+        mail_attachments.delete_attachment(attachment)
+        flash("첨부 파일을 삭제했습니다.", "info")
     return redirect(url_for("followup.view_followup", contact_id=contact.id))
 
 
@@ -355,7 +403,10 @@ def send(contact_id):
         return redirect(url_for("buyer_gmail.connect"))
 
     try:
-        send_via_gmail(current_user, contact.email, followup.subject, followup.body)
+        send_via_gmail(
+            current_user, contact.email, followup.subject, followup.body,
+            attachments=mail_attachments.load_for_send(followup),
+        )
     except Exception as exc:
         followup.status = "failed"
         db.session.commit()
@@ -382,6 +433,7 @@ def compose_new(contact_id):
         flash("먼저 메일 템플릿을 작성해주세요.", "warning")
         return redirect(url_for("mail_template.home"))
 
+    mail_attachments.clear_attachments(contact.followup)
     _fill_contact_from_template(contact, template)
     return redirect(url_for("followup.view_followup", contact_id=contact.id))
 
@@ -408,6 +460,12 @@ def send_selected():
         flash("먼저 Gmail 발송 권한을 연동해주세요.", "warning")
         return redirect(url_for("buyer_gmail.connect"))
 
+    try:
+        bulk_attachments = mail_attachments.read_uploads(request.files.getlist("attachments"))
+    except ValueError as exc:
+        flash(str(exc), "danger")
+        return redirect(url_for("contacts.list_contacts"))
+
     contacts = Contact.query.filter(
         Contact.id.in_(ids), Contact.user_id == current_user.id
     ).all()
@@ -427,7 +485,7 @@ def send_selected():
         followup.generated_at = datetime.utcnow()
 
         try:
-            send_via_gmail(current_user, contact.email, subject, body)
+            send_via_gmail(current_user, contact.email, subject, body, attachments=bulk_attachments)
             followup.status = "sent"
             followup.sent_at = datetime.utcnow()
             followup.last_sent_at = followup.sent_at
@@ -441,6 +499,8 @@ def send_selected():
         db.session.commit()
 
     message = f"선택 발송 완료: 성공 {sent}건, 실패 {failed}건 (선택 {len(contacts)}건 중)"
+    if bulk_attachments:
+        message += f" — 첨부 파일 {len(bulk_attachments)}개 포함"
     if skipped:
         message += f" — 템플릿 없음으로 {skipped}건 건너뜀"
     flash(message, "info")
@@ -545,6 +605,11 @@ def activate(version):
 @login_required
 def edit_profile():
     if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        if not name:
+            flash("이름은 필수 입력 항목입니다.", "danger")
+            return redirect(url_for("buyer_profile.edit_profile"))
+        current_user.name = name
         current_user.company = request.form.get("company", "").strip() or None
         current_user.position = request.form.get("position", "").strip() or None
         current_user.product_description = request.form.get("product_description", "").strip() or None
@@ -556,10 +621,20 @@ def edit_profile():
 
 # ------------------------------------------------------------------ gmail --
 
+def _gmail_redirect_uri():
+    """로컬 개발 중엔 지금 접속한 주소(localhost 또는 127.0.0.1) 그대로 구글이 되돌려 보내게 한다.
+    브라우저는 두 주소를 다른 사이트로 보고 세션 쿠키를 따로 가져서, 접속 주소와 돌아오는
+    주소가 다르면 연동 도중 로그인 세션이 끊긴다. 그 외(운영 등)엔 .env의 GOOGLE_REDIRECT_URI를 쓴다.
+    구글 콘솔의 '승인된 리디렉션 URI'에 두 주소 모두 등록돼 있어야 한다."""
+    if request.host.split(":")[0] in ("localhost", "127.0.0.1"):
+        return url_for("auth.google_callback_redirect", _external=True)
+    return None
+
+
 @buyer_gmail_bp.route("/connect")
 @login_required
 def connect():
-    flow = build_flow()
+    flow = build_flow(_gmail_redirect_uri())
     # access_type=offline + prompt=consent 이어야 매번 refresh_token을 받을 수 있다
     auth_url, state = flow.authorization_url(
         access_type="offline",
@@ -579,7 +654,7 @@ def callback():
         flash("연동 요청이 유효하지 않습니다. 다시 시도해주세요.", "danger")
         return redirect(url_for("contacts.list_contacts"))
 
-    flow = build_flow()
+    flow = build_flow(_gmail_redirect_uri())
     flow.code_verifier = session.get("gmail_code_verifier")
     flow.fetch_token(authorization_response=request.url)
     credentials = flow.credentials

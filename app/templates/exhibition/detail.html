@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ expo.name }} | 사부작{% endblock %}
+{% block title %}{{ expo.name }} | FairMate{% endblock %}
 
 {% block content %}
 {% if expo.hero_image_url %}
@@ -8,17 +8,30 @@
 </div>
 {% endif %}
 
-<div class="page-header">
-  <div>
-    <h1>
-      {{ expo.name }}
-      {% if expo.food_yn %}
-        <span class="badge-food">식품</span>
+<div class="page-header expo-detail-header">
+  <div class="expo-head">
+    <div class="expo-thumb expo-thumb-lg">
+      {% if expo.image_url %}
+      <img src="{{ expo.image_url }}" alt="">
       {% else %}
-        <span class="badge-nonfood">비식품</span>
+      <svg class="expo-thumb-fallback" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="8.5" cy="9.5" r="1.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M21 16l-5.5-5.5a1 1 0 0 0-1.4 0L4 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
       {% endif %}
-    </h1>
-    <p class="page-desc">{{ expo.country_ko or expo.country }} · {{ expo.city }} · {{ expo.start_date|kdate }} ~ {{ expo.end_date|kdate }}</p>
+    </div>
+    <div class="expo-head-text">
+      <h1>
+        {{ expo.name }}
+        {% if expo.food_yn %}
+          <span class="badge-food">식품</span>
+        {% else %}
+          <span class="badge-nonfood">비식품</span>
+        {% endif %}
+      </h1>
+      <p class="expo-head-meta">{{ expo.country_ko or expo.country }} · {{ expo.city }} · {{ expo.start_date|kdate }} ~ {{ expo.end_date|kdate }}</p>
+    </div>
   </div>
   <a href="{{ url_for('dashboard.index') }}" class="btn-secondary">← 대시보드로</a>
 </div>
@@ -37,47 +50,81 @@
   </div>
 
   <div class="tab-panel" id="tab-overview">
-    <div class="card">
-      <h2>기본 정보</h2>
-      <dl class="detail-list">
-        <dt>개최지</dt><dd>{{ expo.venue or '정보 없음' }}</dd>
-        <dt>국가 / 도시</dt><dd>{{ expo.country_ko or expo.country }} / {{ expo.city }}</dd>
-        <dt>일정</dt><dd>{{ expo.start_date|kdate }} ~ {{ expo.end_date|kdate }}</dd>
-        <dt>규모</dt><dd>{{ expo.scale or '미상' }}</dd>
-        <dt>카테고리</dt><dd>{{ expo.category }}</dd>
-        <dt>식품 여부</dt>
-        <dd>
-          {% if expo.food_yn %}
-            <span class="badge-food">식품</span>
-          {% else %}
-            <span class="badge-nonfood">비식품</span>
-          {% endif %}
-        </dd>
-        <dt>참관 대상</dt><dd>{{ expo.audience_type }} ({{ expo.audience_note }})</dd>
-        <dt>공식 웹사이트</dt>
-        <dd>
-          {% if expo.website %}
-            <a href="https://{{ expo.website }}" target="_blank" rel="noopener">{{ expo.website }}</a>
-          {% else %}
-            -
-          {% endif %}
-        </dd>
-      </dl>
+    <div class="card overview-card">
+      <section class="detail-section">
+        <h2 class="detail-section-title">기본 정보</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">개최지</span>
+            <span class="info-value">{{ expo.venue or '정보 없음' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">국가 / 도시</span>
+            <span class="info-value">{{ expo.country_ko or expo.country }} / {{ expo.city }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">일정</span>
+            <span class="info-value">{{ expo.start_date|kdate }} ~ {{ expo.end_date|kdate }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">규모</span>
+            <span class="info-value">
+              {% if expo.scale and expo.scale != '미상' %}<span class="badge-scale">{{ expo.scale }}</span>{% else %}미상{% endif %}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">카테고리</span>
+            <span class="info-value">{{ expo.category or '-' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">식품 여부</span>
+            <span class="info-value">
+              {% if expo.food_yn %}
+                <span class="badge-food">식품</span>
+              {% else %}
+                <span class="badge-nonfood">비식품</span>
+              {% endif %}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">참관 대상</span>
+            <span class="info-value">
+              {% if expo.audience_type %}<span class="badge-audience">{{ expo.audience_type }}</span>{% endif %}
+              {% if expo.audience_note %}<span class="info-note">{{ expo.audience_note }}</span>{% endif %}
+              {% if not expo.audience_type and not expo.audience_note %}-{% endif %}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">공식 웹사이트</span>
+            <span class="info-value">
+              {% if expo.website %}
+                <a href="https://{{ expo.website }}" target="_blank" rel="noopener">{{ expo.website }}</a>
+              {% else %}
+                -
+              {% endif %}
+            </span>
+          </div>
+        </div>
+      </section>
 
       {% if expo.keywords %}
-      <h3>연관 키워드</h3>
-      <div class="keyword-tags">
-        {% for kw in expo.keywords.split(',') %}
-        <span class="keyword-tag">{{ kw.strip() }}</span>
-        {% endfor %}
-      </div>
+      <section class="detail-section">
+        <h2 class="detail-section-title">연관 키워드</h2>
+        <div class="keyword-tags">
+          {% for kw in expo.keywords.split(',') %}
+          <span class="keyword-tag">{{ kw.strip() }}</span>
+          {% endfor %}
+        </div>
+      </section>
       {% endif %}
 
       {% if intro_paragraphs %}
-      <h3>박람회 소개</h3>
-      {% for para in intro_paragraphs %}
-      <p class="intro-text">{{ para }}</p>
-      {% endfor %}
+      <section class="detail-section">
+        <h2 class="detail-section-title">박람회 소개</h2>
+        {% for para in intro_paragraphs %}
+        <p class="intro-text">{{ para }}</p>
+        {% endfor %}
+      </section>
       {% endif %}
     </div>
   </div>
