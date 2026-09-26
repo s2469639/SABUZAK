@@ -725,7 +725,9 @@ p.page-desc:not(:last-child) {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin-top: 12px;
 }
+.keyword-filter-list[hidden] { display: none; }
 
 .expo-list-toolbar {
   display: flex;

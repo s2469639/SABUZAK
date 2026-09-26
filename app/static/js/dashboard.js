@@ -61,6 +61,19 @@ document.addEventListener("DOMContentLoaded", function () {
       submitFilter(form, { keyword_tag: isActive ? "" : tagBtn.dataset.keywordTag });
       return;
     }
+
+    // 키워드 태그 목록은 기본으로 접어둬서 첫 화면엔 안 보이게 하고,
+    // "키워드로 찾기" 버튼을 누르면 그때 펼친다.
+    var tagsToggle = e.target.closest("[data-keyword-tags-toggle]");
+    if (tagsToggle) {
+      var tagsBox = tagsToggle.closest(".expo-results").querySelector("[data-keyword-tags]");
+      if (tagsBox) {
+        var willShow = tagsBox.hidden;
+        tagsBox.hidden = !willShow;
+        tagsToggle.setAttribute("aria-expanded", String(willShow));
+      }
+      return;
+    }
   });
 
   // 정렬 셀렉트는 필터 폼 안에 있지 않아도 되니(레이아웃상 키워드 태그 줄 옆에 있음),

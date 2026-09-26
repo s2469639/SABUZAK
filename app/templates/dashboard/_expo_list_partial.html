@@ -18,15 +18,7 @@
 
   <div class="expo-list-toolbar">
     {% if keyword_tags %}
-    <div class="keyword-filter-list">
-      {% for tag in keyword_tags %}
-      <button type="button"
-              class="keyword-filter-tag {% if tag == selected_keyword_tag %}active{% endif %}"
-              data-keyword-tag="{{ tag }}">
-        {{ tag }}
-      </button>
-      {% endfor %}
-    </div>
+    <button type="button" class="btn-secondary" data-keyword-tags-toggle aria-expanded="false">키워드로 찾기 ▾</button>
     {% endif %}
     <select name="sort" class="expo-sort-select">
       <option value="asc" {{ 'selected' if sort != 'desc' else '' }}>최신순</option>
@@ -39,6 +31,18 @@
       </button>
     </form>
   </div>
+
+  {% if keyword_tags %}
+  <div class="keyword-filter-list" data-keyword-tags {% if not selected_keyword_tag %}hidden{% endif %}>
+    {% for tag in keyword_tags %}
+    <button type="button"
+            class="keyword-filter-tag {% if tag == selected_keyword_tag %}active{% endif %}"
+            data-keyword-tag="{{ tag }}">
+      {{ tag }}
+    </button>
+    {% endfor %}
+  </div>
+  {% endif %}
 
   {% if expos %}
   <div class="expo-list">
