@@ -19,6 +19,7 @@ url_prefix를 붙이면 그 JS 호출이 다 깨진다. 입력 폼 화면(v15 �
 채워준다 (제품명/국가/강점/원재료/인증/가격/박람회명/박람회사이트).
 """
 
+import json
 import os
 import sys
 
@@ -39,6 +40,27 @@ pages_bp = Blueprint("trend_v2", __name__, template_folder="../templates/trend_v
 api_bp = Blueprint("trend_v2_api", __name__, url_prefix="/api")
 
 QUESTION_LABELS = {"Q1": "CONSUMER", "Q2": "COMPETITION", "Q3": "BUYER & CHANNEL", "Q4": "TRADE SHOW & BOOTH"}
+
+
+def _get_job(job_id, kind):
+    """jobs.get()은 서버 메모리만 보기 때문에 서버가 재시작되면 실행 중이던
+    작업뿐 아니라 이미 끝난 작업도 다 사라진 것처럼 보인다. 그런데 v15는 작업이
+    끝나면 결과를 v15/results/<kind>_<job_id>.json에 이미 저장해두고 있으니
+    (jobs.save_result), 메모리에 없으면 그 파일을 대신 읽어서 "done" 상태의
+    job으로 재구성한다 - v15 내부 코드는 그대로 두고 여기서만 보완."""
+    job = jobs.get(job_id, kind)
+    if job is not None:
+        return job
+    path = os.path.join(jobs.RESULTS_DIR, f"{kind}_{job_id}.json")
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            raw = json.load(f)
+    except (OSError, ValueError):
+        return None
+    form = raw.pop("inputs", {}) or {}
+    return {"kind": kind, "status": "done", "result": raw, "error": None, "form": form, "force": False, "links": {}}
 
 
 def _form_from(source):
@@ -164,7 +186,7 @@ def _persist_booth_result(job, job_id):
 @pages_bp.get("/trend/<job_id>")
 @login_required
 def trend_result(job_id):
-    job = jobs.get(job_id, "trend")
+    job = _get_job(job_id, "trend")
     if not job or job["status"] == "running":
         return redirect("/trend-research")
     if job["status"] == "done":
@@ -200,7 +222,7 @@ def booth_index():
 @pages_bp.get("/booth/<job_id>")
 @login_required
 def booth_result(job_id):
-    job = jobs.get(job_id, "booth")
+    job = _get_job(job_id, "booth")
     if not job:
         return _booth_page(_empty_form(), error="부스 기획 작업을 찾지 못했습니다. 서버가 다시 시작되었을 수 있어요. 다시 실행해 주세요.")
     if job["status"] == "running":
@@ -215,9 +237,12 @@ def booth_result(job_id):
 # ---------------------------------------------------------------------------
 
 def _progress_json(job):
-    snap = job["progress"].snapshot()
-    if job["status"] == "done":
-        snap["percent"] = 100
+    if "progress" not in job:  # _get_job()이 파일에서 재구성한 job (재시작 후 조회)
+        snap = {"percent": 100, "message": "", "chips": []}
+    else:
+        snap = job["progress"].snapshot()
+        if job["status"] == "done":
+            snap["percent"] = 100
     return {**snap, "status": job["status"], "error": job["error"], **job["links"]}
 
 
@@ -260,7 +285,7 @@ def api_booth_start():
 @api_bp.get("/<kind>/<job_id>/progress")
 @login_required
 def api_progress(kind, job_id):
-    job = jobs.get(job_id, kind)
+    job = _get_job(job_id, kind)
     if not job:
         return jsonify({"status": "missing", "error": "작업을 찾지 못했어요. 서버가 다시 시작되었을 수 있어요."}), 404
     return jsonify(_progress_json(job))
@@ -269,7 +294,7 @@ def api_progress(kind, job_id):
 @api_bp.get("/<kind>/<job_id>")
 @login_required
 def api_result(kind, job_id):
-    job = jobs.get(job_id, kind)
+    job = _get_job(job_id, kind)
     if not job:
         return jsonify({"status": "missing"}), 404
     return jsonify({"status": job["status"], "error": job["error"], "result": job["result"], **job["links"]})
