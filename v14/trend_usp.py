@@ -72,7 +72,7 @@ MAX_USP_ROWS = 3
 MAX_PITCH_BLOCKS = 4
 BREAKOUT_THRESHOLD = 5000             # Google "Breakout"은 +5000% 이상
 YOY_WINDOW_WEEKS = 13
-YOY_MIN_BASE = 1.0
+YOY_MIN_BASE = 10.0
 YOY_MAX_ZERO_RATIO = 0.5
 
 CLUSTER_KEYS = ["culture_trigger", "intent_funnel", "category_perception", "consumption_habit"]
