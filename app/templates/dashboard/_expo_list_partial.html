@@ -60,7 +60,7 @@
         <span class="expo-meta">{{ expo.country_ko or expo.country }} · {{ expo.city }}</span>
       </div>
       <div class="expo-side">
-        <span class="expo-date">{{ expo.start_date|kdate }} ~ {{ expo.end_date|kdate }}</span>
+        <span class="expo-date">{{ kdate_range(expo.start_date, expo.end_date) }}</span>
         <span class="expo-category">{{ expo.category }}</span>
         {% if expo.food_yn %}
           <span class="badge-food">식품</span>

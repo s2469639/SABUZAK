@@ -5,13 +5,27 @@ from app.extensions import db, login_manager
 
 
 def format_kdate(value):
-    """YYYYMMDD(int/str) -> '2026.09.22'. 값이 없거나 형식이 다르면 원본 그대로 반환."""
+    """YYYYMMDD(int/str) -> '2026.09.22'. 값이 없거나 형식이 다르면 원본 그대로 반환.
+    크롤러가 정확한 날짜를 못 구했을 때 일(day)에 채워두는 32는 실제 날짜가 아니므로
+    '2026.09 예정'처럼 연/월만 보여준다."""
     if not value:
         return ""
     s = str(value)
     if len(s) != 8 or not s.isdigit():
         return s
+    if s[6:8] == "32":
+        return f"{s[:4]}.{s[4:6]} 예정"
     return f"{s[:4]}.{s[4:6]}.{s[6:8]}"
+
+
+def format_kdate_range(start, end):
+    """start_date~end_date를 'YYYY.MM.DD ~ YYYY.MM.DD'로 합쳐 보여준다.
+    day=32(날짜 미정) 처리로 두 값이 같은 문구가 되면 한 번만 보여준다."""
+    s = format_kdate(start)
+    e = format_kdate(end)
+    if not s or not e or s == e:
+        return s or e
+    return f"{s} ~ {e}"
 
 
 def _sync_missing_columns(db):
@@ -45,6 +59,7 @@ def create_app(config_object="config.Config"):
     app.config.from_object(config_object)
     app.config.setdefault("SECRET_KEY", "dev-secret-key-change-me")
     app.jinja_env.filters["kdate"] = format_kdate
+    app.jinja_env.globals["kdate_range"] = format_kdate_range
 
     @app.route("/")
     def root():
