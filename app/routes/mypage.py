@@ -1,5 +1,6 @@
 import re
 
+import openpyxl
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from sqlalchemy.exc import OperationalError
@@ -90,6 +91,8 @@ def _next_redirect(default="mypage.index"):
 def add_product():
     name = request.form.get("name", "").strip()
     hs_code = request.form.get("hs_code", "").strip()
+    brand = request.form.get("brand", "").strip()
+    product_form = request.form.get("product_form", "").strip()
     ingredients = request.form.get("ingredients", "").strip()
     target_price = request.form.get("target_price", "").strip()
     certifications = request.form.get("certifications", "").strip()
@@ -116,6 +119,8 @@ def add_product():
                 form_error=error,
                 form_name=name,
                 form_hs_code=hs_code,
+                form_brand=brand,
+                form_product_form=product_form,
                 form_ingredients=ingredients,
                 form_target_price=target_price,
                 form_certifications=certifications,
@@ -126,6 +131,8 @@ def add_product():
             user_id=current_user.id,
             name=name,
             hs_code=hs_code,
+            brand=brand or None,
+            product_form=product_form or None,
             ingredients=ingredients or None,
             target_price=target_price or None,
             certifications=certifications or None,
@@ -137,6 +144,117 @@ def add_product():
     return _next_redirect()
 
 
+# 엑셀 일괄등록 헤더 -> Product 필드. 한글 헤더 이름으로 매칭해서, 사용자가
+# 엑셀 첫 행에 이 이름 그대로(순서 무관) 컬럼을 두면 자동 인식한다.
+_BULK_UPLOAD_COLUMNS = {
+    "제품명": "name",
+    "hs코드": "hs_code",
+    "hs 코드": "hs_code",
+    "hs code": "hs_code",
+    "hscode": "hs_code",
+    "hs_code": "hs_code",
+    "hs-code": "hs_code",
+    "브랜드명": "brand",
+    "브랜드": "brand",
+    "제품 형태": "product_form",
+    "제품형태": "product_form",
+    "원재료": "ingredients",
+    "원료": "ingredients",
+    "주요 원료": "ingredients",
+    "주요원료": "ingredients",
+    "성분": "ingredients",
+    "성분표": "ingredients",
+    "보유 인증": "certifications",
+    "보유인증": "certifications",
+    "인증": "certifications",
+    "가격": "target_price",
+    "목표 소매 가격대/단위중량": "target_price",
+    "제품 강점": "strengths",
+    "강점": "strengths",
+}
+
+
+@bp.route("/products/bulk-upload", methods=["POST"])
+@login_required
+def bulk_upload_products():
+    file = request.files.get("bulk_file")
+    if not file or not file.filename:
+        flash("업로드할 엑셀 파일을 선택해주세요.", "danger")
+        return redirect(url_for("mypage.index"))
+
+    if not file.filename.lower().endswith((".xlsx", ".xlsm")):
+        flash("엑셀(.xlsx) 파일만 업로드할 수 있습니다.", "danger")
+        return redirect(url_for("mypage.index"))
+
+    try:
+        wb = openpyxl.load_workbook(file, data_only=True, read_only=True)
+        ws = wb[wb.sheetnames[0]]
+        rows_iter = ws.iter_rows(values_only=True)
+        header = next(rows_iter, None)
+    except Exception as e:
+        flash(f"엑셀 파일을 읽는 중 오류가 발생했습니다: {e}", "danger")
+        return redirect(url_for("mypage.index"))
+
+    if not header:
+        flash("엑셀 파일에 데이터가 없습니다.", "danger")
+        return redirect(url_for("mypage.index"))
+
+    col_map = {}  # 컬럼 인덱스 -> Product 필드명
+    for i, cell in enumerate(header):
+        key = str(cell or "").strip().lower()
+        field = _BULK_UPLOAD_COLUMNS.get(key)
+        if field:
+            col_map[i] = field
+
+    if "name" not in col_map.values() or "hs_code" not in col_map.values():
+        flash(
+            "엑셀 첫 행에 '제품명'과 'HS코드' 컬럼이 있어야 합니다. "
+            "(인식된 컬럼: " + ", ".join(str(header[i]) for i in col_map) + ")",
+            "danger",
+        )
+        return redirect(url_for("mypage.index"))
+
+    added, skipped = 0, []
+    for row_num, row in enumerate(rows_iter, start=2):
+        values = {field: str(row[i]).strip() if row[i] is not None else "" for i, field in col_map.items()}
+        name = values.get("name", "")
+        hs_code = values.get("hs_code", "")
+        if not name and not hs_code:
+            continue  # 빈 행은 조용히 건너뜀
+        if not name or not hs_code:
+            skipped.append(f"{row_num}행 (제품명/HS코드 누락)")
+            continue
+
+        is_valid, error = _validate_hs_code(hs_code)
+        if not is_valid:
+            skipped.append(f"{row_num}행 '{name}' ({error})")
+            continue
+
+        db.session.add(Product(
+            user_id=current_user.id,
+            name=name,
+            hs_code=hs_code,
+            brand=values.get("brand") or None,
+            product_form=values.get("product_form") or None,
+            ingredients=values.get("ingredients") or None,
+            target_price=values.get("target_price") or None,
+            certifications=values.get("certifications") or None,
+            strengths=values.get("strengths") or None,
+        ))
+        added += 1
+
+    db.session.commit()
+
+    if added:
+        flash(f"엑셀에서 제품 {added}개를 등록했습니다.", "success")
+    if skipped:
+        flash(f"건너뛴 행 {len(skipped)}개: " + " / ".join(skipped[:10]), "danger")
+    if not added and not skipped:
+        flash("등록할 제품 데이터가 없습니다.", "danger")
+
+    return redirect(url_for("mypage.index"))
+
+
 @bp.route("/products/<int:product_id>/edit", methods=["POST"])
 @login_required
 def edit_product(product_id):
@@ -144,6 +262,8 @@ def edit_product(product_id):
 
     name = request.form.get("name", "").strip()
     hs_code = request.form.get("hs_code", "").strip()
+    brand = request.form.get("brand", "").strip()
+    product_form = request.form.get("product_form", "").strip()
     ingredients = request.form.get("ingredients", "").strip()
     target_price = request.form.get("target_price", "").strip()
     certifications = request.form.get("certifications", "").strip()
@@ -160,6 +280,8 @@ def edit_product(product_id):
 
     product.name = name
     product.hs_code = hs_code
+    product.brand = brand or None
+    product.product_form = product_form or None
     product.ingredients = ingredients or None
     product.target_price = target_price or None
     product.certifications = certifications or None

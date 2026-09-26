@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, timedelta, timezone
 
 from flask import Flask, redirect, url_for
@@ -6,14 +7,49 @@ from sqlalchemy import inspect, text
 from app.extensions import db, login_manager
 
 
+def split_points(text_, limit=4):
+    """v15(트렌드 조사/부스 컨셉)의 리테일 분석 긴 문장을 불릿용으로 나눈다
+    (문장 끝·쉼표 기준, 너무 짧게 쪼개지면 원문 그대로). v15/app.py 원본 그대로."""
+    text_ = str(text_ or "").strip()
+    if not text_:
+        return []
+    parts = [p.strip(" .·-") for p in re.split(r"(?<=[.!?。])\s+|(?<=다)\.\s*|\s*[;·•]\s*|\n+", text_)]
+    parts = [p for p in parts if p]
+    if len(parts) <= 1:
+        parts = [p.strip() for p in text_.split(", ") if p.strip()]
+    if len(parts) <= 1 or any(len(p) < 4 for p in parts):
+        return [text_]
+    return parts[:limit]
+
+
+def chips(text_, limit=6):
+    """'400g, 밀키트, 멸치 육수와 생면 포함' -> 칩 목록. v15/app.py 원본 그대로."""
+    parts = [p.strip() for p in re.split(r"[,/·]|\s+\+\s+", str(text_ or "")) if p.strip()]
+    return parts[:limit]
+
+
 def format_kdate(value):
-    """YYYYMMDD(int/str) -> '2026.09.22'. 값이 없거나 형식이 다르면 원본 그대로 반환."""
+    """YYYYMMDD(int/str) -> '2026.09.22'. 값이 없거나 형식이 다르면 원본 그대로 반환.
+    크롤링 원본에 날짜가 없어서 UNKNOWN_DATE(99999999) 센티널로 저장된 경우
+    "9999.99.99"처럼 날짜인 척 보이는 걸 막기 위해 "일정 미정"으로 표시한다."""
     if not value:
         return ""
     s = str(value)
+    if s == "99999999":
+        return "일정 미정"
     if len(s) != 8 or not s.isdigit():
         return s
     return f"{s[:4]}.{s[4:6]}.{s[6:8]}"
+
+
+def format_kdate_range(start, end):
+    """start_date/end_date(YYYYMMDD) 쌍 -> '2026.09.22 ~ 2026.09.24'.
+    둘 다 UNKNOWN_DATE(99999999)이거나 비어있으면 "일정 미정 ~ 일정 미정"처럼
+    안 보이게 "일정 미정" 하나로 합쳐서 보여준다."""
+    start_s, end_s = str(start or ""), str(end or "")
+    if start_s in ("", "99999999") and end_s in ("", "99999999"):
+        return "일정 미정"
+    return f"{format_kdate(start)} ~ {format_kdate(end)}"
 
 
 def usd_short(value):
@@ -88,10 +124,23 @@ def create_app(config_object="config.Config"):
     app = Flask(__name__)
     app.config.from_object(config_object)
     app.config.setdefault("SECRET_KEY", "dev-secret-key-change-me")
+    if app.config["SECRET_KEY"] == "dev-secret-key-change-me" and not app.debug:
+        # 배포 환경에서 SECRET_KEY 환경변수를 안 넣으면 로그인 세션이 누구나
+        # 아는 키로 서명돼서 위조 가능해진다. 조용히 넘어가지 않고 로그에
+        # 크게 경고를 남긴다 (서버 기동 자체는 막지 않음 - 로컬 테스트 등
+        # SECRET_KEY 없이도 돌려봐야 하는 경우가 있어서).
+        app.logger.warning(
+            "!!! SECRET_KEY 환경변수가 설정되지 않아 기본값을 쓰고 있습니다. "
+            "배포 환경이라면 지금 바로 SECRET_KEY를 랜덤 값으로 설정하세요 "
+            "(예: python -c \"import secrets; print(secrets.token_hex(32))\")."
+        )
     app.jinja_env.filters["kdate"] = format_kdate
+    app.jinja_env.globals["kdate_range"] = format_kdate_range
     app.jinja_env.filters["usd_short"] = usd_short
     app.jinja_env.filters["pct"] = pct
     app.jinja_env.filters["kst"] = kst
+    app.jinja_env.filters["split_points"] = split_points
+    app.jinja_env.filters["chips"] = chips
 
     @app.route("/")
     def root():
@@ -123,6 +172,10 @@ def create_app(config_object="config.Config"):
 
     from app.routes.drafts import bp as drafts_bp
     app.register_blueprint(drafts_bp)
+
+    from app.routes.trend_v2 import api_bp as trend_v2_api_bp, pages_bp as trend_v2_pages_bp
+    app.register_blueprint(trend_v2_pages_bp)
+    app.register_blueprint(trend_v2_api_bp)
 
     from app.routes.buyers import (
         buyer_gmail_bp,

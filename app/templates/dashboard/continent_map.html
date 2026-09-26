@@ -2,6 +2,9 @@
 {% block title %}대시보드 | FairMate{% endblock %}
 
 {% block content %}
+{% if pipeline_banner %}
+<ul class="flash-list"><li class="flash flash-success">{{ pipeline_banner }}</li></ul>
+{% endif %}
 <div class="dash-header">
   <div class="dash-title-row">
     <h1>대륙별 박람회 현황</h1>
@@ -32,15 +35,26 @@
         </div>
       </div>
 
+      <div class="form-row">
+        <div class="form-field">
+          <label for="modal-brand">브랜드명</label>
+          <input type="text" id="modal-brand" name="brand" placeholder="예: 사부작푸드">
+        </div>
+        <div class="form-field">
+          <label for="modal-product_form">제품 형태</label>
+          <input type="text" id="modal-product_form" name="product_form" placeholder="예: 냉동, 분말, 병조림">
+        </div>
+      </div>
+
       <div class="form-field">
-        <label for="modal-ingredients">성분표</label>
+        <label for="modal-ingredients">원재료</label>
         <textarea id="modal-ingredients" name="ingredients" rows="3" placeholder="예: 밀가루, 꿀, 참기름, 계피..."></textarea>
       </div>
 
-      <p class="page-desc">아래 3개 항목은 박람회 상세 페이지의 "트렌드 조사" 탭에서 시장·트렌드 분석 시 자동으로 사용됩니다.</p>
+      <p class="page-desc">아래 항목은 박람회 상세 페이지의 "트렌드 조사" 탭에서 시장·트렌드 분석 시 자동으로 사용됩니다.</p>
       <div class="form-row">
         <div class="form-field">
-          <label for="modal-target_price">목표 소매 가격대/단위중량</label>
+          <label for="modal-target_price">가격 (목표 소매 가격대/단위중량)</label>
           <input type="text" id="modal-target_price" name="target_price" placeholder="예: 4.99 GBP / 350g">
         </div>
         <div class="form-field">
@@ -49,7 +63,7 @@
         </div>
       </div>
       <div class="form-field">
-        <label for="modal-strengths">식감/가공 메커니즘</label>
+        <label for="modal-strengths">제품 강점</label>
         <textarea id="modal-strengths" name="strengths" rows="2" placeholder="예: 얇고 쫄깃한 만두피, 버섯 채즙으로 육즙 모사"></textarea>
       </div>
 

@@ -8,12 +8,11 @@ from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.models import Exhibition, NtmMeasure, Product
-from app.routes.dashboard import CONTINENT_DB_VALUES
+from app.routes.dashboard import CONTINENT_DB_VALUES, is_pipeline_running, pop_pipeline_banner
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
 from app.services.exchange import get_exchange_info
 from app.services.wto_client import get_country_tariff_averages
-from app.services import market_trend
 from app.services.trains_client import (
     fetch_regulations_for_country,
     no_match_row,
@@ -399,7 +398,10 @@ def expo_list(continent):
     ctx = _build_list_context(
         base_query, continent, "exhibition.expo_list", {"continent": continent}, continent
     )
-    return render_template("dashboard/expo_list.html", **ctx)
+    return render_template(
+        "dashboard/expo_list.html", pipeline_running=is_pipeline_running(),
+        pipeline_banner=pop_pipeline_banner(), **ctx
+    )
 
 
 @bp.route("/country/<country>")
@@ -414,7 +416,10 @@ def expo_list_by_country(country):
     ctx = _build_list_context(
         base_query, country, "exhibition.expo_list_by_country", {"country": country}, ""
     )
-    return render_template("dashboard/expo_list.html", **ctx)
+    return render_template(
+        "dashboard/expo_list.html", pipeline_running=is_pipeline_running(),
+        pipeline_banner=pop_pipeline_banner(), **ctx
+    )
 
 
 @bp.route("/partial/all")
@@ -425,7 +430,7 @@ def expo_list_partial_all():
         Exhibition.is_active == 1, Exhibition.id.notin_(dup_ids)
     )
     ctx = _build_list_context(base_query, "해외", "exhibition.expo_list_partial_all", {}, "")
-    return render_template("dashboard/_expo_list_partial.html", **ctx)
+    return render_template("dashboard/_expo_list_partial.html", pipeline_running=is_pipeline_running(), **ctx)
 
 
 @bp.route("/partial/<continent>")
@@ -444,7 +449,7 @@ def expo_list_partial(continent):
     ctx = _build_list_context(
         base_query, continent, "exhibition.expo_list_partial", {"continent": continent}, continent
     )
-    return render_template("dashboard/_expo_list_partial.html", **ctx)
+    return render_template("dashboard/_expo_list_partial.html", pipeline_running=is_pipeline_running(), **ctx)
 
 
 def _split_paragraphs(text):
@@ -481,39 +486,33 @@ def _build_market_rows(expo, linked_products):
     return rows
 
 
-def _exhibition_month(expo):
-    """start_date(YYYYMMDD int) -> 'N월' (없으면 기본값 10월)."""
-    s = str(expo.start_date) if expo.start_date else ""
-    if len(s) == 8 and s.isdigit():
-        return f"{int(s[4:6])}월"
-    return "10월"
-
-
-def _default_trend_specs(expo, product):
-    """제품관리(마이페이지)에 등록해둔 목표가/인증/식감 정보를 그대로 쓴다
-    (예전엔 이 탭에서 매번 다시 입력받았는데, 어차피 제품 고유 정보라
-    마이페이지 제품 등록/수정 폼으로 옮겼다)."""
+def _trend_v2_prefill(expo, product):
+    """JH님이 새로 만든 v15 트렌드 조사 시스템(app.routes.trend_v2)의 입력폼을
+    미리 채우기 위한 쿼리스트링 딕셔너리. v15의 INPUT_FIELDS
+    (name/country/exhibition_name/exhibition_website/strengths/ingredients/
+    certifications/price)에 맞춰 마이페이지 제품 정보 + 박람회 정보를 매핑한다."""
     return {
-        "product_name": product.name,
+        "name": product.name,
         "country": expo.country_ko or expo.country or "",
-        "ingredients": product.ingredients or "",
-        "target_price": product.target_price or "",
-        "certifications": product.certifications or "",
+        "exhibition_name": expo.name or "",
+        "exhibition_website": expo.website or "",
         "strengths": product.strengths or "",
-        "exhibition_month": _exhibition_month(expo),
+        "ingredients": product.ingredients or "",
+        "certifications": product.certifications or "",
+        "price": product.target_price or "",
+        "expo_id": expo.id,
+        "product_id": product.id,
     }
 
 
 def _build_trend_rows(expo, linked_products):
-    """트렌드 조사 탭에 쓸 제품별 시장·트렌드 분석 현황. 네트워크 호출 없이
-    캐시만 읽는다 (실제 분석은 "지금 분석하기" 버튼 -> trend_research 라우트가
-    담당 - 시장 개요 탭과 동일한 패턴)."""
-    rows = []
-    for product in linked_products:
-        specs = _default_trend_specs(expo, product)
-        cached = market_trend.get_cached_analysis(specs)
-        rows.append({"product": product, "specs": specs, "result": cached})
-    return rows
+    """트렌드 조사 탭에 쓸 제품별 진입 정보(v15 시스템으로 넘어갈 때 미리
+    채울 쿼리스트링). 실제 분석/캐시는 이제 app.routes.trend_v2(v15)가
+    독자적으로 관리한다."""
+    return [
+        {"product": product, "prefill": _trend_v2_prefill(expo, product)}
+        for product in linked_products
+    ]
 
 
 @bp.route("/detail/<int:expo_id>")
@@ -550,35 +549,6 @@ def detail(expo_id):
         exchange_info=exchange_info,
         wto_tariff_info=wto_tariff_info,
     )
-
-
-@bp.route("/detail/<int:expo_id>/trend-research/<int:product_id>", methods=["POST"])
-@login_required
-def trend_research(expo_id, product_id):
-    """market_trend_analysis/ 로직(구글 트렌드 + 리드타임 + 경쟁사 + 뉴스)을
-    이 제품 + 박람회 국가 기준으로 실행한다 (캐시 있으면 캐시, "새로 분석"
-    체크 시 강제 재실행)."""
-    expo = Exhibition.query.get_or_404(expo_id)
-    product = Product.query.filter_by(id=product_id, user_id=current_user.id).first_or_404()
-
-    specs = _default_trend_specs(expo, product)
-    specs["exhibition_month"] = request.form.get("exhibition_month", "").strip() or specs["exhibition_month"]
-    force = bool(request.form.get("force"))
-
-    try:
-        payload = market_trend.run_analysis(specs, force=force)
-        if payload.get("news", {}).get("is_error"):
-            flash(
-                f"뉴스/트렌드 API 키가 없거나 오류가 있어 분석을 저장하지 못했습니다: "
-                f"{payload['news'].get('summary')}",
-                "danger",
-            )
-        else:
-            flash(f"{product.name} · {specs['country']} 시장·트렌드 분석을 가져왔습니다.", "success")
-    except Exception as e:
-        flash(f"시장·트렌드 분석 중 오류가 발생했습니다: {e}", "danger")
-
-    return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#trend")
 
 
 @bp.route("/detail/<int:expo_id>/market-research/<int:product_id>", methods=["POST"])

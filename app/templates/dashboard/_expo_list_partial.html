@@ -71,6 +71,11 @@
       <option value="asc" {{ 'selected' if sort != 'desc' else '' }}>최신순</option>
       <option value="desc" {{ 'selected' if sort == 'desc' else '' }}>오래된순</option>
     </select>
+    <form method="post" action="{{ url_for('dashboard.run_weekly_pipeline') }}" class="btn-loading-form expo-update-form">
+      <button type="submit" class="btn-chip" data-loading-text="시작하는 중..." {% if pipeline_running %}disabled{% endif %}>
+        {% if pipeline_running %}박람회 업데이트 중...{% else %}박람회 업데이트{% endif %}
+      </button>
+    </form>
   </div>
 
   {% if expos %}
@@ -93,7 +98,7 @@
         <span class="expo-meta">{{ expo.country_ko or expo.country }} · {{ expo.city }}</span>
       </div>
       <div class="expo-side">
-        <span class="expo-date">{{ expo.start_date|kdate }} ~ {{ expo.end_date|kdate }}</span>
+        <span class="expo-date">{{ kdate_range(expo.start_date, expo.end_date) }}</span>
         <span class="expo-category">{{ expo.category }}</span>
         {% if expo.food_yn %}
           <span class="badge-food">식품</span>

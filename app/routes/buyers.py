@@ -6,6 +6,7 @@
 로그인을 그대로 쓴다).
 """
 
+import logging
 from datetime import datetime, timedelta
 
 from flask import Blueprint, abort, flash, redirect, render_template, request, send_file, session, url_for
@@ -22,6 +23,8 @@ from app.services.mailmerge import render_email
 
 STALE_DAYS = 21
 TEMPLATE_VERSIONS = (1, 2, 3)
+
+logger = logging.getLogger(__name__)
 
 contacts_bp = Blueprint("contacts", __name__, url_prefix="/buyers")
 followup_bp = Blueprint("followup", __name__, url_prefix="/buyers")
@@ -471,6 +474,7 @@ def send_selected():
     ).all()
 
     sent, failed, skipped = 0, 0, 0
+    last_error = None
     for contact in contacts:
         template = _resolve_template(contact)
         if template is None or not template.subject or not template.body:
@@ -491,9 +495,11 @@ def send_selected():
             followup.last_sent_at = followup.sent_at
             followup.dismissed = False
             sent += 1
-        except Exception:
+        except Exception as exc:
+            logger.exception("Gmail 일괄 발송 실패 (user_id=%s, contact_id=%s)", current_user.id, contact.id)
             followup.status = "failed"
             failed += 1
+            last_error = str(exc)
 
         db.session.add(followup)
         db.session.commit()
@@ -503,6 +509,8 @@ def send_selected():
         message += f" — 첨부 파일 {len(bulk_attachments)}개 포함"
     if skipped:
         message += f" — 템플릿 없음으로 {skipped}건 건너뜀"
+    if last_error:
+        message += f" — 실패 사유: {last_error}"
     flash(message, "info")
     return redirect(url_for("contacts.list_contacts"))
 
