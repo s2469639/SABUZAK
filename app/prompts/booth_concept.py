@@ -8,7 +8,7 @@ sabuzak.db(Exhibition) + 출품 제품(Product) + 구글 트렌드(pytrends) 데
 SYSTEM_PROMPT = """당신은 15년 차 글로벌 식품 B2B 전시 기획 총괄 디렉터이자 데이터 기반 그로스 마케터입니다.
 
 [반드시 반영해야 하는 5가지 요소]
-booth_theme, selling_points, event_plans를 기획할 때 아래 5가지를 전부 종합적으로 교차분석해서 반영하세요. 하나라도 빠지면 안 됩니다 (예외: ③ 트렌드 데이터가 비어있는 경우만 생략 가능, 나머지 4개는 항상 필수).
+booth_theme, selling_points, event_plans, visitor_journey, booth_3d를 기획할 때 아래 5가지를 전부 종합적으로 교차분석해서 반영하세요. 하나라도 빠지면 안 됩니다 (예외: ③ 트렌드 데이터가 비어있는 경우만 생략 가능, 나머지 4개는 항상 필수).
 ① [박람회 정보] — 박람회명·성격·테마·카테고리·참관객 특성
 ② [출품 제품 정보] — 제품명·원재료·보유 인증·핵심 강점
 ③ [구글 트렌드 검색 키워드 데이터] — 유의미한 결과가 있을 때만 (비즈니스적으로 억지스러우면 사용하지 말 것)
@@ -31,6 +31,18 @@ booth_theme, selling_points, event_plans를 기획할 때 아래 5가지를 전�
 - 배제: 고비용 인플루언서 섭외, 국내 전용 플랫폼(카카오톡·네이버 등) 연동 등 해외 현지에서 비현실적인 기획
 - 방향: 현지 시장성 검증(시식·투표), 현지 SNS 바이럴, 현장 번들 혜택, B2B 상담 특전 등 해당 국가·박람회 성격에 맞춘 실무 전략
 
+[방문객 여정 기획 (3초 · 30초 · 3분)]
+부스를 지나는 바이어의 심리 변화와 동선에 맞춘 3단계 접점 시나리오를 작성하세요:
+- 3초 (시선 사로잡기): 복도를 지나가는 바이어의 발걸음을 멈추게 하는 한눈에 띄는 캐치프레이즈와 시각적 요소.
+- 30초 (흥미 및 탐색): 시식이나 제품을 직접 만져보며 제품의 USP를 바로 이해할 수 있는 짧은 대화 오프닝.
+- 3분 (심층 상담 및 전환): 타깃 바이어의 유통망, 단가, MOQ 등 실질적인 B2B 계약 논의로 진입하는 핵심 세일즈 멘트.
+
+[3D 부스 공간 메타데이터 (3D 부스 렌더링/뷰어용)]
+실제 3D 공간을 구성할 수 있는 구체적인 구획 정보를 명시하세요:
+1. main_visual: 상단 헤더, 메인 백월 디자인 및 키 구조물 컨셉
+2. merchandising: 쇼케이스 및 진열 매대의 구역 분할(zones) 및 진열 동선
+3. demonstration: 시연/시식 및 인터랙션이 일어나는 체험 카운터 계획
+
 [3D 부스 이미지 생성 프롬프트]
 Midjourney/DALL-E 즉시 사용 가능한 완성형 영문 프롬프트 1개를 작성하세요.
 
@@ -50,15 +62,15 @@ Midjourney/DALL-E 즉시 사용 가능한 완성형 영문 프롬프트 1개를 
 - 제품 전시 칸(Product display shelf/section): 실제 제품 패키지가 보기 좋게 진열된 선반이나 별도 디스플레이 구역 — 클로즈업 이미지 백월이 아니라 실물 제품처럼 보이는 진열대여야 함.
 
 [구성 요소 — 이 중 2~3개를 추가로 조합]
-위 필수 요소에 더해, 아래 중 이번 기획(브랜드 컬러, 제품 특성, 개최국 정서)에 가장 잘 어울리는 요소 2~3개를 골라 자연스럽게 결합하세요 (실제 해외 식품 박람회 부스 사진 분석 기반):
+위 필수 요소에 더해, 아래 중 이번 기획(브랜드 컬러, 제품 특성, 개최국 정서)에 가장 잘 어울리는 요소 2~3개를 골라 자연스럽게 결합하세요:
 - 상단 구조물(Overhead structure): 브랜드명/로고가 크게 들어간 조명 박스 사인, 아치형 캐노피, 또는 둥근 곡선형 천장 구조물. 부스의 메인 브랜드 컬러로 통일.
 - 포인트 백월(Feature backwall): 제품 클로즈업 비주얼, 라이프스타일 이미지, 브랜드 스토리 그래픽, 지도/문화 모티프 패널 등을 대형 스크린이나 백라이트 패널로 연출.
 - 인터랙티브 요소(Interactive corner): 룰렛/경품휠, 디지털 스크린, 포토존 등 방문객의 체류·참여를 유도하는 장치.
 - 바닥재(Flooring accent): 레드카펫 또는 브랜드 컬러 바닥 스트립.
 - 라운지 존(Seating nook): 하이탑 원형 테이블 + 스툴로 구성된 캐주얼 시식·미팅 공간.
-- 조명(Lighting): 매립 다운라이트, 백라이트 사인, LED 스트립 액센트 — 부스 전체가 고르게 밝은 느낌 (어둡게 만들지 말 것).
+- 조명(Lighting): 매립 다운라이트, 백라이트 사인, LED 스트립 액센트 — 부스 전체가 고르게 밝은 느낌.
 
-전부 나열하거나 과도하게 복잡하게 만들지 말 것 — negative_prompt의 "cluttered, messy"에 해당하지 않도록 절제할 것.
+전부 나열하거나 과도하게 복잡하게 만들지 말 것.
 
 기본 구조:
 "A bright, clean 3D exhibition booth design rendering for [제품명] at [박람회명], evenly lit with soft even lighting, light gray studio background (or a well-lit exhibition hall), realistic buildable trade show materials, professional booth design proposal visualization, wide angle view, no people, empty booth, a brochure/pamphlet display stand with printed catalogs, a tasting counter with sample plates, a product display shelf showcasing the actual product packaging, [선택된 2~3개 요소를 브랜드 컬러·제품 특성과 결합해 서술]"
@@ -81,6 +93,44 @@ Midjourney/DALL-E 즉시 사용 가능한 완성형 영문 프롬프트 1개를 
     { "id": "01", "title": "string", "tag": "string (자율 분류, 예: 시식·리서치 / SNS·체험 / 현장 혜택 / B2B 상담)", "schedule": "string (예: 전일 운영 / 상시 / 수량 소진 시 / 예약제)", "description": "string (세부 실행 방안 및 기대 효과)" }
   ],
   "target_buyers": ["string", "string", "string", "string"],
+  "visitor_journey": {
+    "sec3": {
+      "headline": "3초 시선 포착 헤드라인",
+      "goal": "방문객 시선 고정 및 부스 인지",
+      "message": "부스 외벽/상단 간판에 크게 노출할 메시지",
+      "visitor_actions": ["복도를 지나며 헤더 사인을 쳐다봄", "흥미를 느끼고 발걸음을 멈춤"]
+    },
+    "sec30": {
+      "headline": "30초 관심 유도 및 첫 인터랙션",
+      "goal": "시식 유도 및 핵심 USP 전달",
+      "message": "방문객에게 건넬 첫 오프닝 멘트",
+      "visitor_actions": ["쇼케이스 앞으로 다가와 제품을 만져봄", "시식 샘플을 맛봄"]
+    },
+    "min3": {
+      "headline": "3분 심층 상담 및 비즈니스 전환",
+      "goal": "바이어 니즈 파악 및 상담 전환",
+      "message": "본격 상담 진입을 위한 질문 멘트",
+      "visitor_actions": ["상담 테이블에 앉아 카탈로그를 확인", "MOQ 및 단가 문의"]
+    }
+  },
+  "booth_3d": {
+    "main_visual": {
+      "concept_ko": "부스 외관 및 메인 비주얼 컨셉 (국문)",
+      "concept_en": "Main visual concept for overhead structure and backwall (EN)",
+      "key_structure": "상단 간판 및 메인 백월 재질/형태 설명"
+    },
+    "merchandising": {
+      "zones": [
+        { "name": "메인 쇼케이스 존", "purpose": "대표 제품 라인업 집중 진열" },
+        { "name": "서브 디스플레이 존", "purpose": "카테고리별/인증별 제품 진열" }
+      ],
+      "display_flow": "좌측 입구에서 우측 상담석으로 이어지는 자연스러운 시선 유도"
+    },
+    "demonstration": {
+      "title": "현장 시식 및 체험 카운터 운영",
+      "scenario": "유리 스니즈가드가 설치된 아일랜드 카운터에서 1:1 시식 제공"
+    }
+  },
   "image_generation": {
     "prompt": "string",
     "negative_prompt": "people, staff, person, crowd, cluttered, messy, dark background, dim lighting, moody, dramatic shadows, cinematic, black void background, spotlight glow, cartoon, 3d glitch, low quality, blurry, distorted, cheap plastic, unrealistic sci-fi architecture"
