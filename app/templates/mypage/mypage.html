@@ -12,6 +12,7 @@
   .product-group-title { margin: 8px 0 0; font-size: 13px; font-weight: 700; color: #6b7280; }
   .product-group-title:first-child { margin-top: 0; }
   .bulk-template-link { display: inline-flex; align-items: center; }
+  .meta-label { color: #9ca3af; font-weight: 600; }
 </style>
 <div class="page-header">
   <div>
@@ -54,11 +55,14 @@
       {% if product.ingredients %}
         <p class="ingredients">{{ product.ingredients }}</p>
       {% endif %}
-      {% if product.target_price or product.certifications or product.strengths %}
+      {# 가격·인증·강점은 이모지 대신 글자 라벨로, 있는 항목만 " · "로 이어 붙인다 #}
+      {% set meta = [] %}
+      {% if product.target_price %}{% set _ = meta.append(("가격", product.target_price)) %}{% endif %}
+      {% if product.certifications %}{% set _ = meta.append(("인증", product.certifications)) %}{% endif %}
+      {% if product.strengths %}{% set _ = meta.append(("강점", product.strengths)) %}{% endif %}
+      {% if meta %}
       <p class="ingredients">
-        {% if product.target_price %}💰 {{ product.target_price }}{% endif %}
-        {% if product.certifications %} · 🏷️ {{ product.certifications }}{% endif %}
-        {% if product.strengths %} · 🍽️ {{ product.strengths }}{% endif %}
+        {% for label, value in meta %}{% if not loop.first %} · {% endif %}<span class="meta-label">{{ label }}</span> {{ value }}{% endfor %}
       </p>
       {% endif %}
     </div>
