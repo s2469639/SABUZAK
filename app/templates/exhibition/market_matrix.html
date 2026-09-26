@@ -13,16 +13,11 @@
 <div class="page-header">
   <div>
     <h1>품목별 유망시장</h1>
-    <p class="page-desc">UN Comtrade 통계로 분석한 해외 유망시장 추천정보 (KOTRA TriBig "품목별 유망시장"과 같은 구조).</p>
   </div>
   <a href="{{ url_for('mypage.index') }}" class="btn-secondary">← 내 제품 관리로</a>
 </div>
 
 <div class="un-page">
-  <div class="card notice">
-    HS코드를 입력하면 ①② 세계시장 현황 → ③ 유망시장 매트릭스 → ④ 후보국별 상세 → ⑤ AI 분석 순서로 한 화면에 보여줍니다.
-  </div>
-
   <form method="post" id="main-form" class="card search-card">
     <div class="search-main">
       <span class="radio-static">HSCODE</span>
@@ -30,10 +25,8 @@
         <span class="search-icon" aria-hidden="true">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
         </span>
-        <input type="text" name="hscode" id="hscode-input" placeholder="예: 1905.90" value="{{ hscode }}" maxlength="7" required aria-label="HS코드(6자리)">
+        <input type="text" name="hscode" id="hscode-input" placeholder="예: 1905.90" value="{{ (hscode[:4] ~ '.' ~ hscode[4:]) if hscode|length > 4 else hscode }}" maxlength="7" required aria-label="HS코드(6자리)">
       </div>
-      {% set bar_desc = item_desc_ko or (result.official_item_desc if result else '') %}
-      <div class="item-name" title="{{ bar_desc }}">{{ bar_desc if bar_desc else 'HS코드(6자리)를 입력하고 통합분석을 눌러주세요' }}</div>
       <button type="submit" id="submit-btn" class="btn">통합분석</button>
     </div>
     <div class="search-options">
@@ -43,29 +36,37 @@
       </div>
       <div class="opt">
         <label class="field-label" for="candidates-input">관심 국가 (선택 · 쉼표로 구분)</label>
-        <input type="text" name="candidates" id="candidates-input" placeholder="예: Vietnam, 태국, IDN" value="{{ candidates_raw }}">
+        <input type="text" name="candidates" id="candidates-input" placeholder="예: Vietnam, 태국, IDN, VN" value="{{ candidates_raw }}">
+        <span class="opt-help">영문 이름 · 한글 이름 · 국가코드(VN / VNM) 모두 입력 가능</span>
       </div>
       <label class="opt-check">
-        <input type="checkbox" name="force" value="1" {% if force %}checked{% endif %}> 🔄 저장된 결과 무시하고 새로 조사
+        <input type="checkbox" name="force" value="1" {% if force %}checked{% endif %}> 저장된 결과 무시하고 새로 조사
       </label>
     </div>
     <p class="search-hint">앞 4자리 뒤에 마침표가 자동으로 찍히는 건 국제 표준 HS코드 표기 방식이고(예: 1905.90), 실제 조회 시에는 숫자만 사용됩니다.</p>
-    <p class="loading-note" id="loading-note">⏳ 조사 중입니다. 저장된 결과가 없으면 UN Comtrade 호출 제한 때문에 몇 분 걸릴 수 있어요. 창을 닫지 말고 기다려 주세요.</p>
+    <p class="loading-note" id="loading-note">조사 중입니다. 저장된 결과가 없으면 UN Comtrade 호출 제한 때문에 몇 분 걸릴 수 있어요. 창을 닫지 말고 기다려 주세요.</p>
   </form>
 
   {% if matrix_error %}
-    <div class="error">⚠️ {{ matrix_error }}</div>
+    <div class="error">{{ matrix_error }}</div>
   {% endif %}
 
   {% if result %}
+    <nav class="section-tabs" id="section-tabs" aria-label="결과 바로가기">
+      <a href="#sec-world" class="active">세계시장 현황</a>
+      <a href="#sec-matrix">유망시장 매트릭스</a>
+      <a href="#sec-candidates">비교 국가별 상세</a>
+      <a href="#sec-ai">AI 분석</a>
+    </nav>
+
     <div class="card item-card">
       <div class="item-meta">HS {{ result.hscode }} · 분석 기간 {{ result.years[0] }}~{{ result.years[-1] }} ·
         {% if result.from_cache %}저장된 결과 사용 ({{ result.fetched_at | kst }} 조회){% else %}방금 새로 조회함{% endif %}</div>
       {% if result.official_item_desc %}
-        <div class="item-desc">📋 UN Comtrade 공식 품목 설명(HS {{ result.hscode }}): {{ item_desc_ko or result.official_item_desc }}</div>
+        <div class="item-desc-title">품목 설명(HS {{ result.hscode }})</div>
+        <div class="item-desc">{{ item_desc_ko or result.official_item_desc }}</div>
         {% if item_desc_ko %}
           <div class="desc-original">원문: {{ result.official_item_desc }}</div>
-          <div class="desc-note">※ 한국어는 AI 번역이라 관세청 공식 품목명과 표현이 다를 수 있습니다.</div>
         {% endif %}
       {% endif %}
     </div>
@@ -75,7 +76,7 @@
       <section class="card">
         <div class="card-head">
           <h3>① 세계시장 교역 순위
-            <span class="info" tabindex="0">i<span class="info-pop">최신 연도 기준으로 이 품목을 가장 많이 수입(수출)한 상위 국가입니다.{% if overview and overview.years %} 조회 연도: {{ overview.years | join(', ') }} (최신 연도 {{ overview.years[-1] }} 기준 상위 {{ top_n or 10 }}개국){% endif %}</span></span>
+            <span class="info" tabindex="0">i<span class="info-pop">최신 연도 기준으로 이 품목을 가장 많이 수입(수출)한 상위 국가입니다.{% if overview and overview.years %}<br>조회 연도: {{ overview.years | join(', ') }} (최신 연도 {{ overview.years[-1] }} 기준 상위 {{ top_n or 10 }}개국){% endif %}</span></span>
           </h3>
           {% if overview and not overview.unavailable_reason %}
             <div class="flow-toggle" data-toggle-group="ranking">
@@ -94,7 +95,6 @@
           <div class="flow-panel hidden" data-flow-panel="ranking" data-flow="export">
             {{ hbar_chart(overview.export_ranking) }}
           </div>
-          <div class="source">UN Comtrade 기준 · 막대에 마우스를 올리면 정확한 금액이 보입니다.</div>
         {% else %}
           <div class="empty">데이터 없음</div>
         {% endif %}
@@ -103,7 +103,7 @@
       <section class="card">
         <div class="card-head">
           <h3>② 주요국 세계시장 점유율
-            <span class="info" tabindex="0">i<span class="info-pop">{% if overview and overview.years %}세계 전체 {{ overview.years[-1] }}년 기준 {% endif %}상위 국가 + 한국을 강제 포함해서, 연도별로 "세계 시장 전체 대비 점유율"이 어떻게 변해왔는지 보여줍니다.</span></span>
+            <span class="info" tabindex="0">i<span class="info-pop">{% if overview and overview.years %}{{ overview.years[-1] }}년 기준 {% endif %}세계 상위권 국가 및 한국의 연도별<br>세계 시장 점유율 변화 추이를 보여줍니다.</span></span>
           </h3>
           {% if overview and not overview.unavailable_reason and import_line and import_line.lines %}
             <div class="flow-toggle" data-toggle-group="trend">
@@ -120,7 +120,6 @@
           <div class="flow-panel hidden" data-flow-panel="trend" data-flow="export">
             {% with chart = export_line %}{% include "exhibition/_un_line_chart.html" %}{% endwith %}
           </div>
-          <div class="source">UN Comtrade 기준</div>
         {% else %}
           <div class="empty">데이터 없음</div>
         {% endif %}
@@ -131,14 +130,14 @@
     <section class="card" id="sec-matrix">
       <div class="card-head">
         <h3>③ 유망시장 매트릭스
-          <span class="info" tabindex="0">i<span class="info-pop">X축 = 그 나라 수입시장 성장률(CAGR), Y축 = 한국 점유율, 버블 크기 = 수입금액(넓이 비례, 클수록 그 나라가 이 품목을 많이 수입함). 점선은 후보국 평균 기준선입니다. 버블을 클릭하면 수입 순위·금액 등 상세 수치가 뜹니다.</span></span>
+          <span class="info" tabindex="0">i<span class="info-pop">X축 = 그 나라 수입시장 성장률(CAGR)<br>Y축 = 한국 점유율<br>버블 크기 = 수입금액(넓이 비례, 클수록 그 나라가 이 품목을 많이 수입)<br>점선 = 후보국 평균 기준선</span></span>
         </h3>
         <span class="note"{% if result.comparison_too_small %} hidden{% endif %}>점선 = 평균 성장률 {{ result.thresholds.avg_cagr_pct }}% · 한국 점유율 기준 {{ (result.thresholds.share_threshold_pct if result.thresholds.share_threshold_pct is defined else result.thresholds.avg_korea_share_pct) | pct }}</span>
       </div>
       {% if result.comparison_too_small %}
-        <div class="banner">ℹ️ 비교 국가가 {{ result.candidates | length }}개뿐이라 "평균보다 높다/낮다"로 나누는 사분면은 의미가 없어 표시하지 않았습니다. 사분면 비교를 보려면 비교 국가 수를 3 이상으로 해주세요.</div>
+        <div class="banner">비교 국가가 {{ result.candidates | length }}개뿐이라 "평균보다 높다/낮다"로 나누는 사분면은 의미가 없어 표시하지 않았습니다. 사분면 비교를 보려면 비교 국가 수를 3 이상으로 해주세요.</div>
       {% elif result.korea_presence == 'negligible' %}
-        <div class="banner">ℹ️ 이 품목은 모든 후보국에서 한국 점유율이 {{ result.thresholds.min_meaningful_share_pct }}% 미만이라, 한국이 아직 거의 수출하지 않는 품목입니다. 점유율 차이로 우열을 가리기보다 <strong>시장 규모와 성장성</strong> 위주로 보세요.</div>
+        <div class="banner">이 품목은 모든 후보국에서 한국 점유율이 {{ result.thresholds.min_meaningful_share_pct }}% 미만이라, 한국이 아직 거의 수출하지 않는 품목입니다. 점유율 차이로 우열을 가리기보다 <strong>시장 규모와 성장성</strong> 위주로 보세요.</div>
       {% endif %}
       {% if matrix and matrix.points %}
         <div class="chart-scroll">
@@ -158,8 +157,8 @@
                 <div class="x-tick" style="left: {{ t.pct }}%;">{{ t.value }}%</div>
               {% endfor %}
 
-              <span class="axis-title-y">↑ 한국 점유율(%)</span>
-              <span class="axis-title-x">수입시장 성장률 CAGR(%) →</span>
+              <span class="axis-title-y">한국 점유율(%)</span>
+              <span class="axis-title-x">수입시장 성장률 CAGR(%)</span>
               {% if not result.comparison_too_small %}
               <div class="axis-line h" style="top: {{ matrix.threshold_y_pct }}%;"></div>
               <div class="axis-line v" style="left: {{ matrix.threshold_x_pct }}%;"></div>
@@ -193,11 +192,13 @@
             </div>
           </div>
         </div>
-        <div class="chart-legend">
-          <span><i style="background:#3fa2f7"></i>버블 크기 = 품목 총 수입금액</span>
-          {% if result.focus_count %}<span><i style="background:#f08c00"></i>★ 관심 국가</span>{% endif %}
+        <div class="matrix-foot">
+          <p class="note">위로 갈수록 한국이 이미 선전 중인 시장 · 오른쪽으로 갈수록 시장이 빠르게 크고 있음 · 버블이 클수록 큰 시장</p>
+          <div class="chart-legend">
+            <span><i style="background:#3fa2f7"></i>버블 크기 = 품목 총 수입금액</span>
+            {% if result.focus_count %}<span><i style="background:#f08c00"></i>★ 관심 국가</span>{% endif %}
+          </div>
         </div>
-        <p class="note">위로 갈수록 한국이 이미 선전 중인 시장 · 오른쪽으로 갈수록 시장이 빠르게 크고 있음 · 버블이 클수록 큰 시장</p>
       {% else %}
         <div class="empty">매트릭스를 그릴 데이터가 부족합니다.</div>
       {% endif %}
@@ -207,11 +208,11 @@
     <section class="card" id="sec-candidates">
       <div class="card-head">
         <h3>④ 비교 국가별 상세
-          <span class="info" tabindex="0">i<span class="info-pop">🪞 표시는 그 나라가 UN Comtrade에 직접 보고한 공식 수치가 없어서, 상대국들의 보고를 합산한 추정치를 대신 쓴 경우입니다.</span></span>
+          <span class="info" tabindex="0">i<span class="info-pop">"추정" 표시는 그 나라가 UN Comtrade에 직접 보고한 공식 수치가 없어서,<br>상대국들의 보고를 합산한 추정치를 대신 쓴 경우입니다.</span></span>
         </h3>
       </div>
       {% if result.korea_presence == 'negligible' %}
-        <div class="banner">ℹ️ 한국 점유율이 모든 후보국에서 {{ result.thresholds.min_meaningful_share_pct }}% 미만입니다 (한국 수출 실적이 미미한 품목).</div>
+        <div class="banner">한국 점유율이 모든 후보국에서 {{ result.thresholds.min_meaningful_share_pct }}% 미만입니다 (한국 수출 실적이 미미한 품목).</div>
       {% endif %}
       <div class="tbl-wrap">
         <table class="tbl">
@@ -226,7 +227,7 @@
             {% set share = (c.korea_import_usd / c.total_import_usd * 100) if (c.korea_import_usd is not none and c.total_import_usd) else c.korea_share_pct %}
             <tr class="{{ 'focus' if c.is_focus }}">
               <td class="left">
-                {% if c.is_focus %}<span class="star" title="관심 국가">★</span> {% endif %}{{ c.label }}{% if c.is_mirror_estimate %} <span class="badge mirror" title="상대국 보고 기반 추정치">🪞</span>{% endif %}
+                {% if c.is_focus %}<span class="star" title="관심 국가">★</span> {% endif %}{{ c.label }}{% if c.is_mirror_estimate %} <span class="badge mirror" title="상대국 보고 기반 추정치">추정</span>{% endif %}
                 {% if c.data_year %}<span class="sub-num">{{ c.data_year }}년 기준</span>{% endif %}
               </td>
               <td>{% if c.quadrant %}<span class="quadrant-badge quadrant-{{ c.quadrant | replace(' ', '') | replace('/', '') }}">{{ c.quadrant }}</span>{% else %}<span class="sub-num">-</span>{% endif %}</td>
@@ -244,7 +245,7 @@
                 {% if ce is none %}<span class="sub-num">-</span>{% else %}{{ money(ce) }}{% endif %}
               </td>
               <td>
-                {% if c.may_be_incomplete_latest_year %}<span class="badge warn" title="최신 연도 값이 직전 연도보다 30% 이상 급감해 CAGR 계산에서 뺐습니다">⚠️ 최신연도 급감</span>{% endif %}
+                {% if c.may_be_incomplete_latest_year %}<span class="badge warn" title="최신 연도 값이 직전 연도보다 30% 이상 급감해 CAGR 계산에서 뺐습니다">최신연도 급감</span>{% endif %}
                 {% if c.top_supplier %}<span class="sub-num">1위 공급국: {{ c.top_supplier.label }} ({{ c.top_supplier.share_pct | pct }})</span>{% endif %}
               </td>
             </tr>
@@ -253,7 +254,7 @@
       </div>
       <p class="note">한국산 수입액은 상대국이 신고한 값(CIF), 한국 수출액은 한국 관세청 집계(FOB)라 기준이 달라 조금 다를 수 있습니다.</p>
       {% if result.excluded %}
-        <p class="note">⚠️ 비교에서 제외된 국가:
+        <p class="note">비교에서 제외된 국가:
           {% for e in result.excluded %}<strong>{{ e.label }}</strong> ({{ e.reason }}){% if not loop.last %}, {% endif %}{% endfor %}
         </p>
       {% endif %}
@@ -263,7 +264,7 @@
     <section class="card" id="sec-ai">
       <div class="card-head">
         <h3>⑤ AI 분석
-          <span class="info" tabindex="0">i<span class="info-pop">위 매트릭스 수치를 바탕으로 한 AI 해석입니다. 실제 전략 결정 전 추가 검증을 권장합니다.</span></span>
+          <span class="info" tabindex="0">i<span class="info-pop">위 매트릭스 수치를 바탕으로 한 AI 해석입니다.<br>실제 전략 결정 전 추가 검증을 권장합니다.</span></span>
         </h3>
       </div>
       <div class="ai-sub">UN Comtrade · 관세청 통계 기반</div>
@@ -319,6 +320,63 @@ document.querySelectorAll('.un-page .flow-toggle').forEach(function (group) {
   });
 });
 
+// 결과 바로가기 탭: 누르면 해당 섹션으로 부드럽게 스크롤, 스크롤 위치에 따라 현재 탭 표시
+(function () {
+  var nav = document.getElementById('section-tabs');
+  if (!nav) return;
+  var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+  var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+
+  // 사이트 상단에 고정(fixed/sticky) 헤더가 있으면 그 높이만큼 탭을 아래에 붙인다
+  function siteHeaderHeight() {
+    var h = 0;
+    document.querySelectorAll('header, nav, .navbar, .topbar, .site-header, .gnb').forEach(function (el) {
+      if (el === nav || nav.contains(el) || el.contains(nav)) return;
+      var cs = getComputedStyle(el);
+      if (cs.position !== 'fixed' && cs.position !== 'sticky') return;
+      var stickTop = parseFloat(cs.top);  // 붙는 위치 (auto면 NaN)
+      if (isNaN(stickTop) || stickTop > 10) return;
+      var r = el.getBoundingClientRect();
+      if (r.height < 200 && r.width > window.innerWidth / 2) h = Math.max(h, stickTop + r.height);
+    });
+    return h;
+  }
+  var headerH = siteHeaderHeight();
+  nav.style.top = headerH + 'px';
+  function offset() { return headerH + nav.offsetHeight + 12; }
+
+  function setActive(i) {
+    links.forEach(function (a, j) { a.classList.toggle('active', i === j); });
+  }
+  links.forEach(function (a, i) {
+    a.addEventListener('click', function (e) {
+      if (!sections[i]) return;
+      e.preventDefault();
+      var y = sections[i].getBoundingClientRect().top + window.pageYOffset - offset();
+      window.scrollTo({ top: y, behavior: 'smooth' });
+      setActive(i);
+    });
+  });
+
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      var line = offset() + 4, current = 0;
+      sections.forEach(function (sec, i) {
+        if (sec && sec.getBoundingClientRect().top <= line) current = i;
+      });
+      // 맨 아래까지 내려왔으면 마지막 탭(AI 분석)
+      if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight - 2) {
+        current = sections.length - 1;
+      }
+      setActive(current);
+    });
+  }, { passive: true });
+})();
+
 function setLoading() {
   var btn = document.getElementById('submit-btn');
   if (btn) { btn.disabled = true; btn.textContent = '분석 중...'; }
@@ -356,8 +414,10 @@ function fmtPct(v) {
 if (bubbleWrap) {
   var money2 = function (n) { return n ? '$' + Number(n).toLocaleString() : 'N/A'; };
   bubbleWrap.querySelectorAll('.bubble').forEach(function (bubble) {
-    bubble.addEventListener('click', function (e) {
-      e.stopPropagation();
+    // 마우스를 올리면 상세 수치 표시, 벗어나면 숨김 (터치 화면은 탭해도 표시)
+    bubble.addEventListener('mouseleave', hideBubbleDetail);
+    function showDetail(e) {
+      if (e && e.type === 'click') e.stopPropagation();
       hideBubbleDetail();
       bubble.classList.add('selected');
       var d = bubble.dataset;
@@ -375,7 +435,7 @@ if (bubbleWrap) {
       }
       if (d.mirror) {
         var m = document.createElement('div');
-        m.textContent = '🪞 상대국 보고 기반 추정치';
+        m.textContent = '상대국 보고 기반 추정치';
         bubbleDetail.appendChild(m);
       }
       addRow(bubbleDetail, '품목 수입금액', money2(d.import));
@@ -389,7 +449,9 @@ if (bubbleWrap) {
       bubbleDetail.style.left = (left > 60 ? left - 32 : left + 4) + '%';
       bubbleDetail.style.top = Math.min(Math.max(top - 10, 0), 48) + '%';
       bubbleDetail.style.display = 'block';
-    });
+    }
+    bubble.addEventListener('mouseenter', showDetail);
+    bubble.addEventListener('click', showDetail);
   });
 
   (function declutterLabels() {
