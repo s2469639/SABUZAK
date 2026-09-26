@@ -213,7 +213,8 @@ class TrendResult(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     exhibition_id = db.Column(db.Integer, nullable=False)  # raw_exhibitions.id (다른 DB라 FK 불가)
     product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
-    job_id = db.Column(db.String(64), nullable=False)  # v15 job id (/trend/<job_id> 결과 화면으로 바로 이동 가능)
+    job_id = db.Column(db.String(64), nullable=False)  # v15 트렌드 job id (/trend/<job_id> 결과 화면으로 바로 이동 가능)
+    booth_job_id = db.Column(db.String(64))  # v15 부스 컨셉 job id (/booth/<job_id>) - 아직 안 돌렸으면 None
     summary = db.Column(db.Text)
     fetched_at = db.Column(db.DateTime, default=datetime.utcnow)
 
