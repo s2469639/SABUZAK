@@ -45,6 +45,9 @@
         <label class="field-label" for="candidates-input">관심 국가 (선택 · 쉼표로 구분)</label>
         <input type="text" name="candidates" id="candidates-input" placeholder="예: Vietnam, 태국, IDN" value="{{ candidates_raw }}">
       </div>
+      <label class="opt-check">
+        <input type="checkbox" name="force" value="1" {% if force %}checked{% endif %}> 🔄 저장된 결과 무시하고 새로 조사
+      </label>
     </div>
     <p class="search-hint">앞 4자리 뒤에 마침표가 자동으로 찍히는 건 국제 표준 HS코드 표기 방식이고(예: 1905.90), 실제 조회 시에는 숫자만 사용됩니다.</p>
     <p class="loading-note" id="loading-note">⏳ 조사 중입니다. 저장된 결과가 없으면 UN Comtrade 호출 제한 때문에 몇 분 걸릴 수 있어요. 창을 닫지 말고 기다려 주세요.</p>

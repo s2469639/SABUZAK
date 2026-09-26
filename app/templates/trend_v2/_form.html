@@ -19,7 +19,9 @@
         </div>
       </details>
       <div class="actions">
-        <button type="submit" class="btn-submit" id="submit-btn">{{ submit_label }}</button>      </div>
+        <button type="submit" class="btn-submit" id="submit-btn">{{ submit_label }}</button>
+        <label class="check"><input type="checkbox" name="force" {% if force %}checked{% endif %}> 캐시 무시하고 새로 조사</label>
+      </div>
     </form>
   </div>
 

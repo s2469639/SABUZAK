@@ -141,7 +141,7 @@ def generate(draft_id):
     trends_data = _load_v15_trend_cache(trend_job_id) if trend_job_id else None
 
     # 2. v15 트렌드 분석 데이터를 주입하여 부스 컨셉 생성 호출!
-    result = generate_booth_concept(expo, products, trends_data=trends_data, company=current_user.company)
+    result = generate_booth_concept(expo, products, trends_data=trends_data)
     theme = result.get("booth_theme", {})
 
     draft.theme = theme.get("title", "")
