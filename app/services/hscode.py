@@ -162,6 +162,12 @@ def resolve_country_iso(country_name):
     if key in COUNTRY_ISO_MAP:
         return COUNTRY_ISO_MAP[key]
 
+    # "미국", "베트남"처럼 한글 국가명은 pycountry가 못 알아듣는다.
+    # un_comtrade.py에 이미 있는 한글 매핑(약 60개국)을 재사용한다.
+    from app.services.un_comtrade import KOREAN_NAME_TO_ISO3
+    if key in KOREAN_NAME_TO_ISO3:
+        return KOREAN_NAME_TO_ISO3[key]
+
     if pycountry is not None:
         try:
             country = pycountry.countries.get(name=country_name.strip())
