@@ -411,7 +411,7 @@ class ModelUpgradeTest(unittest.TestCase):
 
         def create(**kw):
             calls.append(kw)
-            if kw["model"] == "gpt-6-astra":
+            if kw["model"] == "gpt-5.6-sol":
                 req = httpx.Request("POST", "https://api.openai.com/v1/x")
                 raise openai.NotFoundError("no model", response=httpx.Response(404, request=req), body={})
             return SimpleNamespace(model=kw["model"])
@@ -420,7 +420,7 @@ class ModelUpgradeTest(unittest.TestCase):
                                                     responses=SimpleNamespace(create=create)))
         client.chat.completions.create(model=model_upgrade.TASK_MODEL, temperature=0.3, messages=[])
         self.assertEqual(calls[0], {"model": "gpt-5.6-terra", "reasoning_effort": "low", "messages": []})
-        self.assertEqual(client.chat.completions.create(model=model_upgrade.BOOTH_MODEL, messages=[]).model, "gpt-5.6-sol")
+        self.assertEqual(client.chat.completions.create(model=model_upgrade.BOOTH_MODEL, messages=[]).model, "gpt-5.5")
 
 
 class LayoutTest(unittest.TestCase):
