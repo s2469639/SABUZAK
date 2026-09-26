@@ -585,8 +585,8 @@ def market_research(expo_id, product_id):
 
     force = bool(request.form.get("force"))
     try:
+        # 성공 시엔 시장 개요 탭에 결과가 바로 보이므로 따로 알리지 않는다
         un_comtrade.get_market_research(hs6, expo.country, force=force)
-        flash(f"{product.name}(HS {hs6}) 시장조사를 가져왔습니다.", "success")
     except Exception as e:
         flash(f"UN Comtrade 조사 중 오류가 발생했습니다: {e}", "danger")
 
