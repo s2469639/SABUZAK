@@ -797,20 +797,6 @@ p.page-desc:not(:last-child) {
   margin-bottom: 20px;
 }
 
-/* 식품여부/규모/참관대상은 기본으로 접어서 검색창(+날짜)까지만 보이게 하고,
-   "상세 필터" 버튼을 누르면 펼친다 (지도를 더 키울 공간을 확보하기 위함) */
-.filter-advanced {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  padding-top: 12px;
-  margin-top: 4px;
-  border-top: 1px solid #f0f0f0;
-}
-.filter-advanced[hidden] { display: none; }
-
 .filter-bar select,
 .filter-bar input[type="text"] {
   padding: 8px 10px;
@@ -2233,8 +2219,8 @@ p.page-desc:not(:last-child) {
 .world-map {
   padding: 4px 8px;
   background: transparent;
-  width: 62%;
-  max-width: 720px;
+  width: 80%;
+  max-width: 920px;
   min-width: 320px;
   margin: 0 auto;
 }
