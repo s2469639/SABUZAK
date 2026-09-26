@@ -714,7 +714,7 @@ p.page-desc:not(:last-child) {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .expo-results-header h2 {
@@ -2175,7 +2175,7 @@ p.page-desc:not(:last-child) {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 .dash-header h1 { font-size: 24px; font-weight: 700; margin: 0; color: #1a1a1a; }
 .dash-header-actions { display: flex; align-items: center; gap: 8px; }
@@ -2223,8 +2223,8 @@ p.page-desc:not(:last-child) {
 .world-map {
   padding: 4px 8px;
   background: transparent;
-  height: 34vh;
-  max-height: 380px;
+  height: 42vh;
+  max-height: 460px;
   min-height: 240px;
   width: auto;
   aspect-ratio: 800 / 460;
