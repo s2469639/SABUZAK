@@ -289,8 +289,7 @@ def bulk_upload_products():
 
     db.session.commit()
 
-    if added:
-        flash(f"엑셀에서 제품 {added}개를 등록했습니다.", "success")
+    # 성공 시엔 목록에 바로 보이므로 따로 알리지 않고, 문제가 있을 때만 안내한다
     if skipped:
         flash(f"건너뛴 행 {len(skipped)}개: " + " / ".join(skipped[:10]), "danger")
     if not added and not skipped:
