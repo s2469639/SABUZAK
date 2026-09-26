@@ -5,6 +5,44 @@
   </div>
 
   <form class="filter-bar" data-filter-form>
+    <label class="checkbox-inline">
+      <input type="checkbox" name="food_only" value="1" {% if food_only == "1" %}checked{% endif %}>
+      식품 관련만
+    </label>
+
+    <div class="checkbox-group">
+      <span class="checkbox-group-label">
+        규모
+        <span class="info-icon" tabindex="0">i
+          <span class="info-icon-pop">
+            <strong>대</strong>: 참가기업 1,000개사 이상 또는 방문객 30,000명 이상<br>
+            <strong>중</strong>: 참가기업 300~999개사, 방문객 10,000~29,999명<br>
+            <strong>소</strong>: 참가기업 300개사 미만, 방문객 10,000명 미만<br>
+            <br>
+            박람회 소개·참관대상 원문에 이 숫자나 "세계 최대" 같은 규모 표현이
+            있으면 그대로, 없으면 박람회명·개최국 등 간접 정보로 AI가 추정한
+            값입니다.
+          </span>
+        </span>
+      </span>
+      {% for s in ["대", "중", "소"] %}
+      <label class="checkbox-inline">
+        <input type="checkbox" name="scale" value="{{ s }}" {% if s in selected_scales %}checked{% endif %}>
+        {{ s }}
+      </label>
+      {% endfor %}
+    </div>
+
+    <div class="checkbox-group">
+      <span class="checkbox-group-label">참관대상</span>
+      {% for a in ["B2B", "B2C"] %}
+      <label class="checkbox-inline">
+        <input type="checkbox" name="audience_type" value="{{ a }}" {% if a in selected_audience_types %}checked{% endif %}>
+        {{ a }}
+      </label>
+      {% endfor %}
+    </div>
+
     <input type="text" name="search" placeholder="박람회명 / 국가 / 도시 검색" value="{{ search }}">
 
     <div class="date-range-field">
@@ -14,6 +52,7 @@
     </div>
 
     <button type="submit" class="btn-primary">필터 적용</button>
+    <button type="button" class="btn-secondary" data-filter-reset>초기화</button>
   </form>
 
   <div class="expo-list-toolbar">
@@ -32,7 +71,6 @@
       <option value="asc" {{ 'selected' if sort != 'desc' else '' }}>최신순</option>
       <option value="desc" {{ 'selected' if sort == 'desc' else '' }}>오래된순</option>
     </select>
-    <button type="button" class="btn-secondary" data-filter-reset>초기화</button>
     <form method="post" action="{{ url_for('dashboard.run_weekly_pipeline') }}" class="btn-loading-form expo-update-form">
       <button type="submit" class="btn-chip" data-loading-text="시작하는 중..." {% if pipeline_running %}disabled{% endif %}>
         {% if pipeline_running %}박람회 업데이트 중...{% else %}박람회 업데이트{% endif %}
