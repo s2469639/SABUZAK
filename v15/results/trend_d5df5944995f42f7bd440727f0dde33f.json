@@ -1,0 +1,995 @@
+{
+  "inputs": {
+    "name": "약과",
+    "country": "캐나다",
+    "exhibition_name": "The National Women's Show",
+    "exhibition_website": "nationalwomenshow.com/shows/ottawa",
+    "strengths": "달고 쫀득한 식감, 비건",
+    "ingredients": "밀가루, 꿀, 참기름, 계피",
+    "certifications": "비건, HACCP",
+    "price": "1 USD 달러 / 50g",
+    "country_en": "Canada"
+  },
+  "section1": {
+    "clusters": [
+      {
+        "key": "culture_trigger",
+        "label": "CULTURE TRIGGER",
+        "title_ko": "미디어 유입 원인 분석",
+        "short_ko": "미디어 유입",
+        "summary": "탐색 검색어로 확인된 신호입니다.",
+        "tag": "",
+        "insight": "",
+        "keywords": [
+          {
+            "id": 9,
+            "keyword": "K-drama snacks",
+            "source": "probe",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "probe",
+            "geo": "CA",
+            "is_estimated": false,
+            "is_probe": true,
+            "ko": "K-드라마 간식",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": true,
+            "vs_anchor": 0.0,
+            "anchor_zero": false,
+            "evidence": "probe",
+            "badge": null
+          }
+        ]
+      },
+      {
+        "key": "intent_funnel",
+        "label": "INTENT FUNNEL",
+        "title_ko": "소비자 구매 성숙도 추이",
+        "short_ko": "구매 의도",
+        "summary": "현지 검색은 인근 구매처와 특정 한국 브랜드 제품 탐색으로 바로 이어지며, 동시에 직접 만들어 보려는 레시피 수요도 보입니다.",
+        "tag": "구매 단계 전환",
+        "insight": "지도 판매처와 온라인 구매처를 함께 노출하세요.",
+        "keywords": [
+          {
+            "id": 4,
+            "keyword": "yakgwa recipe",
+            "source": "top",
+            "rising_value": null,
+            "top_value": 5,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "CA",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "약과 레시피·만드는 법",
+            "stage": "consideration",
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": false,
+            "vs_anchor": null,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": null
+          },
+          {
+            "id": 6,
+            "keyword": "yakgwa mold",
+            "source": "top",
+            "rising_value": null,
+            "top_value": 0,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "seed",
+            "geo": "CA",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "약과 틀·성형 도구 찾기",
+            "stage": "consideration",
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": false,
+            "vs_anchor": null,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": null
+          },
+          {
+            "id": 1,
+            "keyword": "yakgwa near me",
+            "source": "both",
+            "rising_value": 5861350,
+            "top_value": 100,
+            "is_breakout": true,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "seed",
+            "geo": "CA",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "가까운 곳에서 약과 찾기",
+            "stage": "purchase",
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": true,
+            "vs_anchor": 0.9,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": {
+              "kind": "rising",
+              "pct": 5861350
+            }
+          },
+          {
+            "id": 2,
+            "keyword": "samlip yakgwa",
+            "source": "both",
+            "rising_value": 32950,
+            "top_value": 1,
+            "is_breakout": true,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "CA",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "삼립 약과 구매 찾기",
+            "stage": "purchase",
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": true,
+            "vs_anchor": 0.0,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": {
+              "kind": "rising",
+              "pct": 32950
+            }
+          }
+        ]
+      },
+      {
+        "key": "category_perception",
+        "label": "PERCEPTION",
+        "title_ko": "현지 인접 경쟁군 인식",
+        "short_ko": "경쟁 인식",
+        "summary": "약과는 현지에서 낯선 전통 한과이면서도 친숙한 쿠키 카테고리로 이해되고 있습니다.",
+        "tag": "쿠키 대체재",
+        "insight": "‘쫀득한 한국식 쿠키’로 쉽게 설명하세요.",
+        "keywords": [
+          {
+            "id": 3,
+            "keyword": "yakgwa cookie",
+            "source": "top",
+            "rising_value": null,
+            "top_value": 5,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "seed",
+            "geo": "CA",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "쿠키로 인식되는 약과",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": false,
+            "vs_anchor": null,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": null
+          },
+          {
+            "id": 5,
+            "keyword": "yakgwa cookies",
+            "source": "top",
+            "rising_value": null,
+            "top_value": 4,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "extended",
+            "geo": "CA",
+            "is_estimated": false,
+            "is_probe": false,
+            "ko": "약과 쿠키",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "insufficient",
+            "has_volume": false,
+            "vs_anchor": null,
+            "anchor_zero": false,
+            "evidence": "measured",
+            "badge": null
+          }
+        ]
+      },
+      {
+        "key": "consumption_habit",
+        "label": "HABIT & TPO",
+        "title_ko": "취식 상황 및 번들 소비",
+        "short_ko": "취식 상황",
+        "summary": "",
+        "tag": "",
+        "insight": "",
+        "keywords": []
+      }
+    ],
+    "country_ko": "캐나다",
+    "geo": "CA",
+    "languages": [
+      "English",
+      "French"
+    ],
+    "buyer_language": "English",
+    "reliability": "high",
+    "reliability_label_ko": "높음",
+    "reliability_note_ko": "",
+    "data_level": "global",
+    "data_level_label_ko": "전 세계 기준 실측 포함",
+    "seed_keywords": [
+      "yakgwa",
+      "Korean yakgwa",
+      "yakgwa coréen"
+    ],
+    "warnings": [
+      "연관 검색어가 적어 전 세계 기준 실측 포함 데이터를 함께 사용했습니다."
+    ]
+  },
+  "section1_error": null,
+  "section2": {
+    "kw_seed": {
+      "primary_category": "상온 과자",
+      "kw1": "Korean yakgwa honey cookies",
+      "kw2": "Asian snacks",
+      "kw3": "Samlip Mini Yakgwa",
+      "retail_domains": [
+        "walmart.ca",
+        "loblaws.ca"
+      ],
+      "category_anchors": "yakgwa Korean honey cookies Asian snacks",
+      "negative_anchors": "-tea -candle -soap -skincare -ricecake",
+      "min_price": 5.0,
+      "max_price": 7.0,
+      "currency_symbol": "CAD",
+      "competitor_product": "Samlip Mini Yakgwa 삼립 미니 약과",
+      "competitor_specs": "400그램 대용량 봉지형 제품이며, 한입 크기 약과가 개별 포장으로 들어 있는 상온 보관 과자다. 캐나다의 한국 식품점과 아시아 식품 온라인몰에서 한국 과자 및 전통 과자 구색으로 판매되는 가까운 동급 대체재다.",
+      "consumer_complaints": "캐나다 소비자는 대용량 약과 봉지를 사면 혼자 먹기에는 양이 많고, 개봉 뒤 남은 제품의 쫀득한 식감이 떨어질 수 있다고 느낀다. 또한 한국 과자 매대에만 있어 일반 쿠키 매대를 찾는 소비자가 제품을 발견하기 어렵고, 꿀맛 과자라는 설명만으로는 참기름과 계피 풍미를 예상하기 어렵다는 불만이 있다.",
+      "shelf_location": "International Foods > Korean Snacks",
+      "value_pitch": "50그램 단위로 약 1미국 달러에 맞춘 5.00~7.00캐나다 달러 소포장 약과는 대용량 한국 과자 봉지와 달리 계산대 주변, 아시아 과자, 쿠키 매대에서 충동 구매용 단품 구색을 만든다. 밀가루 반죽에 꿀의 단맛, 참기름의 고소한 향, 계피 향을 넣어 커피와 차에 곁들이는 달고 쫀득한 상온 과자로 제안한다. 다만 꿀은 비건 원료가 아니므로 캐나다 포장과 매대 문구에는 비건 표시를 사용하면 안 되며, 비건 표기가 필요하면 꿀을 식물성 당류로 바꾼 별도 배합이 필요하다."
+    },
+    "target_product": {
+      "title": "Samlip Mini Yakgwa 삼립 미니 약과",
+      "specs": "400그램 대용량 봉지형 제품이며, 한입 크기 약과가 개별 포장으로 들어 있는 상온 보관 과자다. 캐나다의 한국 식품점과 아시아 식품 온라인몰에서 한국 과자 및 전통 과자 구색으로 판매되는 가까운 동급 대체재다.",
+      "complaints": "캐나다 소비자는 대용량 약과 봉지를 사면 혼자 먹기에는 양이 많고, 개봉 뒤 남은 제품의 쫀득한 식감이 떨어질 수 있다고 느낀다. 또한 한국 과자 매대에만 있어 일반 쿠키 매대를 찾는 소비자가 제품을 발견하기 어렵고, 꿀맛 과자라는 설명만으로는 참기름과 계피 풍미를 예상하기 어렵다는 불만이 있다."
+    },
+    "retail_price": {
+      "price": "4.2 ~ 8 CAD",
+      "usd_price": "$3.1 ~ $5.9 USD",
+      "krw_price": "약 4,185 ~ 7,965원",
+      "badge": "타깃 세그먼트 추정가",
+      "badge_desc": "현지 매장 웹 차단이나 비정상 단가 노이즈를 방지하기 위해, 입력하신 목표 가격대를 기준으로 현지 동급 세그먼트의 시장 유효 진입 범위(±15%)를 역산한 가격입니다.",
+      "unit_price": "규격 단가 환산 (CAD)",
+      "method": "estimate",
+      "search_error": "credits",
+      "sources": []
+    },
+    "sales_channels": {
+      "channels": [
+        "walmart.ca",
+        "loblaws.ca"
+      ],
+      "shelf": "International Foods > Korean Snacks"
+    },
+    "price_strategy": {
+      "pitch": "50그램 단위로 약 1미국 달러에 맞춘 5.00~7.00캐나다 달러 소포장 약과는 대용량 한국 과자 봉지와 달리 계산대 주변, 아시아 과자, 쿠키 매대에서 충동 구매용 단품 구색을 만든다. 밀가루 반죽에 꿀의 단맛, 참기름의 고소한 향, 계피 향을 넣어 커피와 차에 곁들이는 달고 쫀득한 상온 과자로 제안한다. 다만 꿀은 비건 원료가 아니므로 캐나다 포장과 매대 문구에는 비건 표시를 사용하면 안 되며, 비건 표기가 필요하면 꿀을 식물성 당류로 바꾼 별도 배합이 필요하다.",
+      "positioning": "현지 물가 대비 프리미엄/기능성 타깃 포지셔닝"
+    }
+  },
+  "section2_error": null,
+  "research": {
+    "product_name": "약과",
+    "country": "Canada",
+    "exhibition_name": "The National Women's Show",
+    "terms": {
+      "product_terms": [
+        {
+          "term": "Yakgwa",
+          "hits": 0
+        },
+        {
+          "term": "Yakwa",
+          "hits": 0
+        },
+        {
+          "term": "Korean honey cookie",
+          "hits": 0
+        },
+        {
+          "term": "Korean traditional honey cookie",
+          "hits": 0
+        }
+      ],
+      "selected": [],
+      "is_verified": false,
+      "product_match": [
+        "약과",
+        "Yakgwa",
+        "Yakwa",
+        "Korean honey cookie",
+        "Korean traditional honey cookie",
+        "biscuit au miel coréen"
+      ],
+      "category_terms": [
+        "cookies and biscuits",
+        "biscuits et cookies",
+        "fried pastries"
+      ],
+      "kfood_terms": [
+        "Korean food",
+        "Korean cuisine",
+        "cuisine coréenne"
+      ],
+      "country_names": [
+        "Canada",
+        "Canadian",
+        "canadien",
+        "canadienne",
+        "캐나다"
+      ],
+      "country_ko": "캐나다",
+      "local_country": "Canadian",
+      "category_ko": "쿠키 및 비스킷",
+      "category_en": "cookies and biscuits",
+      "words": {
+        "review": "review",
+        "trend": "trend",
+        "price": "price",
+        "brands": "brands",
+        "distributors": "importers distributors",
+        "booth": "booth"
+      },
+      "tld": "ca",
+      "region_key": "north_america",
+      "region_en": "North America",
+      "region_ko": "북미",
+      "region_terms": [
+        "north america",
+        "north american"
+      ],
+      "exhibition_names": [
+        "The National Women's Show"
+      ],
+      "main_domains": [
+        "cbc.ca",
+        "theglobeandmail.com",
+        "thestar.com",
+        "nationalpost.com",
+        "chatelaine.com",
+        "canadiangrocer.com",
+        "grocerybusiness.ca",
+        "canadianfoodbusiness.com",
+        "foodincanada.com",
+        "walmart.ca",
+        "loblaws.ca",
+        "metro.ca",
+        "sobeys.com",
+        "canada.ca",
+        "inspection.canada.ca",
+        "international.gc.ca",
+        "cbsa-asfc.gc.ca"
+      ]
+    },
+    "queries": [
+      "Yakgwa review",
+      "Yakgwa trend Canadian",
+      "Korean food trend Canadian",
+      "Yakgwa brands price Canadian",
+      "cookies and biscuits brands Canadian",
+      "Yakgwa importers distributors Canadian",
+      "Korean food importers distributors Canadian",
+      "캐나다 약과",
+      "캐나다 쿠키 및 비스킷 시장 동향",
+      "The National Women's Show cookies and biscuits trends",
+      "The National Women's Show cookies and biscuits booth",
+      "Yakgwa review",
+      "Yakgwa trend Canadian",
+      "Korean food trend Canadian",
+      "Yakgwa brands price Canadian",
+      "cookies and biscuits brands Canadian",
+      "Yakgwa importers distributors Canadian",
+      "Korean food importers distributors Canadian",
+      "Yakgwa snacking occasions Canada Canadian",
+      "Yakgwa snack purchase drivers Canadian",
+      "Yakgwa Korean cookies Canada Canadian",
+      "Yakgwa Korean snacks price Canada Canadian",
+      "Yakgwa CFIA imported food requirements Canadian",
+      "Yakgwa Canada food distributor margins Canadian",
+      "Yakgwa Canada food show trends Canadian",
+      "Yakgwa food trade show booth ideas Canadian",
+      "The National Women's Show booth exhibitors"
+    ],
+    "query_details": [
+      {
+        "qid": "Q1",
+        "query": "Yakgwa review",
+        "tier": "main",
+        "include_domains": [
+          "cbc.ca",
+          "theglobeandmail.com",
+          "thestar.com",
+          "nationalpost.com",
+          "chatelaine.com"
+        ]
+      },
+      {
+        "qid": "Q1",
+        "query": "Yakgwa trend Canadian",
+        "tier": "main",
+        "include_domains": [
+          "cbc.ca",
+          "theglobeandmail.com",
+          "thestar.com",
+          "nationalpost.com",
+          "chatelaine.com"
+        ]
+      },
+      {
+        "qid": "Q1",
+        "query": "Korean food trend Canadian",
+        "tier": "main",
+        "include_domains": [
+          "cbc.ca",
+          "theglobeandmail.com",
+          "thestar.com",
+          "nationalpost.com",
+          "chatelaine.com"
+        ]
+      },
+      {
+        "qid": "Q2",
+        "query": "Yakgwa brands price Canadian",
+        "tier": "main",
+        "include_domains": [
+          "walmart.ca",
+          "loblaws.ca",
+          "metro.ca",
+          "sobeys.com",
+          "canadiangrocer.com",
+          "grocerybusiness.ca",
+          "canadianfoodbusiness.com",
+          "foodincanada.com"
+        ]
+      },
+      {
+        "qid": "Q2",
+        "query": "cookies and biscuits brands Canadian",
+        "tier": "main",
+        "include_domains": [
+          "walmart.ca",
+          "loblaws.ca",
+          "metro.ca",
+          "sobeys.com",
+          "canadiangrocer.com",
+          "grocerybusiness.ca",
+          "canadianfoodbusiness.com",
+          "foodincanada.com"
+        ]
+      },
+      {
+        "qid": "Q3",
+        "query": "Yakgwa importers distributors Canadian",
+        "tier": "main",
+        "include_domains": [
+          "canadiangrocer.com",
+          "grocerybusiness.ca",
+          "canadianfoodbusiness.com",
+          "foodincanada.com",
+          "canada.ca",
+          "inspection.canada.ca",
+          "international.gc.ca",
+          "cbsa-asfc.gc.ca"
+        ]
+      },
+      {
+        "qid": "Q3",
+        "query": "Korean food importers distributors Canadian",
+        "tier": "main",
+        "include_domains": [
+          "canadiangrocer.com",
+          "grocerybusiness.ca",
+          "canadianfoodbusiness.com",
+          "foodincanada.com",
+          "canada.ca",
+          "inspection.canada.ca",
+          "international.gc.ca",
+          "cbsa-asfc.gc.ca"
+        ]
+      },
+      {
+        "qid": "KR",
+        "query": "캐나다 약과",
+        "tier": "main",
+        "include_domains": [
+          "kotra.or.kr",
+          "dream.kotra.or.kr",
+          "kati.net"
+        ]
+      },
+      {
+        "qid": "KR",
+        "query": "캐나다 쿠키 및 비스킷 시장 동향",
+        "tier": "main",
+        "include_domains": [
+          "kotra.or.kr",
+          "dream.kotra.or.kr",
+          "kati.net"
+        ]
+      },
+      {
+        "qid": "Q4",
+        "query": "The National Women's Show cookies and biscuits trends",
+        "tier": "main",
+        "include_domains": [
+          "nationalwomenshow.com"
+        ]
+      },
+      {
+        "qid": "Q4",
+        "query": "The National Women's Show cookies and biscuits booth",
+        "tier": "main",
+        "include_domains": [
+          "canadiangrocer.com",
+          "grocerybusiness.ca",
+          "canadianfoodbusiness.com",
+          "foodincanada.com"
+        ]
+      },
+      {
+        "qid": "Q1",
+        "query": "Yakgwa review",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q1",
+        "query": "Yakgwa trend Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q1",
+        "query": "Korean food trend Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q2",
+        "query": "Yakgwa brands price Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q2",
+        "query": "cookies and biscuits brands Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q3",
+        "query": "Yakgwa importers distributors Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q3",
+        "query": "Korean food importers distributors Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q1",
+        "query": "Yakgwa snacking occasions Canada Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q1",
+        "query": "Yakgwa snack purchase drivers Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q2",
+        "query": "Yakgwa Korean cookies Canada Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q2",
+        "query": "Yakgwa Korean snacks price Canada Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q3",
+        "query": "Yakgwa CFIA imported food requirements Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q3",
+        "query": "Yakgwa Canada food distributor margins Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q4",
+        "query": "Yakgwa Canada food show trends Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q4",
+        "query": "Yakgwa food trade show booth ideas Canadian",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q4",
+        "query": "The National Women's Show booth exhibitors",
+        "tier": "open",
+        "include_domains": []
+      }
+    ],
+    "site_profile": {
+      "source": "ai",
+      "reviewed": false,
+      "groups": {
+        "media": [
+          "cbc.ca",
+          "theglobeandmail.com",
+          "thestar.com",
+          "nationalpost.com",
+          "chatelaine.com"
+        ],
+        "trade": [
+          "canadiangrocer.com",
+          "grocerybusiness.ca",
+          "canadianfoodbusiness.com",
+          "foodincanada.com"
+        ],
+        "retail": [
+          "walmart.ca",
+          "loblaws.ca",
+          "metro.ca",
+          "sobeys.com"
+        ],
+        "public": [
+          "canada.ca",
+          "inspection.canada.ca",
+          "international.gc.ca",
+          "cbsa-asfc.gc.ca"
+        ]
+      },
+      "dropped": []
+    },
+    "cards": [
+      {
+        "qid": "Q1",
+        "title": "소비자",
+        "question": "현지 소비자는 이 제품군을 언제, 왜 먹고, 무엇에 불만이 있는가",
+        "quote_ids": [],
+        "source_count": 0,
+        "product_quotes": 0,
+        "country_quotes": 0,
+        "conclusion": null,
+        "points": [],
+        "interpretation": null,
+        "gaps": "캐나다 시장에서 이 질문에 답하는 자료를 찾지 못했습니다. 바이어 상담이나 KOTRA 무역관 문의로 확인이 필요합니다.",
+        "dropped": [],
+        "notice": "약과에 대한 캐나다 현지 자료를 찾지 못했습니다.",
+        "diagnostics": {},
+        "criteria": [
+          {
+            "id": "Q1-1",
+            "label_ko": "섭취 상황",
+            "essential": true,
+            "search_hint": "snacking occasions Canada"
+          },
+          {
+            "id": "Q1-2",
+            "label_ko": "구매 동기",
+            "essential": false,
+            "search_hint": "snack purchase drivers"
+          },
+          {
+            "id": "Q1-3",
+            "label_ko": "미충족 불만",
+            "essential": false,
+            "search_hint": "snack consumer complaints"
+          }
+        ],
+        "search": {
+          "used": true,
+          "stage": "code",
+          "reasons": [
+            "원문 확인 발췌 0건 (기준 2건)",
+            "출처 0곳 (기준 2곳)"
+          ],
+          "covered": {},
+          "missing": [
+            "섭취 상황",
+            "구매 동기",
+            "미충족 불만"
+          ],
+          "followup_queries": [
+            "Yakgwa snacking occasions Canada Canadian",
+            "Yakgwa snack purchase drivers Canadian"
+          ]
+        },
+        "main_quotes": 0,
+        "open_quotes": 0
+      },
+      {
+        "qid": "Q2",
+        "title": "경쟁 제품",
+        "question": "현지에서 팔리는 경쟁 제품은 무엇이고, 얼마에, 어떤 메시지로 파는가",
+        "quote_ids": [],
+        "source_count": 0,
+        "product_quotes": 0,
+        "country_quotes": 0,
+        "conclusion": null,
+        "points": [],
+        "interpretation": null,
+        "gaps": "캐나다 시장에서 이 질문에 답하는 자료를 찾지 못했습니다. 바이어 상담이나 KOTRA 무역관 문의로 확인이 필요합니다.",
+        "dropped": [],
+        "notice": "약과에 대한 캐나다 현지 자료를 찾지 못했습니다.",
+        "diagnostics": {},
+        "criteria": [
+          {
+            "id": "Q2-1",
+            "label_ko": "경쟁 상품군",
+            "essential": true,
+            "search_hint": "Korean cookies Canada"
+          },
+          {
+            "id": "Q2-2",
+            "label_ko": "판매 가격",
+            "essential": false,
+            "search_hint": "Korean snacks price Canada"
+          },
+          {
+            "id": "Q2-3",
+            "label_ko": "판매 메시지",
+            "essential": false,
+            "search_hint": "Korean snack product claims"
+          }
+        ],
+        "search": {
+          "used": true,
+          "stage": "code",
+          "reasons": [
+            "원문 확인 발췌 0건 (기준 2건)",
+            "출처 0곳 (기준 2곳)"
+          ],
+          "covered": {},
+          "missing": [
+            "경쟁 상품군",
+            "판매 가격",
+            "판매 메시지"
+          ],
+          "followup_queries": [
+            "Yakgwa Korean cookies Canada Canadian",
+            "Yakgwa Korean snacks price Canada Canadian"
+          ]
+        },
+        "main_quotes": 0,
+        "open_quotes": 0
+      },
+      {
+        "qid": "Q3",
+        "title": "바이어·유통",
+        "question": "바이어·유통사는 무엇을 보고 제품을 들여오는가 (인증, 가격, 패키지, 유통기한, 채널)",
+        "quote_ids": [],
+        "source_count": 0,
+        "product_quotes": 0,
+        "country_quotes": 0,
+        "conclusion": null,
+        "points": [],
+        "interpretation": null,
+        "gaps": "캐나다 시장에서 이 질문에 답하는 자료를 찾지 못했습니다. 바이어 상담이나 KOTRA 무역관 문의로 확인이 필요합니다.",
+        "dropped": [],
+        "notice": null,
+        "diagnostics": {},
+        "criteria": [
+          {
+            "id": "Q3-1",
+            "label_ko": "수입 인증 요건",
+            "essential": true,
+            "search_hint": "CFIA imported food requirements"
+          },
+          {
+            "id": "Q3-2",
+            "label_ko": "납품 가격 조건",
+            "essential": false,
+            "search_hint": "Canada food distributor margins"
+          },
+          {
+            "id": "Q3-3",
+            "label_ko": "상품 규격 요건",
+            "essential": false,
+            "search_hint": "retail packaging shelf life Canada"
+          }
+        ],
+        "search": {
+          "used": true,
+          "stage": "code",
+          "reasons": [
+            "원문 확인 발췌 0건 (기준 2건)",
+            "출처 0곳 (기준 2곳)"
+          ],
+          "covered": {},
+          "missing": [
+            "수입 인증 요건",
+            "납품 가격 조건",
+            "상품 규격 요건"
+          ],
+          "followup_queries": [
+            "Yakgwa CFIA imported food requirements Canadian",
+            "Yakgwa Canada food distributor margins Canadian"
+          ]
+        },
+        "main_quotes": 0,
+        "open_quotes": 0
+      },
+      {
+        "qid": "Q4",
+        "title": "박람회·부스",
+        "question": "이 박람회의 트렌드와 부스 운영·시식 사례는 무엇인가",
+        "quote_ids": [],
+        "source_count": 0,
+        "product_quotes": 0,
+        "country_quotes": 0,
+        "conclusion": null,
+        "points": [],
+        "interpretation": null,
+        "gaps": "캐나다 시장에서 이 질문에 답하는 자료를 찾지 못했습니다. 바이어 상담이나 KOTRA 무역관 문의로 확인이 필요합니다.",
+        "dropped": [],
+        "notice": null,
+        "diagnostics": {},
+        "criteria": [
+          {
+            "id": "Q4-1",
+            "label_ko": "박람회 트렌드",
+            "essential": true,
+            "search_hint": "Canada food show trends"
+          },
+          {
+            "id": "Q4-2",
+            "label_ko": "부스 연출 사례",
+            "essential": false,
+            "search_hint": "food trade show booth ideas"
+          },
+          {
+            "id": "Q4-3",
+            "label_ko": "시식 운영 사례",
+            "essential": false,
+            "search_hint": "trade show sampling best practices"
+          }
+        ],
+        "search": {
+          "used": true,
+          "stage": "code",
+          "reasons": [
+            "원문 확인 발췌 0건 (기준 2건)",
+            "출처 0곳 (기준 2곳)"
+          ],
+          "covered": {},
+          "missing": [
+            "박람회 트렌드",
+            "부스 연출 사례",
+            "시식 운영 사례"
+          ],
+          "followup_queries": [
+            "Yakgwa Canada food show trends Canadian",
+            "Yakgwa food trade show booth ideas Canadian"
+          ]
+        },
+        "main_quotes": 0,
+        "open_quotes": 0
+      }
+    ],
+    "booth": null,
+    "booth_error": null,
+    "quotes": [],
+    "sources": [],
+    "excluded_sources": [],
+    "stats": {
+      "sources_found": 0,
+      "quotes_used": 0,
+      "excluded_source": 0,
+      "market_other": 0,
+      "not_in_source": 0,
+      "off_scope": 0,
+      "country_quotes": 0,
+      "region_quotes": 0,
+      "stale_quotes": 0,
+      "translation_warnings": 0,
+      "main_quotes": 0,
+      "open_quotes": 0,
+      "main_sources": 0,
+      "open_sources": 0,
+      "fallback_questions": [
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4"
+      ]
+    },
+    "failed_queries": [
+      "Yakgwa review",
+      "Yakgwa trend Canadian",
+      "Korean food trend Canadian",
+      "Yakgwa brands price Canadian",
+      "cookies and biscuits brands Canadian",
+      "Yakgwa importers distributors Canadian",
+      "Korean food importers distributors Canadian",
+      "캐나다 약과",
+      "캐나다 쿠키 및 비스킷 시장 동향",
+      "The National Women's Show cookies and biscuits trends",
+      "The National Women's Show cookies and biscuits booth",
+      "Yakgwa review",
+      "Yakgwa trend Canadian",
+      "Korean food trend Canadian",
+      "Yakgwa brands price Canadian",
+      "cookies and biscuits brands Canadian",
+      "Yakgwa importers distributors Canadian",
+      "Korean food importers distributors Canadian",
+      "Yakgwa snacking occasions Canada Canadian",
+      "Yakgwa snack purchase drivers Canadian",
+      "Yakgwa Korean cookies Canada Canadian",
+      "Yakgwa Korean snacks price Canada Canadian",
+      "Yakgwa CFIA imported food requirements Canadian",
+      "Yakgwa Canada food distributor margins Canadian",
+      "Yakgwa Canada food show trends Canadian",
+      "Yakgwa food trade show booth ideas Canadian",
+      "The National Women's Show booth exhibitors"
+    ],
+    "search_error": "credits",
+    "fetched_at": "2026-09-26T03:33:30.510009+00:00",
+    "from_cache": false,
+    "version": "v14.0"
+  },
+  "research_error": null,
+  "view": {
+    "articles": {
+      "Q1": [],
+      "Q2": [],
+      "Q3": [],
+      "Q4": []
+    }
+  },
+  "models": {
+    "booth": "gpt-6-astra",
+    "booth_effort": "medium",
+    "task": "gpt-5.6-terra",
+    "task_effort": "low"
+  },
+  "fetched_at": "2026-09-26 12:33"
+}
