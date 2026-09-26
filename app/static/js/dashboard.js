@@ -61,6 +61,19 @@ document.addEventListener("DOMContentLoaded", function () {
       submitFilter(form, { keyword_tag: isActive ? "" : tagBtn.dataset.keywordTag });
       return;
     }
+
+    // "상세 필터" 토글: 식품여부/규모/참관대상 체크박스는 기본으로 접어둬서
+    // 검색창까지만 보이게 하고, 필요할 때만 펼친다.
+    var advToggle = e.target.closest("[data-filter-advanced-toggle]");
+    if (advToggle) {
+      var advBox = advToggle.closest("form").querySelector("[data-filter-advanced]");
+      if (advBox) {
+        var willShow = advBox.hidden;
+        advBox.hidden = !willShow;
+        advToggle.setAttribute("aria-expanded", String(willShow));
+      }
+      return;
+    }
   });
 
   // 정렬 셀렉트는 필터 폼 안에 있지 않아도 되니(레이아웃상 키워드 태그 줄 옆에 있음),
