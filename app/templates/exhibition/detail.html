@@ -293,7 +293,7 @@
             {% endif %}
           </h4>
           <form method="post" class="btn-loading-form" action="{{ url_for('exhibition.sync_ntm', expo_id=expo.id, product_id=row.product.id) }}">
-            <button type="submit" class="btn-secondary btn-sync-ntm" data-loading-text="사부작사부작 가져오는 중...">
+            <button type="submit" class="btn-secondary btn-sync-ntm" data-loading-text="수입규정을 가져오고 있어요...">
               {% if row.regulation_notes_is_live %}TRAINS 데이터 다시 가져오기{% else %}지금 실제 데이터 가져오기{% endif %}
             </button>
           </form>
