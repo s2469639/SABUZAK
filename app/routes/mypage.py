@@ -1,7 +1,10 @@
+import io
 import re
 
 import openpyxl
-from flask import Blueprint, flash, jsonify, redirect, render_template, request, url_for
+from flask import Blueprint, flash, jsonify, redirect, render_template, request, send_file, url_for
+from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.utils import get_column_letter
 from flask_login import current_user, login_required
 from sqlalchemy.exc import OperationalError
 
@@ -29,9 +32,10 @@ def _hs_master_query_available():
 @bp.route("/")
 @login_required
 def index():
+    # 체크된 제품을 위로 모으고, 각 그룹 안에서는 최근 등록순
     products = (
         Product.query.filter_by(user_id=current_user.id)
-        .order_by(Product.created_at.desc())
+        .order_by(Product.is_checked.desc(), Product.created_at.desc())
         .all()
     )
     return render_template("mypage/mypage.html", products=products)
@@ -110,7 +114,7 @@ def add_product():
 
             products = (
                 Product.query.filter_by(user_id=current_user.id)
-                .order_by(Product.created_at.desc())
+                .order_by(Product.is_checked.desc(), Product.created_at.desc())
                 .all()
             )
             return render_template(
@@ -172,6 +176,46 @@ _BULK_UPLOAD_COLUMNS = {
     "제품 강점": "strengths",
     "강점": "strengths",
 }
+
+# 엑셀 양식 다운로드의 열 제목. 위 _BULK_UPLOAD_COLUMNS가 인식하는 이름과
+# 같아야 받은 양식을 채워서 그대로 올릴 수 있다 ("제품명 *"처럼 표시를 붙이면
+# 인식이 안 되므로 필수 항목은 제목 칸 색으로만 구분).
+_BULK_TEMPLATE_HEADERS = ["제품명", "HS코드", "브랜드명", "제품 형태", "원재료", "보유 인증", "가격", "제품 강점"]
+_BULK_TEMPLATE_REQUIRED = {"제품명", "HS코드"}
+_BULK_TEMPLATE_WIDE = {"원재료", "제품 강점"}
+_BULK_TEMPLATE_ROWS = 500  # HS코드 텍스트 형식을 미리 지정해둘 행 수
+
+
+@bp.route("/products/bulk-template")
+@login_required
+def download_bulk_template():
+    """엑셀 일괄등록용 빈 양식(열 제목만 채움)을 그 자리에서 만들어 내려준다."""
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "제품 목록"
+    ws.append(_BULK_TEMPLATE_HEADERS)
+    for col, header in enumerate(_BULK_TEMPLATE_HEADERS, start=1):
+        cell = ws.cell(row=1, column=col)
+        is_required = header in _BULK_TEMPLATE_REQUIRED
+        cell.font = Font(bold=True, color="FFFFFF" if is_required else "374151")
+        cell.fill = PatternFill("solid", fgColor="EA580C" if is_required else "F3F4F6")
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+        ws.column_dimensions[get_column_letter(col)].width = 36 if header in _BULK_TEMPLATE_WIDE else 18
+    # 엑셀이 1902.30을 숫자로 보고 1902.3으로 끝자리 0을 지우지 않게 HS코드 칸은 텍스트 형식
+    hs_col = _BULK_TEMPLATE_HEADERS.index("HS코드") + 1
+    for row in range(2, _BULK_TEMPLATE_ROWS + 2):
+        ws.cell(row=row, column=hs_col).number_format = "@"
+    ws.freeze_panes = "A2"
+
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    return send_file(
+        buf,
+        as_attachment=True,
+        download_name="제품_일괄등록_양식.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
 
 
 @bp.route("/products/bulk-upload", methods=["POST"])
@@ -245,8 +289,7 @@ def bulk_upload_products():
 
     db.session.commit()
 
-    if added:
-        flash(f"엑셀에서 제품 {added}개를 등록했습니다.", "success")
+    # 성공 시엔 목록에 바로 보이므로 따로 알리지 않고, 문제가 있을 때만 안내한다
     if skipped:
         flash(f"건너뛴 행 {len(skipped)}개: " + " / ".join(skipped[:10]), "danger")
     if not added and not skipped:
@@ -297,6 +340,17 @@ def edit_product(product_id):
 def toggle_product(product_id):
     product = Product.query.filter_by(id=product_id, user_id=current_user.id).first_or_404()
     product.is_checked = not product.is_checked
+    db.session.commit()
+    return redirect(url_for("mypage.index"))
+
+
+@bp.route("/products/check-all", methods=["POST"])
+@login_required
+def check_all_products():
+    """'전체 선택' 체크박스: 내 제품 전부를 체크(checked=1) 또는 해제(0)로 맞춘다.
+    toggle_product는 상태를 뒤집는 방식이라 전체 선택에는 쓸 수 없다."""
+    is_checked = request.form.get("checked") == "1"
+    Product.query.filter_by(user_id=current_user.id).update({"is_checked": is_checked})
     db.session.commit()
     return redirect(url_for("mypage.index"))
 
