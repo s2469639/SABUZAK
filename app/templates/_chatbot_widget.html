@@ -1,0 +1,44 @@
+{% if current_user.is_authenticated %}
+<div class="chatbot-widget" id="chatbot-widget">
+  <button type="button" class="chatbot-fab" id="chatbot-fab" aria-label="챗봇 열기">
+    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="9" y="4" width="3" height="4" rx="1.5" fill="currentColor"/>
+      <circle cx="10.5" cy="3.5" r="1.6" fill="currentColor"/>
+      <rect x="5" y="9" width="22" height="18" rx="9" fill="currentColor"/>
+      <rect x="8.4" y="12.6" width="15.2" height="10.8" rx="5.4" fill="#fff"/>
+      <circle cx="12.6" cy="18" r="2.9" fill="#fff" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="19.4" cy="18" r="2.9" fill="#fff" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="12.6" cy="18" r="1.15" fill="currentColor"/>
+      <circle cx="19.4" cy="18" r="1.15" fill="currentColor"/>
+      <line x1="15.5" y1="18" x2="16.5" y2="18" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M13.5 22.6c1.4 1 3.6 1 5 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    </svg>
+  </button>
+
+  <div class="chatbot-panel" id="chatbot-panel" hidden>
+    <div class="chatbot-panel-header">
+      <span>FairMate 도우미</span>
+      <button type="button" id="chatbot-close" aria-label="닫기">✕</button>
+    </div>
+
+    <div class="chatbot-messages" id="chatbot-messages">
+      <div class="chatbot-msg chatbot-msg-bot">안녕하세요, FairMate 도우미입니다. 사이트 이용 방법이나 제품 HS코드 조회를 도와드립니다.</div>
+    </div>
+
+    <div class="chatbot-examples" id="chatbot-examples">
+      <button type="button" class="chatbot-example-btn">웹사이트 이용 방법을 안내해주세요</button>
+      <button type="button" class="chatbot-example-btn">제품 HS코드를 알려주세요</button>
+      <button type="button" class="chatbot-example-btn">부스 컨셉 기획은 어디서 하나요?</button>
+    </div>
+
+    <form class="chatbot-input-row" id="chatbot-form">
+      <input type="text" id="chatbot-input" placeholder="궁금한 점을 입력하세요" autocomplete="off">
+      <button type="submit" aria-label="전송">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M4 12L20 4L13 20L11 13L4 12Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>
+{% endif %}

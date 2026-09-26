@@ -12,8 +12,14 @@
       <a href="{{ url_for('mypage.index') }}">마이페이지 제품 관리</a>에서 채워주세요.
     </p>
     {% endif %}
+    {# 이미 조사한 결과가 있으면 결과 화면을, 없으면 입력 화면을 연다 #}
+    {% if row.trend_job_id %}
+      {% set frame_src = url_for('trend_v2.trend_result', job_id=row.trend_job_id, expo_id=row.prefill.expo_id, product_id=row.prefill.product_id) %}
+    {% else %}
+      {% set frame_src = url_for('trend_v2.trend_index', **row.prefill) %}
+    {% endif %}
     <iframe class="trend-v2-frame" loading="lazy"
-            src="{{ url_for('trend_v2.trend_index', **row.prefill) }}"
+            src="{{ frame_src }}"
             title="{{ row.product.name }} 트렌드 조사"></iframe>
   </div>
   {% endfor %}

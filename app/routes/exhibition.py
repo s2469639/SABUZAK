@@ -7,8 +7,9 @@ from flask import Blueprint, abort, flash, redirect, render_template, request, u
 from flask_login import current_user, login_required
 
 from app.extensions import db
-from app.models import Exhibition, NtmMeasure, Product
+from app.models import Exhibition, NtmMeasure, Product, TrendResult
 from app.routes.dashboard import CONTINENT_DB_VALUES, is_pipeline_running, pop_pipeline_banner
+from app.routes.trend_v2 import _get_job as get_trend_job
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
 from app.services.exchange import get_exchange_info
@@ -253,6 +254,88 @@ def _hs6(hs_code):
     쓴다. 6자리가 안 되면(코드가 너무 짧으면) None."""
     digits = re.sub(r"\D", "", hs_code or "")
     return digits[:6] if len(digits) >= 6 else None
+
+
+# 관심 국가 입력칸: 영문 이름(Vietnam) / 한글 이름(베트남) / 2자리 코드(VN) /
+# 3자리 코드(VNM) 중 무엇으로 넣어도 같은 나라로 인식되도록, un_comtrade에
+# 넘기기 전에 한 가지 형식으로 통일한다. un_comtrade.resolve_iso3()는 3자리
+# 코드와 KOREAN_NAME_TO_ISO3에 있는 이름(약 60개국)만 알아듣기 때문.
+_ISO2_TO_ISO3 = {
+    "KR": "KOR", "CN": "CHN", "JP": "JPN", "US": "USA", "VN": "VNM", "DE": "DEU",
+    "GB": "GBR", "UK": "GBR", "FR": "FRA", "IN": "IND", "TH": "THA", "ID": "IDN",
+    "MY": "MYS", "PH": "PHL", "SG": "SGP", "AU": "AUS", "CA": "CAN", "MX": "MEX",
+    "BR": "BRA", "IT": "ITA", "ES": "ESP", "NL": "NLD", "BE": "BEL", "AT": "AUT",
+    "SE": "SWE", "DK": "DNK", "NO": "NOR", "FI": "FIN", "IE": "IRL", "PT": "PRT",
+    "GR": "GRC", "PL": "POL", "CZ": "CZE", "HU": "HUN", "RO": "ROU", "RU": "RUS",
+    "SA": "SAU", "AE": "ARE", "IL": "ISR", "EG": "EGY", "ZA": "ZAF", "NG": "NGA",
+    "HK": "HKG", "TW": "TWN", "CH": "CHE", "TR": "TUR", "NZ": "NZL", "CL": "CHL",
+    "PE": "PER", "CO": "COL", "AR": "ARG", "PK": "PAK", "BD": "BGD", "KZ": "KAZ",
+    "MN": "MNG",
+}
+
+
+def _country_display_names():
+    """ISO3 -> 화면 표시용 영문 이름 (resolve_iso3가 그대로 알아듣는 이름)."""
+    names = {}
+    for key, iso3 in getattr(un_comtrade, "KOREAN_NAME_TO_ISO3", {}).items():
+        # 3글자 이하(uae, usa, uk)는 resolve_iso3가 코드로 오해할 수 있어서 제외
+        if iso3 in names or not key.isascii() or "," in key or len(key) <= 3:
+            continue
+        names[iso3] = key.title()
+    return names
+
+
+def _iso2_to_iso3(code):
+    iso3 = _ISO2_TO_ISO3.get(code)
+    if iso3:
+        return iso3
+    try:  # 표에 없는 나라는 pycountry(설치돼 있으면)로
+        import pycountry
+        c = pycountry.countries.get(alpha_2=code)
+        return c.alpha_3 if c else None
+    except Exception:
+        return None
+
+
+def _normalize_country_input(raw):
+    """입력 하나를 un_comtrade가 인식하는 형식으로 바꾼다.
+    인식되는 나라면 영문 이름(예: 'Vietnam') 또는 3자리 코드(예: 'PRT'),
+    끝내 인식이 안 되면 입력값 그대로 (-> 결과 화면 '비교에서 제외된 국가'에 표시)."""
+    text = raw.strip()
+    if not text:
+        return None
+    names = _country_display_names()
+    mapping = getattr(un_comtrade, "KOREAN_NAME_TO_ISO3", {})
+    compact = text.replace(" ", "")
+
+    # 이름표를 먼저 본다 (UAE, USA처럼 3글자 이름이 코드와 헷갈리지 않게)
+    iso3 = (mapping.get(text) or mapping.get(text.lower())
+            or mapping.get(compact) or mapping.get(compact.lower()))
+    if not iso3 and text.isascii() and text.isalpha():
+        if len(text) == 3:
+            iso3 = text.upper()
+        elif len(text) == 2:
+            iso3 = _iso2_to_iso3(text.upper())
+    if not iso3:
+        try:  # 표에 없는 영문 이름(예: Portugal은 있지만 Estonia 같은 나라)
+            guess = resolve_country_iso(text)
+            if guess and len(guess) == 3 and guess.isascii() and guess.isalpha():
+                iso3 = guess.upper()
+        except Exception:
+            iso3 = None
+    if not iso3:
+        return text
+    return names.get(iso3, iso3)
+
+
+def _normalize_country_inputs(raw_list):
+    """여러 개를 정규화하고, 같은 나라를 여러 번 적은 경우(예: 'VN, 베트남') 하나로 합친다."""
+    out = []
+    for raw in raw_list:
+        norm = _normalize_country_input(raw)
+        if norm and norm.lower() not in {o.lower() for o in out}:
+            out.append(norm)
+    return out
 
 
 def _apply_filters(query):
@@ -505,12 +588,30 @@ def _trend_v2_prefill(expo, product):
     }
 
 
+def _saved_trend_job_id(expo, product):
+    """이 박람회+제품으로 이미 끝낸 트렌드 조사가 있으면 그 job_id를 돌려준다
+    (trend_v2가 결과 화면을 열 때 TrendResult에 남겨둔 것). 결과 파일이
+    지워져서 다시 열 수 없는 job이면 None -> 입력 화면부터 보여준다."""
+    saved = TrendResult.query.filter_by(
+        user_id=current_user.id, exhibition_id=expo.id, product_id=product.id,
+    ).first()
+    if not saved or not saved.job_id:
+        return None
+    job = get_trend_job(saved.job_id, "trend")
+    return saved.job_id if job and job["status"] == "done" else None
+
+
 def _build_trend_rows(expo, linked_products):
     """트렌드 조사 탭에 쓸 제품별 진입 정보(v15 시스템으로 넘어갈 때 미리
     채울 쿼리스트링). 실제 분석/캐시는 이제 app.routes.trend_v2(v15)가
-    독자적으로 관리한다."""
+    독자적으로 관리한다. 이미 조사한 결과가 있으면 trend_job_id로 넘겨서
+    페이지를 다시 그려도 탭이 입력 화면 대신 결과 화면을 보여주게 한다."""
     return [
-        {"product": product, "prefill": _trend_v2_prefill(expo, product)}
+        {
+            "product": product,
+            "prefill": _trend_v2_prefill(expo, product),
+            "trend_job_id": _saved_trend_job_id(expo, product),
+        }
         for product in linked_products
     ]
 
@@ -584,7 +685,7 @@ def market_matrix():
     ctx = {
         "result": None, "overview": None, "matrix_error": None, "matrix": None,
         "import_line": None, "export_line": None,
-        "hscode": re.sub(r"\D", "", request.args.get("hscode", "")),
+        "hscode": re.sub(r"\D", "", request.args.get("hscode", ""))[:6],
         "candidates_raw": "", "top_n": 10, "force": False, "item_desc_ko": None,
     }
 
@@ -593,11 +694,18 @@ def market_matrix():
     should_run = request.method == "POST" or bool(request.args.get("hscode"))
     if should_run:
         values = request.form if request.method == "POST" else request.args
-        hscode = re.sub(r"\D", "", values.get("hscode", ""))
+        # 마이페이지 제품의 hs_code는 '1905.90.1050'처럼 10자리일 수 있다 -> 앞 6자리만
+        hscode = _hs6(values.get("hscode", "")) or re.sub(r"\D", "", values.get("hscode", ""))
         candidates_raw = values.get("candidates", "").strip()
-        top_n = max(0, min(int(values.get("top_n") or 10), 20))
+        try:
+            top_n = int(values.get("top_n") or 10)
+        except (TypeError, ValueError):
+            top_n = 10
+        top_n = max(0, min(top_n, 20))
         force = bool(values.get("force"))
-        candidate_list = [c.strip() for c in re.split(r"[,，;、]", candidates_raw) if c.strip()]
+        candidate_list = _normalize_country_inputs(
+            c for c in re.split(r"[,，;、/]", candidates_raw) if c.strip()
+        )
         ctx.update(hscode=hscode, candidates_raw=candidates_raw, top_n=top_n, force=force)
 
         if not re.fullmatch(r"\d{6}", hscode):
@@ -622,8 +730,8 @@ def market_matrix():
             try:
                 overview = un_comtrade.get_market_overview(hscode, top_n=top_n or 10, force=force)
                 ctx["overview"] = overview
-                ctx["import_line"] = _svg_line_series(overview["import_share_trend"])
-                ctx["export_line"] = _svg_line_series(overview["export_share_trend"])
+                ctx["import_line"] = _svg_line_series(overview["import_share_trend"], height=250)
+                ctx["export_line"] = _svg_line_series(overview["export_share_trend"], height=250)
             except Exception as e:
                 ctx["overview"] = {"unavailable_reason": str(e)}
 

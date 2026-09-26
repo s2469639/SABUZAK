@@ -11,8 +11,37 @@
       <p class="desc">현지 검색 트렌드 · 리테일 가격 · 현지 시장 트렌드를 한 화면에서 확인하세요.</p>
     </div>  </div>
 
+  {# 결과 화면(/trend/<job_id>)은 expo_id·product_id를 안 넘겨받으므로, 박람회
+     상세 탭이 쿼리스트링으로 붙여준 값을 폼에 채워서 여기서 다시 조사해도
+     박람회+제품 결과로 저장되게 한다. #}
+  {% set expo_id = expo_id or request.args.get("expo_id") %}
+  {% set product_id = product_id or request.args.get("product_id") %}
   {% set form_action = "/trend-research" %}{% set submit_label = "분석 실행" %}
+  {% if data and not error %}
+  {# 결과가 있으면 입력칸은 한 줄 요약으로 접어둔다 (조건 수정을 누르면 펼침) #}
+  <style>
+    .form-fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 18px; user-select: none; }
+    .form-fold > summary::-webkit-details-marker { display: none; }
+    .form-fold[open] > summary { border-bottom: none; border-radius: 10px 10px 0 0; }
+    .form-fold[open] > .form-container { border-top: none; border-radius: 0 0 10px 10px; padding-top: 4px; }
+    .form-fold .fold-label { flex: none; font-size: 12px; font-weight: 800; color: var(--muted); }
+    .form-fold .fold-summary { flex: 1; min-width: 0; font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .form-fold .fold-toggle { flex: none; font-size: 13px; font-weight: 700; color: var(--accent); }
+    .form-fold .fold-toggle .when-open { display: none; }
+    .form-fold[open] .fold-toggle .when-open { display: inline; }
+    .form-fold[open] .fold-toggle .when-closed { display: none; }
+  </style>
+  <details class="form-fold">
+    <summary>
+      <span class="fold-label">조사 조건</span>
+      <span class="fold-summary">{{ [form.name, form.country, form.exhibition_name] | select | join(" · ") }}</span>
+      <span class="fold-toggle"><span class="when-closed">조건 수정 ▾</span><span class="when-open">접기 ▴</span></span>
+    </summary>
+    {% include "trend_v2/_form.html" %}
+  </details>
+  {% else %}
   {% include "trend_v2/_form.html" %}
+  {% endif %}
 
   {% if data %}
   {% set r = data.research %}
