@@ -10,5 +10,14 @@ python-docx
 weasyprint
 googletrans
 pytrends
+pycountry
+babel
+google-auth
+google-auth-oauthlib
+cryptography
+comtradeapicall
 tavily-python
-pytrends
+pydantic
+openpyxl
+gunicorn
+brotli

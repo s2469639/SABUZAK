@@ -1,7 +1,21 @@
 __pycache__/
 *.pyc
 .env
-instance/*.db
+instance/
 *.csv
 .venv/
 venv/
+
+# 추가 권장
+**/__pycache__/      # 하위 모든 경로의 pycache 포함 (지금은 루트 __pycache__/ 만 매칭될 수 있음)
+*.py[cod]
+**/*.db
+*.db
+*.sqlite
+*.sqlite3
+*.log
+.DS_Store
+._*                  # macOS 리소스포크 파일 (._competitor_analyzer.pyc 같은 것들)
+node_modules/
+*.egg-info/
+app/static/generated/

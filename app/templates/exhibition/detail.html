@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+{% block title %}{{ expo.name }} | FairMate{% endblock %}
+
+{% block content %}
+{% if expo.hero_image_url %}
+<div class="expo-hero">
+  <img src="{{ expo.hero_image_url }}" alt="">
+</div>
+{% endif %}
+
+<div class="page-header expo-detail-header">
+  <div class="expo-head">
+    <div class="expo-thumb expo-thumb-lg">
+      {% if expo.image_url %}
+      <img src="{{ expo.image_url }}" alt="">
+      {% else %}
+      <svg class="expo-thumb-fallback" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="8.5" cy="9.5" r="1.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M21 16l-5.5-5.5a1 1 0 0 0-1.4 0L4 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      {% endif %}
+    </div>
+    <div class="expo-head-text">
+      <h1>
+        {{ expo.name }}
+        {% if expo.food_yn %}
+          <span class="badge-food">식품</span>
+        {% else %}
+          <span class="badge-nonfood">비식품</span>
+        {% endif %}
+      </h1>
+      <p class="expo-head-meta">{{ expo.country_ko or expo.country }} · {{ expo.city }} · {{ kdate_range(expo.start_date, expo.end_date) }}</p>
+    </div>
+  </div>
+  <a href="{{ url_for('dashboard.index') }}" class="btn-secondary">← 대시보드로</a>
+</div>
+
+<div class="tabs" data-active="overview">
+  <div class="tab-nav">
+    <div class="tab-nav-buttons">
+      <button type="button" class="tab-btn active" data-tab="overview">박람회 개요</button>
+      <button type="button" class="tab-btn" data-tab="market">시장 개요</button>
+      <button type="button" class="tab-btn" data-tab="trend">트렌드 조사</button>
+      <button type="button" class="tab-btn" data-tab="hscode">관세 &amp; 수출 주의사항</button>
+    </div>
+    <form method="post" action="{{ url_for('concept.start', expo_id=expo.id) }}">
+      <button type="submit" class="btn-primary">부스 컨셉 기획 →</button>
+    </form>
+  </div>
+
+  <div class="tab-panel" id="tab-overview">
+    <div class="card overview-card">
+      <section class="detail-section">
+        <h2 class="detail-section-title">기본 정보</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">개최지</span>
+            <span class="info-value">{{ expo.venue or '정보 없음' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">국가 / 도시</span>
+            <span class="info-value">{{ expo.country_ko or expo.country }} / {{ expo.city }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">일정</span>
+            <span class="info-value">{{ kdate_range(expo.start_date, expo.end_date) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">규모</span>
+            <span class="info-value">
+              {% if expo.scale and expo.scale != '미상' %}<span class="badge-scale">{{ expo.scale }}</span>{% else %}미상{% endif %}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">카테고리</span>
+            <span class="info-value">{{ expo.category or '-' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">식품 여부</span>
+            <span class="info-value">
+              {% if expo.food_yn %}
+                <span class="badge-food">식품</span>
+              {% else %}
+                <span class="badge-nonfood">비식품</span>
+              {% endif %}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">참관 대상</span>
+            <span class="info-value">
+              {% if expo.audience_type %}<span class="badge-audience">{{ expo.audience_type }}</span>{% endif %}
+              {% if expo.audience_note %}<span class="info-note">{{ expo.audience_note }}</span>{% endif %}
+              {% if not expo.audience_type and not expo.audience_note %}-{% endif %}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">공식 웹사이트</span>
+            <span class="info-value">
+              {% if expo.website %}
+                <a href="https://{{ expo.website }}" target="_blank" rel="noopener">{{ expo.website }}</a>
+              {% else %}
+                -
+              {% endif %}
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {% if expo.keywords %}
+      <section class="detail-section">
+        <h2 class="detail-section-title">연관 키워드</h2>
+        <div class="keyword-tags">
+          {% for kw in expo.keywords.split(',') %}
+          <span class="keyword-tag">{{ kw.strip() }}</span>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      {% if intro_paragraphs %}
+      <section class="detail-section">
+        <h2 class="detail-section-title">박람회 소개</h2>
+        {% for para in intro_paragraphs %}
+        <p class="intro-text">{{ para }}</p>
+        {% endfor %}
+      </section>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-market" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
+    {% include "exhibition/_tab_market.html" %}
+    {% endif %}
+  </div>
+
+  <div class="tab-panel" id="tab-trend" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
+    {% include "exhibition/_tab_trend.html" %}
+    {% endif %}
+  </div>
+
+  <div class="tab-panel" id="tab-hscode" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
+
+    {% if hscode_ctx.overall_best %}
+    <div class="best-tariff-banner">
+      <div class="best-tariff-icon">🏆</div>
+      <div>
+        <div class="best-tariff-label">등록 제품 중 최적 관세 추천</div>
+        <div class="best-tariff-main">
+          <strong>{{ hscode_ctx.overall_best.product.name }}</strong>
+          ({{ hscode_ctx.overall_best.product.hs_code }})
+          — <strong>{{ hscode_ctx.overall_best.best_regime.regime }}</strong>
+          적용 시 <span class="best-tariff-rate">{{ hscode_ctx.overall_best.best_regime.display }}</span>로 가장 유리
+        </div>
+        {% if hscode_ctx.overall_best.certs %}
+        <div class="best-tariff-certs">
+          필요 서류: {{ hscode_ctx.overall_best.certs|join(', ') }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <h3 class="section-label">등록 제품의 {{ expo.country_ko or expo.country }} 수출 HS코드 및 관세율</h3>
+    <div class="tariff-card-list">
+      {% for row in hscode_ctx.product_rows %}
+      <div class="tariff-card tariff-card-stacked">
+        <div class="tariff-card-title">
+          <span class="hs-tag">{{ row.product.name }}</span>
+          <strong>{{ row.product.hs_code }}</strong>
+        </div>
+
+        {% if row.has_data or row.mfn_rate %}
+        <table class="tariff-regime-table">
+          <thead>
+            <tr>
+              <th>협정</th>
+              <th>관세율</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if row.mfn_rate %}
+            <tr class="mfn-row">
+              <td>MFN(기본세율)</td>
+              <td class="tariff-rate-cell {% if row.mfn_rate.tariff_ave == 0 %}zero{% endif %}">
+                {{ row.mfn_rate.display }}
+              </td>
+            </tr>
+            {% endif %}
+            {% for regime in row.regimes %}
+            <tr class="{% if regime.is_best %}best-row{% endif %}">
+              <td>
+                {{ regime.regime }}
+                {% if regime.is_best %}<span class="best-pick-tag">추천</span>{% endif %}
+              </td>
+              <td class="tariff-rate-cell {% if regime.tariff_ave == 0 %}zero{% endif %}">
+                {{ regime.display }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="placeholder-note">이 국가·HS코드 조합의 관세 데이터가 없습니다 (해당 협정 미체결이거나 자료 미수록).</p>
+        {% endif %}
+
+        {% if row.has_range and row.subitems %}
+        <details class="tariff-subitem-detail" open>
+          <summary>⚠️ 등록하신 HS코드({{ row.product.hs_code }})가 세부 10자리 코드까지는 아니라서, 범위로 표시된 세율의 세부 품목별 실제 세율을 확인하세요</summary>
+          <table class="tariff-regime-table">
+            <thead>
+              <tr>
+                <th>세부 HS코드</th>
+                <th>품명</th>
+                {% if row.subitems %}{% for rate in row.subitems[0].rates %}<th>{{ rate.regime }}</th>{% endfor %}{% endif %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in row.subitems %}
+              <tr>
+                <td>{{ item.code }}</td>
+                <td>{{ item.name_ko }}</td>
+                {% for rate in item.rates %}<td>{{ rate.display }}</td>{% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <p class="placeholder-note">정확한 세율을 받으려면 마이페이지에서 제품 HS코드를 위 표의 10자리 세부코드로 정확히 수정해 등록하세요.</p>
+        </details>
+        {% endif %}
+
+        <span class="info-icon" tabindex="0">i
+          <span class="info-icon-pop">
+            ⚠️ 위 관세율은 두 자료를 함께 씁니다 — FTA/RCEP 협정세율은 농림축산식품부
+            "농축산물 FTA 협정세율 현황"(공공데이터포털), MFN(기본세율)은
+            {{ expo.country_ko or expo.country }} 관세청이 공개한 관세율표 원본을
+            기준으로 합니다. 세부 품목별로 예외가 있을 수 있으니, 실제 통관·수출 전
+            반드시 관세청 또는 관세사를 통해 최종 세율을 확인하세요.
+            {% if not hscode_ctx.has_country_data and not row.mfn_rate %}({{ expo.country_ko or expo.country }}은(는) 이 자료들에 관세 정보가 없는 국가입니다 - 한국과 체결된 관세 협정이 없거나 자료에 미수록된 경우입니다.){% endif %}
+            {% if wto_tariff_info and not row.mfn_rate %}
+            <br><br>
+            📊 참고(WTO 통계):
+            {% if wto_tariff_info.agricultural and wto_tariff_info.agricultural.is_eu_aggregate %}
+              {{ expo.country_ko or expo.country }}은(는) EU 회원국이라 개별 국가 통계가 없어 EU 전체 기준 —
+            {% else %}
+              {{ expo.country_ko or expo.country }}의
+            {% endif %}
+            MFN 평균 관세율 —
+            {% if wto_tariff_info.agricultural %}농산물 {{ wto_tariff_info.agricultural.value }}% ({{ wto_tariff_info.agricultural.year }}년){% endif %}
+            {% if wto_tariff_info.all_products %}{% if wto_tariff_info.agricultural %} · {% endif %}전체 품목 {{ wto_tariff_info.all_products.value }}% ({{ wto_tariff_info.all_products.year }}년){% endif %}
+            — 특정 품목이 아닌 국가(또는 EU) 전체 평균이니 위 표의 제품별 세율과 혼동하지 마세요.
+            {% endif %}
+          </span>
+        </span> <span class="placeholder-note" style="display:inline;">관세율 출처·주의사항</span>
+
+        {% if row.certs %}
+        <div class="cert-badges">
+          <span class="cert-label">필요 인증:</span>
+          {% for cert in row.certs %}
+          <span class="cert-badge">{{ cert }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="section-label-row">
+          <h4 class="section-label">
+            수출 주의사항 <span class="section-label-sub">({{ row.product.name }} 관련 식품·농산물 수입규정 참고 · {{ expo.country_ko or expo.country }})</span>
+            {% if row.regulation_notes_is_live %}
+              <span class="data-source-badge live">UNCTAD TRAINS 실데이터</span>
+            {% else %}
+              <span class="data-source-badge">예시 데이터 · 이 제품은 아직 수집 안 됨</span>
+            {% endif %}
+            {% if row.regulation_strictness %}
+              <span class="strictness-badge strictness-{{ row.regulation_strictness }}">규제 강도: {{ row.regulation_strictness }}</span>
+              <span class="info-icon" tabindex="0">i
+                <span class="info-icon-pop">
+                  아래 목록(최대 6건) 중 "필수"(등록·인증·금지 등 반드시 지켜야 하는 항목)와
+                  "주의"(라벨링·검역 등 확인이 필요한 항목) 개수로 판정합니다.<br><br>
+                  <strong>주의요함</strong>: 필수 2건 이상<br>
+                  <strong>보통</strong>: 필수 1건 또는 주의 2건 이상<br>
+                  <strong>낮음</strong>: 그 외
+                </span>
+              </span>
+            {% endif %}
+          </h4>
+          <form method="post" class="btn-loading-form" action="{{ url_for('exhibition.sync_ntm', expo_id=expo.id, product_id=row.product.id) }}">
+            <button type="submit" class="btn-secondary btn-sync-ntm" data-loading-text="사부작사부작 가져오는 중...">
+              {% if row.regulation_notes_is_live %}TRAINS 데이터 다시 가져오기{% else %}지금 실제 데이터 가져오기{% endif %}
+            </button>
+          </form>
+        </div>
+        {% if row.regulation_no_match %}
+        <p class="placeholder-note">해당 부분에 해당되는 파일이 없습니다. ({{ row.product.name }} · {{ expo.country_ko or expo.country }} 관련 UNCTAD TRAINS 규정을 조회했지만 관련 항목을 찾지 못했습니다.)</p>
+        {% else %}
+        <p class="placeholder-note">
+          <span class="info-icon" tabindex="0">i
+            <span class="info-icon-pop">
+              ⚠️ 이 목록은 {{ row.product.name }} 품목만 콕 집은 게 아니라, {{ expo.country_ko or expo.country }}의 식품·농산물 수입 관련 규정 중 관련도가 높은 순으로 보여주는 참고자료입니다 (UNCTAD TRAINS 원본 데이터에 세부 HS코드가 태깅 안 된 경우가 많아 완전히 이 품목 전용으로만 걸러내기 어렵습니다).
+            </span>
+          </span> 이 목록에 대한 안내
+        </p>
+        <div class="regulation-list">
+          {% for note in row.regulation_notes %}
+          <div class="regulation-card level-{{ note.level }}">
+            <span class="regulation-level level-{{ note.level }}">{{ note.level }}</span>
+            <strong>{{ note.title }}</strong>
+            <p>{{ note.desc }}</p>
+            <span class="regulation-ref">
+              ref: {{ note.ref }}
+              {% if note.web_link %}· <a href="{{ note.web_link }}" target="_blank" rel="noopener">원문 링크</a>{% endif %}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

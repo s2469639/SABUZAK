@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}메일 템플릿 | FairMate{% endblock %}
+
+{% block content %}
+{% include "buyers/_nav.html" %}
+
+<div class="page-header">
+  <div>
+    <h1>팔로업 메일 템플릿</h1>
+    <p class="page-desc">
+      박람회 구분 없이 회사 전체가 공용으로 쓰는 템플릿입니다. 최대 3개 버전을 만들어두고, 그중 하나만
+      "발송용"으로 지정해서 사용합니다.<br>
+      제목/본문에 {% raw %}{{exhibition}}{% endraw %}, {% raw %}{{name}}{% endraw %}, {% raw %}{{company}}{% endraw %}
+      를 넣으면 발송 시 박람회명·바이어 이름·회사명으로 자동 치환됩니다.<br>
+      {% raw %}{{date}}{% endraw %} 는 발송일로, {% raw %}{{sender_name}}{% endraw %},
+      {% raw %}{{sender_company}}{% endraw %}, {% raw %}{{sender_position}}{% endraw %} 는
+      <a href="{{ url_for('buyer_profile.edit_profile') }}">발신 정보</a>에 입력한 값으로 자동 치환됩니다.
+    </p>
+  </div>
+  <a href="{{ url_for('contacts.list_contacts') }}" class="btn-secondary">← 바이어 목록으로</a>
+</div>
+
+{% if not all_versions|selectattr('is_active')|selectattr('body')|list %}
+<p class="callout-warning">⚠️ 아직 발송용으로 지정된 템플릿이 없습니다. 아래에서 버전을 선택해 작성한 뒤 "이 버전을 발송용으로 사용"을 눌러주세요.</p>
+{% endif %}
+
+<div class="version-tabs-row">
+  <div class="version-tabs">
+    {% for v in all_versions %}
+    <div class="version-tab-group">
+      <a href="{{ url_for('mail_template.edit_template', version=v.version) }}"
+         class="tab {{ 'tab-active' if v.version == version else '' }}">
+        {{ v.display_name }}
+        {% if v.is_active %} <span class="tab-badge">사용중</span>
+        {% elif not v.body %} <span class="tab-badge tab-badge-muted">미작성</span>
+        {% endif %}
+      </a>
+      <button type="button" class="tab-edit-btn" onclick="toggleRename({{ v.version }})" title="버전 이름 수정">✏️</button>
+      <form id="rename-form-{{ v.version }}" method="post"
+            action="{{ url_for('mail_template.rename', version=v.version) }}" class="rename-form">
+        <input type="text" name="label" placeholder="버전 {{ v.version }}" value="{{ v.label or '' }}" maxlength="60">
+        <button type="submit" class="btn-chip">저장</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  function toggleRename(version) {
+    var form = document.getElementById('rename-form-' + version);
+    form.classList.toggle('rename-form-open');
+  }
+</script>
+
+<div class="card">
+<form method="post" action="{{ url_for('mail_template.revise_template', version=version) }}" class="revise-bar">
+  <input type="text" name="instruction" placeholder="수정 방향을 제시하세요 (예: 더 짧고 캐주얼하게)">
+  <button type="submit" class="btn-secondary">AI로 생성/수정하기</button>
+</form>
+
+<form method="post" action="{{ url_for('mail_template.save', version=version) }}" class="form">
+  <div class="form-field">
+    <label for="subject">제목</label>
+    <input id="subject" name="subject" value="{{ template.subject or '' }}">
+  </div>
+  <div class="form-field">
+    <label for="body">본문</label>
+    <textarea id="body" name="body" rows="14">{{ template.body or '' }}</textarea>
+  </div>
+  <div class="form-actions">
+    <button type="submit" form="activate-form" class="btn-secondary" {{ 'disabled' if template.is_active else '' }}>
+      {{ '현재 발송용 템플릿입니다' if template.is_active else '이 버전을 발송용으로 사용' }}
+    </button>
+    <button type="submit" class="btn-primary">템플릿 저장</button>
+  </div>
+</form>
+<form id="activate-form" method="post" action="{{ url_for('mail_template.activate', version=version) }}"></form>
+</div>
+{% endblock %}

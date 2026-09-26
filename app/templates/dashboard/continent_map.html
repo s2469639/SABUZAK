@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}대시보드 | FairMate{% endblock %}
+
+{% block content %}
+{% if pipeline_banner %}
+<ul class="flash-list"><li class="flash flash-success">{{ pipeline_banner }}</li></ul>
+{% endif %}
+<div class="dash-header">
+  <div class="dash-title-row">
+    <h1>대륙별 박람회 현황</h1>
+    <span class="page-desc">지도에서 권역을 클릭해 대륙별 박람회 목록을 확인하세요.</span>
+  </div>
+  <button type="button" class="btn-primary" data-modal-open="add-product-modal">+ 제품 추가하기</button>
+</div>
+
+<div class="modal-overlay" id="add-product-modal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h2>제품 추가하기</h2>
+      <button type="button" class="modal-close" data-modal-close aria-label="닫기">✕</button>
+    </div>
+
+    <form method="post" action="{{ url_for('mypage.add_product') }}">
+      <input type="hidden" name="next" value="dashboard">
+      <div class="form-row">
+        <div class="form-field hs-autocomplete-field">
+          <label for="modal-name">제품명 *</label>
+          <input type="text" id="modal-name" name="name" placeholder="예: 약과" autocomplete="off" required>
+          <div class="hs-autocomplete-dropdown" hidden></div>
+        </div>
+        <div class="form-field hs-autocomplete-field">
+          <label for="modal-hs_code">HS코드 *</label>
+          <input type="text" id="modal-hs_code" name="hs_code" placeholder="예: 1905.90" autocomplete="off" required>
+          <div class="hs-autocomplete-dropdown" hidden></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="modal-brand">브랜드명</label>
+          <input type="text" id="modal-brand" name="brand" placeholder="예: 사부작푸드">
+        </div>
+        <div class="form-field">
+          <label for="modal-product_form">제품 형태</label>
+          <input type="text" id="modal-product_form" name="product_form" placeholder="예: 냉동, 분말, 병조림">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="modal-ingredients">원재료</label>
+        <textarea id="modal-ingredients" name="ingredients" rows="3" placeholder="예: 밀가루, 꿀, 참기름, 계피..."></textarea>
+      </div>
+
+      <p class="page-desc">아래 항목은 박람회 상세 페이지의 "트렌드 조사" 탭에서 시장·트렌드 분석 시 자동으로 사용됩니다.</p>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="modal-target_price">가격 (목표 소매 가격대/단위중량)</label>
+          <input type="text" id="modal-target_price" name="target_price" placeholder="예: 4.99 GBP / 350g">
+        </div>
+        <div class="form-field">
+          <label for="modal-certifications">보유 인증</label>
+          <input type="text" id="modal-certifications" name="certifications" placeholder="예: 비건, 코셔, HACCP">
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="modal-strengths">제품 강점</label>
+        <textarea id="modal-strengths" name="strengths" rows="2" placeholder="예: 얇고 쫄깃한 만두피, 버섯 채즙으로 육즙 모사"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" data-modal-close>취소</button>
+        <button type="submit" class="btn-primary">추가하기</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="dash-map-card">
+  <div id="world-map" class="world-map"></div>
+
+  <div class="world-map-legend">
+    {% for continent in continents %}
+    <button type="button" class="legend-chip" data-continent="{{ continent }}"
+            data-url="{{ url_for('exhibition.expo_list_partial', continent=continent) }}">
+      <span class="legend-dot" data-legend-dot="{{ continent }}"></span>
+      <span>{{ continent }}</span>
+      <span class="legend-count">{{ counts.get(continent, 0) }}</span>
+    </button>
+    {% endfor %}
+  </div>
+</div>
+
+<div id="continent-results" class="continent-results-wrap">
+  {% include "dashboard/_expo_list_partial.html" %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-geo-projection@4/dist/d3-geo-projection.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="{{ url_for('static', filename='js/worldmap.js') }}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var mapEl = document.getElementById("world-map");
+    if (!mapEl || !window.SabuzakWorldMap) return;
+
+    // 범례 칩 색상 점 채우기
+    document.querySelectorAll("[data-legend-dot]").forEach(function (el) {
+      var koLabel = el.getAttribute("data-legend-dot");
+      var enId = Object.keys(window.SabuzakWorldMap.CONTINENT_KO).find(function (k) {
+        return window.SabuzakWorldMap.CONTINENT_KO[k] === koLabel;
+      });
+      if (enId) el.style.background = window.SabuzakWorldMap.CONTINENT_COLOR[enId];
+    });
+
+    window.SabuzakWorldMap.render(mapEl, {
+      dataUrl: "{{ url_for('static', filename='data/countries-110m.json') }}",
+      onSelect: function (continentEn, koLabel) {
+        // 클릭된 대륙과 매칭되는 범례 칩을 클릭 → dashboard.js가 필터링/active 토글 처리
+        var chip = document.querySelector('.legend-chip[data-continent="' + koLabel + '"]');
+        if (chip) chip.click();
+      },
+    });
+
+    // 범례 칩을 직접 클릭했을 때도 지도의 강조 상태를 같이 맞춘다
+    document.querySelectorAll(".legend-chip").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        var koLabel = chip.dataset.continent;
+        var enId = Object.keys(window.SabuzakWorldMap.CONTINENT_KO).find(function (k) {
+          return window.SabuzakWorldMap.CONTINENT_KO[k] === koLabel;
+        });
+        if (enId && mapEl._worldMapSetActive) mapEl._worldMapSetActive(enId);
+      });
+    });
+  });
+</script>
+{% endblock %}

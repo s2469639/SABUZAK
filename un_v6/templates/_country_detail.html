@@ -1,0 +1,218 @@
+{% from "_macros.html" import bar_chart, money, yoy %}
+{# ⑥ 국가 상세 조사. 대시보드 첫 화면에서도, 탭 클릭 시 /detail 응답으로도 이 파일 하나를 쓴다 #}
+  {% if detail or detail_error or result %}
+    <section class="card" id="country-detail">
+      <div class="card-head">
+        <h3>⑥ 국가 상세 조사{% if detail %}: {{ country or detail.target_country }}{% endif %} <span class="basis">선택 국가 1개</span></h3>
+      </div>
+
+      {% if result and result.candidates %}
+        <p class="note" style="margin-top:-6px;">탭 번호 = 비교 국가 중 수입금액 순위 · <span class="star">★</span> = 관심 국가{% if detail_auto_reason and detail %} · 지금은 <strong>{{ detail_auto_reason }}</strong>이라 자동으로 열었습니다{% endif %}</p>
+        {% set labels = result.candidates | map(attribute='label') | list %}
+        <div class="tabs">
+          {% for c in result.candidates | sort(attribute='import_rank') %}
+            <a href="#country-detail" class="country-link{% if country == c.label %} active{% endif %}" data-country="{{ c.label }}" title="비교 국가 중 수입금액 {{ c.import_rank }}위">{{ c.import_rank }}.{% if c.is_focus %}<span class="star">★</span>{% endif %}{{ c.label }}</a>
+          {% endfor %}
+          {% if country and country not in labels %}
+            <a href="#country-detail" class="country-link active" data-country="{{ country }}">{{ country }}</a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if detail_error %}
+        <div class="error">⚠️ {{ detail_error }}</div>
+      {% endif %}
+
+      {% if detail %}
+        <div class="detail-head">
+          <h3>{{ detail.target_country }}의 교역통계 (HS {{ detail.hscode }})</h3>
+          <div class="detail-meta">
+            {% if detail.from_cache %}
+              <span class="badge cache">캐시 결과 · {{ detail.fetched_at | kst }}</span>
+            {% else %}
+              <span class="badge fresh">새로 조사함 · {{ detail.fetched_at | kst }}</span>
+            {% endif %}
+            <span>조회 연도: {{ detail.years | join(', ') }}</span>
+          </div>
+        </div>
+
+        {% if not result %}
+          {# 매트릭스가 실패한 경우에만 품목 설명/글로벌 순위를 여기서 보여준다 (성공 시엔 위와 중복) #}
+          {% if detail.official_item_desc %}
+            <div class="card item-card" style="box-shadow:none; border:1px solid var(--line); border-left:4px solid #f5b400;">
+              <div class="item-desc">📋 UN Comtrade 공식 품목 설명(HS {{ detail.hscode }}): {{ item_desc_ko or detail.official_item_desc }}</div>
+              {% if item_desc_ko %}<div class="desc-original">원문: {{ detail.official_item_desc }}</div>{% endif %}
+              <div class="desc-original">이 설명이 조사하려던 품목과 다르면 HS코드를 잘못 입력하셨을 수 있습니다. 다시 확인해주세요.</div>
+            </div>
+          {% endif %}
+          <p class="sub-title">글로벌 수입 순위 (상위 10개국)</p>
+          {% if detail.global_import_ranking %}
+            <div class="tbl-wrap row-gap">
+              <table class="tbl">
+                <tr><th>#</th><th>국가</th><th>수입액(USD)</th></tr>
+                {% for r in detail.global_import_ranking %}
+                  <tr><td>{{ loop.index }}</td><td>{{ r.country }}</td><td class="num">${{ "{:,.0f}".format(r.import_value_usd) }}</td></tr>
+                {% endfor %}
+              </table>
+            </div>
+          {% else %}
+            <div class="empty">데이터 없음</div>
+          {% endif %}
+        {% endif %}
+
+        <div class="grid-2">
+          <!-- 시장 경쟁력 -->
+          <div class="panel">
+            {% set comp = detail.competitiveness %}
+            {% if comp and comp.top_suppliers %}
+              <p class="sub-title">{{ detail.target_country }}의 수입지역 순위 ({{ comp.year }}년)</p>
+            {% else %}
+              <p class="sub-title">{{ detail.target_country }}의 주요 경쟁국 비교</p>
+            {% endif %}
+            {% if comp and comp.total_import_usd %}
+              {% if comp.is_mirror_estimate %}
+                <p><span class="badge mirror">🪞 상대국 보고 기반 추정치</span></p>
+                <p class="note">
+                  ⚠️ {{ detail.target_country }}이(가) 이 API에 직접 보고한 공식 수치가 없어서,
+                  전세계 각국이 "{{ detail.target_country }}에 수출했다"고 보고한 값들을 합산한
+                  <strong>추정치</strong>입니다. {{ detail.target_country }} 정부의 공식 발표 수치와 다를 수 있습니다.
+                </p>
+              {% endif %}
+              <p class="note">{{ comp.year }}년 전체 수입액: <strong style="color:var(--text)">${{ "{:,.0f}".format(comp.total_import_usd) }}</strong>{% if comp.supplier_country_count %} · 공급국 {{ comp.supplier_country_count }}개국{% endif %}</p>
+              {% if comp.top_suppliers %}
+                {# 실제 상위 공급국 순위 - 트라이빅처럼 한국 행은 맨 위에 초록색으로 고정 #}
+                <div class="tbl-wrap">
+                  <table class="tbl">
+                    <tr><th>순위</th><th>수입지역</th><th>수입금액(USD)</th><th>비중</th></tr>
+                    {% if comp.korea_supplier %}
+                      <tr class="kor">
+                        <td>{{ comp.korea_supplier.rank }}</td>
+                        <td>한국 ({{ comp.korea_supplier.label }})</td>
+                        <td class="num">${{ "{:,.0f}".format(comp.korea_supplier.import_value_usd) }}</td>
+                        <td>{{ comp.korea_supplier.share_pct | pct }}</td>
+                      </tr>
+                    {% else %}
+                      <tr class="kor"><td>-</td><td>한국</td><td colspan="2">이 시장으로의 한국산 수입 기록 없음</td></tr>
+                    {% endif %}
+                    {% for sup in comp.top_suppliers if not sup.is_korea %}
+                      <tr>
+                        <td>{{ sup.rank }}</td>
+                        <td>{{ sup.label }}</td>
+                        <td class="num">${{ "{:,.0f}".format(sup.import_value_usd) }}</td>
+                        <td>{{ sup.share_pct | pct }}</td>
+                      </tr>
+                    {% endfor %}
+                  </table>
+                </div>
+                {% if comp.supplier_ranked_count and comp.supplier_ranked_count > comp.top_suppliers | length %}
+                  <p class="note">상위 {{ comp.top_suppliers | length }}개국만 표시 (전체 {{ comp.supplier_ranked_count }}개국)</p>
+                {% endif %}
+              {% else %}
+                {# 예전 캐시 결과: 미리 정해둔 비교국(KOR/CHN/JPN/USA)만 있음 - 순위가 아님 #}
+                <div class="banner">이 결과는 예전 방식으로 저장된 결과라 실제 수입지역 순위가 아니라 고정 비교국만 보여줍니다. "저장된 결과 무시하고 새로 조사"로 다시 조회하면 실제 상위 공급국 순위가 나옵니다.</div>
+                <div class="tbl-wrap">
+                  <table class="tbl">
+                    <tr><th>비교국</th><th>수입금액(USD)</th><th>비중</th></tr>
+                    {% for b in comp.breakdown %}
+                      <tr class="{{ 'kor' if b.country_iso3 == 'KOR' else '' }}">
+                        <td>{{ b.country_iso3 }}</td>
+                        <td class="num">${{ "{:,.0f}".format(b.import_value_usd) }}</td>
+                        <td>{{ b.share_pct | pct if b.share_pct is not none else 'N/A' }}</td>
+                      </tr>
+                    {% endfor %}
+                  </table>
+                </div>
+              {% endif %}
+            {% else %}
+              <div class="empty">데이터 없음</div>
+            {% endif %}
+          </div>
+
+          <!-- 성장 트렌드 -->
+          {% set gt = detail.growth_trend %}
+          <div class="panel">
+            <p class="sub-title">{{ detail.target_country }}의 수입 추이{% if gt %} ({{ gt.years_with_data }}/{{ gt.years_requested | length }}개년 데이터 확보){% endif %}</p>
+            {% if gt and gt.by_year %}
+              {% if gt.is_mirror_estimate %}
+                <p><span class="badge mirror">🪞 상대국 보고 기반 추정치</span></p>
+              {% endif %}
+              <div class="unit">단위: USD</div>
+              {{ bar_chart(gt.by_year, 'year', 'import_value_usd', highlight_first=false) }}
+              {% if gt.by_year | selectattr('may_be_incomplete') | list %}
+                <p class="note">* 빗금 막대 = 직전 연도보다 30% 이상 급감해 집계가 덜 됐을 가능성이 있는 연도 (CAGR 계산에서 제외)</p>
+              {% endif %}
+              {% if gt.cagr_pct is not none %}
+                <p class="cagr {{ 'up' if gt.cagr_pct >= 0 else 'down' }}">CAGR{% if gt.cagr_start_year %} ({{ gt.cagr_start_year }}→{{ gt.cagr_end_year }}){% endif %}: {{ gt.cagr_pct }}%</p>
+              {% endif %}
+            {% else %}
+              <div class="empty">데이터 없음</div>
+            {% endif %}
+          </div>
+        </div>
+
+        {% set ke = detail.korea_exports_customs %}
+        <div class="section-divider">한국의 {{ detail.target_country }} 수출 추이 <span class="sub-num" style="display:inline">관세청 기준 (FOB)</span></div>
+        {% if ke and ke.available %}
+          {% if ke.by_year and (ke.by_year | map(attribute='export_usd') | select | list) %}
+            <div class="panel">
+              <div class="unit">단위: USD</div>
+              {{ bar_chart(ke.by_year, 'year', 'export_usd', highlight_first=false) }}
+            </div>
+          {% else %}
+            <div class="empty">조회 기간 동안 한국의 이 나라 수출 실적이 없습니다 (관세청 기준 $0).{% if ke.ytd %} {{ ke.ytd.year }}년 1~{{ ke.ytd.months }}월 누계: {{ money(ke.ytd.export_usd) }}{% endif %}</div>
+          {% endif %}
+        {% elif ke %}
+          <div class="empty">관세청 자료를 불러오지 못했습니다 ({{ ke.reason }})</div>
+        {% else %}
+          <div class="empty">이 결과는 관세청 연동 이전에 저장된 결과입니다. "저장된 결과 무시하고 새로 조사"로 다시 조회하면 표시됩니다.</div>
+        {% endif %}
+
+        {% set dv = detail.derived %}
+        {% if dv and dv.yearly_rows %}
+          <div class="section-divider">연도별 교역 현황
+            <span class="sub-num" style="display:inline">{{ detail.target_country }} 수입: UN Comtrade · 한국 수출: 관세청</span>
+          </div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <tr>
+                <th>연도</th>
+                <th>{{ detail.target_country }} 수입액<br><span class="sub-num">전체, USD</span></th>
+                <th>전년 대비</th>
+                {% if dv.has_customs %}
+                  <th>한국 → {{ detail.target_country }} 수출액<br><span class="sub-num">관세청, USD</span></th>
+                  <th>전년 대비</th>
+                {% endif %}
+                {% if dv.has_notes %}<th>참고</th>{% endif %}
+              </tr>
+              {% for r in dv.yearly_rows %}
+                <tr>
+                  <td>{{ r.year }}</td>
+                  <td class="num">{{ ('$' ~ '{:,.0f}'.format(r.import_usd)) if r.import_usd is not none else '-' }}</td>
+                  <td class="num">{{ yoy(r.import_yoy_pct) }}</td>
+                  {% if dv.has_customs %}
+                    <td class="num">{{ ('$' ~ '{:,.0f}'.format(r.korea_export_usd)) if r.korea_export_usd is not none else '-' }}</td>
+                    <td class="num">{{ yoy(r.korea_export_yoy_pct) }}</td>
+                  {% endif %}
+                  {% if dv.has_notes %}<td>{% if r.note %}<span class="badge warn">{{ r.note }}</span>{% endif %}</td>{% endif %}
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+          {% set ytd = dv.korea.customs_ytd %}
+          {% if ytd %}
+            <p class="note">한국 → {{ detail.target_country }} 수출 {{ ytd.year }}년 1~{{ ytd.months }}월 누계: <strong style="color:var(--text)">{{ money(ytd.export_usd) }}</strong>
+              {% if ytd.prev_export_usd is defined %}(전년 동기 {{ money(ytd.prev_export_usd) }}{% if ytd.yoy_pct is not none %}, {{ yoy(ytd.yoy_pct) }}{% endif %}){% endif %}
+            </p>
+          {% endif %}
+          <p class="note">수입액은 {{ detail.target_country }}가 신고한 CIF 기준, 한국 수출액은 한국 관세청 FOB 기준이라 두 값을 직접 나눠 비교하면 안 됩니다.</p>
+        {% endif %}
+
+        <div class="section-divider">{{ detail.target_country }} AI 전략 시사점
+          <span class="info" tabindex="0">i<span class="info-pop">위 UN Comtrade 수치를 바탕으로 한 AI 해석입니다. 실제 전략 결정 전 추가 검증을 권장합니다.</span></span>
+        </div>
+        <div id="detail-ai-slot">{% include "_ai_detail.html" %}</div>
+      {% elif not detail_error %}
+        <div class="empty">위 탭에서 국가를 선택하면 그 국가의 교역통계가 여기에 표시됩니다.</div>
+      {% endif %}
+    </section>
+  {% endif %}

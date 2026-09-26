@@ -1,123 +1,130 @@
-# 사부작(SABUZAK) | K-전통스낵 해외 박람회 운영 자동화 대시보드
+# 페어메이트(FairMate)
 
-김부각·약과 등 K-전통스낵 수출기업 '사부작' 의 해외 박람회 운영 업무를 자동화하는 내부용 대시보드입니다. 해외 시장 조사, 박람회 일정 수집, 부스 컨셉 기획, 기안서 작성까지 하나의 화면에서 처리합니다.
+중소 식품수출기업의 바이어 발굴을 위한 박람회 서칭 및 부스 컨셉 기획 원스탑 웹 서비스입니다. 마이페이지에서 자신의 제품(브랜드명·HS코드·원재료·인증·가격 등)을 등록하면, 해외 박람회 탐색·시장 조사·관세율/수출 규제 조회·부스 컨셉 기획·기안서 작성까지 하나의 화면에서 처리합니다.
 
-# 제품군
-사부작이 수출하는 5종 K-전통스낵입니다. 국가별 세부 HS코드·관세율은 박람회 상세 페이지의 HS코드 탭에서 확인합니다.
+특정 제품군(과자·스낵 등)에 고정된 서비스가 아니라, 식품 산업군에서 등록한 제품의 HS코드를 기준으로 관세율·수출 규제·시장 트렌드를 조회하는 범용 식품 수출 지원 플랫폼입니다.
 
-김부각	1905.90
-유과	1905.90
-약과	1905.90
-누룽지칩	1904.90
-고구마스틱	2005.99
+# 제품 등록
+사용자가 마이페이지에서 직접 제품을 등록합니다 (제품명, HS코드, 브랜드명, 제품 형태, 원재료, 보유 인증, 가격, 제품 강점).
+- 엑셀(.xlsx) 업로드로 여러 제품을 한번에 등록 가능 (컬럼명만 맞으면 순서 무관)
+- 체크된 제품만 시장 분석·부스 컨셉에 반영
+- 국가별 세부 HS코드·관세율(FTA 협정세율 + MFN 기본세율)·수출 규제는 박람회 상세 페이지의 "HS코드 & 수출 주의사항" 탭에서 확인
 
 # 화면 흐름
 로그인 → 대시보드(세계 지도) → [대륙 클릭] → 대륙별 박람회 목록 → 박람회 상세
         → 부스 컨셉 기획 → 기안서 작성
+        └ 마이페이지 (제품 등록/관리)
+        └ 바이어 관리 (연락처·팔로업·메일 템플릿)
         └ 작성 중인 박람회 (진행 상황 관리)
-        └ 기타
-            └ KOTRA 한국관 단체 참가 바로가기
-            └ 정부 지원 사업 바로가기
 
 ① 대시보드 — 세계 지도에서 대륙을 클릭하면 해당 대륙의 박람회 목록 페이지로 이동 (권역: 아메리카 · 유럽 · 중동·아프리카 · 아시아 · 오세아니아)
 
 ② 대륙별 박람회 목록 — 선택한 대륙의 박람회를 목록으로 표시, 클릭 시 상세로 이동
 
-③ 박람회 상세 — 4개 탭으로 구성
+③ 박람회 상세 — 탭으로 구성
 박람회 개요 — 개최지·장소·규모·카테고리·연간 방문객·참가 기업, 공식 소개
-시장·트렌드 — 현재 환율, 시장 인사이트 카드(YoY 성장률 + 전략 제안)
-HS코드 — 품목별 HS코드·관세율·필요 인증(HACCP 등)
-수출 주의사항 — 필수/정보/주의 등급별 규제 카드(법령 근거 포함)
+시장 개요 — UN Comtrade 기반 교역 통계, 현재 환율
+트렌드 조사 — 구글 트렌드·경쟁사·현지 뉴스 기반 시장 인사이트
+HS코드 & 수출 주의사항 — 등록 제품별 HS코드·관세율(FTA 협정세율 + MFN 기본세율)·필요 인증·UNCTAD TRAINS 기반 수출 규제
 
 ④ 부스 컨셉 기획 — 상세 데이터를 기반으로 AI가 부스 테마·슬로건, 핵심 셀링포인트, 이벤트 기획안 자동 생성 → 내용 수정 및 초안 저장 가능
 
 ⑤ 기안서 작성 — 컨셉을 바탕으로 참가 기안서 자동 생성 → 내용 수정 및 초안 저장 가능, PDF·Word 출력
 
-⑥ 작성 중인 박람회 — 컨셉/기안서 진행 상태 관리 및 이어서 작성
+⑥ 마이페이지 — 제품 등록/수정/삭제, 엑셀 일괄 등록
+
+⑦ 바이어 관리 — 바이어 연락처, 팔로업 이메일, 메일 템플릿 관리 (Gmail 연동)
 
 # 주요 기능
-세계 지도에서 대륙 클릭 → 대륙별 박람회 탐색
-박람회 목록 날짜별·규모별 필터
-박람회별 시장·규제·HS코드 정보 자동 정리
-AI 부스 컨셉 자동 생성 후 수정·초안 저장
-기안서 자동 작성 후 수정·초안 저장, PDF/Word 내보내기
-작성 진행 상태(컨셉/기안서) 관리
+- 세계 지도에서 대륙 클릭 → 대륙별 박람회 탐색, 날짜별·규모별 필터
+- 마이페이지에서 제품 등록(개별/엑셀 일괄) → 등록 제품 기준으로 관세율·규제·시장 자동 조회
+- 박람회별 시장·규제·HS코드 정보 자동 정리 (UN Comtrade, UNCTAD TRAINS, 관세청 FTA/MFN 관세율)
+- AI 부스 컨셉 자동 생성 후 수정·초안 저장
+- 기안서 자동 작성 후 수정·초안 저장, PDF/Word 내보내기
+- 바이어 연락처·팔로업 메일 관리 (Gmail 연동)
 
 # 기술 스택
 Backend — Python + Flask
-데이터 처리 — pandas
-Frontend — Jinja2 템플릿 + HTML/CSS + 바닐라 JS (탭 전환·초안 저장 등)
-Database — SQLite (초안 저장용, 별도 설치 불필요)
-추가 설치 패키지
+데이터 처리 — pandas, openpyxl(엑셀 업로드/관세율표 파싱)
+Frontend — Jinja2 템플릿 + HTML/CSS + 바닐라 JS
+Database — SQLite (Flask-SQLAlchemy, 바인드 2개: 기본 DB + app_data.db)
+LLM — OpenAI API (시장 트렌드 키워드 추출·경쟁사 분석, 부스 컨셉·기안서 생성)
 
-기존 python · flask · pandas 외에 아래 패키지가 필요합니다.
+패키지 설치: `pip install -r requirements.txt`
 
-패키지	용도
-Flask-SQLAlchemy	컨셉·기안서 초안 저장 (DB ORM)
-requests	외부 API 호출 (박람회 일정 수집)
-python-dotenv	환경변수(.env) 관리
-anthropic (또는 openai)	LLM API — 컨셉·기안서 자동 생성
-python-docx	기안서 Word(.docx) 출력
-weasyprint	기안서 PDF 출력 (HTML → PDF)
-bash
-pip install flask flask-sqlalchemy pandas requests python-dotenv anthropic python-docx weasyprint
+환경 변수는 `.env` 파일에 설정합니다 (OPENAI_API_KEY, TAVILY_API_KEY, WTO_API_KEY 등 — 각 서비스 모듈 상단 주석 참고).
 
-weasyprint는 시스템 라이브러리(GTK/Pango 등)가 필요할 수 있습니다. 설치가 번거로우면 pdfkit(+ wkhtmltopdf)로 대체 가능합니다.
-
-환경 변수는 .env 파일에 설정합니다.
-env
-LLM_API_KEY=your_key
-PREDICTHQ_API_KEY=your_key
-
-실행 방법
-bash
+# 실행 방법
+```
 flask run          # 기본 포트 5000
+```
+또는 `python run.py`
 
 # 코드 구조
-sabuzak/
-├── app/                          # Flask 웹앱 본체
-│   ├── __init__.py               # create_app() 앱 팩토리 — DB/로그인 초기화, 라우트 등록
-│   ├── extensions.py             # db(SQLAlchemy), login_manager 객체 선언
-│   ├── models.py                 # DB 테이블 정의 (Exhibition, User, ConceptDraft, ProposalDraft)
-│   ├── routes/                   # URL 하나당 함수 하나 (Flask 뷰)
-│   │   ├── auth.py               # /login, /logout
-│   │   ├── dashboard.py          # / (세계지도), /continent/<대륙> (목록)
-│   │   ├── exhibition.py         # /exhibitions/<id> (상세 4탭)
-│   │   ├── concept.py            # 부스 컨셉 생성·저장 API
-│   │   ├── proposal.py           # 기안서 생성·저장·출력 API
-│   │   ├── drafts.py             # /drafts (작성 중인 박람회 목록)
-│   │   └── crawl.py              # /crawl/run, /crawl/status (대시보드 크롤링 버튼)
-│   ├── services/                 # 라우트가 호출하는 실제 로직
-│   │   ├── data.py               # raw_exhibitions 조회, 시장트렌드/HS코드/규제 데이터 가공
-│   │   ├── exchange.py           # 실시간 환율 API 호출
-│   │   ├── country_names.py      # 국가명 영→한 정적 매핑
-│   │   ├── crawl_runner.py       # 크롤링을 백그라운드 스레드로 실행
-│   │   ├── llm.py                # OpenAI로 컨셉/기안서 문구 생성
-│   │   └── export.py             # 기안서 PDF/Word 출력
-│   ├── templates/                # 화면 HTML (Jinja2)
-│   └── static/                   # CSS/JS/이미지
+```
+SABUZAK/
+├── app/
+│   ├── __init__.py            # create_app(), 블루프린트 등록, SQLite 자동 컬럼 보정
+│   ├── extensions.py
+│   ├── models.py               # User, Product, Exhibition, NtmMeasure, HsCodeMaster 등
+│   │
+│   ├── routes/
+│   │   ├── auth.py             # 로그인/회원가입
+│   │   ├── dashboard.py        # 세계 지도 대시보드
+│   │   ├── exhibition.py       # 박람회 상세, 시장/HS코드 탭, 관세율 동기화
+│   │   ├── trend_v2.py         # 트렌드 조사 + 부스 컨셉(v15/ 로직 그대로 재사용, 3D 부스 뷰어 포함)
+│   │   ├── concept.py          # 부스 컨셉 기획 (기존 시스템 - concept.py/booth_concept.py 계열, trend_v2와 별개로 유지 중)
+│   │   ├── drafts.py           # 작성 중인 박람회(초안) 목록
+│   │   ├── mypage.py           # 제품 등록/수정/삭제, 엑셀 일괄 등록
+│   │   └── buyers.py           # 바이어 연락처/팔로업/메일템플릿/Gmail 연동 (블루프린트 여러 개)
+│   │
+│   ├── services/
+│   │   ├── hscode.py           # 박람회 상세의 HS코드 탭 컨텍스트 조립
+│   │   ├── tariff_lookup.py    # FTA 협정세율 + MFN 기본세율 조회 (scripts/market/*.csv 기반)
+│   │   ├── trains_client.py    # UNCTAD TRAINS 수출 규제 조회
+│   │   ├── un_comtrade.py      # UN Comtrade 교역 통계
+│   │   ├── wto_client.py       # WTO 국가별 평균 관세율(참고용)
+│   │   ├── kr_customs.py       # 관세청 HS코드 마스터 연동
+│   │   ├── booth_concept.py    # 부스 컨셉 AI 생성 (기존 concept.py 계열)
+│   │   ├── exchange.py         # 환율 조회
+│   │   ├── openai_client.py    # OpenAI 클라이언트 래퍼
+│   │   ├── mailer.py / mail_llm.py / mailmerge.py / google_oauth.py / attachments.py / card_scan.py
+│   │   └── macmap_client.py
+│   │
+│   ├── prompts/, schemas/      # LLM 프롬프트 템플릿, 구조화 출력 스키마
+│   │
+│   ├── templates/
+│   │   ├── base.html, auth_base.html
+│   │   ├── auth/                (login.html, register.html)
+│   │   ├── dashboard/            (continent_map.html, expo_list.html, index.html)
+│   │   ├── exhibition/           (detail.html + _tab_market.html, _tab_trend.html 등 partial)
+│   │   ├── concept/               (booth_concept.html)
+│   │   ├── drafts/                (drafts_list.html)
+│   │   ├── mypage/                (mypage.html)
+│   │   └── buyers/                (buyer_manage.html, contact_form.html 등)
+│   │
+│   └── static/
+│       ├── css/style.css, un_dashboard.css
+│       ├── js/                   (tabs.js, mypage.js, dashboard.js, attach_menu.js 등)
+│       └── img/
 │
-├── scripts/                      # 웹앱과 별개로 터미널에서 실행하는 배치 스크립트
-│   ├── crawl/                    # 박람회 목록 수집
-│   │   ├── tradefairdates_scraper.py   # 목록 페이지 파싱 (이름/날짜/국가/참관대상)
-│   │   └── sync_to_db.py               # 크롤링 결과 → DB 증분 저장
-│   ├── classify/                 # AI 분류·번역
-│   │   └── preprocess.py         # 대륙/food_yn/규모/키워드 분류 + intro 한국어 번역
-│   └── market/                   # 무역통계·관세 데이터 (신규)
-│       ├── comtrade_test1.py     # UN Comtrade — 국가별 수출액·YoY
-│       ├── macmap_api.py         # macmap.org — 관세율·비관세조치(NTM)
-│       └── proxy_server.py       # macmap 호출용 CORS 우회 프록시
+├── scripts/
+│   ├── crawl/          # 박람회 일정 수집
+│   ├── classify/        # 박람회 분류/전처리
+│   └── market/          # 관세율 데이터 원천 (build_mfn_rates.py, *_FTA_협정세율_*.csv, mfn_base_rates.csv 등)
 │
-├── legacy/                       # 안 쓰는 예전 버전 (참고용, 실행 안 함)
-├── data/                         # 정적 참조 데이터 (CSV 등)
-├── instance/
-│   └── sabuzak.db                # 실제 DB 파일 (git에는 안 올라감)
-├── config.py                     # DB 경로, SECRET_KEY 등 설정
-├── requirements.txt              # pip 설치 목록
-├── run.py                        # 앱 실행 진입점 (python run.py)
-└── setup.sh                      # 설치 자동화 스크립트
+├── v15/                       # 트렌드 조사 + 부스 컨셉(3D 뷰어 포함) 원본 로직 (app/routes/trend_v2.py가 그대로 재사용)
+├── un_v6/                    # UN Comtrade 대시보드 관련 별도 모듈
+├── instance/                 # SQLite DB, 캐시 파일 (git 미포함)
+├── config.py
+├── requirements.txt
+├── run.py
+└── .env (git 미포함)
+```
 
 # 데이터 소스
 박람회 일정 — TradeFairDates
 정부 지원금 — KATI(aT 농식품 수출정보), KOTRA 해외전시포털(gep.or.kr)
-식품 규제 — 공공데이터포털(식품안전정보원 수출식품 부적합 사례)
+식품 규제 — UNCTAD TRAINS
+관세율 — 관세청 국가별 관세율표(FTA/MFN, `scripts/market/`), WTO Tariff Download Facility, WTO Timeseries API(국가 평균 참고용)
+시장 통계 — UN Comtrade

@@ -1,0 +1,15 @@
+<div class="tab-nav">
+  <div class="tab-nav-buttons">
+    <a href="{{ url_for('contacts.list_contacts') }}"
+       class="tab-btn {{ 'active' if request.endpoint and request.endpoint.startswith('contacts.') else '' }}">바이어 목록</a>
+    <a href="{{ url_for('mail_template.home') }}"
+       class="tab-btn {{ 'active' if request.endpoint and request.endpoint.startswith('mail_template.') else '' }}">메일 템플릿</a>
+    <a href="{{ url_for('buyer_profile.edit_profile') }}"
+       class="tab-btn {{ 'active' if request.endpoint == 'buyer_profile.edit_profile' else '' }}">발신 정보</a>
+  </div>
+  {% if current_user.google_refresh_token %}
+  <span class="buyer-mail-gmail-status">Gmail 연동됨 ({{ current_user.google_email }})</span>
+  {% else %}
+  <a href="{{ url_for('buyer_gmail.connect') }}" class="btn-chip">Gmail 발송 연동</a>
+  {% endif %}
+</div>
