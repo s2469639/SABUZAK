@@ -3,25 +3,27 @@
 
 {% block content %}
 {% set checked_count = products | selectattr("is_checked") | list | length %}
-{% set all_checked = products and checked_count == products | length %}
 <style>
-  .check-all-form { margin-top: -6px; display: flex; align-items: center; gap: 6px; font-size: 14px; color: #374151; }
+  .check-all-form { margin-top: -6px; display: flex; align-items: center; gap: 10px; font-size: 14px; color: #374151; }
   .check-all-form label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; }
   .check-all-count { color: #6b7280; }
+  .bulk-delete-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .multi-selected-warning { margin: 0 0 16px; }
   .product-group-title { margin: 8px 0 0; font-size: 13px; font-weight: 700; color: #6b7280; }
   .product-group-title:first-child { margin-top: 0; }
   .bulk-template-link { display: inline-flex; align-items: center; }
+  .meta-label { color: #9ca3af; font-weight: 600; }
 </style>
 <div class="page-header">
   <div>
     <h1>내 제품 관리</h1>
-    <p class="page-desc">체크된 제품만 시장 분석·부스 컨셉에 반영됩니다.</p>
+    <p class="page-desc">'분석 제품'으로 선택한 제품 1개가 시장 분석·트렌드 조사·부스 컨셉에 반영됩니다.</p>
     {% if products %}
-    {# 전부 체크돼 있으면 체크 표시, 일부만/하나도 없으면 빈 칸. 누르면 전체 선택 <-> 전체 해제 #}
-    <form method="post" action="{{ url_for('mypage.check_all_products') }}" class="check-all-form">
-      <input type="hidden" name="checked" value="{{ '0' if all_checked else '1' }}">
-      <label><input type="checkbox" onchange="this.form.submit()" {% if all_checked %}checked{% endif %}> 전체 선택</label>
-      <span class="check-all-count">({{ checked_count }}/{{ products | length }}개 선택됨)</span>
+    {# 삭제용 선택: 전부 체크돼 있을 때만 전체 선택에 체크 표시, 개수는 스크립트가 바로 갱신 #}
+    <form method="post" action="{{ url_for('mypage.bulk_delete_products') }}" id="bulk-delete-form" class="check-all-form">
+      <label><input type="checkbox" id="delete-all"> 전체 선택</label>
+      <span class="check-all-count" id="delete-count">(0/{{ products | length }}개 선택됨)</span>
+      <button type="submit" class="btn-text-danger bulk-delete-btn" id="bulk-delete-btn" disabled>선택 삭제</button>
     </form>
     {% endif %}
   </div>
@@ -30,19 +32,21 @@
   </button>
 </div>
 
+{% if checked_count > 1 %}
+<p class="flash flash-warning multi-selected-warning">분석 제품이 여러 개 선택돼 있어요. 남길 제품의 '✓ 분석 제품' 버튼을 누르면 그 제품 하나만 남습니다.</p>
+{% endif %}
+
 {% if products %}
 <div class="product-list">
   {% for product in products %}
-  {# 체크된 제품이 위로 정렬돼 오므로, 그룹이 바뀌는 곳에 제목을 넣는다 #}
+  {# 분석 제품이 위로 정렬돼 오므로, 그룹이 바뀌는 곳에 제목을 넣는다 #}
   {% if loop.first or loop.previtem.is_checked != product.is_checked %}
   <p class="product-group-title">
-    {% if product.is_checked %}선택된 제품 ({{ checked_count }}){% else %}선택 안 된 제품 ({{ products | length - checked_count }}){% endif %}
+    {% if product.is_checked %}분석 제품 ({{ checked_count }}){% else %}다른 제품 ({{ products | length - checked_count }}){% endif %}
   </p>
   {% endif %}
   <div class="product-row">
-    <form method="post" action="{{ url_for('mypage.toggle_product', product_id=product.id) }}" class="product-toggle">
-      <input type="checkbox" onchange="this.form.submit()" {% if product.is_checked %}checked{% endif %}>
-    </form>
+    <input type="checkbox" class="delete-check" name="product_ids" value="{{ product.id }}" form="bulk-delete-form" aria-label="{{ product.name }} 삭제 선택">
     <div class="product-info">
       <strong>{{ product.name }}</strong>
       {% if product.brand %}<span class="hs-tag">{{ product.brand }}</span>{% endif %}
@@ -51,15 +55,25 @@
       {% if product.ingredients %}
         <p class="ingredients">{{ product.ingredients }}</p>
       {% endif %}
-      {% if product.target_price or product.certifications or product.strengths %}
+      {# 가격·인증·강점은 이모지 대신 글자 라벨로, 있는 항목만 " · "로 이어 붙인다 #}
+      {% set meta = [] %}
+      {% if product.target_price %}{% set _ = meta.append(("가격", product.target_price)) %}{% endif %}
+      {% if product.certifications %}{% set _ = meta.append(("인증", product.certifications)) %}{% endif %}
+      {% if product.strengths %}{% set _ = meta.append(("강점", product.strengths)) %}{% endif %}
+      {% if meta %}
       <p class="ingredients">
-        {% if product.target_price %}💰 {{ product.target_price }}{% endif %}
-        {% if product.certifications %} · 🏷️ {{ product.certifications }}{% endif %}
-        {% if product.strengths %} · 🍽️ {{ product.strengths }}{% endif %}
+        {% for label, value in meta %}{% if not loop.first %} · {% endif %}<span class="meta-label">{{ label }}</span> {{ value }}{% endfor %}
       </p>
       {% endif %}
     </div>
     <div class="action-buttons">
+      <form method="post" action="{{ url_for('mypage.toggle_product', product_id=product.id) }}">
+        {% if product.is_checked %}
+        <button type="submit" class="btn-chip btn-chip-active" title="{{ '이 제품만 분석 제품으로 남기기' if checked_count > 1 else '다시 누르면 선택이 해제됩니다' }}">✓ 분석 제품</button>
+        {% else %}
+        <button type="submit" class="btn-chip">분석 제품으로 선택</button>
+        {% endif %}
+      </form>
       <a class="btn-chip" href="{{ url_for('exhibition.market_matrix', hscode=product.hs_code) }}" data-market-loading>유망시장 조사</a>
       <button type="button" class="btn-chip" data-modal-open="edit-product-modal" data-edit-product
               data-edit-url="{{ url_for('mypage.edit_product', product_id=product.id) }}"
@@ -78,6 +92,36 @@
   </div>
   {% endfor %}
 </div>
+<script>
+(function () {
+  var all = document.getElementById("delete-all");
+  if (!all) return;
+  var boxes = Array.prototype.slice.call(document.querySelectorAll(".delete-check"));
+  var count = document.getElementById("delete-count");
+  var btn = document.getElementById("bulk-delete-btn");
+  function checkedCount() {
+    return boxes.filter(function (b) { return b.checked; }).length;
+  }
+  function update() {
+    var n = checkedCount();
+    all.checked = n === boxes.length;
+    count.textContent = "(" + n + "/" + boxes.length + "개 선택됨)";
+    btn.disabled = n === 0;
+  }
+  all.addEventListener("change", function () {
+    boxes.forEach(function (b) { b.checked = all.checked; });
+    update();
+  });
+  boxes.forEach(function (b) { b.addEventListener("change", update); });
+  document.getElementById("bulk-delete-form").addEventListener("submit", function (e) {
+    var n = checkedCount();
+    if (!n || !confirm("선택한 제품 " + n + "개를 삭제하시겠습니까?")) e.preventDefault();
+  });
+  // 뒤로가기로 돌아왔을 때 브라우저가 체크 상태를 복원해도 개수가 맞게
+  window.addEventListener("pageshow", update);
+  update();
+})();
+</script>
 {% endif %}
 
 <div class="modal-overlay{% if form_error %} open{% endif %}" id="add-product-modal">

@@ -146,7 +146,7 @@
     <div class="best-tariff-banner">
       <div class="best-tariff-icon">🏆</div>
       <div>
-        <div class="best-tariff-label">등록 제품 중 최적 관세 추천</div>
+        <div class="best-tariff-label">최적 관세 추천</div>
         <div class="best-tariff-main">
           <strong>{{ hscode_ctx.overall_best.product.name }}</strong>
           ({{ hscode_ctx.overall_best.product.hs_code }})
@@ -162,7 +162,7 @@
     </div>
     {% endif %}
 
-    <h3 class="section-label">등록 제품의 {{ expo.country_ko or expo.country }} 수출 HS코드 및 관세율</h3>
+    <h3 class="section-label">선택한 제품의 {{ expo.country_ko or expo.country }} 수출 HS코드 및 관세율</h3>
     <div class="tariff-card-list">
       {% for row in hscode_ctx.product_rows %}
       <div class="tariff-card tariff-card-stacked">
@@ -285,7 +285,7 @@
             {% endif %}
           </h4>
           <form method="post" class="btn-loading-form" action="{{ url_for('exhibition.sync_ntm', expo_id=expo.id, product_id=row.product.id) }}">
-            <button type="submit" class="btn-secondary btn-sync-ntm" data-loading-text="사부작사부작 가져오는 중...">
+            <button type="submit" class="btn-secondary btn-sync-ntm" data-loading-text="수입규정을 가져오고 있어요...">
               {% if row.regulation_notes_is_live %}TRAINS 데이터 다시 가져오기{% else %}지금 실제 데이터 가져오기{% endif %}
             </button>
           </form>

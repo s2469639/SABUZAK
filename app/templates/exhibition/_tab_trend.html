@@ -8,7 +8,7 @@
   <div class="tariff-card tariff-card-stacked tariff-card-frame">
     {% if not (row.prefill.price and row.prefill.certifications and row.prefill.strengths) %}
     <p class="placeholder-note">
-      ⚠️ 목표 가격대·보유 인증·제품 강점 정보가 일부 비어있으면 분석 품질이 떨어질 수 있어요.
+      목표 가격대·보유 인증·제품 강점 정보가 일부 비어있으면 분석 품질이 떨어질 수 있어요.
       <a href="{{ url_for('mypage.index') }}">마이페이지 제품 관리</a>에서 채워주세요.
     </p>
     {% endif %}
