@@ -2409,7 +2409,7 @@ p.page-desc:not(:last-child) {
 .chatbot-widget.open-below .chatbot-panel { bottom: auto; top: 68px; }
 
 .chatbot-panel {
-  position: absolute; right: 0; bottom: 72px; width: 340px; max-height: 480px;
+  position: absolute; right: 0; bottom: 72px; width: 380px; max-height: 560px;
   background: #fff; border-radius: 14px; box-shadow: 0 10px 28px rgba(20, 20, 20, 0.14);
   display: flex; flex-direction: column; overflow: hidden;
 }
@@ -2423,7 +2423,7 @@ p.page-desc:not(:last-child) {
 }
 .chatbot-panel-header button { background: none; border: none; color: #fff; cursor: pointer; font-size: 14px; }
 
-.chatbot-messages { flex: 1 1 auto; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-height: 160px; max-height: 260px; }
+.chatbot-messages { flex: 1 1 auto; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-height: 200px; max-height: 340px; }
 
 /* white-space:pre-wrap이었을 때 템플릿 들여쓰기 공백까지 그대로 렌더링돼
    메시지가 어중간하게 가운데로 쏠려 보였던 문제 -> pre-line으로 교체해
