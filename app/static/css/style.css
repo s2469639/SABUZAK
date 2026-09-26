@@ -2405,6 +2405,9 @@ p.page-desc:not(:last-child) {
   display: flex; flex-direction: column; overflow: hidden;
   border: 1px solid #e5e7eb;
 }
+/* class selector가 브라우저 기본 [hidden] 규칙보다 우선순위가 높아서,
+   hidden 속성을 줘도 위 display:flex가 이겨버려 항상 떠 있던 버그 수정 */
+.chatbot-panel[hidden] { display: none; }
 
 .chatbot-panel-header {
   background: #ea580c; color: #fff; font-weight: 700; font-size: 14px;

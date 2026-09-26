@@ -46,7 +46,7 @@
     history.push({ role: "user", content: text });
     input.value = "";
 
-    var loadingEl = addMessage("bot", "생각하는 중...");
+    var loadingEl = addMessage("bot", "확인 중입니다...");
     loadingEl.classList.add("chatbot-msg-loading");
 
     fetch("/chatbot/message", {
@@ -57,13 +57,13 @@
       .then(function (res) { return res.json(); })
       .then(function (data) {
         loadingEl.classList.remove("chatbot-msg-loading");
-        var reply = data.reply || data.error || "죄송해요, 답변을 불러오지 못했어요.";
+        var reply = data.reply || data.error || "답변을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.";
         loadingEl.textContent = reply;
         history.push({ role: "assistant", content: reply });
       })
       .catch(function () {
         loadingEl.classList.remove("chatbot-msg-loading");
-        loadingEl.textContent = "네트워크 오류로 답변을 받지 못했어요. 잠시 후 다시 시도해주세요.";
+        loadingEl.textContent = "네트워크 오류로 답변을 받지 못했습니다. 잠시 후 다시 시도해주세요.";
       });
   }
 
