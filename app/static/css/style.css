@@ -2216,15 +2216,21 @@ p.page-desc:not(:last-child) {
 /* 지도 아래 "해외 박람회 목록"까지 스크롤 없이 한 화면에 보이도록 지도를
    85% -> 훨씬 작게(최대 560px) 줄였다. viewBox가 800x460이라 폭이 줄면
    높이도 그 비율대로 같이 줄어든다. */
+/* 지도 크기를 폭(%)이 아니라 뷰포트 높이(vh) 기준으로 정해서, 화면이
+   넓어져도 지도 밑의 "해외 박람회 목록" 검색창까지는 항상 스크롤 없이
+   보이게 한다. (전에 폭%로 키웠더니 가로가 넓은 화면에서 세로도 같이
+   커져서 검색창이 화면 밖으로 밀려났었음) */
 .world-map {
   padding: 4px 8px;
   background: transparent;
-  width: 80%;
-  max-width: 920px;
-  min-width: 320px;
+  height: 34vh;
+  max-height: 380px;
+  min-height: 240px;
+  width: auto;
+  aspect-ratio: 800 / 460;
   margin: 0 auto;
 }
-.world-map svg { width: 100%; height: auto; display: block; }
+.world-map svg { width: 100%; height: 100%; display: block; }
 
 .world-map-legend {
   display: flex;
