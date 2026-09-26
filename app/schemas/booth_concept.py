@@ -92,8 +92,8 @@ class BoothConcept(BaseModel):
     @field_validator("event_plans")
     @classmethod
     def _check_event_plans(cls, v):
-        if not (3 <= len(v) <= 4):
-            raise ValueError("event_plans must contain 3 to 4 items")
+        if len(v) != 3:
+            raise ValueError("event_plans must contain exactly 3 items")
         return v
 
     @field_validator("target_buyers")
