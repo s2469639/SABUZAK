@@ -2385,57 +2385,59 @@ p.page-desc:not(:last-child) {
 .un-bubble-detail strong { display: block; font-size: 13px; margin-bottom: 4px; }
 .un-bubble-detail a { color: #8ab4f8; pointer-events: auto; }
 
-/* 플로팅 챗봇 위젯: 평소엔 우하단 동그라미 아이콘, 클릭하면 팝업 채팅창 */
+/* 플로팅 챗봇 위젯: 평소엔 우하단 로봇 얼굴 아이콘, 클릭하면 팝업 채팅창 */
 .chatbot-widget { position: fixed; right: 24px; bottom: 24px; z-index: 200; }
 
 .chatbot-fab {
-  width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer;
-  background: linear-gradient(135deg, #ff8a3d, #ea580c); color: #fff;
+  width: 58px; height: 58px; border-radius: 50%; border: none; cursor: pointer;
+  background: #fde9d9; color: #d9661f;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.35);
+  box-shadow: 0 6px 16px rgba(217, 102, 31, 0.22);
   transition: transform 0.15s ease;
 }
 .chatbot-fab:hover { transform: scale(1.06); }
-.chatbot-fab svg { width: 26px; height: 26px; }
-.chatbot-fab.is-open { background: #6b7280; }
+.chatbot-fab svg { width: 34px; height: 34px; }
+.chatbot-fab.is-open { background: #eef0f3; color: #6b7280; }
 
 .chatbot-panel {
-  position: absolute; right: 0; bottom: 68px; width: 340px; max-height: 480px;
-  background: #fff; border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+  position: absolute; right: 0; bottom: 72px; width: 340px; max-height: 480px;
+  background: #fff; border-radius: 14px; box-shadow: 0 10px 28px rgba(20, 20, 20, 0.14);
   display: flex; flex-direction: column; overflow: hidden;
-  border: 1px solid #e5e7eb;
 }
 /* class selector가 브라우저 기본 [hidden] 규칙보다 우선순위가 높아서,
    hidden 속성을 줘도 위 display:flex가 이겨버려 항상 떠 있던 버그 수정 */
 .chatbot-panel[hidden] { display: none; }
 
 .chatbot-panel-header {
-  background: #ea580c; color: #fff; font-weight: 700; font-size: 14px;
+  background: #f3743c; color: #fff; font-weight: 700; font-size: 14px;
   padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;
 }
 .chatbot-panel-header button { background: none; border: none; color: #fff; cursor: pointer; font-size: 14px; }
 
 .chatbot-messages { flex: 1 1 auto; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-height: 160px; max-height: 260px; }
 
-.chatbot-msg { font-size: 13px; line-height: 1.55; padding: 8px 11px; border-radius: 10px; max-width: 85%; white-space: pre-wrap; word-break: break-word; }
-.chatbot-msg-bot { background: #f3f4f6; color: #111827; align-self: flex-start; }
-.chatbot-msg-user { background: #ea580c; color: #fff; align-self: flex-end; }
+/* white-space:pre-wrap이었을 때 템플릿 들여쓰기 공백까지 그대로 렌더링돼
+   메시지가 어중간하게 가운데로 쏠려 보였던 문제 -> pre-line으로 교체해
+   불필요한 공백/들여쓰기는 접고, 줄바꿈만 유지 + 항상 왼쪽 정렬 */
+.chatbot-msg { font-size: 13px; line-height: 1.55; padding: 9px 12px; border-radius: 12px; max-width: 82%; white-space: pre-line; word-break: break-word; text-align: left; }
+.chatbot-msg-bot { background: #f5f6f8; color: #333; align-self: flex-start; }
+.chatbot-msg-user { background: #f3743c; color: #fff; align-self: flex-end; }
 .chatbot-msg-loading { color: #9ca3af; font-style: italic; }
 
 .chatbot-examples { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 10px; }
 .chatbot-example-btn {
-  font-size: 12px; padding: 6px 10px; border-radius: 999px; border: 1px solid #e5e7eb;
-  background: #fff7ed; color: #ea580c; cursor: pointer; white-space: nowrap;
+  font-size: 12px; padding: 6px 10px; border-radius: 999px; border: 1px solid #f6dcc9;
+  background: #fdf2e9; color: #c2570f; cursor: pointer; white-space: nowrap; text-align: left;
 }
-.chatbot-example-btn:hover { background: #ffedd5; }
+.chatbot-example-btn:hover { background: #fbe6d2; }
 
-.chatbot-input-row { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid #e5e7eb; }
+.chatbot-input-row { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid #eee; }
 .chatbot-input-row input {
   flex: 1; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 10px; font-size: 13px; outline: none;
 }
-.chatbot-input-row input:focus { border-color: #ea580c; }
+.chatbot-input-row input:focus { border-color: #f3743c; }
 .chatbot-input-row button {
-  border: none; background: #ea580c; color: #fff; border-radius: 8px; width: 36px;
+  border: none; background: #f3743c; color: #fff; border-radius: 8px; width: 36px;
   display: flex; align-items: center; justify-content: center; cursor: pointer;
 }
 .chatbot-input-row button svg { width: 16px; height: 16px; }
