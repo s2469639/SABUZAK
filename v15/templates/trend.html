@@ -10,7 +10,12 @@
       <h1>트렌드 조사</h1>
       <p class="desc">현지 검색 트렌드 · 리테일 가격 · 현지 시장 트렌드를 한 화면에서 확인하세요.</p>
     </div>
-    {% if data %}<a class="btn-orange" href="{{ booth_link }}">부스 컨셉 기획 →</a>{% endif %}
+    {% if data %}
+      <form method="post" action="{{ url_for('concept.start', expo_id=data.inputs.expo_id if (data.inputs and data.inputs.expo_id) else (expo.id if expo else 1)) }}" style="margin:0;">
+        <input type="hidden" name="job_id" value="{{ data.id or job_id or '' }}">
+        <button type="submit" class="btn-orange" style="cursor:pointer; border:none;">부스 컨셉 기획 →</button>
+      </form>
+    {% endif %}
   </div>
 
   {% set form_action = "/" %}{% set submit_label = "분석 실행" %}

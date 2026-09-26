@@ -1799,8 +1799,8 @@ p.page-desc:not(:last-child) {
 }
 
 .event-index {
-  font-family: monospace;
-  color: #d1d5db;
+  font-family: inherit;
+  color: #ea580c;
   font-weight: 700;
   font-size: 16px;
 }
@@ -2439,4 +2439,37 @@ p.page-desc:not(:last-child) {
 
 @media (max-width: 480px) {
   .chatbot-panel { width: calc(100vw - 32px); right: -8px; }
+}
+
+/* 수출 주의사항 탭: 제목·제품 표기를 시장 개요 탭(16px)과 같은 크기로 통일 */
+#tab-hscode .section-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: inherit;
+}
+
+#tab-hscode .tariff-card-title {
+  font-size: 16px;
+}
+
+#tab-hscode .tariff-card-title .hs-tag {
+  margin-left: 0;
+  font-size: inherit;
+}
+
+#tab-hscode .section-label {
+  margin: 20px 0;
+}
+
+#tab-hscode .tariff-card-title .hs-tag {
+  font-weight: 700;
+  color: inherit;
+}
+
+/* 부스 컨셉 기획 화면의 구역 제목: 수출 주의사항 탭 소제목과 같은 규격, 위아래 간격 20px */
+.section-label.section-label-lg {
+  font-size: 16px;
+  font-weight: 700;
+  color: inherit;
+  margin: 20px 0;
 }

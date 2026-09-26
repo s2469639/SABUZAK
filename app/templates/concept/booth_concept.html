@@ -30,7 +30,7 @@
   <h2>AI 부스 컨셉 자동 생성</h2>
   <p>
     등록 제품 <strong>{{ products|map(attribute='name')|join(', ') }}</strong><br>
-    + {{ expo.name }} 특성·시장/트렌드를 분석해 최적의 컨셉을 생성합니다
+    + {{ expo.name }} 특성·시장/트렌드를 분석해 최적의 컨셉을 생성합니다.
   </p>
   <form method="post" action="{{ url_for('concept.generate', draft_id=draft.id) }}">
     <button type="submit" class="btn-primary btn-large">컨셉 자동 생성하기</button>
@@ -39,17 +39,25 @@
 
 {% else %}
 
+{# ========================================== #}
+{# 1. 슬로건 & 부스 테마                       #}
+{# ========================================== #}
 <div class="card">
-  <p class="section-eyebrow">부스 테마</p>
-  <h2 class="concept-theme">{{ draft.theme }}</h2>
-  <p class="concept-slogan">슬로건: {{ draft.slogan }}</p>
+  <p class="section-eyebrow">부스 테마 & 슬로건</p>
+  <h2 class="concept-theme" style="margin-bottom:8px;">{{ draft.theme }}</h2>
+  <p class="concept-slogan" style="font-size:17px; font-weight:600; color:#ff6b00; margin-bottom:12px;">
+    슬로건: {{ draft.slogan }}
+  </p>
   {% if draft.description %}
-  <p class="concept-description">{{ draft.description }}</p>
+  <p class="concept-description" style="color:#4b5563; line-height:1.6;">{{ draft.description }}</p>
   {% endif %}
 </div>
 
+{# ========================================== #}
+{# 2. 핵심 셀링포인트                          #}
+{# ========================================== #}
 {% if selling_points %}
-<h3 class="section-label">핵심 셀링포인트</h3>
+<h3 class="section-label section-label-lg">핵심 셀링포인트</h3>
 <div class="selling-point-grid">
   {% for sp in selling_points %}
   <div class="selling-point-card">
@@ -61,8 +69,11 @@
 </div>
 {% endif %}
 
+{# ========================================== #}
+{# 3. 이벤트 기획안                            #}
+{# ========================================== #}
 {% if events %}
-<h3 class="section-label">이벤트 기획안</h3>
+<h3 class="section-label section-label-lg">현장 이벤트 기획안</h3>
 <div class="event-list">
   {% for event in events %}
   <div class="event-row">
@@ -80,15 +91,75 @@
 </div>
 {% endif %}
 
+{# ========================================== #}
+{# 4. 3초 · 30초 · 3분 (방문객 여정)            #}
+{# ========================================== #}
+{% set vj = visitor_journey or (draft.extra_data and draft.extra_data.visitor_journey) %}
+{% if vj %}
+<h3 class="section-label section-label-lg">방문객 여정 시나리오 (3초 · 30초 · 3분)</h3>
+<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:28px;">
+  
+  {# 3초 단계 #}
+  <div class="card" style="margin-bottom:0; padding:18px; border-top:3px solid #ff6b00;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <strong style="color:#ff6b00; font-size:16px;">3초</strong>
+      <span style="font-size:12px; color:#6b7280;">시선 사로잡기</span>
+    </div>
+    <div style="font-weight:700; font-size:14px; margin-bottom:8px; color:#111827;">{{ vj.sec3.headline }}</div>
+    <div style="font-size:12px; color:#4b5563; background:#f9fafb; padding:8px; border-radius:6px; margin-bottom:8px;">
+      <b>🎯 목표:</b> {{ vj.sec3.goal }}
+    </div>
+    <div style="font-size:12px; color:#1e40af; background:#eff6ff; padding:8px; border-radius:6px;">
+      <b>💬 캐치 카피:</b> “{{ vj.sec3.message }}”
+    </div>
+  </div>
+
+  {# 30초 단계 #}
+  <div class="card" style="margin-bottom:0; padding:18px; border-top:3px solid #3b82f6;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <strong style="color:#3b82f6; font-size:16px;">30초</strong>
+      <span style="font-size:12px; color:#6b7280;">흥미 및 탐색</span>
+    </div>
+    <div style="font-weight:700; font-size:14px; margin-bottom:8px; color:#111827;">{{ vj.sec30.headline }}</div>
+    <div style="font-size:12px; color:#4b5563; background:#f9fafb; padding:8px; border-radius:6px; margin-bottom:8px;">
+      <b>🎯 목표:</b> {{ vj.sec30.goal }}
+    </div>
+    <div style="font-size:12px; color:#1e40af; background:#eff6ff; padding:8px; border-radius:6px;">
+      <b>💬 건넬 말:</b> “{{ vj.sec30.message }}”
+    </div>
+  </div>
+
+  {# 3분 단계 #}
+  <div class="card" style="margin-bottom:0; padding:18px; border-top:3px solid #10b981;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <strong style="color:#10b981; font-size:16px;">3분</strong>
+      <span style="font-size:12px; color:#6b7280;">심층 상담 및 전환</span>
+    </div>
+    <div style="font-weight:700; font-size:14px; margin-bottom:8px; color:#111827;">{{ vj.min3.headline }}</div>
+    <div style="font-size:12px; color:#4b5563; background:#f9fafb; padding:8px; border-radius:6px; margin-bottom:8px;">
+      <b>🎯 목표:</b> {{ vj.min3.goal }}
+    </div>
+    <div style="font-size:12px; color:#1e40af; background:#eff6ff; padding:8px; border-radius:6px;">
+      <b>💬 상담 전환:</b> “{{ vj.min3.message }}”
+    </div>
+  </div>
+
+</div>
+{% endif %}
+
+{# 주요 타겟 바이어 태그 #}
 {% if target_buyers %}
-<h3 class="section-label">주요 타겟 바이어</h3>
-<div class="keyword-tags">
+<h3 class="section-label section-label-lg">주요 타겟 바이어</h3>
+<div class="keyword-tags" style="margin-bottom:28px;">
   {% for buyer in target_buyers %}
   <span class="keyword-tag">{{ buyer }}</span>
   {% endfor %}
 </div>
 {% endif %}
 
+{# ========================================== #}
+{# 부스 컨셉 예상 이미지 (단일 렌더링 카드)      #}
+{# ========================================== #}
 <div class="card concept-image-card">
   <p class="section-eyebrow">부스 컨셉 예상 이미지</p>
 
