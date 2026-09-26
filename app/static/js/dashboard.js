@@ -39,13 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   resultsBox.addEventListener("click", function (e) {
-    var pageLink = e.target.closest("a.page-link");
-    if (pageLink) {
-      e.preventDefault();
-      loadPartial(pageLink.getAttribute("href"));
-      return;
-    }
-
     var resetBtn = e.target.closest("[data-filter-reset]");
     if (resetBtn) {
       var form = resetBtn.closest("[data-filter-form]");

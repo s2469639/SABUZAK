@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}팔로업 메일 | FairMate{% endblock %}
+{% block title %}팔로업 메일 | 사부작{% endblock %}
 
 {% block content %}
 {% include "buyers/_nav.html" %}
@@ -47,22 +47,9 @@
     <label>본문</label>
     <textarea rows="14" readonly>{{ followup.body }}</textarea>
   </div>
-  {% if followup.attachments %}
-  <div class="form-field">
-    <label>첨부 파일</label>
-    <ul class="attach-list">
-      {% for a in followup.attachments %}
-      <li>
-        <a href="{{ url_for('followup.download_attachment', contact_id=contact.id, attachment_id=a.id) }}">{{ a.filename }}</a>
-        <span class="attach-size">{{ a.size_label }}</span>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
 </div>
 {% else %}
-<form method="post" action="{{ url_for('followup.save', contact_id=contact.id) }}" class="form" enctype="multipart/form-data">
+<form method="post" action="{{ url_for('followup.save', contact_id=contact.id) }}" class="form">
   <div class="form-field">
     <label for="subject">제목</label>
     <input id="subject" name="subject" value="{{ followup.subject }}">
@@ -71,58 +58,10 @@
     <label for="body">본문</label>
     <textarea id="body" name="body" rows="14">{{ followup.body }}</textarea>
   </div>
-  <div class="form-field attach-field">
-    <label>첨부 파일</label>
-    <div class="attach-menu attach-menu-left">
-      <button type="button" class="btn-secondary" id="mail-attach-btn">
-        파일 첨부 <span id="mail-attach-count"></span>
-      </button>
-      <div class="attach-menu-pop" id="mail-attach-pop" hidden>
-        <button type="button" class="attach-menu-item" data-attach-action="review">첨부 파일 확인</button>
-        <button type="button" class="attach-menu-item" data-attach-action="new">새 파일 첨부</button>
-      </div>
-      <input type="file" name="attachments" id="mail-attach-input" multiple hidden>
-      <input type="file" id="mail-attach-picker" multiple hidden>
-    </div>
-    <p class="page-desc">파일당 10MB, 합계 15MB 이하예요. 고른 파일은 "저장"을 누르면 함께 첨부돼요. (.exe 등 Gmail이 차단하는 형식은 첨부할 수 없어요.)</p>
-  </div>
   <div class="form-actions">
     <button type="submit" class="btn-secondary">저장</button>
   </div>
 </form>
-{% for a in followup.attachments %}
-<form id="del-att-{{ a.id }}" method="post"
-      action="{{ url_for('followup.delete_attachment', contact_id=contact.id, attachment_id=a.id) }}"
-      onsubmit="return confirm('이 첨부 파일을 삭제할까요? 저장하지 않은 제목/본문 수정과 새로 고른 파일은 사라져요.');"></form>
-{% endfor %}
-
-<div class="modal-overlay" id="mail-attach-modal">
-  <div class="modal-dialog">
-    <div class="modal-header">
-      <h2>첨부 파일 확인</h2>
-      <button type="button" class="modal-close" data-modal-close aria-label="닫기">✕</button>
-    </div>
-    <ul class="attach-list" id="mail-attach-list"></ul>
-    <p class="page-desc">이 메일을 발송할 때 위 파일들이 함께 나가요.</p>
-    <div class="form-actions">
-      <button type="button" class="btn-secondary" data-modal-close>닫기</button>
-    </div>
-  </div>
-</div>
-
-{% set saved_files = [] %}
-{% for a in followup.attachments %}
-  {% set _ = saved_files.append({
-    'name': a.filename,
-    'size': a.size_label,
-    'url': url_for('followup.download_attachment', contact_id=contact.id, attachment_id=a.id),
-    'deleteFormId': 'del-att-' ~ a.id
-  }) %}
-{% endfor %}
-<script src="{{ url_for('static', filename='js/attach_menu.js') }}"></script>
-<script>
-  SabuzakAttach.init({ prefix: 'mail-attach', saved: {{ saved_files|tojson }}, pendingNote: '저장하면 첨부돼요' });
-</script>
 
 <form method="post" action="{{ url_for('followup.send', contact_id=contact.id) }}"
       onsubmit="return confirm('{{ contact.email }} 로 실제 메일을 발송합니다. 계속할까요?');">

@@ -1,7 +1,7 @@
 <div class="expo-results" data-partial-url="{{ url_for('exhibition.expo_list_partial', continent=continent) if continent else url_for(list_url[0], **list_url[1]) }}">
   <div class="expo-results-header">
     <h2>{{ title }} 박람회 목록</h2>
-    <span class="page-desc">총 {{ total }}건</span>
+    <span class="page-desc">총 {{ expos|length }}건</span>
   </div>
 
   <form class="filter-bar" data-filter-form>
@@ -106,25 +106,6 @@
     </a>
     {% endfor %}
   </div>
-
-  {% if pagination %}
-  <nav class="pagination" aria-label="페이지 이동">
-    {% if pagination.prev_url %}
-    <a class="page-link" href="{{ pagination.prev_url }}" aria-label="이전 페이지">‹</a>
-    {% endif %}
-    {% for item in pagination["items"] %}
-      {% if item %}
-      <a class="page-link {{ 'active' if item.n == pagination.page else '' }}" href="{{ item.url }}"
-         {% if item.n == pagination.page %}aria-current="page"{% endif %}>{{ item.n }}</a>
-      {% else %}
-      <span class="page-ellipsis">…</span>
-      {% endif %}
-    {% endfor %}
-    {% if pagination.next_url %}
-    <a class="page-link" href="{{ pagination.next_url }}" aria-label="다음 페이지">›</a>
-    {% endif %}
-  </nav>
-  {% endif %}
   {% else %}
   <p class="empty-state">조건에 맞는 박람회가 없습니다.</p>
   {% endif %}

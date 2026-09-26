@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}대시보드 | FairMate{% endblock %}
+{% block title %}대시보드 | 사부작{% endblock %}
 
 {% block content %}
 <div class="dash-header">
   <div class="dash-title-row">
     <h1>대륙별 박람회 현황</h1>
-    <span class="page-desc">지도에서 권역을 클릭해 대륙별 박람회 목록을 확인하세요.</span>
+    <span class="page-desc">지도에서 권역을 클릭해 대륙별 박람회 목록을 확인하세요</span>
   </div>
   <button type="button" class="btn-primary" data-modal-open="add-product-modal">+ 제품 추가하기</button>
 </div>
@@ -35,22 +35,6 @@
       <div class="form-field">
         <label for="modal-ingredients">성분표</label>
         <textarea id="modal-ingredients" name="ingredients" rows="3" placeholder="예: 밀가루, 꿀, 참기름, 계피..."></textarea>
-      </div>
-
-      <p class="page-desc">아래 3개 항목은 박람회 상세 페이지의 "트렌드 조사" 탭에서 시장·트렌드 분석 시 자동으로 사용됩니다.</p>
-      <div class="form-row">
-        <div class="form-field">
-          <label for="modal-target_price">목표 소매 가격대/단위중량</label>
-          <input type="text" id="modal-target_price" name="target_price" placeholder="예: 4.99 GBP / 350g">
-        </div>
-        <div class="form-field">
-          <label for="modal-certifications">보유 인증</label>
-          <input type="text" id="modal-certifications" name="certifications" placeholder="예: 비건, 코셔, HACCP">
-        </div>
-      </div>
-      <div class="form-field">
-        <label for="modal-strengths">식감/가공 메커니즘</label>
-        <textarea id="modal-strengths" name="strengths" rows="2" placeholder="예: 얇고 쫄깃한 만두피, 버섯 채즙으로 육즙 모사"></textarea>
       </div>
 
       <div class="form-actions">

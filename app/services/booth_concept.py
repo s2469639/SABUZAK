@@ -150,7 +150,7 @@ def _call_llm(expo_text, product_text, trends_text):
 
 def _fallback_generate(expo, products):
     """API 키가 없거나 호출/검증에 실패했을 때 쓰는 규칙 기반 생성기."""
-    product_names = [p.name for p in products] or ["FairMate 제품"]
+    product_names = [p.name for p in products] or ["사부작 제품"]
     names_joined = ", ".join(product_names)
     country = expo.country_ko or expo.country or "해당 시장"
 

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}발신 정보 | FairMate{% endblock %}
+{% block title %}발신 정보 | 사부작{% endblock %}
 
 {% block content %}
 {% include "buyers/_nav.html" %}
@@ -21,20 +21,14 @@
 {% endif %}
 
 <div class="card">
-<form method="post" class="form profile-form" autocomplete="off">
-  <div class="form-row row-name-company-position">
-    <div class="form-field">
-      <label for="name">이름</label>
-      <input id="name" name="name" required autocomplete="off" placeholder="예: 홍길동" value="{{ current_user.name or '' }}">
-    </div>
-    <div class="form-field">
-      <label for="company">회사명</label>
-      <input id="company" name="company" autocomplete="off" value="{{ current_user.company or '' }}">
-    </div>
-    <div class="form-field">
-      <label for="position">직급</label>
-      <input id="position" name="position" autocomplete="off" placeholder="예: 해외영업 대리" value="{{ current_user.position or '' }}">
-    </div>
+<form method="post" class="form" autocomplete="off">
+  <div class="form-field">
+    <label for="company">회사명</label>
+    <input id="company" name="company" autocomplete="off" value="{{ current_user.company or '' }}">
+  </div>
+  <div class="form-field">
+    <label for="position">직급</label>
+    <input id="position" name="position" autocomplete="off" placeholder="예: 해외영업 대리" value="{{ current_user.position or '' }}">
   </div>
   <div class="form-field">
     <label for="product_description">제품/사업 설명</label>

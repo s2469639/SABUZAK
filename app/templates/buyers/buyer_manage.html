@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}바이어 관리 | FairMate{% endblock %}
+{% block title %}바이어 관리 | 사부작{% endblock %}
 
 {% block content %}
 {% include "buyers/_nav.html" %}
@@ -7,20 +7,9 @@
 <div class="page-header">
   <div>
     <h1>바이어 목록</h1>
-    <p class="page-desc">박람회에서 만난 바이어 연락처와 팔로업 메일 이력을 관리합니다.</p>
+    <p class="page-desc">박람회에서 만난 바이어 연락처와 팔로업 메일 이력을 관리합니다</p>
   </div>
   <div class="page-header-actions">
-    <div class="attach-menu">
-      <button type="button" class="btn-secondary" id="bulk-attach-btn" title="선택 발송할 때 모든 바이어에게 함께 보낼 파일">
-        파일 첨부 <span id="bulk-attach-count"></span>
-      </button>
-      <div class="attach-menu-pop" id="bulk-attach-pop" hidden>
-        <button type="button" class="attach-menu-item" data-attach-action="review">첨부 파일 확인</button>
-        <button type="button" class="attach-menu-item" data-attach-action="new">새 파일 첨부</button>
-      </div>
-      <input type="file" name="attachments" form="bulk-send-form" id="bulk-attach-input" multiple hidden>
-      <input type="file" id="bulk-attach-picker" multiple hidden>
-    </div>
     <button type="submit" form="bulk-send-form" class="btn-primary">선택 발송</button>
     <a class="btn-secondary" href="{{ url_for('contacts.new_contact') }}">+ 바이어 등록</a>
   </div>
@@ -42,11 +31,11 @@
 </p>
 {% endif %}
 
-<form id="bulk-send-form" method="post" action="{{ url_for('followup.send_selected') }}" enctype="multipart/form-data"
+<form id="bulk-send-form" method="post" action="{{ url_for('followup.send_selected') }}"
       onsubmit="return confirm('선택한 ' + document.querySelectorAll('input[name=contact_ids]:checked').length + '명에게 템플릿 메일을 발송합니다. 계속할까요?');">
 </form>
 
-<form method="get" class="filter-bar filter-bar-compact">
+<form method="get" class="filter-bar">
   <select name="exhibition_id" onchange="this.form.submit()">
     <option value="">전체</option>
     {% for e in exhibitions %}
@@ -64,28 +53,26 @@
 <table class="table">
   <thead>
     <tr>
-      <th class="col-shrink"></th>
-      <th class="col-expo">박람회</th><th class="col-shrink">등록일</th><th class="col-name">이름</th><th class="col-company">회사 · 직급</th><th class="col-email">이메일</th><th class="col-notes">비고</th><th class="col-shrink">메일 상태</th><th class="col-shrink"></th>
+      <th></th>
+      <th>박람회</th><th>등록일</th><th>이름</th><th>회사</th><th>직급</th><th>이메일</th><th>비고</th><th>메일 상태</th><th></th>
     </tr>
   </thead>
   <tbody>
     {% for c in contacts %}
     <tr class="{{ 'stale-row' if c.id in stale_ids else '' }}">
-      <td class="col-shrink"><input type="checkbox" name="contact_ids" value="{{ c.id }}" form="bulk-send-form"></td>
+      <td><input type="checkbox" name="contact_ids" value="{{ c.id }}" form="bulk-send-form"></td>
       <td>{{ c.exhibition_name }}</td>
-      <td class="col-shrink cell-date">{{ c.created_at.strftime('%y.%m.%d') }}</td>
-      <td class="cell-name">{{ c.name }}</td>
-      <td>
-        <div>{{ c.company }}</div>
-        {% if c.position %}<div class="cell-sub">{{ c.position }}</div>{% endif %}
-      </td>
-      <td class="cell-email">{{ c.email }}</td>
+      <td>{{ c.created_at.strftime('%y.%m.%d') }}</td>
+      <td>{{ c.name }}</td>
+      <td>{{ c.company }}</td>
+      <td>{{ c.position }}</td>
+      <td>{{ c.email }}</td>
       <td class="notes-cell">
         {% if c.phone %}<div>Tel: {{ c.phone }}</div>{% endif %}
         {% if c.address %}<div>Address: {{ c.address }}</div>{% endif %}
         {% if c.remarks %}<div>{{ c.remarks }}</div>{% endif %}
       </td>
-      <td class="col-shrink">
+      <td>
         <div class="status-cell">
         {% if c.followup and c.followup.last_sent_at %}
           <a href="{{ url_for('followup.view_followup', contact_id=c.id) }}" class="status status-sent status-link">
@@ -125,7 +112,7 @@
         {% endif %}
         </div>
       </td>
-      <td class="col-shrink actions">
+      <td class="actions">
         <div class="action-buttons action-buttons-stacked">
           <a href="{{ url_for('contacts.edit_contact', contact_id=c.id) }}" class="btn-chip">정보 수정</a>
           <form action="{{ url_for('contacts.delete_contact', contact_id=c.id) }}" method="post"
@@ -136,30 +123,13 @@
       </td>
     </tr>
     {% else %}
-    <tr><td colspan="9">등록된 바이어가 없습니다.</td></tr>
+    <tr><td colspan="10">등록된 바이어가 없습니다.</td></tr>
     {% endfor %}
   </tbody>
 </table>
 </div>
 
-<div class="modal-overlay" id="bulk-attach-modal">
-  <div class="modal-dialog">
-    <div class="modal-header">
-      <h2>첨부 파일 확인</h2>
-      <button type="button" class="modal-close" data-modal-close aria-label="닫기">✕</button>
-    </div>
-    <ul class="attach-list" id="bulk-attach-list"></ul>
-    <p class="page-desc">선택 발송하는 모든 바이어에게 이 파일들이 함께 나가요.</p>
-    <div class="form-actions">
-      <button type="button" class="btn-secondary" data-modal-close>닫기</button>
-    </div>
-  </div>
-</div>
-
-<script src="{{ url_for('static', filename='js/attach_menu.js') }}"></script>
 <script>
-  SabuzakAttach.init({ prefix: 'bulk-attach' });
-
   document.getElementById('select-all-btn').addEventListener('click', function () {
     document.querySelectorAll('input[name="contact_ids"]').forEach(function (cb) {
       cb.checked = true;
