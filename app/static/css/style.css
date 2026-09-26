@@ -707,7 +707,7 @@ p.page-desc:not(:last-child) {
 }
 
 .continent-results-wrap {
-  margin-top: 24px;
+  margin-top: 16px;
 }
 
 .expo-results-header {
@@ -2213,10 +2213,15 @@ p.page-desc:not(:last-child) {
   border: 1px solid #ebe8e2;
 }
 
+/* 지도 아래 "해외 박람회 목록"까지 스크롤 없이 한 화면에 보이도록 지도를
+   85% -> 훨씬 작게(최대 560px) 줄였다. viewBox가 800x460이라 폭이 줄면
+   높이도 그 비율대로 같이 줄어든다. */
 .world-map {
   padding: 4px 8px;
   background: transparent;
-  width: 85%;
+  width: 46%;
+  max-width: 560px;
+  min-width: 320px;
   margin: 0 auto;
 }
 .world-map svg { width: 100%; height: auto; display: block; }
@@ -2226,7 +2231,7 @@ p.page-desc:not(:last-child) {
   align-items: center;
   justify-content: center;
   gap: 20px;
-  padding: 10px 20px;
+  padding: 6px 20px;
   flex-wrap: wrap;
   background: #fff;
   border-top: 1px solid #ebe8e2;
