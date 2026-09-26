@@ -1774,8 +1774,8 @@ p.page-desc:not(:last-child) {
 }
 
 .event-index {
-  font-family: monospace;
-  color: #d1d5db;
+  font-family: inherit;
+  color: #ea580c;
   font-weight: 700;
   font-size: 16px;
 }
@@ -2359,3 +2359,36 @@ p.page-desc:not(:last-child) {
 .un-bubble-detail { position: absolute; display: none; background: #3c4043; color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.6; min-width: 190px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 5; pointer-events: none; }
 .un-bubble-detail strong { display: block; font-size: 13px; margin-bottom: 4px; }
 .un-bubble-detail a { color: #8ab4f8; pointer-events: auto; }
+
+/* 수출 주의사항 탭: 제목·제품 표기를 시장 개요 탭(16px)과 같은 크기로 통일 */
+#tab-hscode .section-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: inherit;
+}
+
+#tab-hscode .tariff-card-title {
+  font-size: 16px;
+}
+
+#tab-hscode .tariff-card-title .hs-tag {
+  margin-left: 0;
+  font-size: inherit;
+}
+
+#tab-hscode .section-label {
+  margin: 20px 0;
+}
+
+#tab-hscode .tariff-card-title .hs-tag {
+  font-weight: 700;
+  color: inherit;
+}
+
+/* 부스 컨셉 기획 화면의 구역 제목: 수출 주의사항 탭 소제목과 같은 규격, 위아래 간격 20px */
+.section-label.section-label-lg {
+  font-size: 16px;
+  font-weight: 700;
+  color: inherit;
+  margin: 20px 0;
+}
