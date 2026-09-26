@@ -451,29 +451,79 @@ if (bubbleWrap) {
     bubble.addEventListener('click', showDetail);
   });
 
-  (function declutterLabels() {
+  // 국가 이름 배치: 각 이름을 버블 아래/위/오른쪽/왼쪽/대각선 후보 자리 중
+  // (1) 그래프 영역 안에 있고 (2) 다른 이름·버블과 덜 겹치는 자리에 놓는다.
+  // 큰 버블(큰 시장) 이름부터 먼저 자리를 잡는다.
+  function placeLabels() {
+    var W = bubbleWrap.clientWidth, H = bubbleWrap.clientHeight, PAD = 2, GAP = 3;
+    var bubbles = Array.prototype.slice.call(bubbleWrap.querySelectorAll('.bubble'));
     var labels = Array.prototype.slice.call(bubbleWrap.querySelectorAll('.bubble-label'));
-    labels.forEach(function (l) { l.dataset.shift = '0'; });
-    for (var pass = 0; pass < 10; pass++) {
-      var moved = false;
-      for (var i = 0; i < labels.length; i++) {
-        for (var j = i + 1; j < labels.length; j++) {
-          var a = labels[i].getBoundingClientRect();
-          var b = labels[j].getBoundingClientRect();
-          var overlap = a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
-          if (!overlap) continue;
-          var lower = a.top <= b.top ? labels[j] : labels[i];
-          var upperRect = a.top <= b.top ? a : b;
-          var lowerRect = a.top <= b.top ? b : a;
-          var shift = Number(lower.dataset.shift) + (upperRect.bottom - lowerRect.top) + 1;
-          lower.dataset.shift = String(shift);
-          lower.style.transform = 'translate(-50%, ' + shift + 'px)';
-          moved = true;
-        }
-      }
-      if (!moved) break;
+    var items = bubbles.map(function (b, i) {
+      var r = b.offsetWidth / 2;
+      return {
+        el: labels[i], r: r,
+        cx: parseFloat(b.style.left) / 100 * W,
+        cy: parseFloat(b.style.top) / 100 * H
+      };
+    }).filter(function (it) { return it.el; });
+
+    items.forEach(function (it) {
+      it.el.style.transform = 'none';
+      it.w = it.el.offsetWidth;
+      it.h = it.el.offsetHeight;
+    });
+
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+    function rectOverlap(a, b) {
+      var x = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
+      var y = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+      return (x > 0 && y > 0) ? x * y : 0;
     }
-  })();
+    function circleOverlap(rc, c) {
+      var nx = clamp(c.cx, rc.x, rc.x + rc.w), ny = clamp(c.cy, rc.y, rc.y + rc.h);
+      var d = Math.sqrt((c.cx - nx) * (c.cx - nx) + (c.cy - ny) * (c.cy - ny));
+      return d < c.r ? (c.r - d) * rc.h : 0;
+    }
+
+    // 사분면 이름표(집중 공략 등)도 가리지 않게 미리 "차지한 자리"로 넣어둔다
+    var wrapRect = bubbleWrap.getBoundingClientRect();
+    var placed = Array.prototype.slice.call(bubbleWrap.querySelectorAll('.quadrant-tag')).map(function (t) {
+      var r = t.getBoundingClientRect();
+      return { x: r.left - wrapRect.left, y: r.top - wrapRect.top, w: r.width, h: r.height };
+    });
+    items.slice().sort(function (a, b) { return b.r - a.r; }).forEach(function (it) {
+      var w = it.w, h = it.h, cx = it.cx, cy = it.cy, r = it.r;
+      var cands = [
+        [cx - w / 2, cy + r + GAP],                 // 아래
+        [cx - w / 2, cy - r - GAP - h],             // 위
+        [cx + r + GAP, cy - h / 2],                 // 오른쪽
+        [cx - r - GAP - w, cy - h / 2],             // 왼쪽
+        [cx + r * 0.7, cy + r * 0.7],               // 오른쪽 아래
+        [cx - r * 0.7 - w, cy + r * 0.7],           // 왼쪽 아래
+        [cx + r * 0.7, cy - r * 0.7 - h],           // 오른쪽 위
+        [cx - r * 0.7 - w, cy - r * 0.7 - h]        // 왼쪽 위
+      ];
+      var best = null;
+      cands.forEach(function (c, order) {
+        var outside = (c[0] < PAD || c[0] + w > W - PAD || c[1] < PAD || c[1] + h > H - PAD);
+        var rc = { x: clamp(c[0], PAD, W - PAD - w), y: clamp(c[1], PAD, H - PAD - h), w: w, h: h };
+        var score = order * 0.5 + (outside ? 40 : 0);
+        placed.forEach(function (p) { score += rectOverlap(rc, p) * 3; });
+        items.forEach(function (o) { if (o !== it) score += circleOverlap(rc, o); });
+        score += circleOverlap(rc, it) * 2;         // 자기 버블을 가리는 자리도 피함
+        if (!best || score < best.score) best = { rc: rc, score: score };
+      });
+      placed.push(best.rc);
+      it.el.style.left = best.rc.x + 'px';
+      it.el.style.top = best.rc.y + 'px';
+    });
+  }
+  placeLabels();
+  var labelTimer = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(labelTimer);
+    labelTimer = setTimeout(placeLabels, 150);
+  });
 
   document.addEventListener('click', function (e) {
     if (bubbleDetail && bubbleDetail.contains(e.target)) return;
