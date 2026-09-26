@@ -134,19 +134,20 @@
 
     // 지도 크기를 실제 화면 높이에 맞춰 정확히 계산한다 (vh %로 어림잡으면
     // 모니터마다 검색창이 화면 밖으로 밀리거나 반대로 너무 작아지는 문제가
-    // 있었음). "박람회명/국가/도시 검색" 입력창이 있는 필터 바 아래쪽이
-    // 뷰포트 하단에 딱 맞게 지도 높이를 매번 다시 계산해서 맞춘다.
+    // 있었음). "필터 적용" 버튼까지만(체크박스+검색창+날짜) 뷰포트 안에
+    // 들어오면 되고, 그 아래 줄바꿈되는 "초기화" 버튼은 화면 밖으로 밀려도
+    // 된다 - 그래서 기준을 filter-bar 전체가 아니라 "필터 적용" 버튼으로 잡는다.
     var MIN_MAP_H = 240;
     var MAX_MAP_H = 900;
-    var BOTTOM_MARGIN = 10; // 필터 바 밑에 남길 여유
+    var BOTTOM_MARGIN = 10; // 기준 요소 밑에 남길 여유
 
     function fitMapToViewport() {
-      var filterBar = document.querySelector(".filter-bar");
-      if (!filterBar) return;
+      var anchor = document.querySelector(".filter-bar .btn-primary") || document.querySelector(".filter-bar");
+      if (!anchor) return;
 
       var mapRect = mapEl.getBoundingClientRect();
-      var filterRect = filterBar.getBoundingClientRect();
-      var delta = (window.innerHeight - BOTTOM_MARGIN) - filterRect.bottom;
+      var anchorRect = anchor.getBoundingClientRect();
+      var delta = (window.innerHeight - BOTTOM_MARGIN) - anchorRect.bottom;
       var newHeight = mapRect.height + delta;
       newHeight = Math.max(MIN_MAP_H, Math.min(MAX_MAP_H, newHeight));
 
