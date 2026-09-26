@@ -49,25 +49,30 @@ def _empty_form():
     return {f: "" for f in INPUT_FIELDS}
 
 
-def _booth_link(form, booth_job_id=None):
+def _booth_link(form, booth_job_id=None, expo_id=None, product_id=None):
     if booth_job_id:
         return f"/booth/{booth_job_id}"
     from urllib.parse import urlencode
-    return "/booth?" + urlencode({k: v for k, v in form.items() if v})
+    params = {k: v for k, v in form.items() if v}
+    if expo_id:
+        params["expo_id"] = expo_id
+    if product_id:
+        params["product_id"] = product_id
+    return "/booth?" + urlencode(params)
 
 
 def _trend_page(form, data=None, error=None, force=False, booth_job_id=None, job_id=None, expo_id=None, product_id=None):
     return render_template(
         "trend_v2/trend.html", form=form, data=data, error=error, force=force,
-        question_labels=QUESTION_LABELS, booth_link=_booth_link(form, booth_job_id),
+        question_labels=QUESTION_LABELS, booth_link=_booth_link(form, booth_job_id, expo_id, product_id),
         job_id=job_id, expo_id=expo_id, product_id=product_id,
     )
 
 
-def _booth_page(form, data=None, error=None, force=False, job_id=None, running=False):
+def _booth_page(form, data=None, error=None, force=False, job_id=None, running=False, expo_id=None, product_id=None):
     return render_template(
         "trend_v2/booth.html", form=form, data=data, error=error, force=force,
-        job_id=job_id, running=running,
+        job_id=job_id, running=running, expo_id=expo_id, product_id=product_id,
     )
 
 
@@ -110,31 +115,49 @@ def _build_trend_summary(result):
     return " · ".join(parts) or "분석 완료"
 
 
-def _persist_trend_result(job, job_id):
-    """트렌드 조사가 (박람회, 제품) 조합으로 시작된 경우, '작성 중인 박람회'
-    목록에서 보여줄 수 있게 가벼운 요약 포인터를 남긴다. expo_id/product_id가
-    없으면(예: v15 폼에서 직접 시작) 그냥 건너뛴다."""
+def _linked_expo_product(job):
+    """job의 links에서 (박람회, 제품) id를 뽑는다. 둘 다 없으면(예: v15 폼에서
+    직접 시작) None을 돌려준다 - '작성 중인 박람회' 목록 연동은 건너뛴다."""
     links = job.get("links") or {}
     expo_id, product_id = links.get("expo_id"), links.get("product_id")
     if not expo_id or not product_id:
-        return
+        return None, None
     try:
-        expo_id, product_id = int(expo_id), int(product_id)
+        return int(expo_id), int(product_id)
     except (TypeError, ValueError):
-        return
+        return None, None
 
+
+def _get_or_create_trend_result(expo_id, product_id):
     existing = TrendResult.query.filter_by(
         user_id=current_user.id, exhibition_id=expo_id, product_id=product_id,
     ).first()
-    summary = _build_trend_summary(job.get("result"))
-    if existing:
-        existing.job_id, existing.summary = job_id, summary
-    else:
-        existing = TrendResult(
-            user_id=current_user.id, exhibition_id=expo_id, product_id=product_id,
-            job_id=job_id, summary=summary,
-        )
+    if existing is None:
+        existing = TrendResult(user_id=current_user.id, exhibition_id=expo_id, product_id=product_id, job_id="")
         db.session.add(existing)
+    return existing
+
+
+def _persist_trend_result(job, job_id):
+    """트렌드 조사가 (박람회, 제품) 조합으로 시작된 경우, '작성 중인 박람회'
+    목록에서 보여줄 수 있게 가벼운 요약 포인터를 남긴다."""
+    expo_id, product_id = _linked_expo_product(job)
+    if expo_id is None:
+        return
+    existing = _get_or_create_trend_result(expo_id, product_id)
+    existing.job_id = job_id
+    existing.summary = _build_trend_summary(job.get("result"))
+    db.session.commit()
+
+
+def _persist_booth_result(job, job_id):
+    """부스 컨셉 기획이 (박람회, 제품) 조합으로 시작된 경우도 동일하게, 이미
+    있는(또는 방금 만든) TrendResult 포인터에 부스 job_id만 얹어둔다."""
+    expo_id, product_id = _linked_expo_product(job)
+    if expo_id is None:
+        return
+    existing = _get_or_create_trend_result(expo_id, product_id)
+    existing.booth_job_id = job_id
     db.session.commit()
 
 
@@ -163,12 +186,15 @@ def booth_index():
     """GET: 부스 컨셉만 따로 실행하는 화면(쿼리스트링으로 미리 채울 수 있음).
     POST: 자바스크립트가 꺼진 브라우저용."""
     if request.method == "GET":
-        return _booth_page(_form_from(request.args))
+        return _booth_page(
+            _form_from(request.args), expo_id=request.args.get("expo_id"), product_id=request.args.get("product_id"),
+        )
     form, force = _form_from(request.form), bool(request.form.get("force"))
+    expo_id, product_id = request.form.get("expo_id"), request.form.get("product_id")
     try:
-        return _booth_page(form, run_booth(form, force=force), force=force)
+        return _booth_page(form, run_booth(form, force=force), force=force, expo_id=expo_id, product_id=product_id)
     except ValueError as e:
-        return _booth_page(form, error=str(e), force=force)
+        return _booth_page(form, error=str(e), force=force, expo_id=expo_id, product_id=product_id)
 
 
 @pages_bp.get("/booth/<job_id>")
@@ -179,6 +205,8 @@ def booth_result(job_id):
         return _booth_page(_empty_form(), error="부스 기획 작업을 찾지 못했습니다. 서버가 다시 시작되었을 수 있어요. 다시 실행해 주세요.")
     if job["status"] == "running":
         return _booth_page(job["form"], job_id=job_id, running=True)
+    if job["status"] == "done":
+        _persist_booth_result(job, job_id)
     return _booth_page(job["form"], job["result"], job["error"], job["force"], job_id=job_id)
 
 
@@ -215,13 +243,17 @@ def api_trend_start():
 @api_bp.post("/booth/start")
 @login_required
 def api_booth_start():
+    raw = request.form or request.get_json(silent=True) or {}
     try:
-        job_id = start_booth_job(
-            _form_from(request.form or request.get_json(silent=True) or {}),
-            force=bool(request.values.get("force")),
-        )
+        job_id = start_booth_job(_form_from(raw), force=bool(request.values.get("force")))
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
+    expo_id, product_id = raw.get("expo_id"), raw.get("product_id")
+    if expo_id and product_id:
+        job = jobs.get(job_id)
+        if job:
+            job["links"]["expo_id"] = expo_id
+            job["links"]["product_id"] = product_id
     return jsonify({"job_id": job_id})
 
 
