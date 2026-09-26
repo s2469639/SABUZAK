@@ -197,6 +197,9 @@ def create_app(config_object="config.Config"):
     app.register_blueprint(buyer_profile_bp)
     app.register_blueprint(buyer_gmail_bp)
 
+    from app.routes.chatbot import bp as chatbot_bp
+    app.register_blueprint(chatbot_bp)
+
     # 나머지 blueprint(proposal, crawl)는
     # 구현되는 대로 여기에 register_blueprint 하면 됩니다.
 

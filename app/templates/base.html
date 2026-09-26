@@ -87,6 +87,8 @@
     </div>
   </div>
 
+  {% include "_chatbot_widget.html" %}
+
   {% if current_user.is_authenticated %}
   <div class="modal-overlay" id="edit-profile-modal">
     <div class="modal-dialog">
@@ -122,5 +124,6 @@
   <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
   <script src="{{ url_for('static', filename='js/mypage.js') }}"></script>
   <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
 </body>
 </html>
