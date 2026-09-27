@@ -1,5 +1,36 @@
+{% if selectable_products %}
+{# 제품은 있는데 분석 제품이 선택 안 된 경우: 여기서 바로 골라서 같은 탭으로 돌아온다 #}
+<div class="no-product-state">
+  <h3>분석할 제품을 골라주세요</h3>
+  <p>시장 개요·관세·트렌드 조사는 분석 제품 1개를 기준으로 보여드려요.</p>
+  <ul class="pick-product-list">
+    {% for p in selectable_products %}
+    <li class="pick-product-row">
+      <span class="pick-product-name">{{ p.name }} <span class="pick-product-hs">{{ p.hs_code }}</span></span>
+      <form method="post" action="{{ url_for('mypage.toggle_product', product_id=p.id) }}">
+        <input type="hidden" name="select_only" value="1">
+        <input type="hidden" name="return_expo" value="{{ expo.id }}">
+        <input type="hidden" name="return_tab" value="{{ return_tab }}">
+        <button type="submit" class="btn-chip">이 제품으로 분석</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  <a href="{{ url_for('mypage.index') }}" class="pick-product-manage">내 제품 관리로 가기</a>
+</div>
+<style>
+  .pick-product-list { list-style: none; margin: 16px auto 12px; padding: 0; max-width: 460px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+  .pick-product-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 14px; }
+  .pick-product-row form { margin: 0; flex: none; }
+  .pick-product-name { font-weight: 600; color: #111827; min-width: 0; overflow-wrap: anywhere; }
+  .pick-product-hs { margin-left: 6px; font-size: 12px; font-weight: 400; color: #6b7280; }
+</style>
+{% else %}
 <div class="no-product-state">
   <h3>등록된 제품이 없습니다</h3>
-  <p>내 제품에서 제품을 추가하면<br>해당 국가 맞춤 정보를 확인할 수 있습니다</p>
-  <a href="{{ url_for('mypage.index') }}" class="btn-primary">내 제품 추가하러 가기 →</a>
+  <p>제품을 추가하면 해당 국가 맞춤 정보를 바로 확인할 수 있습니다</p>
+  <button type="button" class="btn-primary" data-modal-open="expo-add-product-modal" data-open-expo-add data-return-tab="{{ return_tab }}">+ 제품 추가하기</button>
+  <p><a href="{{ url_for('mypage.index') }}" class="pick-product-manage">내 제품 관리로 가기</a></p>
 </div>
+{% endif %}
+<style>.pick-product-manage { font-size: 13px; color: #6b7280; }</style>

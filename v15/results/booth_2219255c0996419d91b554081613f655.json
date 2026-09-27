@@ -1,0 +1,885 @@
+{
+  "inputs": {
+    "name": "황금비율 오리지널 마일드믹스",
+    "country": "싱가포르",
+    "exhibition_name": "Restaurant Asia",
+    "exhibition_website": "restaurantasia.com.sg",
+    "strengths": "부드러운 우유 풍미와 깊고 진한 커피 원두의 조화",
+    "ingredients": "인스턴트커피, 식물성크림, 자일로스설탕",
+    "certifications": "HACCP, ISO 22000",
+    "price": "12g×100입 (14,900원)",
+    "country_en": "Singapore"
+  },
+  "booth": {
+    "summary": "확정 SKU인 12g×100입에 집중해 ‘첫맛은 마일드하지만 10초 뒤에도 커피 끝맛이 남는가’를 무페어링 시음으로 검증하고, 적격 바이어에게는 숫자가 모두 채워진 거래조건표로 즉시 전환합니다. 부스는 3m×3m, 운영인력 3명, 하루 시음 300잔을 기준으로 설계하되 조제·가격·물류 수치는 박람회 전 필수 확정 게이트로 관리합니다.",
+    "positioning": {
+      "target_buyer": "1순위 Singapore 수입·유통사 및 식품서비스 디스트리뷰터, 2순위 호텔·케이터링·오피스 팬트리 구매 담당자",
+      "core_message": "황금비율 마일드믹스는 12g 1회분 포맷으로 빠르게 제공하면서, 부드러운 우유 풍미 뒤에도 커피 끝맛이 남도록 설계된 푸드서비스용 커피 믹스입니다."
+    },
+    "sections": {
+      "main_visual": {
+        "concept_en": "Mild First. Wait 10. Coffee Stays.",
+        "concept_ko": "첫맛은 마일드하게. 10초 뒤에도 커피는 남게.",
+        "key_message": "일반적인 우유·커피 이미지 대신 실제 100입 패키지와 ‘10초 끝맛 확인’이라는 시음 행동을 전면에 내세워 제품 약속을 즉시 체험하게 합니다.",
+        "bullets": [
+          {
+            "text": "3m×3m 코너형 부스를 가정해 백월 중앙 1.8m 높이에 실제 12g×100입 패키지를 최소 120cm 크기로 확대합니다. 패키지 위에는 제품명 ‘GOLDEN RATIO MILD MIX’, 아래에는 ‘Mild First. Wait 10. Coffee Stays.’만 배치해 브랜드와 맛의 확인 방법을 5m 거리에서 함께 읽게 합니다.",
+            "quote_ids": [],
+            "company": [
+              "강점",
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "백월 오른쪽에는 숫자 증거 패널 3개를 둡니다. 첫 칸은 확정 정보인 ‘12g SINGLE SERVE’, 나머지는 사전 제품 테스트 후 확정한 ‘권장 물량 ___ml’과 ‘완전 용해 ___초’를 표시합니다. 설치 파일은 실제 수치가 입력되기 전에는 출력하지 않으며, 미확정 값을 TBC 상태로 관람객에게 노출하지 않습니다.",
+            "quote_ids": [
+              "R11"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "통로 쪽에는 대형 스틱 모형 1개와 실제 100입 박스 3개만 반복 진열합니다. 크림 화이트·에스프레소 브라운·골드의 세 색만 사용하고, 일반적인 우유 파동 그래픽 대신 ‘한 모금→10초 대기→끝맛 선택’의 세 단계 아이콘을 조명으로 강조합니다.",
+            "quote_ids": [
+              "R3",
+              "R4"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "박람회 전 블라인드 관능평가에서 표본 수, 비교 조건, 커피 끝맛 평가 결과가 확보되면 백월 하단에 해당 수치와 조사 조건을 함께 표시합니다. 결과가 없거나 차이가 명확하지 않으면 수치 우위 주장은 사용하지 않고 현장 평가만 수집합니다.",
+            "quote_ids": [
+              "R3",
+              "R4"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          }
+        ]
+      },
+      "slogan": {
+        "main_en": "Mild First. Wait 10. Coffee Stays.",
+        "main_ko": "첫맛은 마일드하게. 10초 뒤에도 커피는 남게.",
+        "sub_en": "One 12g Stick for Fast Coffee Service",
+        "sub_ko": "빠른 커피 서비스를 위한 12g 한 스틱",
+        "bullets": [
+          {
+            "text": "메인 슬로건은 경쟁 제품도 사용할 수 있는 ‘smooth’와 ‘deep’의 단순 병렬에서 벗어나, 방문객이 실제로 수행할 ‘10초 끝맛 확인’을 제품 약속에 결합합니다. 제품명은 슬로건 바로 위에 고정해 이 체험을 Golden Ratio의 시음 자산으로 만듭니다.",
+            "quote_ids": [
+              "R3",
+              "R4"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "서브 슬로건은 바이어가 확인하려는 운영 가치인 12g 정량 포맷과 빠른 서비스를 명시합니다. ‘30초 완성’ 같은 속도 수치는 권장 물량·온도·교반·용해 테스트로 실제 달성 여부가 확인된 후에만 추가합니다.",
+            "quote_ids": [
+              "R11"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          }
+        ]
+      },
+      "signature_pairing": {
+        "item": "Golden Ratio Mild Mix × 10-Second Finish Check, with Optional Mini Kaya Toast Session",
+        "intent": "핵심 시음은 음식 없이 커피의 첫맛과 끝맛을 확인하고, 카야 토스트는 현지 조식 활용도를 보여주는 예약 시간대의 보조 프로그램으로만 운영합니다.",
+        "bullets": [
+          {
+            "text": "상시 시음은 60~80ml의 무페어링 커피로 진행합니다. 방문객이 첫 모금을 마신 뒤 10초 타이머를 보고 ‘Milk smoothness’와 ‘Coffee finish’를 각각 5점으로 평가하게 해 카야의 단맛 없이 핵심 약속을 검증합니다.",
+            "quote_ids": [
+              "R1",
+              "R2"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "미니 카야 토스트 페어링은 매일 11:30과 15:30, 회당 25개로 제한합니다. ‘Breakfast Application Session’ 표지 아래 커피를 먼저 평가한 방문객에게만 3×3cm 한입 크기로 제공해 호텔 조식·카페 메뉴 적용성을 보여줍니다.",
+            "quote_ids": [
+              "R1",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "토스트는 성분표와 제조·유통기한이 표시된 단일 공급처의 사전 포장 제품만 사용합니다. 빵·달걀·우유 등 알레르겐을 카운터 전면에 고지하고, 개봉 시각·보관온도·폐기 시각·전용 집게 교체 기록을 운영일지에 남깁니다.",
+            "quote_ids": [
+              "R7",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "페어링 상담 시에는 ‘호텔 조식 세트’, ‘회의실 커피’, ‘오피스 팬트리’ 세 장의 활용 카드만 제시하고, 방문객이 실제 도입을 검토할 채널 한 개를 선택하게 해 상담 질문으로 연결합니다.",
+            "quote_ids": [
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "demonstration": {
+        "title": "10초 끝맛 확인 시음과 3분 거래 가능성 검증",
+        "bullets": [
+          {
+            "text": "박람회 60일 전 실제 제품으로 권장 물량, 물 온도, 교반 횟수, 완전 용해 시간과 조제 후 관능 유지시간을 시험합니다. 30초 이내 완전 용해가 확인되면 ‘30-Second One-Stick Service’를 운영하고, 초과하면 실제 측정 시간을 정직하게 표시해 시연명을 수정합니다.",
+            "quote_ids": [],
+            "company": [
+              "원료",
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "30초 시연은 ‘스틱 개봉→미리 계량한 온수 투입→확정 횟수만큼 교반→타이머 정지’로 표준화합니다. 완성된 커피는 60~80ml 위생컵에 제공하고, 방문객은 한 모금 후 10초 뒤 커피 끝맛을 평가합니다. 보온병 장기 보관 커피는 핵심 시음에 사용하지 않습니다.",
+            "quote_ids": [
+              "R12"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "3분 시연에서는 동일 조건으로 두 잔을 연속 제조한 뒤 실제 스틱, 100입 박스, 외포장 카톤을 보여줍니다. 이어 확정된 스틱당 FOB 가격, 잔당 원가, MOQ, 리드타임, 총 유통기한, Singapore 도착 보장 잔여기한, 카톤·팔레트 적재량을 거래조건표 한 장으로 설명합니다.",
+            "quote_ids": [
+              "R5",
+              "R10",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "3m×3m 부스에는 시음 담당 1명, 리드 선별 1명, 상담 담당 1명 등 총 3명을 배치합니다. 하루 6시간 시음, 시간당 45~50잔, 하루 300잔을 운영 상한으로 잡고 컵 330개, 식수 최대 30L, 뚜껑형 폐수통 20L 2개, 일반·식품 쓰레기통 각 1개를 준비합니다. 최종 식수량은 확정 레시피에 맞춰 다시 계산합니다.",
+            "quote_ids": [
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "packaging": {
+        "direction": "실제 발주 가능한 12g×100입 SKU만 중심에 두고, Singapore 라벨·Nutri-Grade·알레르겐 검토 상태를 투명하게 보여주는 푸드서비스 패키지",
+        "bullets": [
+          {
+            "text": "전면은 ‘Mild First. Coffee Finish.’를 핵심 메시지 하나로 사용하고 ‘12g × 100 sticks’를 바로 아래 표시합니다. 저당·저지방·Healthier Choice·Halal 표현은 분석, 심사 또는 인증이 완료되기 전에는 넣지 않습니다.",
+            "quote_ids": [
+              "R8",
+              "R9"
+            ],
+            "company": [
+              "강점",
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "후면 Singapore 검토본에는 영어 제품명, 전체 원재료, 알레르겐, 순중량, 원산지, lot, 조제법, 보관법, 영양정보와 현지 importer 또는 distributor 주소 영역을 배치합니다. 식물성크림의 전체 구성과 우유 유래 sodium caseinate 포함 여부를 먼저 확인합니다.",
+            "quote_ids": [
+              "R7",
+              "R8"
+            ],
+            "company": [
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "박람회 전 조제 기준 sugar·saturated fat 분석과 Nutri-Grade 예상 등급에 대한 현지 전문가 검토를 완료합니다. C 또는 D 등급 적용이 확인되면 전면 마크가 다른 정보와 충돌하지 않도록 우측 상단에 규정 크기의 표시 공간을 확보합니다.",
+            "quote_ids": [
+              "R8"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "부스에는 확정 SKU인 100입 제품만 판매 가능 제품으로 전시합니다. 20~30입 리테일팩이나 200~500입 업소용 규격은 생산 가능성·단가·MOQ가 확인된 경우에만 ‘CONCEPT ONLY — NOT YET ORDERABLE’ 표지와 함께 별도 포트폴리오 파일에서 보여줍니다.",
+            "quote_ids": [
+              "R5",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "merchandising": {
+        "bullets": [
+          {
+            "text": "제품 선반에는 100입 박스를 가로 3개×세로 2단으로 반복 진열하고, 옆에 스틱 12개를 세워 1회분 포맷을 보여줍니다. 확인되지 않은 리테일팩 목업은 실제 제품 옆에 놓지 않습니다.",
+            "quote_ids": [],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "상담 테이블에는 공개용 제품 시트와 적격 바이어용 거래조건표를 분리합니다. 거래조건표에는 100입 기준 EXW·FOB, 스틱당 공급가, 운송 시나리오별 SGD landed cost, 권장 도매가·RRP, 수입사·유통사 마진, MOQ를 실제 숫자로 기재하며 미확정 공란이 있으면 배포하지 않습니다.",
+            "quote_ids": [
+              "R5"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "두 번째 물류 시트에는 박스·외포장 규격과 총중량, 카톤당 제품 수, 팔레트당 카톤 수, 월 생산능력, 생산 리드타임, 총 유통기한, Singapore 도착 보장 잔여기한, 보관조건, COA 제공 여부를 숫자로 기재합니다. HACCP·ISO 22000 인증서와 COA 예시는 태블릿에서 즉시 열람하게 합니다.",
+            "quote_ids": [
+              "R10"
+            ],
+            "company": [
+              "인증"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "상담 QR의 첫 화면에는 ‘SFA-registered importer 여부, 유통 채널, 예상 연간 물량, 목표 landed cost, Nutri-Grade 요구, Halal 필요 여부’를 배치합니다. 직접 수입하지 않는 호텔·케이터링 구매자는 디스트리뷰터 연결 필요 리드로 별도 태그합니다.",
+            "quote_ids": [
+              "R6",
+              "R8",
+              "R9",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ],
+        "zones": [
+          {
+            "name": "1. Stop & Read Zone",
+            "position": "통로 정면 백월과 전면 좌측",
+            "purpose": "실제 100입 패키지, 12g 스틱, ‘Mild First. Wait 10. Coffee Stays.’를 함께 노출해 제품과 시음 이유를 3초 안에 전달합니다.",
+            "quote_ids": [],
+            "company": [
+              "강점",
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "name": "2. Taste Proof Bar",
+            "position": "통로와 맞닿은 전면 우측 1200mm 카운터",
+            "purpose": "표준 레시피로 제조한 무페어링 시음과 10초 끝맛 평가를 운영하며 방문객의 업종·채널을 선별합니다.",
+            "quote_ids": [
+              "R1",
+              "R2",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "name": "3. Orderable SKU & Compliance Wall",
+            "position": "부스 내부 왼쪽 벽면",
+            "purpose": "실제 주문 가능한 12g×100입 제품을 리테일 레디 형태로 진열하고 HACCP·ISO 22000, 영문 라벨 검토본, Nutri-Grade 검토 상태를 구분해 보여줍니다.",
+            "quote_ids": [
+              "R7",
+              "R8"
+            ],
+            "company": [
+              "인증"
+            ],
+            "is_idea": false
+          },
+          {
+            "name": "4. Buyer Decision Table",
+            "position": "부스 안쪽 오른쪽의 반개방 상담 테이블",
+            "purpose": "수입 자격과 유통 채널을 확인한 뒤 가격·MOQ·물류·유통기한 수치로 샘플 발송, 견적 또는 후속 미팅을 확정합니다.",
+            "quote_ids": [
+              "R6",
+              "R10",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      }
+    },
+    "visitor_flow": {
+      "3s": {
+        "headline": "통로에서 3초: 실제 100입 패키지와 ‘Wait 10’으로 멈추게 하기",
+        "goal": "제품이 12g 1회분 커피 믹스이며, 확인할 차이가 ‘마일드한 첫맛 뒤에 남는 커피 끝맛’임을 즉시 이해시킵니다.",
+        "visitor": [
+          "확대된 Golden Ratio Mild Mix 100입 패키지와 대형 스틱을 봅니다.",
+          "‘Mild First. Wait 10. Coffee Stays.’와 한 모금·10초·끝맛 아이콘을 읽습니다."
+        ],
+        "staff": [
+          "통로를 막지 않고 시음컵을 보여주며 ‘Take one sip, wait ten seconds’라고 초대합니다.",
+          "바이어 배지가 보이면 업종을 확인하고 시음 바의 대기 위치를 안내합니다."
+        ],
+        "props": [
+          "120cm 이상 확대 패키지 그래픽",
+          "대형 12g 스틱 모형",
+          "10초 카운트다운 LED",
+          "실제 100입 박스 6개"
+        ],
+        "message": "첫맛의 부드러움뿐 아니라 10초 뒤 남는 커피 끝맛을 직접 확인하십시오."
+      },
+      "30s": {
+        "headline": "한 스틱 정량 제조와 10초 끝맛 확인",
+        "goal": "제품의 맛 약속과 1회분 운영 편의성을 음식 없이 검증하고, 상담할 바이어를 선별합니다.",
+        "visitor": [
+          "확정 레시피로 제조되는 한 스틱 서비스를 봅니다.",
+          "60~80ml 커피를 한 모금 마시고 10초 뒤 끝맛을 평가합니다.",
+          "업종과 사용 채널을 한 가지 선택합니다."
+        ],
+        "staff": [
+          "미리 계량한 물과 표준 교반 횟수로 제조합니다.",
+          "‘Milk smoothness’와 ‘Coffee finish’를 각각 5점으로 기록합니다.",
+          "수입·유통·구매 담당자는 Buyer Decision Table로 안내합니다."
+        ],
+        "props": [
+          "승인된 온수기",
+          "정량 디스펜서 또는 계량컵",
+          "디지털 온도계",
+          "교반봉"
+        ],
+        "message": "12g 한 스틱으로 빠르게 제공하면서 부드러운 첫맛과 커피 끝맛을 함께 전달합니다."
+      },
+      "3min": {
+        "headline": "감각 평가에서 실제 거래 숫자로 전환",
+        "goal": "수입·채널 적합성을 확인하고 샘플, 견적 또는 후속 미팅을 확정합니다.",
+        "visitor": [
+          "실제 주문 가능한 12g×100입 SKU와 Singapore 라벨 검토본을 확인합니다.",
+          "FOB, landed cost, 잔당 원가, MOQ, 리드타임, 유통기한과 물류입수를 검토합니다.",
+          "샘플 발송 또는 견적에 필요한 조건과 후속 날짜를 확정합니다."
+        ],
+        "staff": [
+          "SFA 등록 importer 여부와 주력 유통 채널을 첫 질문으로 확인합니다.",
+          "공개 자료와 비공개 거래조건표를 구분해 제시합니다.",
+          "샘플 수령 주소를 등록하고 캘린더 초대 또는 발송일을 현장에서 확정합니다."
+        ],
+        "props": [
+          "숫자가 모두 입력된 거래조건표",
+          "포장·팔레트 물류 시트",
+          "영문 라벨 검토본",
+          "HACCP·ISO 22000 인증서 사본"
+        ],
+        "message": "맛뿐 아니라 가격, 마진, 통관 준비, 공급조건까지 한 자리에서 판단할 수 있습니다."
+      }
+    },
+    "key_actions": [
+      {
+        "title": "박람회 60일 전 거래·조제 수치 확정 게이트 운영",
+        "detail": "수출 담당자, 생산 담당자, 품질 담당자가 D-60까지 권장 조제법, 영양·알레르겐, Nutri-Grade 검토값, FOB, MOQ, 리드타임, 생산능력, 포장·팔레트 수치와 유통기한을 확정합니다. D-45까지 숫자가 채워지지 않은 자료는 부스 출력물에서 제외하고, 핵심 가격·물류 조건이 미확정이면 Hosted Buyer 미팅 신청보다 내부 확정을 우선합니다.",
+        "quote_ids": [
+          "R5",
+          "R7",
+          "R8",
+          "R10"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      {
+        "title": "무페어링 10초 시음으로 커피 끝맛 검증",
+        "detail": "시음 담당자는 방문객에게 첫 모금을 마시게 하고 10초 타이머 후 ‘Coffee finish’와 ‘Milk smoothness’를 각각 5점으로 기록합니다. 업종과 채널도 함께 태깅해 수입사, 호텔, 케이터링, 팬트리별 평균과 부정 의견을 매일 폐장 후 정리합니다.",
+        "quote_ids": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "company": [
+          "강점"
+        ],
+        "is_idea": false
+      },
+      {
+        "title": "적격 바이어에게만 가격·물류 결정표 제시",
+        "detail": "리드 선별 담당자가 SFA 등록 importer 여부, 주력 채널, 예상 물량과 목표 가격대를 확인한 뒤 적격 바이어를 상담 테이블로 넘깁니다. 상담 담당자는 실제 숫자가 입력된 거래조건표로 마진과 공급 가능성을 검토하고, 3분 안에 견적 범위 또는 추가 검토 항목을 합의합니다.",
+        "quote_ids": [
+          "R5",
+          "R6",
+          "R10",
+          "R11"
+        ],
+        "company": [],
+        "is_idea": false
+      }
+    ],
+    "kpis": [
+      {
+        "metric": "적격 바이어 상담 수",
+        "target": "행사 전체 60건 이상",
+        "how": "회사명, 담당 업무, 유통 채널, 예상 물량이 기록된 수입·유통사 또는 식품서비스 구매 담당자만 집계합니다."
+      },
+      {
+        "metric": "시음 후 상담 전환율",
+        "target": "적격 직무 시음객의 30% 이상",
+        "how": "수입·유통·구매 직무로 확인된 시음객 중 Buyer Decision Table에서 거래조건표를 검토한 비율로 계산합니다."
+      },
+      {
+        "metric": "샘플·견적 요청 전환율",
+        "target": "적격 상담의 35% 이상",
+        "how": "수령 주소가 확보된 샘플 요청 또는 목표 수량·가격 조건이 기록된 견적 요청만 집계합니다."
+      },
+      {
+        "metric": "후속 미팅 확정 수",
+        "target": "행사 전체 8건 이상",
+        "how": "행사 종료 후 14일 이내로 날짜, 참석자와 논의 안건이 확정된 온라인·대면 미팅만 집계합니다."
+      }
+    ],
+    "risks": [
+      {
+        "text": "Singapore 판매 전 영문 라벨, 전체 원재료·알레르겐, 영양정보와 Nutri-Grade 적용 여부를 현지 규정 전문가와 확인해야 합니다. 현재 자료만으로 저당·저지방·건강·Halal 주장을 사용해서는 안 됩니다.",
+        "quote_ids": [
+          "R7",
+          "R8",
+          "R9"
+        ],
+        "company": [
+          "원료",
+          "인증"
+        ],
+        "is_idea": false
+      },
+      {
+        "text": "온수기 사용, 급배수, 현장 시음, 카야 토스트 반입·보관·폐기 및 알레르겐 고지 기준을 주최 측과 행사장에 사전 승인받아야 합니다. 부스 내 제조가 불허되면 즉석 제조 주장을 제외하고 승인된 준비 구역에서 소량 배치로 제조하되 배치별 제조시각과 최대 제공시간을 표시해야 합니다.",
+        "quote_ids": [
+          "R12"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      {
+        "text": "입점 협상 전 리콜 이력, COA·미생물 시험성적서 제공 가능 여부, 총 유통기한, Singapore 도착 보장 잔여기한, 운송 온도와 카톤·팔레트 적재 안정성을 확인해야 합니다.",
+        "quote_ids": [
+          "R10"
+        ],
+        "company": [],
+        "is_idea": false
+      }
+    ],
+    "questions": [
+      "100입 기준 EXW·FOB 가격, 최소 MOQ, 생산 리드타임, 월 생산능력, 카톤당 입수·규격·중량, 팔레트 적재량과 사용 가능한 Incoterms는 무엇입니까?",
+      "12g 한 스틱의 권장 물량·물 온도·교반 횟수·완전 용해 시간·조제 후 품질 유지시간과 조제 기준 영양성분, 식물성크림 전체 구성 및 우유 유래 알레르겐은 무엇입니까?",
+      "총 유통기한, Singapore 도착 시 보장 가능한 잔여기한, COA·미생물 시험성적서와 리콜 이력 제공 여부, Singapore 인정 Halal 인증 추진 가능성은 어떻게 됩니까?"
+    ],
+    "brief": {
+      "insights": [
+        {
+          "fact": "출처 미확인 조사 메모에서 Singapore 소비자는 평일 아침에 가격과 편의성 때문에 3-in-1 커피를 선택하지만, 다른 커피보다 달게 느끼며 sugar와 creamer의 fat content를 아쉬움으로 꼽았다.",
+          "insight": "빠른 커피를 원하는 소비자도 단맛과 크리머가 커피 풍미를 덮는 제품은 피하고 싶어 한다.",
+          "implication": "황금비율은 검증되지 않은 저당·건강 효능을 주장하기보다, 부드러운 우유 풍미 뒤에도 깊은 커피 맛이 남는다는 감각적 차이를 우선 증명해야 한다. 건강 관련 메시지는 조제 기준 sugar·saturated fat 분석과 Nutri-Grade 산출 후 결정해야 한다.",
+          "quote_ids": [
+            "R1",
+            "R2",
+            "R8"
+          ],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        },
+        {
+          "fact": "현지 경쟁 제품은 well-balanced taste, robust aroma, full-bodied kopi 같은 진한 커피 표현과 함께 Halal, Healthier Choice, lower sugar and saturated fats를 전면에 내세우고 있다.",
+          "insight": "Singapore의 3-in-1 시장에서는 맛의 균형만으로는 부족하며, 진한 커피 존재감과 건강·인증 근거를 함께 비교한다.",
+          "implication": "황금비율은 경쟁 제품과 동일한 저당·Halal 주장을 서두르지 말고, 우선 '부드럽지만 커피가 흐려지지 않는 맛'으로 차별화해야 한다. 동시에 영양 분석과 Singapore에서 인정되는 Halal 인증 가능성을 시장 진입 과제로 제시해야 한다.",
+          "quote_ids": [
+            "R3",
+            "R4",
+            "R8",
+            "R9"
+          ],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        },
+        {
+          "fact": "Singapore에서 가공식품을 상업적으로 수입하려면 현지 trader의 SFA importer 등록과 선적별 permit이 필요하며, 영어 라벨과 알레르겐 표시, nutrition information panel 및 Nutri-Grade 요건도 확인해야 한다.",
+          "insight": "수입·유통 바이어는 맛보다 먼저 실제 통관·라벨 적용이 가능한 제품인지 확인해야 상담을 다음 단계로 진행할 수 있다.",
+          "implication": "상담 초기부터 바이어의 Singapore 등록 importer 여부와 유통 채널을 확인하고, 영문 원재료·알레르겐 정보, 영양성분, Nutri-Grade 예상 등급, 현지 importer 표기 공간의 준비 상태를 명확히 밝혀야 한다.",
+          "quote_ids": [
+            "R6",
+            "R7",
+            "R8"
+          ],
+          "company": [],
+          "is_idea": false
+        },
+        {
+          "fact": "Restaurant Asia에는 호텔·카페·케이터링·수입사·유통사·구매 담당자가 방문하며, 대형 hospitality buyer는 product specification, COA·미생물 기준, 납품 시 잔여 유통기한 등을 요구할 수 있다.",
+          "insight": "푸드서비스 바이어에게 좋은 맛은 기본이고, 대량 운영에서의 간편성·일관성과 공급 문서가 구매 가능성을 결정한다.",
+          "implication": "제품을 단순 소비재가 아니라 호텔 조식, 케이터링, 오피스 팬트리 등에 적용 가능한 1회분 인스턴트 솔루션으로 정의하되, 총 유통기한·도착 예상 잔여기한·COA 제공 여부·MOQ와 공급 조건을 함께 검증해야 한다.",
+          "quote_ids": [
+            "R10",
+            "R11"
+          ],
+          "company": [
+            "원료",
+            "가격대"
+          ],
+          "is_idea": false
+        }
+      ],
+      "target_buyers": [
+        {
+          "priority": 1,
+          "type": "Singapore 수입·유통사 및 식품서비스 디스트리뷰터",
+          "job": "Singapore 수입 등록과 permit 진행 가능성, 영문 라벨·Nutri-Grade 적합성, 예상 현지 공급가와 유통 마진, MOQ, 유통기한, 공급 안정성, Halal 채널 진입 가능성을 확인하는 것"
+        },
+        {
+          "priority": 2,
+          "type": "호텔·케이터링·오피스 팬트리 구매 담당자",
+          "job": "빠른 제공과 맛의 일관성, 1잔당 원가, 대용량 운영 적합성, 제품 규격서·COA, 알레르겐, 잔여 유통기한 및 실제 납품 조건을 확인하는 것"
+        }
+      ],
+      "big_idea": {
+        "line_en": "For fast-service coffee buyers, Golden Ratio Mild Mix delivers smooth milkiness without losing deep coffee character, in an easy single-serve instant format.",
+        "line_ko": "빠른 커피 서비스를 원하는 바이어에게 황금비율 마일드믹스는 간편한 1회분 인스턴트 포맷으로, 깊은 커피 풍미를 잃지 않는 부드러운 우유 맛을 제공합니다.",
+        "why": "Singapore에서는 3-in-1의 편의성은 선호되지만 과도한 단맛과 크리머에 대한 불만이 있고, 경쟁 제품은 균형감과 진한 향을 강조한다. 황금비율은 기업이 보유한 '부드러운 우유 풍미와 깊고 진한 커피 원두의 조화'를 핵심 차별점으로 삼을 수 있다. 다만 '저당'이나 '건강한 제품'은 현재 자료만으로 입증되지 않으므로 약속에서 제외한다.",
+        "quote_ids": [
+          "R1",
+          "R2",
+          "R3",
+          "R11"
+        ],
+        "company": [
+          "강점",
+          "원료",
+          "가격대"
+        ],
+        "is_idea": false
+      },
+      "rtb": [
+        {
+          "text": "제품의 명시된 핵심 강점이 부드러운 우유 풍미와 깊고 진한 커피 원두의 조화이므로, '마일드하지만 커피 존재감이 남는 맛'이라는 약속과 직접 연결된다.",
+          "quote_ids": [],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "인스턴트커피·식물성크림·자일로스설탕으로 구성된 1회분 믹스이며 12g×100입 형태여서, 호텔 조식·케이터링·오피스 팬트리처럼 빠른 제공이 필요한 채널에 제안할 수 있다. 단, 실제 물 배합량과 1잔당 원가는 추가 확인이 필요하다.",
+          "quote_ids": [
+            "R11"
+          ],
+          "company": [
+            "원료",
+            "가격대"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "HACCP와 ISO 22000 인증은 제조 과정의 식품안전 관리 체계를 설명하는 근거가 된다. 다만 Singapore 수입 적합성, Nutri-Grade 및 Halal을 대신하는 인증은 아니다.",
+          "quote_ids": [
+            "R8",
+            "R9"
+          ],
+          "company": [
+            "인증"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "현지 경쟁 제품도 balanced taste와 robust aroma를 핵심 가치로 사용하고 있어, 우유의 부드러움과 깊은 커피 풍미를 함께 제공하는 제품 포지션은 시장의 맛 평가 기준과 관련성이 있다.",
+          "quote_ids": [
+            "R3",
+            "R4"
+          ],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        }
+      ]
+    },
+    "mode": "B",
+    "stage": "revised",
+    "revise_below": 4,
+    "scores": [
+      {
+        "id": "insight",
+        "label": "인사이트 연결",
+        "score": 5,
+        "reason": "각 실행안에 R1~R12와 기업 강점의 근거가 표시되어 있고, 검증되지 않은 저당·Halal 주장을 배제한 판단도 조사 인사이트와 명확히 연결된다."
+      },
+      {
+        "id": "single_minded",
+        "label": "빅 아이디어 일관성",
+        "score": 4,
+        "reason": "시각물·슬로건·시음·시연이 ‘부드럽지만 깊은 커피’에 집중되지만, 카야 토스트와 다수의 미확정 패키지 목업은 제품 자체의 맛 증명보다 관심을 분산시킬 수 있다."
+      },
+      {
+        "id": "buyer_value",
+        "label": "바이어 가치",
+        "score": 3,
+        "reason": "바이어 질문 항목은 잘 나열했지만 FOB 가격, 잔당 원가, MOQ, 유통기한, 리드타임, 생산능력, 물류입수, Nutri-Grade 등급이 실제 숫자로 준비되지 않아 현장에서 입점 판단을 내릴 수 없다."
+      },
+      {
+        "id": "specificity",
+        "label": "구체성",
+        "score": 3,
+        "reason": "3초·30초·3분 동선과 소품은 구체적이나 부스 크기, 인력, 시간당 시음 처리량, 일일 샘플 수량, 물·폐수·쓰레기 운영 및 상담 자료의 확정 수치가 빠져 있다."
+      },
+      {
+        "id": "distinctiveness",
+        "label": "차별성",
+        "score": 3,
+        "reason": "‘Smooth Milk. Deep Coffee.’는 이해하기 쉽지만 balanced·smooth·deep coffee를 쓰는 경쟁 믹스커피에도 적용 가능한 표현이며, 황금비율만의 배합·원두·관능 데이터가 없다."
+      },
+      {
+        "id": "feasibility",
+        "label": "실행 가능성",
+        "score": 3,
+        "reason": "온수 시연과 토스트 제공은 허가·위생·알레르겐·보관 설비 부담이 크고, 사전 제조 후 보온병에 보관하는 대안은 맛의 일관성을 증명한다는 시연 목적과 충돌한다."
+      }
+    ],
+    "skill": {
+      "name": "booth_marketing",
+      "folder": "booth_marketing",
+      "files": [
+        "SKILL.md",
+        "examples.md",
+        "rubric.md"
+      ],
+      "chars": 5249,
+      "fingerprint": "52255d5798cb",
+      "warnings": []
+    },
+    "planner_persona": "당신은 해외 식품 박람회 부스 기획 15년차 마케터입니다. Summer Fancy Food Show, ANUGA, FOODEX Japan 등에서 K-푸드 부스를 30회 이상 총괄했고, 부스 방문 바이어의 상담 전환율을 끌어올린 경험이 있습니다. 미국·유럽 대형 유통 바이어와 입점 협상을 해 봤습니다. 조사 자료로 확인된 사실과 기획 아이디어를 구분해서 쓰고, 실제 부스에서 바로 실행할 수 있게 구체적으로 제안합니다.",
+    "reviewer_persona": "당신은 미국 대형 유통 식품 MD 10년차입니다. 박람회에서 하루 50개 부스를 도는 바이어 입장에서, 입점 판단에 필요한 정보(가격, 유통기한, 인증, 물류, 진열 형태)가 빠졌거나 과장된 곳, 바이어 눈에 띄지 않을 연출, 실제 부스에서 실행하기 어려운 계획을 날카롭게 지적합니다.",
+    "review": {
+      "overall": "메시지와 동선은 잘 정리됐지만, 현재는 ‘멋진 시음 부스’에 가깝고 가격·유통기한·물류·규제 수치가 없어 Singapore 바이어가 실제 거래 여부를 판단하기에는 준비가 부족합니다.",
+      "comments": [
+        {
+          "section": "overall",
+          "issue": "14,900원은 한국 판매가격으로 보이며 Singapore 바이어가 필요한 수출 거래가격과 마진 구조가 없다. 가격 레일을 비워 두거나 TBC로 제시하면 가격 질문이 가장 먼저 나오는 박람회에서 상담이 중단된다.",
+          "suggestion": "박람회 전까지 100입 기준 EXW·FOB 가격, 스틱당 공급가, 예상 해상·항공 운임, SGD 환산 landed cost, 권장 도매가·RRP와 수입사 및 유통사 마진 시나리오를 한 장으로 확정하라."
+        },
+        {
+          "section": "진열 가이드",
+          "issue": "MOQ, 총 유통기한, 도착 잔여기한, 보관조건, 생산 리드타임, 월 생산능력, 카톤 입수와 팔레트 적재량이 모두 미확정이다. 항목만 있는 원페이저는 바이어 자료가 아니라 내부 체크리스트다.",
+          "suggestion": "부스 오픈 전에 최소한 MOQ, 100입 박스 외포장 규격·중량, 카톤당 수량, 팔레트 적재량, 월 생산능력, 리드타임, 총 유통기한, Singapore 도착 시 보장 잔여기한을 숫자로 채우고 COA·HACCP·ISO 인증서 사본을 즉시 열람 가능하게 준비하라."
+        },
+        {
+          "section": "메인 비주얼",
+          "issue": "우유빛 파동과 짙은 커피색 이미지는 일반적인 라테나 3-in-1 브랜드에도 그대로 적용할 수 있어 혼잡한 전시장에서는 제품 고유성이 약하다.",
+          "suggestion": "제품명과 실제 100입 패키지를 슬로건보다 작게 두지 말고, ‘12g stick / 제조 시간 / 권장 물량’처럼 운영상 차이를 전면에 넣어라. 가능하다면 블라인드 관능평가 결과나 커피 고형분 등 검증 가능한 수치로 ‘deep coffee’를 증명하라."
+        },
+        {
+          "section": "시그니처 페어링",
+          "issue": "카야 버터 토스트는 현지 친숙성은 있으나 카야의 강한 단맛과 버터 풍미가 커피의 끝맛을 가릴 수 있고, 빵·달걀·우유 알레르겐과 외부 식품 반입 및 보관 부담을 추가한다.",
+          "suggestion": "핵심 시음은 무페어링 커피 60~80ml로 단순화하고 카야 토스트는 정해진 시간대의 선택 프로그램으로 제한하라. 제공한다면 사전 포장된 단일 공급처 제품, 성분표, 보관온도, 폐기시간, 집게 교체 기준과 일일 제공 수량을 확정하라."
+        },
+        {
+          "section": "시연",
+          "issue": "정확한 물량·온도·용해 시간이 아직 없는데 ‘30초 시연’을 약속했고, 보온병 대안은 제조 후 시간에 따라 향과 질감이 달라져 정량성과 일관성 증명을 약화한다.",
+          "suggestion": "실제 제품 테스트 후 물량, 온도, 교반 횟수, 완전 용해 시간을 확정하고 그 결과에 맞춰 시연 시간을 수정하라. 부스 내 제조 승인이 없으면 즉석 시연 주장을 빼고 배치별 제조시각과 최대 제공시간을 표시한 샘플링 방식으로 전환하라."
+        },
+        {
+          "section": "패키징",
+          "issue": "20~30입 및 200~500입 목업은 생산 가능성, 포장단가, MOQ가 확인되지 않아 바이어가 실제 발주 가능한 SKU로 오해할 수 있다. 영양정보·Nutri-Grade·알레르겐도 미확정이다.",
+          "suggestion": "확정 SKU인 12g×100입을 중심으로 전시하고 미개발 규격은 ‘concept only’로 명확히 표시하라. 박람회 전 영양분석, 식물성크림 세부 원료, 알레르겐, Nutri-Grade 예상 등급과 Singapore 영문 라벨 검토본을 준비한 뒤 패키지 확장안을 제시하라."
+        }
+      ]
+    },
+    "applied": [
+      "일반적인 우유·커피 비주얼을 실제 100입 패키지, 12g 스틱과 ‘10초 끝맛 확인’ 체험 중심으로 변경해 차별성을 강화했습니다.",
+      "핵심 시음은 무페어링 커피로 단순화하고 카야 토스트는 하루 2회 제한 프로그램으로 축소해 맛 간섭과 위생·알레르겐 부담을 줄였습니다.",
+      "미확정 20~30입 및 대용량 패키지를 주 진열에서 제외하고, 실제 주문 가능한 12g×100입 SKU와 Singapore 라벨 검토본에 집중했습니다.",
+      "3m×3m 부스, 인력 3명, 시간당 45~50잔, 하루 300잔, 식수·폐수·컵·쓰레기 운영 기준을 추가해 현장 실행 가능성을 높였습니다.",
+      "FOB, 잔당 원가, landed cost, MOQ, 리드타임, 생산능력, 유통기한, 카톤·팔레트 수치를 박람회 전 반드시 확정하도록 거래조건표와 D-60 준비 게이트를 추가했습니다."
+    ],
+    "has_profile": true,
+    "has_product_evidence": null,
+    "model": "gpt-5.6-sol",
+    "research": {
+      "method": "web_search",
+      "notes": [
+        {
+          "id": "R1",
+          "topic": "consumer",
+          "topic_label": "소비자",
+          "text": "[조사 사실] 2025년 Singapore 소비자 43명의 1주일 기록에서 instant coffee·capsule·drip bag은 전체 413잔 중 약 17%였고, 평일 아침에는 가격과 편의성 때문에 3-in-1을 선택했지만 다른 커피보다 달게 느꼈다. [기획 시사점] 출근 전·오피스용 ‘quick, smooth, not overly sweet’ 시음 메시지가 적합하다.",
+          "source_url": "https://www.straitstimes.com/multimedia/graphics/2025/12/singapore-coffee/index.html",
+          "source_title": "We asked more than 40 people to track their coffee consumption for a week. Here is what we found.",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R2",
+          "topic": "consumer",
+          "topic_label": "소비자",
+          "text": "[조사 사실] CNA 조사에서 3-in-1 coffee는 빠르고 저렴한 morning pick-me-up으로 설명됐으며, 소비자가 아쉬워하는 핵심은 높은 sugar와 creamer의 fat content였다. 평균 caffeine은 60.9mg/100ml로 측정돼 각성 효과는 분명하지만, 건강성과 향미를 함께 개선한 제품 수요가 확인된다.",
+          "source_url": "https://www.channelnewsasia.com/cna-insider/whats-your-3-1-coffee-you-can-have-healthier-brew-without-breaking-bank-2483661",
+          "source_title": "What’s in your 3-in-1 coffee? You can have a healthier brew without breaking the bank",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R3",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[조사 사실] FairPrice의 Super Original 3-in-1 Coffee 450g은 S$6.95이며, ‘well-balanced taste and robust aroma’를 핵심 메시지로 사용하고 Halal·Healthier Choice를 표시한다. [기획 시사점] 황금비율은 ‘부드러운 우유 풍미+깊은 커피’라는 감각 차별점을 한 모금 비교 시음으로 증명해야 한다.",
+          "source_url": "https://www.fairprice.com.sg/product/super-original-3-in-1-coffee-700g-13185540",
+          "source_title": "Super Original 3-in-1 Coffee | NTUC FairPrice",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R4",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[조사 사실] Gold Kili Traditional Kopi 30×20g은 S$5.80이며 Arabica·Robusta, full-bodied, roasty aroma와 ‘25% lower in sugar and saturated fats’를 전면 메시지로 내세우고 Halal·Healthier Choice를 확보했다. 현지 경쟁축이 진한 kopi 풍미와 저당·건강성의 결합임을 보여준다.",
+          "source_url": "https://www.fairprice.com.sg/product/gold-kili-3-in-1-instant-coffee-traditional-kopi-30-x-20g-13136629",
+          "source_title": "Gold Kili 3 in 1 Instant Coffee - Traditional Kopi | NTUC FairPrice",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R5",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[조사 사실] Nescafe 3 in 1 Original 100×16.5g은 FairPrice에서 S$20.95이며, 동일 목록의 Indocafe 100×20g은 S$17.80으로 대용량 100입 제품의 현지 소매 기준을 형성한다. 바이어 상담 시 기업:가격대와 함께 예상 Singapore RRP, stick당 가격, 유통 마진표를 준비해야 한다.",
+          "source_url": "https://www.fairprice.com.sg/product-listing?hasImage=true&hasStock=true&pageType=similar-product&personalisationApi=similar-product&personalisationType=SIMILAR_PRODUCT&title=Similar+Products&trackinfo=1377140",
+          "source_title": "Similar Products | FairPrice Singapore",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R6",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "[조사 사실] instant coffee mix 같은 processed food를 상업 수입하려면 Singapore 현지 trader가 SFA에 importer로 등록돼 있어야 하며, 매 선적의 import permit 절차도 확인해야 한다. [기획 시사점] 부스 상담지는 ‘Singapore registered importer 여부’와 유통 채널을 첫 질문으로 구성하는 것이 효율적이다.",
+          "source_url": "https://www.sfa.gov.sg/food-import-export/commercial-imports/what-you-need-to-know-for-import-of-food",
+          "source_title": "What You Need to Know for Import of Food for Commercial Sale",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R7",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "[조사 사실] Singapore 판매용 prepacked food 라벨은 영어로 제품명, 원재료·알레르겐, 순중량, 현지 importer/distributor 주소, 원산지, lot identification, 사용법 등을 표시해야 한다. 식물성크림에 milk-derived sodium caseinate 등이 포함되는지 확인해 우유 알레르겐을 정확히 선언해야 한다.",
+          "source_url": "https://www.sfa.gov.sg/docs/default-source/food-manufacturing-and-storage/a-guide-to-food-labelling-and-advertisements.pdf",
+          "source_title": "A Guide to Food Labelling and Advertisements",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R8",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "[조사 사실] 3-in-1 instant coffee powder는 Singapore Nutri-Grade 대상이며, nutrition information panel이 필요하고 C·D 등급이면 front-of-pack Nutri-Grade mark가 의무다. [기획 시사점] 자일로스설탕만으로 건강 메시지를 만들지 말고, 조제 기준 sugar·saturated fat 분석 후 등급을 먼저 산출해야 한다.",
+          "source_url": "https://www.hpb.gov.sg/healthy-living/food-and-beverage/nutri-grade/",
+          "source_title": "Measures for Nutri-Grade | Health Promotion Board",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R9",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "[조사 사실] 해외 제조 제품의 Halal 인증은 MUIS가 인정한 Foreign Halal Certification Body가 발행해야 Singapore Halal 유통망에서 신뢰받을 수 있다. 현재 기업:HACCP·ISO 22000은 식품안전 강점이지만, Muslim 소비자·Halal café·catering 채널 진입을 위해 별도 Halal 가능성을 확인할 필요가 있다.",
+          "source_url": "https://fhcb.muis.gov.sg/",
+          "source_title": "MUIS Foreign Halal Certification Body e-Service Portal",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R10",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "[조사 사실] 대형 hospitality buyer인 Resorts World Sentosa의 공급 기준은 COA·미생물 기준 등 product specification을 요구하며, 납품일 기준 최소 50%의 shelf life가 남아 있어야 한다. [기획 시사점] 부스에는 총 유통기한, Singapore 도착 예상 잔여기한, COA 제공 가능 여부를 한 장의 buyer sheet로 제시해야 한다.",
+          "source_url": "https://www.rwsentosa.com/-/jssmedia/project/non-gaming/rwsentosa/procurement/our-suppliers/archive/food-safety-requirements_2020-09-29.pdf?hash=8B83FCC97D1797C083626B951F9BC660&rev=92dbda410b5c40dea3ffc367885953cb",
+          "source_title": "Resorts World Sentosa Food Safety Requirements for Suppliers",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R11",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "[조사 사실] Restaurant Asia 방문자에는 café owners, baristas, hotels, caterers, central/ghost kitchens, hyper/supermarkets, importers, purchasing managers, wholesalers/distributors가 포함된다. Hosted Buyers Programme도 ASEAN·APAC의 foodservice decision-makers와 맞춤형 B2B meetings를 운영하므로 retail뿐 아니라 office pantry·hotel breakfast·catering용 bulk proposal을 함께 준비해야 한다.",
+          "source_url": "https://restaurantasia.com.sg/visit/visitor-profile/",
+          "source_title": "Visitor Profile - Restaurant ASIA",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R12",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "[조사 사실] 공식 사이트가 안내하는 다음 행사는 2027년 7월 14~16일 Sands Expo & Convention Centre에서 열리며, Restaurant Asia는 SIGEP Asia와 함께 specialty coffee & tea, food ingredients, equipment, technology를 포괄한다. 최근 행사는 innovation·sustainability·technology-driven productivity를 강조하고 실제 tasting과 demonstration을 핵심 프로그램으로 운영했다.",
+          "source_url": "https://restaurantasia.com.sg/",
+          "source_title": "Home - Restaurant ASIA",
+          "source_status": "출처 미확인"
+        }
+      ],
+      "citations": [],
+      "error": ""
+    },
+    "source_mode": "openai_self_research",
+    "short": {
+      "summary": "12g×100입 무페어링 시음·하루 300잔",
+      "core_message": "12g 1회분 푸드서비스용 커피 믹스",
+      "big_idea_why": "Singapore 맞춤 우유 풍미·진한 커피 조화",
+      "insight.0.fact": "Singapore 3-in-1 단맛·크리머 불만",
+      "insight.0.implication": "커피 끝맛 우선 증명·건강 메시지 보류",
+      "insight.1.fact": "경쟁 제품의 진한 커피·Halal·저당 강조",
+      "insight.1.implication": "부드럽고 흐려지지 않는 커피 맛 차별화",
+      "insight.2.fact": "Singapore 수입 등록·permit·라벨 요건",
+      "insight.2.implication": "바이어 importer·채널·라벨 준비 확인",
+      "insight.3.fact": "Hospitality 바이어의 규격·COA·기한 요구",
+      "insight.3.implication": "호텔·케이터링용 1회분 솔루션 검증",
+      "action.0": "D-60 조건 확정·D-45 미확정물 제외",
+      "action.1": "10초 후 5점 맛 평가·채널별 집계",
+      "action.2": "importer·물량·가격 확인 후 3분 상담",
+      "bullet.main_visual.0": "3m×3m 부스의 12g×100입·10초 메시지",
+      "bullet.main_visual.1": "12g SINGLE SERVE·확정 수치 패널",
+      "bullet.main_visual.2": "스틱·100입 박스와 10초 시음 아이콘",
+      "bullet.main_visual.3": "관능평가 수치 확보 시에만 우위 표시",
+      "key_message.main_visual": "100입 패키지와 10초 끝맛 시음 전면화",
+      "bullet.slogan.0": "Golden Ratio 10초 끝맛 확인 슬로건",
+      "bullet.slogan.1": "12g 정량·빠른 서비스 서브 슬로건",
+      "bullet.signature_pairing.0": "60~80ml 무페어링 10초 평가",
+      "bullet.signature_pairing.1": "11:30·15:30 카야 토스트 25개 제공",
+      "bullet.signature_pairing.2": "사전 포장 토스트·알레르겐·보관 기록",
+      "bullet.signature_pairing.3": "호텔·회의실·팬트리 활용 카드 상담",
+      "bullet.demonstration.0": "D-60 조제·용해 시험과 실제 시간 표시",
+      "bullet.demonstration.1": "표준 30초 시연·10초 끝맛 평가",
+      "bullet.demonstration.2": "3분 시연과 FOB·MOQ·기한 조건 설명",
+      "bullet.demonstration.3": "3명 운영·하루 300잔·컵 330개",
+      "bullet.packaging.0": "Mild First. Coffee Finish.·12g × 100 sticks",
+      "bullet.packaging.1": "Singapore 영문 라벨·알레르겐 정보 확인",
+      "bullet.packaging.2": "sugar·saturated fat·Nutri-Grade 검토",
+      "bullet.packaging.3": "100입만 판매 전시·미확정 규격 분리",
+      "bullet.merchandising.0": "100입 6박스·12g 스틱 12개 진열",
+      "bullet.merchandising.1": "적격 바이어용 EXW·FOB·MOQ 조건표",
+      "bullet.merchandising.2": "물류·생산·유통기한 수치와 COA 제시",
+      "bullet.merchandising.3": "SFA importer·채널·물량 QR 확인",
+      "zone.merchandising.0": "100입·12g·10초 메시지 3초 전달",
+      "zone.merchandising.2": "12g×100입·인증·라벨 검토 상태 전시",
+      "risk.0": "Singapore 라벨·Nutri-Grade 검토 필수",
+      "risk.1": "온수·시음·토스트 운영 사전 승인",
+      "risk.2": "리콜·COA·기한·운송 안정성 확인",
+      "question.0": "100입 EXW·FOB·MOQ·생산·물류 확인",
+      "question.1": "12g 조제법·영양·크리머·알레르겐 확인",
+      "question.2": "유통기한·COA·리콜·Halal 가능성 확인"
+    },
+    "from_cache": true
+  },
+  "booth_error": null,
+  "models": {
+    "booth": "gpt-5.6-sol",
+    "booth_effort": "medium",
+    "task": "gpt-5.6-terra",
+    "task_effort": "low"
+  },
+  "fetched_at": "2026-09-27 14:28"
+}

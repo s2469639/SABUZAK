@@ -659,6 +659,14 @@ def detail(expo_id):
         Product.hs_code != "",
     ).all()
     has_linked_product = len(linked_products) > 0
+    # 제품은 등록돼 있는데 분석 제품을 안 고른 경우, 탭에서 바로 고를 수 있게 목록을 넘긴다
+    selectable_products = [] if has_linked_product else (
+        Product.query.filter(
+            Product.user_id == current_user.id,
+            Product.hs_code.isnot(None),
+            Product.hs_code != "",
+        ).order_by(Product.created_at.desc()).all()
+    )
 
     hscode_ctx = build_hscode_context(expo, linked_products) if has_linked_product else None
     market_rows = _build_market_rows(expo, linked_products) if has_linked_product else []
@@ -673,6 +681,7 @@ def detail(expo_id):
         expo=expo,
         intro_paragraphs=intro_paragraphs,
         has_linked_product=has_linked_product,
+        selectable_products=selectable_products,
         hscode_ctx=hscode_ctx,
         market_rows=market_rows,
         trend_rows=trend_rows,

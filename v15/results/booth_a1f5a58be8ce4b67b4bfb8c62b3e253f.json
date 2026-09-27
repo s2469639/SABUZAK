@@ -1,0 +1,22 @@
+{
+  "inputs": {
+    "name": "참나무 훈연 후랑크소시지",
+    "country": "일본",
+    "exhibition_name": "Food Long Life Japan (LLj)",
+    "exhibition_website": "hijapan.info",
+    "strengths": "참나무 훈연으로 향을 더하고 톡 터지는 육즙 식감",
+    "ingredients": "국산 돼지고기 85%, 정제수, 천일염, 복합향신료",
+    "certifications": "HACCP",
+    "price": "300g×2개입 (6,900원)",
+    "country_en": "Japan"
+  },
+  "booth": null,
+  "booth_error": "부스 기획안을 만들지 못했습니다.",
+  "models": {
+    "booth": "gpt-5.6-sol",
+    "booth_effort": "medium",
+    "task": "gpt-5.6-terra",
+    "task_effort": "low"
+  },
+  "fetched_at": "2026-09-27 15:09"
+}
