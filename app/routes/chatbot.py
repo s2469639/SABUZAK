@@ -11,7 +11,7 @@ import re
 
 from flask import Blueprint, jsonify, request, url_for
 from flask_login import login_required
-from sqlalchemy import or_
+from sqlalchemy import func, or_
 
 from app import format_kdate_range
 from app.models import Exhibition, HsCodeMaster
@@ -51,8 +51,14 @@ SYSTEM_PROMPT = """당신은 식품 수출 박람회 준비 플랫폼 "FairMate"
 사용자가 특정 제품의 HS코드를 물으면 lookup_hscode 함수를 반드시 호출해서 실제 관세청 데이터로 답하세요.
 직접 코드를 추측해서 말하지 마세요.
 
-검색 결과가 없을 때는 아래 순서로 대응하세요:
-1) 먼저 "약과", "한과"처럼 더 구체적인/일반적인 다른 표현으로 한 번 더 lookup_hscode를 시도해보세요.
+관세청 마스터 데이터의 품목명은 "즉석밥"/"햇반" 같은 일상적인 제품명이 아니라 "찌거나 삶은 쌀"처럼
+가공 상태·원재료 중심의 딱딱한 공식 용어로 되어 있습니다. 그래서 사용자가 흔히 쓰는 제품명 그대로
+검색하면 거의 항상 실패합니다.
+
+검색 결과가 없을 때는 아래 순서로 재시도하세요 (lookup_hscode를 여러 번 호출해도 됩니다):
+1) 먼저 제품명에서 핵심 원재료만 뽑아 검색하세요. 예: "즉석밥"/"햇반" → "쌀", "냉동만두" → "만두"
+   또는 "밀가루", "조미김" → "김", "라면" → "면". 그래도 안 되면 그 원재료의 다른 표현(가공 상태,
+   예: "삶은", "찐", "건조한", "냉동한" 등)을 조합해서 한두 번 더 시도해보세요.
 2) 그래도 결과가 없고, 유과·약과·한과처럼 한국 고유 식품이라 관세청 품목명에 정확히 없는 경우라면,
    아는 일반 지식으로 가장 가까울 것으로 보이는 상위 분류(예: 과자류는 HS 1905류)를 참고용으로
    제시하되, 반드시 "정확한 코드로 매칭된 결과가 아니며, 실제 신고 전 관세사·관세청 확인이
@@ -142,7 +148,17 @@ def _lookup_hscode(query):
             HsCodeMaster.name_ko.ilike(f"%{t}%") | HsCodeMaster.hsk_name.ilike(f"%{t}%")
             for t in like_terms
         ]
-        return HsCodeMaster.query.filter(or_(*conditions)).limit(8).all()
+        # 검색어를 "쌀"처럼 원재료 단위로 넓히면 관련 없는 것까지 수십 건씩
+        # 걸리는데, limit을 너무 낮게 잡으면(예전 8건) 정작 맞는 품목(예:
+        # "찌거나 삶은 쌀")이 순서상 뒤에 있어 응답에 아예 안 실렸다.
+        # 이름이 짧을수록 더 일반적인/핵심적인 품목일 가능성이 높아서 그걸
+        # 우선 보여주고, 건수도 20건까지 넉넉하게 준다.
+        return (
+            HsCodeMaster.query.filter(or_(*conditions))
+            .order_by(func.length(HsCodeMaster.name_ko))
+            .limit(20)
+            .all()
+        )
 
     rows = _search([query])
     if not rows:
