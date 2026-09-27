@@ -2578,6 +2578,113 @@ p.page-desc:not(:last-child) {
   .buyer-mail-gmail-connected {
     flex-wrap: wrap;
   }
+
+  /* 박람회 목록 카드: 썸네일(고정폭) + 본문(줄어듦) + 오른쪽 날짜/카테고리/
+     배지(white-space:nowrap, 안 줄어듦)가 한 줄이라, 본문 쪽만 극단적으로
+     좁아져서 국가명이 한 글자씩 줄바꿈됐다. 오른쪽 묶음이 안 들어가면
+     그냥 다음 줄로 내려가게 한다. */
+  .expo-row {
+    flex-wrap: wrap;
+  }
+
+  .expo-side {
+    white-space: normal;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-left: 72px;
+  }
+
+  /* 바이어 목록 표: 컬럼이 8~9개라 모바일에서 가로 스크롤 표로 두면
+     계속 옆으로 넘겨야 해서 쓰기 어렵다. 핵심 정보(이름·박람회·회사·
+     이메일·메일상태·액션)만 카드로 세로 배치하고, 등록일·비고는 감추되
+     "정보 수정" 링크(더보기 메뉴 안)를 누르면 전화번호·주소·메모까지
+     전부 볼 수 있는 상세 화면이라 정보가 사라지진 않는다. */
+  .buyer-table {
+    min-width: 0 !important;
+  }
+
+  .buyer-table thead {
+    display: none;
+  }
+
+  .buyer-table, .buyer-table tbody, .buyer-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .buyer-table tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 2px 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .buyer-table tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .buyer-table td {
+    display: block;
+    border: none !important;
+    padding: 0 !important;
+    width: auto;
+  }
+
+  .buyer-table td.col-shrink:first-child {
+    order: -1;
+    align-self: center;
+  }
+
+  .buyer-table td.cell-date,
+  .buyer-table td.notes-cell {
+    display: none;
+  }
+
+  .buyer-table td.cell-expo {
+    order: 1;
+    flex: 1 1 100%;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+
+  .buyer-table td.cell-name {
+    order: 2;
+    flex: 1 1 100%;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .buyer-table td.cell-company {
+    order: 3;
+    flex: 1 1 100%;
+    font-size: 13px;
+    color: #6b7280;
+  }
+
+  .buyer-table td.cell-email {
+    order: 4;
+    flex: 1 1 100%;
+    font-size: 13px;
+  }
+
+  .buyer-table td.cell-mailstate {
+    order: 5;
+    margin-top: 4px;
+  }
+
+  .buyer-table td.actions {
+    order: 6;
+    flex: 1 1 100%;
+    margin-top: 8px;
+  }
+
+  .buyer-table .row-actions {
+    justify-content: flex-start;
+  }
 }
 
 /* 어느 화면 요소가 컨테이너 폭을 넘어서더라도(계산 실수 등) 페이지
@@ -2590,6 +2697,15 @@ p.page-desc:not(:last-child) {
 html, body {
   overflow-x: hidden;
   max-width: 100%;
+}
+
+/* 어딘가 flex 칸이 예상보다 좁아지는 경우에도, 한글이 글자 하나마다
+   줄바꿈되는 일은 없게 하는 전역 안전장치. 띄어쓰기 단위로만 줄바꿈하고
+   (word-break: keep-all), 그래도 단어 하나가 너무 길면 그때만 잘라
+   넘치지 않게 한다 (overflow-wrap: break-word). */
+body {
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 /* 플로팅 챗봇 위젯: 평소엔 우하단 로봇 얼굴 아이콘, 클릭하면 팝업 채팅창.
