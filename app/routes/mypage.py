@@ -141,6 +141,7 @@ def add_product():
             target_price=target_price or None,
             certifications=certifications or None,
             strengths=strengths or None,
+            is_checked=not _has_selected_product(),
         )
         db.session.add(product)
         db.session.commit()
@@ -259,6 +260,7 @@ def bulk_upload_products():
         return redirect(url_for("mypage.index"))
 
     added, skipped = 0, []
+    has_selected = _has_selected_product()  # 분석 제품이 없으면 첫 번째로 등록되는 제품만 선택
     for row_num, row in enumerate(rows_iter, start=2):
         values = {field: str(row[i]).strip() if row[i] is not None else "" for i, field in col_map.items()}
         name = values.get("name", "")
@@ -284,7 +286,9 @@ def bulk_upload_products():
             target_price=values.get("target_price") or None,
             certifications=values.get("certifications") or None,
             strengths=values.get("strengths") or None,
+            is_checked=not has_selected,
         ))
+        has_selected = True
         added += 1
 
     db.session.commit()
@@ -338,20 +342,38 @@ def edit_product(product_id):
 @bp.route("/products/<int:product_id>/toggle", methods=["POST"])
 @login_required
 def toggle_product(product_id):
+    """분석 제품 선택. 시장 분석·트렌드·부스 컨셉은 한 번에 제품 1개만 다루므로,
+    이 제품을 고르면 나머지는 해제한다. 이 제품 하나만 분석 제품일 때 다시 누르면
+    해제 (예전에 여러 개가 선택된 상태라면 누른 제품 하나만 남긴다)."""
     product = Product.query.filter_by(id=product_id, user_id=current_user.id).first_or_404()
-    product.is_checked = not product.is_checked
+    others = Product.query.filter(
+        Product.user_id == current_user.id, Product.id != product.id, Product.is_checked == True,  # noqa: E712
+    )
+    if product.is_checked and others.count() == 0:
+        product.is_checked = False
+    else:
+        others.update({"is_checked": False})
+        product.is_checked = True
     db.session.commit()
     return redirect(url_for("mypage.index"))
 
 
-@bp.route("/products/check-all", methods=["POST"])
+def _has_selected_product():
+    """이미 분석 제품이 있으면 새로 등록하는 제품은 선택 안 된 채로 둔다
+    (Product.is_checked의 DB 기본값이 True라서 등록 코드에서 직접 정한다)."""
+    return Product.query.filter_by(user_id=current_user.id, is_checked=True).first() is not None
+
+
+@bp.route("/products/bulk-delete", methods=["POST"])
 @login_required
-def check_all_products():
-    """'전체 선택' 체크박스: 내 제품 전부를 체크(checked=1) 또는 해제(0)로 맞춘다.
-    toggle_product는 상태를 뒤집는 방식이라 전체 선택에는 쓸 수 없다."""
-    is_checked = request.form.get("checked") == "1"
-    Product.query.filter_by(user_id=current_user.id).update({"is_checked": is_checked})
-    db.session.commit()
+def bulk_delete_products():
+    """'전체 선택'/삭제용 체크박스로 고른 내 제품들을 한 번에 삭제한다. 하나씩
+    지워야 연결된 트렌드 조사 기록(TrendResult)도 delete_product와 똑같이 같이 지워진다."""
+    ids = [int(i) for i in request.form.getlist("product_ids") if i.isdigit()]
+    if ids:
+        for product in Product.query.filter(Product.user_id == current_user.id, Product.id.in_(ids)).all():
+            db.session.delete(product)
+        db.session.commit()
     return redirect(url_for("mypage.index"))
 
 

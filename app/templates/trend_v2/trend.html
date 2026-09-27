@@ -5,6 +5,29 @@
 {% block result_base %}/trend/{% endblock %}
 {% block loading_sub %}세 가지 분석을 동시에 진행해요. 보통 3~5분 걸려요.{% endblock %}
 {% block content %}
+<style>
+  /* 트렌드 조사 화면 전용 (부스 컨셉 화면과 같이 쓰는 base.html은 그대로 둔다) */
+  .container { word-break: keep-all; overflow-wrap: break-word; }
+  .sec-info { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; margin-left: 6px; border-radius: 50%; border: 1px solid var(--line-2); color: var(--muted); font-size: 11px; font-weight: 700; vertical-align: 3px; font-family: inherit; }
+  /* 키워드 박스: 급등 / 영어 / 한글 / 수치를 위에서 아래로, 모든 줄 높이를 같게 */
+  .kw-list { grid-auto-rows: 1fr; }
+  .kw { flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 2px; padding: 8px 10px; }
+  .kw .badges { margin-bottom: 2px; }
+  .kw-orig { font-family: inherit; font-size: 13px; font-weight: 600; line-height: 1.4; }
+  .kw-ko { font-size: 12px; line-height: 1.4; }
+  .kw .badge-num { margin-top: auto; padding-top: 2px; font-size: 12px; font-weight: 700; }
+  /* 설명 말풍선은 아래로 (위로 뜨면 본문을 가림) */
+  .tip:hover::after, .tip:focus::after { bottom: auto; top: calc(100% + 8px); max-width: min(320px, 80vw); line-height: 1.6; }
+  .sec-info.tip:hover::after, .sec-info.tip:focus::after { left: 0; right: auto; font-size: 13px; font-weight: 500; }
+  .tooltip-text { bottom: auto; top: calc(100% + 8px); width: 320px; max-width: 80vw; padding: 10px 12px; font-size: 13px; line-height: 1.6; }
+  /* 3. 현지 시장 트렌드 분석: 대시보드 본문 크기에 맞춤 */
+  .stat-pill { font-size: 12px; padding: 2px 8px; gap: 6px; }
+  .research-card .card-title { font-size: 15px; }
+  .research-card .muted { font-size: 13px; line-height: 1.6; }
+  .conclusion { font-size: 14px; font-weight: 700; line-height: 1.6; }
+  .points { font-size: 13px; line-height: 1.6; }
+  .interp { font-size: 13px; line-height: 1.6; }
+</style>
   <div class="page-head">
     <div>
       <h1>트렌드 조사</h1>
@@ -46,7 +69,8 @@
   {% if data %}
   {% set r = data.research %}
   {# ============================ 1. 트렌드 ============================ #}
-  <div class="section-head"><div class="section-title">1. 연관 검색어 기반 시장 트렌드 4단계 클러스터링</div></div>
+  <div class="section-head"><div class="section-title">1. 연관 검색어 기반 시장 트렌드 4단계 클러스터링
+    <span class="sec-info tip" tabindex="0" data-tip="키워드마다 표시가 다른 이유: '급등'은 Google 트렌드에서 검색량이 짧은 기간에 크게 급증(Breakout, +5,000% 이상)한 검색어라 수치 대신 표시만 해요. '급상승 %'는 최근 검색량이 이전 기간보다 늘어난 폭이고, '전년 대비 %'는 작년 같은 기간과 비교한 검색 관심도 변화예요. 둘 다 Google 트렌드의 상대 지수라 실제 검색 횟수와는 달라요." aria-label="키워드 표시 안내">i</span></div></div>
   {% set s1 = data.section1 %}
   {% if s1 %}
     <div class="meta-row">
@@ -56,11 +80,11 @@
       <span class="meta">Google 데이터 신뢰도 <b class="lv-{{ s1.reliability }}">{{ s1.reliability_label_ko }}</b></span>
       <span class="meta">바이어 언어 <b>{{ s1.buyer_language }}</b></span>
       <span class="meta">조회 <b>{{ data.fetched_at }}</b></span>
-      <span class="meta-legend">% = 작년 같은 기간 대비 검색량 변화</span>
+      <span class="meta-legend">급상승 % = 최근 급증 폭 (Google 트렌드) · 전년 대비 % = 작년 같은 기간 대비</span>
     </div>
     {% if s1.reliability_note_ko %}<div class="slim-banner" role="note"><span class="ico info" aria-hidden="true">i</span>{{ s1.reliability_note_ko }}</div>{% endif %}
     {# "연관 검색어가 적어 … 데이터를 함께 사용했습니다." 안내는 숨긴다 (저장된 예전 결과 포함) #}
-    {% for w in s1.warnings if not w.startswith("연관 검색어가 적어") %}<div class="slim-banner" role="note"><span class="ico">⚠️</span>{{ w }}</div>{% endfor %}
+    {% for w in s1.warnings if not w.startswith("연관 검색어가 적어") %}<div class="slim-banner" role="note">{{ w }}</div>{% endfor %}
     <div class="cluster-grid">
       {% for c in s1.clusters %}
       {% if not c.keywords %}
@@ -77,20 +101,21 @@
         <div class="kw-list">
           {% for kw in c.keywords %}
           <div class="kw">
-            <div><div class="kw-orig">{{ kw.keyword }}</div>{% if kw.ko %}<div class="kw-ko">{{ kw.ko }}</div>{% endif %}
-              {% if kw.is_breakout %}<div class="badges" style="margin-top:3px"><span class="chip red tip" tabindex="0" data-tip="Google 트렌드에서 검색량이 짧은 기간에 크게 급증(Breakout)한 검색어예요">급등</span></div>{% endif %}</div>
+            {% if kw.is_breakout %}<div class="badges"><span class="chip red tip" tabindex="0" data-tip="Google 트렌드에서 검색량이 짧은 기간에 크게 급증(Breakout)한 검색어예요">급등</span></div>{% endif %}
+            <div class="kw-orig">{{ kw.keyword }}</div>
+            {% if kw.ko %}<div class="kw-ko">{{ kw.ko }}</div>{% endif %}
             {% if kw.badge and kw.badge.kind == 'yoy' %}
               {% set p = kw.badge.pct %}
-              {% set tip = "최근 3개월 '" ~ kw.keyword ~ "' 검색 관심도가 " ~ (("작년 같은 기간보다 " ~ p|abs ~ "% " ~ ("높아요" if p > 0 else "낮아요")) if p != 0 else "작년 같은 기간과 비슷해요") ~ " (Google 트렌드 상대 지수)" %}
-              <span class="badge-num tip {{ 'up' if p > 0 else ('down' if p < 0 else 'flat') }}" tabindex="0" data-tip="{{ tip }}" aria-label="{{ tip }}">{{ '+' if p > 0 }}{{ p }}%</span>
-            {% elif kw.badge and kw.badge.kind == 'rising' %}
-              {% set tip = "'" ~ kw.keyword ~ "'은(는) 최근 검색량이 빠르게 늘어난 연관 검색어예요 (+" ~ kw.badge.pct ~ "%, Google 트렌드 급상승 지표)" %}
-              <span class="badge-num tip rising" tabindex="0" data-tip="{{ tip }}" aria-label="{{ tip }}">급상승 +{{ kw.badge.pct }}%</span>
+              {% set tip = "최근 3개월 '" ~ kw.keyword ~ "' 검색 관심도가 " ~ (("작년 같은 기간보다 " ~ "{:,}".format(p|abs) ~ "% " ~ ("높아요" if p > 0 else "낮아요")) if p != 0 else "작년 같은 기간과 비슷해요") ~ " (Google 트렌드 상대 지수)" %}
+              <span class="badge-num tip {{ 'up' if p > 0 else ('down' if p < 0 else 'flat') }}" tabindex="0" data-tip="{{ tip }}" aria-label="{{ tip }}">전년 대비 {{ '+' if p > 0 }}{{ "{:,}".format(p) }}%</span>
+            {% elif kw.badge and kw.badge.kind == 'rising' and not kw.is_breakout %}
+              {% set tip = "'" ~ kw.keyword ~ "'은(는) 최근 검색량이 빠르게 늘어난 연관 검색어예요 (+" ~ "{:,}".format(kw.badge.pct) ~ "%, Google 트렌드 급상승 지표)" %}
+              <span class="badge-num tip rising" tabindex="0" data-tip="{{ tip }}" aria-label="{{ tip }}">급상승 +{{ "{:,}".format(kw.badge.pct) }}%</span>
             {% endif %}
           </div>
           {% endfor %}
         </div>
-        {% if c.insight %}<div class="callout"><span class="ico">💡</span><span>{{ c.insight }}</span></div>{% endif %}
+        {% if c.insight %}<div class="callout"><span>{{ c.insight }}</span></div>{% endif %}
       </div>
       {% endif %}{% endfor %}
     </div>
@@ -130,7 +155,7 @@
         <div class="card-header">SALES CHANNELS</div>
         <div class="card-title">진출 타깃 채널</div>
         {% if s2.sales_channels.shelf %}<div class="field"><div class="k">추천 매대</div><div class="v">{{ s2.sales_channels.shelf }}</div></div>{% endif %}
-        {% if s2.sales_channels.channels %}<div class="field"><div class="k">유통몰</div>{% for ch in s2.sales_channels.channels %}<span class="pill">🏬 {{ ch }}</span>{% endfor %}</div>{% endif %}
+        {% if s2.sales_channels.channels %}<div class="field"><div class="k">유통몰</div>{% for ch in s2.sales_channels.channels %}<span class="pill">{{ ch }}</span>{% endfor %}</div>{% endif %}
       </div>
       <div class="card">
         <div class="card-header">PRICE &amp; USP STRATEGY</div>
@@ -162,17 +187,11 @@
         {% if c.conclusion %}
           <div class="conclusion">{{ c.conclusion.text }}{% for i in c.conclusion.quote_ids %}<button class="ref" type="button" data-tab="{{ c.qid }}" data-target="{{ i }}" aria-label="{{ i }} 원문 보기">{{ i }}</button>{% endfor %}</div>
         {% endif %}
+        {% if c.interpretation %}<div class="interp"><b>AI 해석</b> · {{ c.interpretation|replace("AI 해석:", "")|trim }}</div>{% endif %}
         {% if c.points %}
           <details class="more">
             <summary><span class="when-closed">자세히 보기 ({{ c.points|length }})</span><span class="when-open">접기</span></summary>
             <div class="more-body"><ul class="points">{% for p in c.points %}<li>{{ p.text }}{% for i in p.quote_ids %}<button class="ref" type="button" data-tab="{{ c.qid }}" data-target="{{ i }}" aria-label="{{ i }} 원문 보기">{{ i }}</button>{% endfor %}</li>{% endfor %}</ul></div>
-          </details>
-        {% endif %}
-        {% if c.interpretation %}<div class="interp"><b>AI 해석</b> · {{ c.interpretation|replace("AI 해석:", "")|trim }}</div>{% endif %}
-        {% if c.gaps %}
-          <details class="more caution">
-            <summary><span class="when-closed">⚠️ 확인 필요</span><span class="when-open">⚠️ 접기</span></summary>
-            <div class="more-body caution-text">{{ c.gaps }}</div>
           </details>
         {% endif %}
         <div class="card-footer">
