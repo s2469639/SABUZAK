@@ -213,10 +213,5 @@
   {% endfor %}
 </div>
 
-<form method="post" action="{{ url_for('concept.generate', draft_id=draft.id) }}" class="regenerate-form"
-      onsubmit="return confirm('부스 기획을 새로 만듭니다. 몇 분 걸리고, 지금 내용은 새 결과로 바뀌어요. 진행할까요?')">
-  <button type="submit" class="btn-secondary">컨셉 다시 생성하기</button>
-</form>
-
 {% endif %}
 {% endblock %}

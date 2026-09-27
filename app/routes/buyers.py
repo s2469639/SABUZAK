@@ -6,11 +6,15 @@
 로그인을 그대로 쓴다).
 """
 
+import io
 import logging
 from datetime import datetime, timedelta
 
+import openpyxl
 from flask import Blueprint, abort, flash, redirect, render_template, request, send_file, session, url_for
 from flask_login import current_user, login_required
+from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.utils import get_column_letter
 
 from app.extensions import db
 from app.models import Contact, ConceptDraft, EmailTemplate, Exhibition, FollowupEmail
@@ -202,6 +206,147 @@ def delete_contact(contact_id):
     db.session.delete(contact)
     db.session.commit()
     flash("삭제되었습니다.", "info")
+    return redirect(url_for("contacts.list_contacts"))
+
+
+# 엑셀 일괄등록 열 제목 -> Contact 필드. 첫 행의 제목을 이 이름으로(순서 무관) 두면 인식한다.
+_BULK_CONTACT_COLUMNS = {
+    "이름": "name", "성명": "name", "name": "name",
+    "이메일": "email", "메일": "email", "email": "email", "e-mail": "email",
+    "회사명": "company", "회사": "company", "company": "company",
+    "직급": "position", "직책": "position", "position": "position",
+    "전화번호": "phone", "전화": "phone", "연락처": "phone", "phone": "phone", "tel": "phone",
+    "주소": "address", "address": "address",
+    "비고": "remarks", "메모": "remarks", "remarks": "remarks",
+}
+# 양식 다운로드의 열 제목 (위에서 인식하는 이름과 같아야 채운 양식을 그대로 올릴 수 있다)
+_BULK_CONTACT_HEADERS = ["이름", "이메일", "회사명", "직급", "전화번호", "주소", "비고"]
+_BULK_CONTACT_REQUIRED = {"이름", "이메일"}
+_BULK_CONTACT_WIDE = {"주소", "비고"}
+_BULK_CONTACT_ROWS = 500  # 전화번호 텍스트 형식을 미리 지정해둘 행 수
+
+
+def _cell_text(value):
+    """엑셀 칸 값을 문자열로. 전화번호처럼 숫자로 저장된 칸은 1092674285.0 -> 1092674285."""
+    if value is None:
+        return ""
+    if isinstance(value, float) and value.is_integer():
+        value = int(value)
+    return str(value).strip()
+
+
+@contacts_bp.route("/contacts/bulk-template")
+@login_required
+def download_contact_template():
+    """바이어 엑셀 일괄등록용 빈 양식(열 제목만 채움)을 그 자리에서 만들어 내려준다."""
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "바이어 목록"
+    ws.append(_BULK_CONTACT_HEADERS)
+    for col, header in enumerate(_BULK_CONTACT_HEADERS, start=1):
+        cell = ws.cell(row=1, column=col)
+        is_required = header in _BULK_CONTACT_REQUIRED
+        cell.font = Font(bold=True, color="FFFFFF" if is_required else "374151")
+        cell.fill = PatternFill("solid", fgColor="EA580C" if is_required else "F3F4F6")
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+        ws.column_dimensions[get_column_letter(col)].width = 36 if header in _BULK_CONTACT_WIDE else 20
+    # 엑셀이 010으로 시작하는 번호를 숫자로 보고 앞자리 0을 지우지 않게 전화번호 칸은 텍스트 형식
+    phone_col = _BULK_CONTACT_HEADERS.index("전화번호") + 1
+    for row in range(2, _BULK_CONTACT_ROWS + 2):
+        ws.cell(row=row, column=phone_col).number_format = "@"
+    ws.freeze_panes = "A2"
+
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    return send_file(
+        buf,
+        as_attachment=True,
+        download_name="바이어_일괄등록_양식.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+
+@contacts_bp.route("/contacts/bulk-upload", methods=["POST"])
+@login_required
+def bulk_upload_contacts():
+    """엑셀로 바이어 여러 명을 한 번에 등록한다. 박람회는 업로드할 때 하나 골라서
+    파일 전체에 적용한다 (Contact는 박람회가 필수라서)."""
+    exhibitions = {e.id: e for e in _drafted_exhibitions()}
+    exhibition = exhibitions.get(request.form.get("exhibition_id", type=int))
+    if not exhibition:
+        flash("바이어를 등록할 박람회를 선택해주세요.", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+
+    file = request.files.get("bulk_file")
+    if not file or not file.filename:
+        flash("업로드할 엑셀 파일을 선택해주세요.", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+    if not file.filename.lower().endswith((".xlsx", ".xlsm")):
+        flash("엑셀(.xlsx) 파일만 업로드할 수 있습니다.", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+
+    try:
+        wb = openpyxl.load_workbook(file, data_only=True, read_only=True)
+        rows_iter = wb[wb.sheetnames[0]].iter_rows(values_only=True)
+        header = next(rows_iter, None)
+    except Exception as e:
+        flash(f"엑셀 파일을 읽는 중 오류가 발생했습니다: {e}", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+    if not header:
+        flash("엑셀 파일에 데이터가 없습니다.", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+
+    col_map = {}  # 열 번호 -> Contact 필드
+    for i, cell in enumerate(header):
+        field = _BULK_CONTACT_COLUMNS.get(str(cell or "").strip().lower())
+        if field:
+            col_map[i] = field
+    if "name" not in col_map.values() or "email" not in col_map.values():
+        flash("엑셀 첫 행에 '이름'과 '이메일' 열이 있어야 합니다. 엑셀 양식을 내려받아 사용해 주세요.", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+
+    # 같은 박람회에 같은 이메일로 이미 등록된 바이어는 중복 등록하지 않는다
+    existing = {
+        (c.email or "").lower()
+        for c in Contact.query.filter_by(user_id=current_user.id, exhibition_id=exhibition.id).all()
+    }
+    added, skipped = 0, []
+    for row_num, row in enumerate(rows_iter, start=2):
+        values = {field: _cell_text(row[i]) if i < len(row) else "" for i, field in col_map.items()}
+        name, email = values.get("name", ""), values.get("email", "")
+        if not any(values.values()):
+            continue  # 빈 행은 조용히 건너뜀
+        if not name or not email:
+            skipped.append(f"{row_num}행 (이름/이메일 누락)")
+            continue
+        if "@" not in email:
+            skipped.append(f"{row_num}행 '{name}' (이메일 형식 오류)")
+            continue
+        if email.lower() in existing:
+            skipped.append(f"{row_num}행 '{name}' (이미 등록된 이메일)")
+            continue
+        existing.add(email.lower())
+        db.session.add(Contact(
+            user_id=current_user.id,
+            exhibition_id=exhibition.id,
+            exhibition_name=exhibition.name,
+            name=name,
+            email=email,
+            company=values.get("company", ""),
+            position=values.get("position", ""),
+            phone=values.get("phone", ""),
+            address=values.get("address", ""),
+            remarks=values.get("remarks", ""),
+        ))
+        added += 1
+    db.session.commit()
+
+    # 성공 시엔 목록에 바로 보이므로 따로 알리지 않고, 문제가 있을 때만 안내한다
+    if skipped:
+        flash(f"건너뛴 행 {len(skipped)}개: " + " / ".join(skipped[:10]), "danger")
+    if not added and not skipped:
+        flash("등록할 바이어 데이터가 없습니다.", "danger")
     return redirect(url_for("contacts.list_contacts"))
 
 
