@@ -2522,6 +2522,18 @@ p.page-desc:not(:last-child) {
     max-width: none;
   }
 
+  /* 대시보드 헤더: 제목+설명+버튼이 줄바꿈 없는 flex 한 줄이라 설명 문구가
+     길면 그 줄 전체 폭이 화면보다 커져서 페이지 전체가 옆으로 밀렸다.
+     모바일에서는 세로로 쌓이게 바꾼다. */
+  .dash-header {
+    flex-wrap: wrap;
+  }
+
+  .dash-title-row {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
   /* 대륙별 지도: JS가 뷰포트 "높이" 기준으로 px 높이를 잡고 폭은
      aspect-ratio로 따라가다 보니, 세로로 긴 휴대폰 화면에서는 지도 폭이
      화면 너비를 넘어서 페이지 전체가 옆으로 밀리는 문제가 있었다.
