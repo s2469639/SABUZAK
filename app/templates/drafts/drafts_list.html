@@ -26,7 +26,7 @@
       {% if trend and trend.booth_job_id %}
       <a href="/booth/{{ trend.booth_job_id }}" class="btn-chip">부스 컨셉(v15)</a>
       {% endif %}
-      <a href="{{ url_for('concept.detail', draft_id=draft.id) }}" class="btn-secondary">컨셉보기</a>
+      <a href="{{ url_for('concept.detail', draft_id=draft.id) }}" class="btn-chip">컨셉보기</a>
       <form method="post" action="{{ url_for('drafts.delete', draft_id=draft.id) }}">
         <button type="submit" class="btn-text-danger" onclick="return confirm('이 박람회의 컨셉 기획을 삭제하시겠습니까?')">삭제</button>
       </form>
