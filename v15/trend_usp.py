@@ -926,11 +926,13 @@ def finalize_clusters(clusters: dict) -> int:
 
 
 def decide_badge(kw: dict):
-    """배지 우선순위: 전년 대비 증감 → 구글 급상승 % → 없음."""
+    """배지 우선순위: 전년 대비 증감 → 구글 급상승 % → 없음.
+    Breakout(≥BREAKOUT_THRESHOLD)은 기준값이 0에 가까워 %가 수만 단위로 튀므로 숫자 대신 '급등' 칩만 보인다."""
     if kw.get("yoy_pct") is not None:
         return {"kind": "yoy", "pct": kw["yoy_pct"]}
-    if kw.get("rising_value") is not None and not kw["is_estimated"] and not kw["is_probe"]:
-        return {"kind": "rising", "pct": kw["rising_value"]}
+    rising = kw.get("rising_value")
+    if rising is not None and rising < BREAKOUT_THRESHOLD and not kw["is_estimated"] and not kw["is_probe"]:
+        return {"kind": "rising", "pct": rising}
     return None
 
 

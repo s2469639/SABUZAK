@@ -41,8 +41,8 @@
     <div class="tab-nav-buttons">
       <button type="button" class="tab-btn active" data-tab="overview">박람회 개요</button>
       <button type="button" class="tab-btn" data-tab="market">시장 개요</button>
-      <button type="button" class="tab-btn" data-tab="trend">트렌드 조사</button>
       <button type="button" class="tab-btn" data-tab="hscode">관세 &amp; 수출 주의사항</button>
+      <button type="button" class="tab-btn" data-tab="trend">트렌드 조사</button>
     </div>
     <form method="post" action="{{ url_for('concept.start', expo_id=expo.id) }}">
       <button type="submit" class="btn-primary">부스 컨셉 기획 →</button>
@@ -134,14 +134,6 @@
       {% include "exhibition/_no_product_state.html" %}
     {% else %}
     {% include "exhibition/_tab_market.html" %}
-    {% endif %}
-  </div>
-
-  <div class="tab-panel" id="tab-trend" hidden>
-    {% if not has_linked_product %}
-      {% include "exhibition/_no_product_state.html" %}
-    {% else %}
-    {% include "exhibition/_tab_trend.html" %}
     {% endif %}
   </div>
 
@@ -325,6 +317,14 @@
       </div>
       {% endfor %}
     </div>
+    {% endif %}
+  </div>
+
+  <div class="tab-panel" id="tab-trend" hidden>
+    {% if not has_linked_product %}
+      {% include "exhibition/_no_product_state.html" %}
+    {% else %}
+    {% include "exhibition/_tab_trend.html" %}
     {% endif %}
   </div>
 </div>

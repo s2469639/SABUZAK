@@ -31,7 +31,9 @@ def chips(text_, limit=6):
 def format_kdate(value):
     """YYYYMMDD(int/str) -> '2026.09.22'. 값이 없거나 형식이 다르면 원본 그대로 반환.
     크롤링 원본에 날짜가 없어서 UNKNOWN_DATE(99999999) 센티널로 저장된 경우
-    "9999.99.99"처럼 날짜인 척 보이는 걸 막기 위해 "일정 미정"으로 표시한다."""
+    "9999.99.99"처럼 날짜인 척 보이는 걸 막기 위해 "일정 미정"으로 표시하고,
+    연/월은 있지만 정확한 날(day)을 못 구해 32로 채워둔 경우는
+    '2026.09 예정'처럼 연/월만 보여준다."""
     if not value:
         return ""
     s = str(value)
@@ -39,17 +41,22 @@ def format_kdate(value):
         return "일정 미정"
     if len(s) != 8 or not s.isdigit():
         return s
+    if s[6:8] == "32":
+        return f"{s[:4]}.{s[4:6]} 예정"
     return f"{s[:4]}.{s[4:6]}.{s[6:8]}"
 
 
 def format_kdate_range(start, end):
     """start_date/end_date(YYYYMMDD) 쌍 -> '2026.09.22 ~ 2026.09.24'.
-    둘 다 UNKNOWN_DATE(99999999)이거나 비어있으면 "일정 미정 ~ 일정 미정"처럼
-    안 보이게 "일정 미정" 하나로 합쳐서 보여준다."""
+    둘 다 UNKNOWN_DATE(99999999)이거나 비어있으면 "일정 미정" 하나로,
+    day=32 처리 등으로 두 값이 같은 문구가 되면 그 값 하나로만 보여준다."""
     start_s, end_s = str(start or ""), str(end or "")
     if start_s in ("", "99999999") and end_s in ("", "99999999"):
         return "일정 미정"
-    return f"{format_kdate(start)} ~ {format_kdate(end)}"
+    s, e = format_kdate(start), format_kdate(end)
+    if not s or not e or s == e:
+        return s or e
+    return f"{s} ~ {e}"
 
 
 def usd_short(value):
@@ -189,6 +196,9 @@ def create_app(config_object="config.Config"):
     app.register_blueprint(mail_template_bp)
     app.register_blueprint(buyer_profile_bp)
     app.register_blueprint(buyer_gmail_bp)
+
+    from app.routes.chatbot import bp as chatbot_bp
+    app.register_blueprint(chatbot_bp)
 
     # 나머지 blueprint(proposal, crawl)는
     # 구현되는 대로 여기에 register_blueprint 하면 됩니다.

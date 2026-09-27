@@ -61,7 +61,7 @@ python -m unittest discover -s tests -v         # 오프라인 테스트
 - 트렌드 조사: 검색 신호 없는 분류도 카드 유지(2×2), 제품 스펙은 짧으면 태그·문장이면 목록
 
 ## 모델
-v12와 같습니다: 부스 `gpt-6-astra`(V13에서도 `.env`의 `V12_BOOTH_MODEL`/`V12_BOOTH_EFFORT`로 변경), 나머지 `gpt-5.6-terra`(`V12_TASK_MODEL`).
+v12와 같습니다: 부스 `gpt-5.6-sol`(V13에서도 `.env`의 `V12_BOOTH_MODEL`/`V12_BOOTH_EFFORT`로 변경), 나머지 `gpt-5.6-terra`(`V12_TASK_MODEL`).
 
 ## 한계
 - 실제 API로는 실행해 보지 못했습니다(가짜 응답 테스트 18개로 검증).

@@ -1,12 +1,12 @@
 """v12: OpenAI 모델 설정과 추론형 모델 대응.
 
 trend_usp·retail_research·research 모듈이 OpenAI 클라이언트를 이 모듈로 감싸서
-  1) 모델 이름을 바꾸고 (부스 기획 = 최상위 모델, 나머지 작업 = 중간 등급 모델)
+  1) 모델 이름을 바꾸고 (부스 기획 = 상위 모델, 나머지 작업 = 중간 등급 모델)
   2) 추론형 모델(gpt-5·gpt-6·o 시리즈)이 받지 않는 temperature를 빼고 추론 깊이(reasoning effort)를 넣고
   3) 모델 ID가 없거나 계정에서 막혀 있으면 대체 모델로 자동 전환한다.
 
 환경변수(.env)로 바꿀 수 있다:
-  V12_BOOTH_MODEL   (기본 gpt-6-astra)    부스 기획·부스용 자체 조사
+  V12_BOOTH_MODEL   (기본 gpt-5.6-sol)    부스 기획·부스용 자체 조사
   V12_BOOTH_EFFORT  (기본 medium)         low | medium | high | xhigh | max
   V12_TASK_MODEL    (기본 gpt-5.6-terra)  섹션 1 분류, 섹션 2 리테일, 섹션 3 발췌·요약
   V12_TASK_EFFORT   (기본 low)
@@ -38,7 +38,7 @@ _load_dotenv()
 
 logger = logging.getLogger("sabuzak.dashboard_v12.models")
 
-BOOTH_MODEL = os.getenv("V12_BOOTH_MODEL") or "gpt-6-astra"
+BOOTH_MODEL = os.getenv("V12_BOOTH_MODEL") or "gpt-5.6-sol"
 BOOTH_EFFORT = os.getenv("V12_BOOTH_EFFORT") or "medium"
 TASK_MODEL = os.getenv("V12_TASK_MODEL") or "gpt-5.6-terra"
 TASK_EFFORT = os.getenv("V12_TASK_EFFORT") or "low"
