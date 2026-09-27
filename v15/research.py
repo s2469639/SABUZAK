@@ -1058,9 +1058,9 @@ def summarize_question(client, product_name, country, qid, quotes, quote_index, 
             "product_quotes": product_n, "country_quotes": sum(1 for x in mine if x["market"] == "country"),
             "conclusion": None, "points": [], "interpretation": None, "gaps": None,
             "dropped": [], "notice": None, "diagnostics": dict(diag[qid])}
-    if qid in ("Q1", "Q2") and product_n == 0:
-        card["notice"] = f"{product_name}에 대한 {terms['country_ko']} 현지 자료를 찾지 못했습니다." + (
-            " 아래는 제품군·한국 식품·권역 자료입니다 (배지 참고)." if mine else "")
+    # (삭제) 제품 자체의 현지 자료가 없을 때 카드 위에 띄우던
+    # "OO에 대한 OO 현지 자료를 찾지 못했습니다. 아래는 제품군·한국 식품·권역 자료입니다" 안내 문구.
+    # 자료 범위는 각 문장 옆 배지(E1, E2…)로 확인할 수 있어서 화면에서는 뺀다.
     if not mine:
         card["gaps"] = f"{terms['country_ko']} 시장에서 이 질문에 답하는 자료를 찾지 못했습니다. 바이어 상담이나 KOTRA 무역관 문의로 확인이 필요합니다."
         return card
