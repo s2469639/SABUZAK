@@ -7,10 +7,11 @@ function calling으로 실제 DB/서비스를 직접 조회해서 답하게 한�
 """
 
 import json
+import re
 
 from flask import Blueprint, jsonify, request, url_for
 from flask_login import login_required
-from sqlalchemy import or_
+from sqlalchemy import func, or_
 
 from app import format_kdate_range
 from app.models import Exhibition, HsCodeMaster
@@ -50,13 +51,35 @@ SYSTEM_PROMPT = """당신은 식품 수출 박람회 준비 플랫폼 "FairMate"
 사용자가 특정 제품의 HS코드를 물으면 lookup_hscode 함수를 반드시 호출해서 실제 관세청 데이터로 답하세요.
 직접 코드를 추측해서 말하지 마세요.
 
-검색 결과가 없을 때는 아래 순서로 대응하세요:
-1) 먼저 "약과", "한과"처럼 더 구체적인/일반적인 다른 표현으로 한 번 더 lookup_hscode를 시도해보세요.
-2) 그래도 결과가 없고, 유과·약과·한과처럼 한국 고유 식품이라 관세청 품목명에 정확히 없는 경우라면,
+항상 0단계로, 사용자가 말한 제품명 그대로 먼저 한 번 검색하세요("식혜"처럼 일상 단어가 공식
+품목명과 정확히 같은 경우도 꽤 있어서, 지레짐작으로 건너뛰면 오히려 놓칩니다).
+
+그 검색이 비었을 때만 아래처럼 넓혀가세요. 관세청 마스터 데이터의 품목명은 종종 "즉석밥"/"햇반"이
+아니라 "찌거나 삶은 쌀"처럼 가공 상태·원재료 중심의 딱딱한 공식 용어로 되어 있어서, 사용자가 흔히
+쓰는 제품명 그대로는 안 나올 수 있습니다.
+
+검색 결과가 없을 때는 아래 순서로 재시도하세요 (lookup_hscode를 여러 번 호출해도 됩니다):
+1) 먼저 제품명에서 핵심 원재료만 뽑아 검색하세요. 예: "즉석밥"/"햇반" → "쌀", "냉동만두" → "만두"
+   또는 "밀가루", "조미김" → "김", "라면" → "면". 그래도 안 되면 그 원재료의 다른 표현(가공 상태,
+   예: "삶은", "찐", "건조한", "냉동한" 등)을 조합해서 한두 번 더 시도해보세요.
+2) 원재료로도 안 나오면, "이 식품이 관세청 분류상 실제로 어느 대분류에 속할지"를 스스로 판단해서
+   그 대분류 키워드로 검색하세요. 원재료가 무엇이든 관세 분류는 완제품의 성격(음료/과자·베이커리/
+   조미료/유제품 등)을 따르는 경우가 많습니다. 예: "식혜"는 쌀이 재료지만 완제품은 음료라서
+   "쌀"로는 절대 안 나오고 "음료" 또는 "청량음료"로 검색해야 나옵니다("2202.99" 계열). 마찬가지로
+   "수정과"→"음료", "조청"→"당" 또는 "시럽", "육포"→"건조" 또는 "육류가공품"처럼, 완제품이
+   실제로 속할 상위 카테고리를 추론해서 검색어를 바꿔보세요.
+   특히 제품명이 "OO부각"(튀긴 것), "OO튀김", "OO강정", "OO칩", "OO스낵"처럼 가공 형태를 나타내는
+   접미사로 끝나면, 원재료 자체(예: "김부각"의 "김")로만 검색한 결과는 원재료 원물(예: 냉동/건조
+   상태의 김)일 뿐 실제로는 무관한 후보일 가능성이 높습니다. 이런 경우 원재료 검색과 별도로 반드시
+   "과자" 또는 "스낵"으로도 한 번 더 검색해서(예: "김부각" → "과자"), 두 결과를 비교해 실제
+   완제품(조미·가공 과자류, HS 19류·20류 등)에 더 가까운 후보를 우선 제시하세요. 원재료 원물
+   후보(예: "2005.99 김치"처럼 단순 글자 일치로 걸린 것, 또는 가공 안 된 원물 김)는 완제품과
+   무관하면 답변에서 제외하세요.
+3) 그래도 결과가 없고, 유과·약과·한과처럼 한국 고유 식품이라 관세청 품목명에 정확히 없는 경우라면,
    아는 일반 지식으로 가장 가까울 것으로 보이는 상위 분류(예: 과자류는 HS 1905류)를 참고용으로
    제시하되, 반드시 "정확한 코드로 매칭된 결과가 아니며, 실제 신고 전 관세사·관세청 확인이
    필요하다"는 점을 함께 명시하세요. 없는 코드를 마치 정확한 코드인 것처럼 단정하지 마세요.
-3) 정말 아무 단서도 없으면 "정확한 품목명을 알려주시면 다시 확인해드리겠습니다."처럼 정중히 안내하세요.
+4) 정말 아무 단서도 없으면 "정확한 품목명을 알려주시면 다시 확인해드리겠습니다."처럼 정중히 안내하세요.
 
 [박람회 검색]
 "다음 달 유럽 박람회 뭐 있어?", "베트남 식품 박람회 찾아줘"처럼 박람회를 찾거나 추천해달라는 질문에는
@@ -128,16 +151,36 @@ TOOLS = [
 
 
 def _lookup_hscode(query):
+    """제품명으로 관세청 마스터를 검색한다. name_ko는 공식 품목명이라 "냉동
+    손만두"처럼 실제 제품명을 통째로 넣으면 거의 매칭이 안 된다 (실제로는
+    "만두 냉동한 것"처럼 순서/표현이 다름). 그래서 문구 전체로 먼저
+    시도하고, 안 걸리면 단어 단위로 쪼개서 OR 검색한다."""
     if not query or not _hs_master_query_available():
         return []
-    like = f"%{query.strip()}%"
-    rows = (
-        HsCodeMaster.query.filter(
-            (HsCodeMaster.name_ko.ilike(like)) | (HsCodeMaster.hsk_name.ilike(like))
+    query = query.strip()
+
+    def _search(like_terms):
+        conditions = [
+            HsCodeMaster.name_ko.ilike(f"%{t}%") | HsCodeMaster.hsk_name.ilike(f"%{t}%")
+            for t in like_terms
+        ]
+        # 검색어를 "쌀"처럼 원재료 단위로 넓히면 관련 없는 것까지 수십 건씩
+        # 걸리는데, limit을 너무 낮게 잡으면(예전 8건) 정작 맞는 품목(예:
+        # "찌거나 삶은 쌀")이 순서상 뒤에 있어 응답에 아예 안 실렸다.
+        # 이름이 짧을수록 더 일반적인/핵심적인 품목일 가능성이 높아서 그걸
+        # 우선 보여주고, 건수도 20건까지 넉넉하게 준다.
+        return (
+            HsCodeMaster.query.filter(or_(*conditions))
+            .order_by(func.length(HsCodeMaster.name_ko))
+            .limit(20)
+            .all()
         )
-        .limit(8)
-        .all()
-    )
+
+    rows = _search([query])
+    if not rows:
+        words = [w for w in re.split(r"\s+", query) if len(w) >= 2]
+        if words:
+            rows = _search(words)
     return [{"hscode": r.hscode, "name_ko": r.name_ko or r.hsk_name} for r in rows]
 
 
@@ -235,7 +278,13 @@ def message():
         )
         choice = response.choices[0].message
 
-        if choice.tool_calls:
+        # 최대 3라운드까지 tool을 반복 호출할 수 있게 한다. 이전엔 tool 결과를
+        # 받은 뒤 마지막 응답 요청에 tools를 안 넘겨서, 검색이 비었을 때
+        # "다른 키워드로 다시 검색해보라"는 지침이 있어도 모델이 실제로는
+        # 두 번째 검색을 시도할 방법이 없었다 (그래서 계속 "못 찾음"만 반복).
+        for _ in range(4):
+            if not choice.tool_calls:
+                break
             messages.append(choice.model_dump(exclude_none=True))
             for call in choice.tool_calls:
                 args = json.loads(call.function.arguments or "{}")
@@ -246,7 +295,9 @@ def message():
                     "tool_call_id": call.id,
                     "content": json.dumps(results, ensure_ascii=False),
                 })
-            response = client.chat.completions.create(model=MODEL, messages=messages, max_tokens=500)
+            response = client.chat.completions.create(
+                model=MODEL, messages=messages, tools=TOOLS, max_tokens=500,
+            )
             choice = response.choices[0].message
 
         return jsonify({"reply": choice.content or "죄송해요, 답변을 만들지 못했어요."})

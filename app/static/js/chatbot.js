@@ -38,36 +38,40 @@
 
   function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
-  function updateOpenDirection(left, top) {
-    var w = widget.offsetWidth;
-    widget.classList.toggle("side-left", left + w / 2 < window.innerWidth / 2);
+  function updateOpenDirection(side, top) {
+    widget.classList.toggle("side-left", side === "left");
     widget.classList.toggle("open-below", top < 220);
   }
 
-  function applyPosition(left, top, animate) {
+  // 좌/우 "쪽"과 세로 위치(top)만 저장하고, 실제 left px는 매번 현재
+  // 창 너비 기준으로 다시 계산한다. 예전에는 절대 left px를 그대로
+  // 저장했다가 창 크기가 바뀌면(리사이즈, 다른 모니터) 가장자리에서
+  // 떨어져 화면 중간에 붕 떠 보이는 문제가 있었다.
+  function applyPosition(side, top, animate) {
     widget.style.transition = animate ? "left 0.28s ease, top 0.28s ease" : "none";
+    var w = widget.offsetWidth || 58;
+    var left = side === "left" ? EDGE_GAP : window.innerWidth - w - EDGE_GAP;
     widget.style.left = left + "px";
     widget.style.top = top + "px";
     widget.style.right = "auto";
     widget.style.bottom = "auto";
-    updateOpenDirection(left, top);
+    updateOpenDirection(side, top);
   }
 
-  function savePosition(left, top) {
-    try { localStorage.setItem(POS_KEY, JSON.stringify({ left: left, top: top })); } catch (e) {}
+  function savePosition(side, top) {
+    try { localStorage.setItem(POS_KEY, JSON.stringify({ side: side, top: top })); } catch (e) {}
   }
 
   function restorePosition() {
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem(POS_KEY) || "null"); } catch (e) {}
-    if (saved && typeof saved.left === "number" && typeof saved.top === "number") {
-      var w = widget.offsetWidth || 58, h = widget.offsetHeight || 58;
-      var left = clamp(saved.left, EDGE_GAP, window.innerWidth - w - EDGE_GAP);
+    if (saved && (saved.side === "left" || saved.side === "right") && typeof saved.top === "number") {
+      var h = widget.offsetHeight || 58;
       var top = clamp(saved.top, EDGE_GAP, window.innerHeight - h - EDGE_GAP);
-      applyPosition(left, top, false);
+      applyPosition(saved.side, top, false);
     } else {
-      var rect = widget.getBoundingClientRect();
-      updateOpenDirection(rect.left, rect.top);
+      // 기본 위치(CSS의 right/bottom)는 항상 오른쪽 가장자리이므로 그대로 둔다.
+      updateOpenDirection("right", window.innerHeight);
     }
   }
 
@@ -95,10 +99,16 @@
       fab.classList.remove("is-open");
       widget.classList.add("dragging");
     }
+    // 드래그 중에는 픽셀 좌표를 그대로 따라가야 하니 여기서만 직접
+    // left/top을 찍는다 (applyPosition은 좌/우 스냅 전용).
     var w = widget.offsetWidth, h = widget.offsetHeight;
     var left = clamp(dragState.originLeft + dx, EDGE_GAP, window.innerWidth - w - EDGE_GAP);
     var top = clamp(dragState.originTop + dy, EDGE_GAP, window.innerHeight - h - EDGE_GAP);
-    applyPosition(left, top, false);
+    widget.style.transition = "none";
+    widget.style.left = left + "px";
+    widget.style.top = top + "px";
+    widget.style.right = "auto";
+    widget.style.bottom = "auto";
   });
 
   function endDrag() {
@@ -108,10 +118,10 @@
       suppressClick = true;
       var rect = widget.getBoundingClientRect();
       var w = widget.offsetWidth, h = widget.offsetHeight;
-      var snapLeft = (rect.left + w / 2 < window.innerWidth / 2) ? EDGE_GAP : window.innerWidth - w - EDGE_GAP;
+      var side = (rect.left + w / 2 < window.innerWidth / 2) ? "left" : "right";
       var top = clamp(rect.top, EDGE_GAP, window.innerHeight - h - EDGE_GAP);
-      applyPosition(snapLeft, top, true);
-      savePosition(snapLeft, top);
+      applyPosition(side, top, true);
+      savePosition(side, top);
     }
     dragState = null;
   }
@@ -119,11 +129,12 @@
   fab.addEventListener("pointercancel", endDrag);
 
   window.addEventListener("resize", function () {
-    var rect = widget.getBoundingClientRect();
-    var w = widget.offsetWidth, h = widget.offsetHeight;
-    var left = clamp(rect.left, EDGE_GAP, window.innerWidth - w - EDGE_GAP);
-    var top = clamp(rect.top, EDGE_GAP, window.innerHeight - h - EDGE_GAP);
-    applyPosition(left, top, false);
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(POS_KEY) || "null"); } catch (e) {}
+    if (!saved || (saved.side !== "left" && saved.side !== "right")) return;
+    var h = widget.offsetHeight || 58;
+    var top = clamp(saved.top, EDGE_GAP, window.innerHeight - h - EDGE_GAP);
+    applyPosition(saved.side, top, false);
   });
 
   restorePosition();
