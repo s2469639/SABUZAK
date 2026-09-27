@@ -119,69 +119,55 @@
     <div class="event-main">
       <div class="event-title-row">
         <strong>{{ event.title }}</strong>
-        <span class="event-tag">{{ event.tag }}</span>
+        {% if event.tag %}<span class="event-tag">{{ event.tag }}</span>{% endif %}
       </div>
-      <p>{{ event.description }}</p>
+      {% if event.summary or event.description %}<p class="event-summary">{{ event.summary or event.description }}</p>{% endif %}
+      {% if event.why %}<p class="event-why">{{ event.why }}</p>{% endif %}
+
+      {% if event.steps %}
+      <div class="event-block">
+        <span class="event-block-title">진행 방법</span>
+        <ol class="event-steps">
+          {% for step in event.steps %}<li>{{ step }}</li>{% endfor %}
+        </ol>
+      </div>
+      {% endif %}
+
+      {% for d in event.details or [] %}
+      <div class="event-block">
+        <span class="event-block-title">{{ d.heading }}</span>
+        <ul class="event-lines">
+          {% for line in d.lines %}<li>{{ line }}</li>{% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+
+      {% if event.reward %}
+      <div class="event-block"><span class="event-block-title">경품·혜택</span><p>{{ event.reward }}</p></div>
+      {% endif %}
+      {% if event.prep %}
+      <div class="event-block"><span class="event-block-title">준비물·인원</span><p>{{ event.prep }}</p></div>
+      {% endif %}
     </div>
-    <span class="event-timing">{{ event.schedule }}</span>
+    {% if event.schedule %}<span class="event-timing">{{ event.schedule }}</span>{% endif %}
   </div>
   {% endfor %}
 </div>
 {% endif %}
 
 {# ========================================== #}
-{# 4. 3초 · 30초 · 3분 (방문객 여정)            #}
+{# 4. 바이어 어필 포인트                        #}
 {# ========================================== #}
-{% set vj = visitor_journey %}
-{% if vj %}
-<h3 class="section-label section-label-lg">방문객 여정 시나리오 (3초 · 30초 · 3분)</h3>
-<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:28px;">
-  
-  {# 3초 단계 #}
-  <div class="card" style="margin-bottom:0; padding:18px; border-top:3px solid #ff6b00;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <strong style="color:#ff6b00; font-size:16px;">3초</strong>
-      <span style="font-size:12px; color:#6b7280;">시선 사로잡기</span>
-    </div>
-    <div style="font-weight:700; font-size:14px; margin-bottom:8px; color:#111827;">{{ vj.sec3.headline }}</div>
-    <div style="font-size:12px; color:#4b5563; background:#f9fafb; padding:8px; border-radius:6px; margin-bottom:8px;">
-      <b>목표:</b> {{ vj.sec3.goal }}
-    </div>
-    <div style="font-size:12px; color:#1e40af; background:#eff6ff; padding:8px; border-radius:6px;">
-      <b>캐치 카피:</b> “{{ vj.sec3.message }}”
-    </div>
+{% if buyer_appeal %}
+<h3 class="section-label section-label-lg">바이어 어필 포인트</h3>
+<div class="appeal-grid">
+  {% for a in buyer_appeal %}
+  <div class="appeal-card">
+    <strong>{{ a.title }}</strong>
+    {% if a.why %}<p><span class="appeal-label">왜 중요한가</span>{{ a.why }}</p>{% endif %}
+    {% if a.show %}<p><span class="appeal-label">부스에서 보여줄 것</span>{{ a.show }}</p>{% endif %}
   </div>
-
-  {# 30초 단계 #}
-  <div class="card" style="margin-bottom:0; padding:18px; border-top:3px solid #3b82f6;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <strong style="color:#3b82f6; font-size:16px;">30초</strong>
-      <span style="font-size:12px; color:#6b7280;">흥미 및 탐색</span>
-    </div>
-    <div style="font-weight:700; font-size:14px; margin-bottom:8px; color:#111827;">{{ vj.sec30.headline }}</div>
-    <div style="font-size:12px; color:#4b5563; background:#f9fafb; padding:8px; border-radius:6px; margin-bottom:8px;">
-      <b>목표:</b> {{ vj.sec30.goal }}
-    </div>
-    <div style="font-size:12px; color:#1e40af; background:#eff6ff; padding:8px; border-radius:6px;">
-      <b>건넬 말:</b> “{{ vj.sec30.message }}”
-    </div>
-  </div>
-
-  {# 3분 단계 #}
-  <div class="card" style="margin-bottom:0; padding:18px; border-top:3px solid #10b981;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <strong style="color:#10b981; font-size:16px;">3분</strong>
-      <span style="font-size:12px; color:#6b7280;">심층 상담 및 전환</span>
-    </div>
-    <div style="font-weight:700; font-size:14px; margin-bottom:8px; color:#111827;">{{ vj.min3.headline }}</div>
-    <div style="font-size:12px; color:#4b5563; background:#f9fafb; padding:8px; border-radius:6px; margin-bottom:8px;">
-      <b>목표:</b> {{ vj.min3.goal }}
-    </div>
-    <div style="font-size:12px; color:#1e40af; background:#eff6ff; padding:8px; border-radius:6px;">
-      <b>상담 전환:</b> “{{ vj.min3.message }}”
-    </div>
-  </div>
-
+  {% endfor %}
 </div>
 {% endif %}
 
@@ -196,28 +182,39 @@
 {% endif %}
 
 {# ========================================== #}
-{# 부스 컨셉 예상 이미지 (단일 렌더링 카드)      #}
+{# 5. 박람회 준비 & 사전 검증 체크리스트 (고정 내용) #}
 {# ========================================== #}
-<div class="card concept-image-card">
-  <p class="section-eyebrow">부스 컨셉 예상 이미지</p>
-
-  {% if draft.image_path %}
-  <img src="{{ url_for('static', filename=draft.image_path) }}" alt="부스 예상 이미지" class="concept-image-preview">
-  {% endif %}
-
-  {% if draft.image_prompt %}
-  <p class="concept-image-prompt">{{ draft.image_prompt }}</p>
-  {% endif %}
-
-  <form method="post" action="{{ url_for('concept.generate_image', draft_id=draft.id) }}" class="concept-image-form">
-    <button type="submit" class="btn-primary">
-      {{ '이미지 다시 생성하기' if draft.image_path else 'AI 이미지 생성' }}
-    </button>
-  </form>
+<h3 class="section-label section-label-lg">박람회 준비 &amp; 사전 검증 필수 체크리스트 (Gating Checklist)</h3>
+<div class="card checklist-card">
+  {% set checklist = [
+    ("인허가 & 수입 적격성", [
+      "타깃 국가 동물성/가공식품 수입 승인 조건 및 제조시설 등록 여부 확인",
+      "박람회 주최 측 및 현지 관할청의 축산/식품 반입 및 무상 시식 사전 서면 승인 확보",
+      "현장 판매 및 전시품 가격표 부착 가능/금지 규정 최종 확인",
+    ]),
+    ("원재료 & 패키징 라벨링", [
+      "알레르겐 표기 및 복합 원재료·첨가물 현지 기준 검증 및 규격서 구비",
+      "현지어 표기 라벨 내 책임자(수입자) 표기 및 유통기한·보관조건 표기 공간 확보",
+      "물류 규격(W×D×H, GTIN, 박스 입수, 팔레트 적재 단수) 및 공급 가격 조건 확정",
+    ]),
+    ("현장 운영 & 리스크 방어", [
+      "시식 현장용 알레르겐 안내 카드 제작 및 교차오염 방지 집기 세팅 완료",
+      "부스 면적 대비 가열/냉장 설비 규격 점검 및 피크타임 리허설 통과",
+      "인허가/규격 미확정 시 '상업 도입'에서 '수입 파트너 발굴/시장성 조사' 모드로 전환 준비",
+    ]),
+  ] %}
+  {% for group_title, items in checklist %}
+  <div class="checklist-group">
+    <span class="checklist-group-title">{{ group_title }}</span>
+    <ul class="checklist-items">
+      {% for item in items %}<li>{{ item }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
 </div>
 
 <form method="post" action="{{ url_for('concept.generate', draft_id=draft.id) }}" class="regenerate-form"
-      onsubmit="return confirm('부스 기획을 새로 만듭니다. 몇 분 걸리고, 지금 내용과 이미지는 새 결과로 바뀌어요. 진행할까요?')">
+      onsubmit="return confirm('부스 기획을 새로 만듭니다. 몇 분 걸리고, 지금 내용은 새 결과로 바뀌어요. 진행할까요?')">
   <button type="submit" class="btn-secondary">컨셉 다시 생성하기</button>
 </form>
 
