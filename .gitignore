@@ -1,7 +1,7 @@
 __pycache__/
 *.pyc
 .env
-instance/
+instance/*
 *.csv
 .venv/
 venv/
@@ -14,6 +14,12 @@ venv/
 *.sqlite
 *.sqlite3
 *.log
+
+# Render 등 배포 환경은 재시작마다 파일시스템이 초기화되므로,
+# 시딩용 DB(박람회/HS코드 데이터)는 git에 포함해 배포 이미지에 실어 보낸다.
+# app_data.db(계정 데이터)는 프로젝트용이라 유실돼도 무방 -> 계속 무시.
+!instance/sabuzak.db
+!instance/hscode.db
 .DS_Store
 ._*                  # macOS 리소스포크 파일 (._competitor_analyzer.pyc 같은 것들)
 node_modules/
