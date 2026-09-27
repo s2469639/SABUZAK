@@ -2521,6 +2521,24 @@ p.page-desc:not(:last-child) {
     width: calc(100vw - 32px);
     max-width: none;
   }
+
+  /* 대륙별 지도: JS가 뷰포트 "높이" 기준으로 px 높이를 잡고 폭은
+     aspect-ratio로 따라가다 보니, 세로로 긴 휴대폰 화면에서는 지도 폭이
+     화면 너비를 넘어서 페이지 전체가 옆으로 밀리는 문제가 있었다.
+     모바일에서는 반대로 폭을 100%로 고정하고 높이를 aspect-ratio로
+     따라가게 해서 가로 오버플로를 막는다 (JS의 인라인 height px보다
+     !important로 우선). */
+  .world-map {
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+}
+
+/* 어느 화면 요소가 컨테이너 폭을 넘어서더라도(계산 실수 등) 페이지
+   전체가 옆으로 스크롤되며 레이아웃이 깨지는 일은 막는 안전장치 */
+body {
+  overflow-x: hidden;
 }
 
 /* 플로팅 챗봇 위젯: 평소엔 우하단 로봇 얼굴 아이콘, 클릭하면 팝업 채팅창.
