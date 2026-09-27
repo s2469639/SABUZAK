@@ -46,7 +46,7 @@
             <a href="{{ url_for('dashboard.index') }}"
                class="{% if request.endpoint == 'dashboard.index' %}active{% endif %}">대시보드</a>
             <a href="{{ url_for('drafts.index') }}"
-               class="{% if request.endpoint == 'drafts.index' %}active{% endif %}">작성 중인 박람회</a>
+               class="{% if request.endpoint == 'drafts.index' %}active{% endif %}">마이 페어 (My Fair)</a>
             <a href="{{ url_for('mypage.index') }}"
                class="{% if request.endpoint == 'mypage.index' %}active{% endif %}">내 제품 관리</a>
             <a href="{{ url_for('contacts.list_contacts') }}"
