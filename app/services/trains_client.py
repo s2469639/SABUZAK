@@ -89,13 +89,19 @@ def normalize_hs_code(hs_code: str) -> str:
 
 def _product_codes_for_query(hs_code: str) -> list:
     """제품의 HS코드로 TRAINS "products" 필터에 넣을 후보 코드 목록을 만든다.
-    원본 코드 그대로 + 4자리(챕터) 단위를 같이 보낸다 (챕터 단위까지 넣어야
-    TRAINS의 느슨한 품목 태깅에서 관련 규정을 놓치지 않음)."""
+    최대 6자리(HS6) + 4자리(챕터) 단위만 보낸다 (챕터 단위까지 넣어야
+    TRAINS의 느슨한 품목 태깅에서 관련 규정을 놓치지 않음).
+
+    8자리 이상(세부품목 단위)의 원본 코드를 그대로 보내면 TRAINS 서버가
+    500(`{"Error":"Unexpected error Occured"}`)을 내는 게 실제로 확인됐다
+    (products 필드가 TRAINS 자체 품목 마스터 목록에서 고르는 방식이라,
+    6자리보다 세밀한 코드는 그 목록에 없어서 서버 쪽에서 처리하다 죽는
+    것으로 보임). 그래서 6자리보다 길면 앞 6자리로 잘라서 보낸다."""
     digits = normalize_hs_code(hs_code)
     if not digits:
         return DEFAULT_DEBUG_HS_CODES
-    codes = [digits]
-    if len(digits) > 4:
+    codes = [digits[:6]] if len(digits) > 6 else [digits]
+    if len(digits) > 4 and codes[0] != digits[:4]:
         codes.append(digits[:4])
     return codes
 
@@ -183,6 +189,29 @@ EU_MEMBER_ISO3 = {
 }
 EU_TRAINS_CODE = "EUN"
 
+# TRAINS의 "Data Availability" 표(사용자가 직접 UNCTAD 사이트에서 다운받아
+# 확인해준 CSV)에 실제로 등록된 리포터(=규정을 낸 적 있는 국가/경제권)
+# 135개 ISO3 목록. 이 표에 개별 EU 회원국은 하나도 없고 "European Union"
+# (코드 918, ISO "EUN")만 있어서, 위 EU 폴백이 맞다는 것도 이걸로 검증됨.
+# 이 목록에 없는 나라는 TRAINS에 애초에 데이터가 없다는 뜻이라, 네트워크
+# 요청 자체를 보내지 않고 바로 "규정 없음"으로 처리한다 (헛수고 방지).
+TRAINS_REPORTER_ISO3 = {
+    "AFG", "ALB", "DZA", "ATG", "ARG", "ARM", "AUS", "AZE", "BHS", "BHR",
+    "BGD", "BRB", "BLR", "BEN", "BOL", "BIH", "BWA", "BRA", "BRN", "BFA",
+    "BDI", "CPV", "KHM", "CMR", "CAN", "TCD", "CHL", "CHN", "HKG", "COL",
+    "COM", "COG", "COK", "CRI", "CUB", "CIV", "COD", "DMA", "ECU", "EGY",
+    "SLV", "ETH", "FJI", "GAB", "GMB", "GEO", "GHA", "GRD", "GTM", "GIN",
+    "GUY", "HND", "ISL", "IND", "IDN", "ISR", "JAM", "JPN", "JOR", "KAZ",
+    "KEN", "SWZ", "KIR", "KOR", "XKX", "KWT", "KGZ", "LAO", "LBN", "LSO",
+    "LBR", "MWI", "MYS", "MLI", "MHL", "MRT", "MUS", "MEX", "FSM", "MNE",
+    "MAR", "MOZ", "MMR", "NAM", "NRU", "NPL", "NZL", "NIC", "NER", "NGA",
+    "NIU", "MKD", "NOR", "OMN", "PAK", "PLW", "PAN", "PNG", "PRY", "PER",
+    "PHL", "QAT", "MDA", "TUR", "RUS", "RWA", "WSM", "SAU", "SEN", "SRB",
+    "SYC", "SGP", "SLB", "ZAF", "LKA", "PSE", "SUR", "CHE", "TJK", "THA",
+    "TLS", "TGO", "TON", "TTO", "TUN", "TUV", "UGA", "ARE", "GBR", "TZA",
+    "USA", "URY", "VUT", "VEN", "VNM", "ZMB", "ZWE",
+}
+
 
 def _fetch_pages(reporter_code: str, product_codes: list, page_size: int, max_pages: int, log_key: str) -> list:
     """실제로 페이지네이션 돌면서 TRAINS를 호출하는 부분. 캐싱은 호출부
@@ -216,8 +245,19 @@ def _fetch_pages(reporter_code: str, product_codes: list, page_size: int, max_pa
                 print(f"  [TRAINS] {log_key} page {page} 요청 실패: {exc}", flush=True)
                 raise
             print(f"  [TRAINS] {log_key} page {page} 응답: {resp.status_code}", flush=True)
-            if resp.status_code != 429:
+            if resp.status_code not in (429, 500, 502, 503, 504):
                 break
+            if resp.status_code != 429:
+                # 500/502/503/504도 TRAINS 쪽에서 종종 일시적으로 나는 걸로
+                # 확인돼서(같은 요청을 잠시 후 다시 보내면 성공하는 경우가
+                # 많음), 429와 같은 backoff 스케줄로 재시도한다.
+                if attempt < len(RETRY_BACKOFF_SEC):
+                    print(
+                        f"  [TRAINS] {log_key} page {page} {resp.status_code} - "
+                        f"{RETRY_BACKOFF_SEC[attempt]}초 후 재시도",
+                        flush=True,
+                    )
+                continue
             # 서버가 Retry-After로 대기시간을 알려주기도 하는데, 이 값을 그대로
             # 믿고 sleep하면 서버가 큰 값(몇십초~그 이상)을 줄 경우 아무 로그도
             # 없이 통째로 멈춰버린 것처럼 보인다. 그래서 상한(MAX_RETRY_AFTER_SEC)을
@@ -239,7 +279,15 @@ def _fetch_pages(reporter_code: str, product_codes: list, page_size: int, max_pa
                     wait_sec = min(retry_after_sec, MAX_RETRY_AFTER_SEC)
                     print(f"  [TRAINS] {log_key} page {page} 429, Retry-After={retry_after}s -> {wait_sec}s 대기", flush=True)
                     time.sleep(wait_sec)
-        resp.raise_for_status()
+        try:
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError as exc:
+            body_preview = (resp.text or "")[:300]
+            raise requests.exceptions.HTTPError(
+                f"{exc} (요청 국가={reporter_code}, HS코드후보={product_codes}, "
+                f"응답 본문 앞부분: {body_preview!r})",
+                response=resp,
+            ) from exc
 
         if total_count is None:
             header_total = resp.headers.get("X-Total-Count")
@@ -306,15 +354,19 @@ def fetch_regulations_for_country(
             _memory_cache[cache_key] = entry
             return entry["rows"]
 
-    all_rows = _fetch_pages(country_iso3, product_codes, page_size, max_pages, cache_key)
-
-    real_rows = [r for r in all_rows if not _is_placeholder_row(r)]
-    if not real_rows and country_iso3 in EU_MEMBER_ISO3:
-        eu_log_key = f"{cache_key}(EU 폴백)"
-        print(f"  [TRAINS] {cache_key} 개별 조회에 실데이터 없음 -> EU 코드로 재시도", flush=True)
-        eu_rows = _fetch_pages(EU_TRAINS_CODE, product_codes, page_size, max_pages, eu_log_key)
-        if any(not _is_placeholder_row(r) for r in eu_rows):
-            all_rows = eu_rows
+    if country_iso3 in EU_MEMBER_ISO3:
+        # EU 회원국은 개별 국가로 조회해봤자 늘 더미 행뿐이라는 게 이미
+        # 확인됐으니(TRAINS_REPORTER_ISO3 목록에 개별 회원국이 아예 없음),
+        # 헛수고하지 않고 바로 EU 코드로 조회한다.
+        print(f"  [TRAINS] {cache_key} EU 회원국 -> EU 코드(EUN)로 바로 조회", flush=True)
+        all_rows = _fetch_pages(EU_TRAINS_CODE, product_codes, page_size, max_pages, f"{cache_key}(EU)")
+    elif country_iso3 not in TRAINS_REPORTER_ISO3:
+        # TRAINS Data Availability 표에 아예 없는 나라 - 요청해봤자 더미
+        # 행만 올 게 뻔하니 네트워크 요청 자체를 생략한다.
+        print(f"  [TRAINS] {cache_key} TRAINS에 등록된 적 없는 리포터라 요청 생략", flush=True)
+        all_rows = []
+    else:
+        all_rows = _fetch_pages(country_iso3, product_codes, page_size, max_pages, cache_key)
 
     now = time.time()
     _memory_cache[cache_key] = {"rows": all_rows, "fetched_at": now}
@@ -390,12 +442,33 @@ def is_product_relevant(reg: dict, product_codes: list) -> bool:
     return _has_strong_food_signal(reg)
 
 
+# TRAINS의 NTM 카테고리(MAST 분류) 중 식품 수출에 가장 직접적으로 영향을
+# 주는 3개. A=위생·식물위생(SPS), B=기술장벽(TBT), P=수출조치. ntmTypes
+# 필드가 채워진 나라(아르헨티나 등 - 브라우저에서 직접 확인함, 다만 중국/
+# 호주처럼 대부분 안 채워진 나라도 많음)는 이 값으로 가산점을 줘서 순위를
+# 올린다. 강제 필터로는 안 쓴다 - ntmTypes가 안 채워진 나라(더 흔함)는
+# 이 필터를 걸면 결과가 통째로 0건이 될 위험이 있고, "Imported Food
+# Charges"처럼 A/B/P가 아니어도 유용한 규정(수입식품 공통 부과금)까지
+# 같이 잘려나가기 때문.
+HIGH_VALUE_NTM_TYPES = {"A", "B", "P"}
+
+
+def _ntm_type_code(reg: dict) -> str:
+    """ntmTypes 필드는 "A - Sanitary and phytosanitary measures" 같은
+    형식으로 오므로, 맨 앞 분류 코드 한 글자만 뽑아낸다."""
+    ntm_types = (reg.get("ntmTypes") or "").strip()
+    return ntm_types[0].upper() if ntm_types else ""
+
+
 def _relevance_score(reg: dict) -> int:
     text = " ".join([
         reg.get("officialTitle") or "",
         reg.get("description") or "",
     ]).lower()
-    return sum(1 for kw in _FOOD_RELEVANCE_KEYWORDS if kw in text)
+    score = sum(1 for kw in _FOOD_RELEVANCE_KEYWORDS if kw in text)
+    if _ntm_type_code(reg) in HIGH_VALUE_NTM_TYPES:
+        score += 3  # 카테고리 태깅이 확실한 규정을 우선순위로 올림
+    return score
 
 
 def _llm_filter_relevant(product_name: str, candidates: list) -> list:

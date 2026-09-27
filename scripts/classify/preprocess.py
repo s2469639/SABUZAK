@@ -44,7 +44,7 @@ from openai import OpenAI
 DEFAULT_DB_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "..", "..", "instance", "sabuzak.db"
 )
-DEFAULT_MODEL = "gpt-4o"
+DEFAULT_MODEL = "gpt-4o-mini"
 
 
 def get_client():
@@ -68,11 +68,17 @@ def fetch_targets(conn, force: bool, limit: int):
         """
         cur.execute(query)
     else:
+        # last_updated_at(어떤 필드든 하나라도 바뀌면 갱신)이 아니라
+        # classify_relevant_updated_at(이 분류 프롬프트에 실제로 들어가는
+        # name/country/audience_note/website/intro가 바뀐 시각)과 비교한다.
+        # 날짜·장소·연락처처럼 분류랑 무관한 필드만 바뀐 건 재분류 대상이 아님
+        # (예전엔 last_updated_at을 써서, 이미 완전히 분류된 박람회가 날짜만
+        # 수정돼도 통째로 재분류 대상에 걸려 API 비용이 낭비됐었다).
         query = """
             SELECT id, name, country, website, audience_note, intro
             FROM raw_exhibitions
             WHERE is_active = 1
-              AND (classified_at IS NULL OR last_updated_at > classified_at)
+              AND (classified_at IS NULL OR classify_relevant_updated_at > classified_at)
             ORDER BY id
         """
         cur.execute(query)

@@ -6,13 +6,19 @@
 로그인을 그대로 쓴다).
 """
 
+import io
+import logging
 from datetime import datetime, timedelta
 
-from flask import Blueprint, flash, redirect, render_template, request, session, url_for
+import openpyxl
+from flask import Blueprint, abort, flash, redirect, render_template, request, send_file, session, url_for
 from flask_login import current_user, login_required
+from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.utils import get_column_letter
 
 from app.extensions import db
 from app.models import Contact, ConceptDraft, EmailTemplate, Exhibition, FollowupEmail
+from app.services import attachments as mail_attachments
 from app.services.card_scan import scan_business_card
 from app.services.google_oauth import build_flow, encrypt_token, fetch_userinfo
 from app.services.mail_llm import revise_email_template, revise_individual_email
@@ -21,6 +27,8 @@ from app.services.mailmerge import render_email
 
 STALE_DAYS = 21
 TEMPLATE_VERSIONS = (1, 2, 3)
+
+logger = logging.getLogger(__name__)
 
 contacts_bp = Blueprint("contacts", __name__, url_prefix="/buyers")
 followup_bp = Blueprint("followup", __name__, url_prefix="/buyers")
@@ -194,9 +202,151 @@ def edit_contact(contact_id):
 @login_required
 def delete_contact(contact_id):
     contact = Contact.query.filter_by(id=contact_id, user_id=current_user.id).first_or_404()
+    mail_attachments.purge_files(contact.followup)
     db.session.delete(contact)
     db.session.commit()
     flash("삭제되었습니다.", "info")
+    return redirect(url_for("contacts.list_contacts"))
+
+
+# 엑셀 일괄등록 열 제목 -> Contact 필드. 첫 행의 제목을 이 이름으로(순서 무관) 두면 인식한다.
+_BULK_CONTACT_COLUMNS = {
+    "이름": "name", "성명": "name", "name": "name",
+    "이메일": "email", "메일": "email", "email": "email", "e-mail": "email",
+    "회사명": "company", "회사": "company", "company": "company",
+    "직급": "position", "직책": "position", "position": "position",
+    "전화번호": "phone", "전화": "phone", "연락처": "phone", "phone": "phone", "tel": "phone",
+    "주소": "address", "address": "address",
+    "비고": "remarks", "메모": "remarks", "remarks": "remarks",
+}
+# 양식 다운로드의 열 제목 (위에서 인식하는 이름과 같아야 채운 양식을 그대로 올릴 수 있다)
+_BULK_CONTACT_HEADERS = ["이름", "이메일", "회사명", "직급", "전화번호", "주소", "비고"]
+_BULK_CONTACT_REQUIRED = {"이름", "이메일"}
+_BULK_CONTACT_WIDE = {"주소", "비고"}
+_BULK_CONTACT_ROWS = 500  # 전화번호 텍스트 형식을 미리 지정해둘 행 수
+
+
+def _cell_text(value):
+    """엑셀 칸 값을 문자열로. 전화번호처럼 숫자로 저장된 칸은 1092674285.0 -> 1092674285."""
+    if value is None:
+        return ""
+    if isinstance(value, float) and value.is_integer():
+        value = int(value)
+    return str(value).strip()
+
+
+@contacts_bp.route("/contacts/bulk-template")
+@login_required
+def download_contact_template():
+    """바이어 엑셀 일괄등록용 빈 양식(열 제목만 채움)을 그 자리에서 만들어 내려준다."""
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "바이어 목록"
+    ws.append(_BULK_CONTACT_HEADERS)
+    for col, header in enumerate(_BULK_CONTACT_HEADERS, start=1):
+        cell = ws.cell(row=1, column=col)
+        is_required = header in _BULK_CONTACT_REQUIRED
+        cell.font = Font(bold=True, color="FFFFFF" if is_required else "374151")
+        cell.fill = PatternFill("solid", fgColor="EA580C" if is_required else "F3F4F6")
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+        ws.column_dimensions[get_column_letter(col)].width = 36 if header in _BULK_CONTACT_WIDE else 20
+    # 엑셀이 010으로 시작하는 번호를 숫자로 보고 앞자리 0을 지우지 않게 전화번호 칸은 텍스트 형식
+    phone_col = _BULK_CONTACT_HEADERS.index("전화번호") + 1
+    for row in range(2, _BULK_CONTACT_ROWS + 2):
+        ws.cell(row=row, column=phone_col).number_format = "@"
+    ws.freeze_panes = "A2"
+
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    return send_file(
+        buf,
+        as_attachment=True,
+        download_name="바이어_일괄등록_양식.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+
+@contacts_bp.route("/contacts/bulk-upload", methods=["POST"])
+@login_required
+def bulk_upload_contacts():
+    """엑셀로 바이어 여러 명을 한 번에 등록한다. 박람회는 업로드할 때 하나 골라서
+    파일 전체에 적용한다 (Contact는 박람회가 필수라서)."""
+    exhibitions = {e.id: e for e in _drafted_exhibitions()}
+    exhibition = exhibitions.get(request.form.get("exhibition_id", type=int))
+    if not exhibition:
+        flash("바이어를 등록할 박람회를 선택해주세요.", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+
+    file = request.files.get("bulk_file")
+    if not file or not file.filename:
+        flash("업로드할 엑셀 파일을 선택해주세요.", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+    if not file.filename.lower().endswith((".xlsx", ".xlsm")):
+        flash("엑셀(.xlsx) 파일만 업로드할 수 있습니다.", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+
+    try:
+        wb = openpyxl.load_workbook(file, data_only=True, read_only=True)
+        rows_iter = wb[wb.sheetnames[0]].iter_rows(values_only=True)
+        header = next(rows_iter, None)
+    except Exception as e:
+        flash(f"엑셀 파일을 읽는 중 오류가 발생했습니다: {e}", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+    if not header:
+        flash("엑셀 파일에 데이터가 없습니다.", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+
+    col_map = {}  # 열 번호 -> Contact 필드
+    for i, cell in enumerate(header):
+        field = _BULK_CONTACT_COLUMNS.get(str(cell or "").strip().lower())
+        if field:
+            col_map[i] = field
+    if "name" not in col_map.values() or "email" not in col_map.values():
+        flash("엑셀 첫 행에 '이름'과 '이메일' 열이 있어야 합니다. 엑셀 양식을 내려받아 사용해 주세요.", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+
+    # 같은 박람회에 같은 이메일로 이미 등록된 바이어는 중복 등록하지 않는다
+    existing = {
+        (c.email or "").lower()
+        for c in Contact.query.filter_by(user_id=current_user.id, exhibition_id=exhibition.id).all()
+    }
+    added, skipped = 0, []
+    for row_num, row in enumerate(rows_iter, start=2):
+        values = {field: _cell_text(row[i]) if i < len(row) else "" for i, field in col_map.items()}
+        name, email = values.get("name", ""), values.get("email", "")
+        if not any(values.values()):
+            continue  # 빈 행은 조용히 건너뜀
+        if not name or not email:
+            skipped.append(f"{row_num}행 (이름/이메일 누락)")
+            continue
+        if "@" not in email:
+            skipped.append(f"{row_num}행 '{name}' (이메일 형식 오류)")
+            continue
+        if email.lower() in existing:
+            skipped.append(f"{row_num}행 '{name}' (이미 등록된 이메일)")
+            continue
+        existing.add(email.lower())
+        db.session.add(Contact(
+            user_id=current_user.id,
+            exhibition_id=exhibition.id,
+            exhibition_name=exhibition.name,
+            name=name,
+            email=email,
+            company=values.get("company", ""),
+            position=values.get("position", ""),
+            phone=values.get("phone", ""),
+            address=values.get("address", ""),
+            remarks=values.get("remarks", ""),
+        ))
+        added += 1
+    db.session.commit()
+
+    # 성공 시엔 목록에 바로 보이므로 따로 알리지 않고, 문제가 있을 때만 안내한다
+    if skipped:
+        flash(f"건너뛴 행 {len(skipped)}개: " + " / ".join(skipped[:10]), "danger")
+    if not added and not skipped:
+        flash("등록할 바이어 데이터가 없습니다.", "danger")
     return redirect(url_for("contacts.list_contacts"))
 
 
@@ -337,7 +487,53 @@ def save(contact_id):
     followup.body = request.form["body"]
     followup.status = "edited"
     db.session.commit()
-    flash("내용이 저장되었습니다.", "success")
+
+    try:
+        items = mail_attachments.read_uploads(
+            request.files.getlist("attachments"), mail_attachments.existing_total(followup)
+        )
+    except ValueError as exc:
+        flash(f"내용은 저장됐지만 파일은 첨부되지 않았습니다. {exc}", "danger")
+        return redirect(url_for("followup.view_followup", contact_id=contact.id))
+
+    mail_attachments.save_uploads(followup, items)
+    flash(
+        f"내용이 저장되고 파일 {len(items)}개가 첨부되었습니다." if items else "내용이 저장되었습니다.",
+        "success",
+    )
+    return redirect(url_for("followup.view_followup", contact_id=contact.id))
+
+
+def _get_owned_attachment(contact_id, attachment_id):
+    contact = _get_owned_contact(contact_id)
+    followup = contact.followup
+    attachment = next((a for a in (followup.attachments if followup else []) if a.id == attachment_id), None)
+    if attachment is None:
+        abort(404)
+    return contact, followup, attachment
+
+
+@followup_bp.route("/contacts/<int:contact_id>/followup/attachments/<int:attachment_id>")
+@login_required
+def download_attachment(contact_id, attachment_id):
+    _, _, attachment = _get_owned_attachment(contact_id, attachment_id)
+    return send_file(
+        mail_attachments.path_for(attachment),
+        as_attachment=True,
+        download_name=attachment.filename,
+        mimetype=attachment.content_type or "application/octet-stream",
+    )
+
+
+@followup_bp.route("/contacts/<int:contact_id>/followup/attachments/<int:attachment_id>/delete", methods=["POST"])
+@login_required
+def delete_attachment(contact_id, attachment_id):
+    contact, followup, attachment = _get_owned_attachment(contact_id, attachment_id)
+    if followup.status == "sent":
+        flash("이미 발송된 메일의 첨부는 지울 수 없습니다.", "warning")
+    else:
+        mail_attachments.delete_attachment(attachment)
+        flash("첨부 파일을 삭제했습니다.", "info")
     return redirect(url_for("followup.view_followup", contact_id=contact.id))
 
 
@@ -355,7 +551,10 @@ def send(contact_id):
         return redirect(url_for("buyer_gmail.connect"))
 
     try:
-        send_via_gmail(current_user, contact.email, followup.subject, followup.body)
+        send_via_gmail(
+            current_user, contact.email, followup.subject, followup.body,
+            attachments=mail_attachments.load_for_send(followup),
+        )
     except Exception as exc:
         followup.status = "failed"
         db.session.commit()
@@ -382,6 +581,7 @@ def compose_new(contact_id):
         flash("먼저 메일 템플릿을 작성해주세요.", "warning")
         return redirect(url_for("mail_template.home"))
 
+    mail_attachments.clear_attachments(contact.followup)
     _fill_contact_from_template(contact, template)
     return redirect(url_for("followup.view_followup", contact_id=contact.id))
 
@@ -408,11 +608,18 @@ def send_selected():
         flash("먼저 Gmail 발송 권한을 연동해주세요.", "warning")
         return redirect(url_for("buyer_gmail.connect"))
 
+    try:
+        bulk_attachments = mail_attachments.read_uploads(request.files.getlist("attachments"))
+    except ValueError as exc:
+        flash(str(exc), "danger")
+        return redirect(url_for("contacts.list_contacts"))
+
     contacts = Contact.query.filter(
         Contact.id.in_(ids), Contact.user_id == current_user.id
     ).all()
 
     sent, failed, skipped = 0, 0, 0
+    last_error = None
     for contact in contacts:
         template = _resolve_template(contact)
         if template is None or not template.subject or not template.body:
@@ -427,22 +634,28 @@ def send_selected():
         followup.generated_at = datetime.utcnow()
 
         try:
-            send_via_gmail(current_user, contact.email, subject, body)
+            send_via_gmail(current_user, contact.email, subject, body, attachments=bulk_attachments)
             followup.status = "sent"
             followup.sent_at = datetime.utcnow()
             followup.last_sent_at = followup.sent_at
             followup.dismissed = False
             sent += 1
-        except Exception:
+        except Exception as exc:
+            logger.exception("Gmail 일괄 발송 실패 (user_id=%s, contact_id=%s)", current_user.id, contact.id)
             followup.status = "failed"
             failed += 1
+            last_error = str(exc)
 
         db.session.add(followup)
         db.session.commit()
 
     message = f"선택 발송 완료: 성공 {sent}건, 실패 {failed}건 (선택 {len(contacts)}건 중)"
+    if bulk_attachments:
+        message += f" — 첨부 파일 {len(bulk_attachments)}개 포함"
     if skipped:
         message += f" — 템플릿 없음으로 {skipped}건 건너뜀"
+    if last_error:
+        message += f" — 실패 사유: {last_error}"
     flash(message, "info")
     return redirect(url_for("contacts.list_contacts"))
 
@@ -545,6 +758,11 @@ def activate(version):
 @login_required
 def edit_profile():
     if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        if not name:
+            flash("이름은 필수 입력 항목입니다.", "danger")
+            return redirect(url_for("buyer_profile.edit_profile"))
+        current_user.name = name
         current_user.company = request.form.get("company", "").strip() or None
         current_user.position = request.form.get("position", "").strip() or None
         current_user.product_description = request.form.get("product_description", "").strip() or None
@@ -556,10 +774,20 @@ def edit_profile():
 
 # ------------------------------------------------------------------ gmail --
 
+def _gmail_redirect_uri():
+    """로컬 개발 중엔 지금 접속한 주소(localhost 또는 127.0.0.1) 그대로 구글이 되돌려 보내게 한다.
+    브라우저는 두 주소를 다른 사이트로 보고 세션 쿠키를 따로 가져서, 접속 주소와 돌아오는
+    주소가 다르면 연동 도중 로그인 세션이 끊긴다. 그 외(운영 등)엔 .env의 GOOGLE_REDIRECT_URI를 쓴다.
+    구글 콘솔의 '승인된 리디렉션 URI'에 두 주소 모두 등록돼 있어야 한다."""
+    if request.host.split(":")[0] in ("localhost", "127.0.0.1"):
+        return url_for("auth.google_callback_redirect", _external=True)
+    return None
+
+
 @buyer_gmail_bp.route("/connect")
 @login_required
 def connect():
-    flow = build_flow()
+    flow = build_flow(_gmail_redirect_uri())
     # access_type=offline + prompt=consent 이어야 매번 refresh_token을 받을 수 있다
     auth_url, state = flow.authorization_url(
         access_type="offline",
@@ -579,7 +807,7 @@ def callback():
         flash("연동 요청이 유효하지 않습니다. 다시 시도해주세요.", "danger")
         return redirect(url_for("contacts.list_contacts"))
 
-    flow = build_flow()
+    flow = build_flow(_gmail_redirect_uri())
     flow.code_verifier = session.get("gmail_code_verifier")
     flow.fetch_token(authorization_response=request.url)
     credentials = flow.credentials
@@ -595,3 +823,16 @@ def callback():
 
     flash(f"{userinfo['email']} 계정으로 Gmail 발송이 연동되었습니다.", "success")
     return redirect(url_for("contacts.list_contacts"))
+
+
+@buyer_gmail_bp.route("/disconnect", methods=["POST"])
+@login_required
+def disconnect():
+    """기존 Gmail 발송 연동 해제. 구글쪽 권한 승인 자체를 취소하는 게 아니라
+    (그건 사용자가 구글 계정 설정에서 직접 해야 함), 저장해둔 refresh_token만
+    지워서 이 서비스에서 더는 그 계정으로 발송 못 하게 한다."""
+    current_user.google_email = None
+    current_user.google_refresh_token = None
+    db.session.commit()
+    flash("Gmail 발송 연동을 해제했습니다.", "success")
+    return redirect(request.referrer or url_for("contacts.list_contacts"))

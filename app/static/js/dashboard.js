@@ -39,6 +39,13 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   resultsBox.addEventListener("click", function (e) {
+    var pageLink = e.target.closest("a.page-link");
+    if (pageLink) {
+      e.preventDefault();
+      loadPartial(pageLink.getAttribute("href"));
+      return;
+    }
+
     var resetBtn = e.target.closest("[data-filter-reset]");
     if (resetBtn) {
       var form = resetBtn.closest("[data-filter-form]");
@@ -84,6 +91,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     if (dateFromInput && dateFromInput.value) params.set("date_from", dateFromInput.value);
     if (dateToInput && dateToInput.value) params.set("date_to", dateToInput.value);
+
+    form.querySelectorAll('input[name="scale"]:checked').forEach(function (cb) {
+      params.append("scale", cb.value);
+    });
+    form.querySelectorAll('input[name="audience_type"]:checked').forEach(function (cb) {
+      params.append("audience_type", cb.value);
+    });
 
     var currentTag = "";
     var activeTagBtn = box.querySelector(".keyword-filter-tag.active");

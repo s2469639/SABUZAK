@@ -91,6 +91,7 @@ CREATE TABLE IF NOT EXISTS raw_exhibitions (
     keywords        TEXT,
     intro_ko        TEXT,
     classified_at   TEXT,
+    classify_relevant_updated_at TEXT,
     is_active       INTEGER NOT NULL DEFAULT 1,
     last_updated_at TEXT NOT NULL,
     country_ko          TEXT,
@@ -108,7 +109,8 @@ NEW_COLUMNS = [
     "id", "detail_url", "name", "start_date", "end_date", "country", "city", "venue",
     "audience_note", "website", "intro", "image_url", "hero_image_url", "category",
     "continent", "food_yn",
-    "scale", "keywords", "intro_ko", "classified_at", "is_active", "last_updated_at",
+    "scale", "keywords", "intro_ko", "classified_at", "classify_relevant_updated_at",
+    "is_active", "last_updated_at",
     "country_ko", "organizer_email", "organizer_phone", "contact_synced_at",
 ]
 
@@ -178,6 +180,7 @@ def _old_row_to_new(old_cols, row):
         "keywords": pick("keywords", "키워드", default=None),
         "intro_ko": pick("intro_ko", default=None),
         "classified_at": pick("classified_at", default=None),
+        "classify_relevant_updated_at": pick("classify_relevant_updated_at", default=None),
         "is_active": pick("is_active", default=1),
         "last_updated_at": pick("last_updated_at", default=now_iso()),
         "country_ko": pick("country_ko", default=None),
@@ -233,9 +236,10 @@ def init_db(conn):
                 (id, detail_url, name, start_date, end_date, country, city, venue,
                  audience_note, website, intro, image_url, hero_image_url, category,
                  continent, food_yn,
-                 scale, keywords, intro_ko, classified_at, is_active, last_updated_at,
+                 scale, keywords, intro_ko, classified_at, classify_relevant_updated_at,
+                 is_active, last_updated_at,
                  country_ko, organizer_email, organizer_phone, contact_synced_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 row.get("id"), new_row["detail_url"], new_row["name"], new_row["start_date"],
@@ -244,7 +248,8 @@ def init_db(conn):
                 new_row["image_url"], new_row["hero_image_url"], new_row["category"],
                 new_row["continent"],
                 new_row["food_yn"], new_row["scale"], new_row["keywords"], new_row["intro_ko"],
-                new_row["classified_at"], new_row["is_active"], new_row["last_updated_at"],
+                new_row["classified_at"], new_row["classify_relevant_updated_at"],
+                new_row["is_active"], new_row["last_updated_at"],
                 new_row["country_ko"], new_row["organizer_email"], new_row["organizer_phone"],
                 new_row["contact_synced_at"],
             ),
@@ -317,6 +322,13 @@ def crawl_selected_sites(labels_urls, with_details, verbose=True):
     return all_rows, failed_labels
 
 
+# new_values 튜플에서 AI 분류(preprocess.py)가 실제로 프롬프트에 넣는 필드의 인덱스
+# (name=0, country=3, audience_note=6, website=7, intro=8). 날짜/장소/카테고리처럼
+# 분류랑 무관한 필드만 바뀌었을 땐 재분류를 트리거하면 안 되므로, "뭐든 바뀜"과
+# "분류에 쓰이는 필드가 바뀜"을 별도 컬럼(classify_relevant_updated_at)으로 추적한다.
+_CLASSIFY_RELEVANT_IDX = (0, 3, 6, 7, 8)
+
+
 def sync_rows(conn, rows):
     """크롤링 결과를 DB에 반영. 반환: (신규건수, 업데이트건수, 변경없음건수)"""
     cur = conn.cursor()
@@ -361,10 +373,11 @@ def sync_rows(conn, rows):
                 """
                 INSERT INTO raw_exhibitions
                     (detail_url, name, start_date, end_date, country, city, venue,
-                     audience_note, website, intro, image_url, category, is_active, last_updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
+                     audience_note, website, intro, image_url, category, is_active,
+                     last_updated_at, classify_relevant_updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
                 """,
-                (detail_url, *new_values, ts),
+                (detail_url, *new_values, ts, ts),
             )
             new_count += 1
         else:
@@ -379,15 +392,19 @@ def sync_rows(conn, rows):
 
             changed = tuple(merged) != tuple(existing)
             if changed:
+                classify_changed = any(
+                    merged[i] != existing[i] for i in _CLASSIFY_RELEVANT_IDX
+                )
                 cur.execute(
                     """
                     UPDATE raw_exhibitions
                     SET name=?, start_date=?, end_date=?, country=?, city=?, venue=?,
                         audience_note=?, website=?, intro=?, image_url=?, category=?, is_active=1,
-                        last_updated_at=?
+                        last_updated_at=?,
+                        classify_relevant_updated_at=COALESCE(?, classify_relevant_updated_at)
                     WHERE detail_url=?
                     """,
-                    (*merged, ts, detail_url),
+                    (*merged, ts, ts if classify_changed else None, detail_url),
                 )
                 updated_count += 1
             else:

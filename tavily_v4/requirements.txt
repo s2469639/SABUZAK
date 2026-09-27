@@ -1,4 +1,0 @@
-flask
-python-dotenv
-openai
-tavily-python

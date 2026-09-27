@@ -1,0 +1,3095 @@
+{
+  "inputs": {
+    "name": "황금비율 오리지널 마일드믹스",
+    "country": "싱가포르",
+    "exhibition_name": "Restaurant Asia",
+    "exhibition_website": "restaurantasia.com.sg",
+    "strengths": "부드러운 우유 풍미와 깊고 진한 커피 원두의 조화",
+    "ingredients": "인스턴트커피, 식물성크림, 자일로스설탕",
+    "certifications": "HACCP, ISO 22000",
+    "price": "12g×100입 (14,900원)",
+    "country_en": "Singapore"
+  },
+  "section1": {
+    "clusters": [
+      {
+        "key": "culture_trigger",
+        "label": "CULTURE TRIGGER",
+        "title_ko": "미디어 유입 원인 분석",
+        "short_ko": "미디어 유입",
+        "summary": "틱톡 콘텐츠가 한국식 커피믹스를 처음 접하고 관심을 갖는 유입 계기로 작동한다.",
+        "tag": "K콘텐츠 유입",
+        "insight": "틱톡용 아이스커피 영상을 제작하세요",
+        "keywords": [
+          {
+            "id": 9,
+            "keyword": "Korean coffee TikTok",
+            "source": "estimated",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "estimated",
+            "geo": "SG",
+            "is_estimated": true,
+            "is_probe": false,
+            "ko": "틱톡에서 보는 한국 커피",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "estimated",
+            "has_volume": null,
+            "vs_anchor": null,
+            "evidence": "estimated",
+            "badge": null
+          }
+        ]
+      },
+      {
+        "key": "intent_funnel",
+        "label": "INTENT FUNNEL",
+        "title_ko": "소비자 구매 성숙도 추이",
+        "short_ko": "구매 의도",
+        "summary": "현지 소비자는 제품명·한국 커피믹스 카테고리로 검색한 뒤 온라인몰 또는 한국 식료품점에서 구매처를 찾는다.",
+        "tag": "구매 전환",
+        "insight": "온라인몰·한인마트 입점을 병행하세요",
+        "keywords": [
+          {
+            "id": 1,
+            "keyword": "Original Mild Mix coffee",
+            "source": "estimated",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "estimated",
+            "geo": "SG",
+            "is_estimated": true,
+            "is_probe": false,
+            "ko": "오리지널 마일드 믹스 커피",
+            "stage": "purchase",
+            "yoy_pct": null,
+            "yoy_status": "estimated",
+            "has_volume": null,
+            "vs_anchor": null,
+            "evidence": "estimated",
+            "badge": null
+          },
+          {
+            "id": 2,
+            "keyword": "Korean coffee mix Singapore",
+            "source": "estimated",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "estimated",
+            "geo": "SG",
+            "is_estimated": true,
+            "is_probe": false,
+            "ko": "싱가포르 한국 커피믹스",
+            "stage": "purchase",
+            "yoy_pct": null,
+            "yoy_status": "estimated",
+            "has_volume": null,
+            "vs_anchor": null,
+            "evidence": "estimated",
+            "badge": null
+          },
+          {
+            "id": 11,
+            "keyword": "buy Korean coffee online",
+            "source": "estimated",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "estimated",
+            "geo": "SG",
+            "is_estimated": true,
+            "is_probe": false,
+            "ko": "한국 커피 온라인 구매",
+            "stage": "purchase",
+            "yoy_pct": null,
+            "yoy_status": "estimated",
+            "has_volume": null,
+            "vs_anchor": null,
+            "evidence": "estimated",
+            "badge": null
+          },
+          {
+            "id": 12,
+            "keyword": "Korean grocery Singapore",
+            "source": "estimated",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "estimated",
+            "geo": "SG",
+            "is_estimated": true,
+            "is_probe": false,
+            "ko": "싱가포르 한국 식료품점",
+            "stage": "purchase",
+            "yoy_pct": null,
+            "yoy_status": "estimated",
+            "has_volume": null,
+            "vs_anchor": null,
+            "evidence": "estimated",
+            "badge": null
+          }
+        ]
+      },
+      {
+        "key": "category_perception",
+        "label": "PERCEPTION",
+        "title_ko": "현지 인접 경쟁군 인식",
+        "short_ko": "경쟁 인식",
+        "summary": "한국 커피믹스는 맥심과 함께 네스카페 3-in-1, 말레이시아식 화이트커피의 대안으로 비교된다. 부드러운 우유 풍미와 진한 커피 맛의 균형을 차별점으로 제시할 필요가 있다.",
+        "tag": "경쟁 브랜드",
+        "insight": "화이트커피 대비 진한 원두맛을 강조하세요",
+        "keywords": [
+          {
+            "id": 4,
+            "keyword": "Maxim Mocha Gold",
+            "source": "estimated",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "estimated",
+            "geo": "SG",
+            "is_estimated": true,
+            "is_probe": false,
+            "ko": "맥심 모카골드",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "estimated",
+            "has_volume": null,
+            "vs_anchor": null,
+            "evidence": "estimated",
+            "badge": null
+          },
+          {
+            "id": 6,
+            "keyword": "Nescafé 3 in 1",
+            "source": "estimated",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "estimated",
+            "geo": "SG",
+            "is_estimated": true,
+            "is_probe": false,
+            "ko": "네스카페 3-in-1",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "estimated",
+            "has_volume": null,
+            "vs_anchor": null,
+            "evidence": "estimated",
+            "badge": null
+          },
+          {
+            "id": 7,
+            "keyword": "oldtown white coffee",
+            "source": "estimated",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "estimated",
+            "geo": "SG",
+            "is_estimated": true,
+            "is_probe": false,
+            "ko": "올드타운 화이트커피",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "estimated",
+            "has_volume": null,
+            "vs_anchor": null,
+            "evidence": "estimated",
+            "badge": null
+          },
+          {
+            "id": 14,
+            "keyword": "kopi segera Korea",
+            "source": "estimated",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "estimated",
+            "geo": "SG",
+            "is_estimated": true,
+            "is_probe": false,
+            "ko": "한국 인스턴트커피",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "estimated",
+            "has_volume": null,
+            "vs_anchor": null,
+            "evidence": "estimated",
+            "badge": null
+          }
+        ]
+      },
+      {
+        "key": "consumption_habit",
+        "label": "HABIT & TPO",
+        "title_ko": "취식 상황 및 번들 소비",
+        "short_ko": "취식 상황",
+        "summary": "커피믹스는 비스킷 등 간단한 스낵과 함께 즐기는 휴식·간식 상황에 연결된다.",
+        "tag": "취식 페어링",
+        "insight": "비스킷 페어링 묶음 행사를 운영하세요",
+        "keywords": [
+          {
+            "id": 13,
+            "keyword": "coffee mix with biscuits",
+            "source": "estimated",
+            "rising_value": null,
+            "top_value": null,
+            "is_breakout": false,
+            "kind": "query",
+            "topic_type": "",
+            "is_category": false,
+            "level": "estimated",
+            "geo": "SG",
+            "is_estimated": true,
+            "is_probe": false,
+            "ko": "비스킷과 함께 먹는 커피믹스",
+            "stage": null,
+            "yoy_pct": null,
+            "yoy_status": "estimated",
+            "has_volume": null,
+            "vs_anchor": null,
+            "evidence": "estimated",
+            "badge": null
+          }
+        ]
+      }
+    ],
+    "country_ko": "싱가포르",
+    "geo": "SG",
+    "languages": [
+      "English",
+      "Chinese (Simplified)",
+      "Malay"
+    ],
+    "buyer_language": "English",
+    "reliability": "high",
+    "reliability_label_ko": "높음",
+    "reliability_note_ko": "",
+    "data_level": "estimated",
+    "data_level_label_ko": "AI 추정 (Google 트렌드 데이터 없음)",
+    "seed_keywords": [
+      "Golden Ratio coffee",
+      "Original Mild Mix",
+      "韩国速溶咖啡"
+    ],
+    "warnings": [
+      "Google 트렌드에서 연관 검색어를 받지 못해 AI 추정 검색어로 분류했습니다. 수치 배지는 표시하지 않습니다."
+    ]
+  },
+  "section1_error": null,
+  "section2": {
+    "kw_seed": {
+      "primary_category": "식품",
+      "kw1": "3 in 1 instant coffee sachets",
+      "kw2": "Instant Coffee",
+      "kw3": "NESCAFÉ 3in1 Original Instant Coffee Mix",
+      "retail_domains": [
+        "fairprice.com.sg",
+        "redmart.lazada.sg"
+      ],
+      "category_anchors": "3 in 1 instant coffee, coffee mix, coffee sachets, instant coffee",
+      "negative_anchors": "-coffee beans -ground coffee -coffee capsules -ready to drink -cold brew",
+      "min_price": 10.0,
+      "max_price": 11.5,
+      "currency_symbol": "USD",
+      "competitor_product": "NESCAFÉ 3in1 Original Instant Coffee Mix 네스카페 쓰리인원 오리지널 인스턴트 커피 믹스",
+      "competitor_specs": "17그램 스틱 30개입, 총 510그램. 인스턴트커피와 크리머, 설탕을 한 스틱에 담은 분말형 삼인일 커피믹스이며, 뜨거운 물에 타서 마신다. 실온의 건조한 곳에 보관하는 상온 유통 제품이다.",
+      "consumer_complaints": "싱가포르의 삼인일 커피믹스 구매자들은 기존 제품이 지나치게 달아 커피 맛이 약하게 느껴진다는 의견, 크리머 맛이 강해 입안에 텁텁함이 남는다는 의견, 한 스틱 용량이 커서 오후에 가볍게 마시기 부담스럽다는 의견을 자주 제기한다. 코피티암에서 마시는 진한 코피보다 원두 향이 약하다고 느끼는 소비자도 있다.",
+      "shelf_location": "Coffee, Tea and Beverages > Instant Coffee",
+      "value_pitch": "황금비율 오리지널 마일드믹스는 인스턴트커피의 깊고 진한 원두 풍미를 중심에 두고, 식물성크림으로 부드러운 우유 맛을 더한 12그램 스틱 커피믹스다. 자일로스설탕을 사용해 일반 설탕 중심의 삼인일 커피믹스와 원료 구성을 분명히 구분할 수 있다. 싱가포르 소비자가 아침 토스트와 카야잼, 오후 업무 중 간식 시간에 뜨거운 물만으로 마시는 스틱커피 매대에 배치하면, 네스카페 중심의 대용량 단맛 커피믹스 구색에 100개입 대용량 구매 선택지를 추가할 수 있다. 12그램 100개입은 가정의 매일 음용과 사무실 팬트리 비축 수요를 함께 겨냥해 한 번에 더 높은 구매 금액을 만들며, 진한 인스턴트커피와 부드러운 식물성크림 조합으로 코피티암식 진한 커피 맛을 선호하지만 우유 맛도 원하는 소비자를 매장으로 끌어들일 수 있다."
+    },
+    "target_product": {
+      "title": "NESCAFÉ 3in1 Original Instant Coffee Mix 네스카페 쓰리인원 오리지널 인스턴트 커피 믹스",
+      "specs": "17그램 스틱 30개입, 총 510그램. 인스턴트커피와 크리머, 설탕을 한 스틱에 담은 분말형 삼인일 커피믹스이며, 뜨거운 물에 타서 마신다. 실온의 건조한 곳에 보관하는 상온 유통 제품이다.",
+      "complaints": "싱가포르의 삼인일 커피믹스 구매자들은 기존 제품이 지나치게 달아 커피 맛이 약하게 느껴진다는 의견, 크리머 맛이 강해 입안에 텁텁함이 남는다는 의견, 한 스틱 용량이 커서 오후에 가볍게 마시기 부담스럽다는 의견을 자주 제기한다. 코피티암에서 마시는 진한 코피보다 원두 향이 약하다고 느끼는 소비자도 있다."
+    },
+    "retail_price": {
+      "price": "8.5 ~ 13.2 USD",
+      "usd_price": "$8.5 ~ $13.2 USD",
+      "krw_price": "약 11,475 ~ 17,820원",
+      "badge": "타깃 세그먼트 추정가",
+      "badge_desc": "현지 매장 웹 차단이나 비정상 단가 노이즈를 방지하기 위해, 입력하신 목표 가격대를 기준으로 현지 동급 세그먼트의 시장 유효 진입 범위(±15%)를 역산한 가격입니다.",
+      "unit_price": "규격 단가 환산 (USD)",
+      "method": "estimate",
+      "search_error": null,
+      "sources": []
+    },
+    "sales_channels": {
+      "channels": [
+        "fairprice.com.sg",
+        "redmart.lazada.sg"
+      ],
+      "shelf": "Coffee, Tea and Beverages > Instant Coffee"
+    },
+    "price_strategy": {
+      "pitch": "황금비율 오리지널 마일드믹스는 인스턴트커피의 깊고 진한 원두 풍미를 중심에 두고, 식물성크림으로 부드러운 우유 맛을 더한 12그램 스틱 커피믹스다. 자일로스설탕을 사용해 일반 설탕 중심의 삼인일 커피믹스와 원료 구성을 분명히 구분할 수 있다. 싱가포르 소비자가 아침 토스트와 카야잼, 오후 업무 중 간식 시간에 뜨거운 물만으로 마시는 스틱커피 매대에 배치하면, 네스카페 중심의 대용량 단맛 커피믹스 구색에 100개입 대용량 구매 선택지를 추가할 수 있다. 12그램 100개입은 가정의 매일 음용과 사무실 팬트리 비축 수요를 함께 겨냥해 한 번에 더 높은 구매 금액을 만들며, 진한 인스턴트커피와 부드러운 식물성크림 조합으로 코피티암식 진한 커피 맛을 선호하지만 우유 맛도 원하는 소비자를 매장으로 끌어들일 수 있다.",
+      "positioning": "현지 물가 대비 프리미엄/기능성 타깃 포지셔닝"
+    }
+  },
+  "section2_error": null,
+  "research": {
+    "product_name": "황금비율 오리지널 마일드믹스",
+    "country": "Singapore",
+    "exhibition_name": "Restaurant Asia",
+    "terms": {
+      "product_terms": [
+        {
+          "term": "Maxim Mocha Gold Mild Coffee Mix",
+          "hits": 1
+        },
+        {
+          "term": "Maxim Mocha Gold Mild",
+          "hits": 5
+        },
+        {
+          "term": "Maxim Original Mild Coffee Mix",
+          "hits": 0
+        },
+        {
+          "term": "Maxim Moka Gold Mild Coffee Mix",
+          "hits": 0
+        }
+      ],
+      "selected": [
+        "Maxim Mocha Gold Mild"
+      ],
+      "is_verified": true,
+      "product_match": [
+        "황금비율 오리지널 마일드믹스",
+        "Maxim Mocha Gold Mild Coffee Mix",
+        "Maxim Mocha Gold Mild",
+        "Maxim Original Mild Coffee Mix",
+        "Maxim Moka Gold Mild Coffee Mix",
+        "Maxim Mocha Gold 3-in-1 Coffee Mix"
+      ],
+      "category_terms": [
+        "instant coffee mix",
+        "3-in-1 coffee",
+        "即溶咖啡混合"
+      ],
+      "kfood_terms": [
+        "Korean food",
+        "Korean groceries",
+        "韩国食品"
+      ],
+      "country_names": [
+        "Singapore",
+        "Republic of Singapore",
+        "Singaporean",
+        "Singapura",
+        "新加坡",
+        "싱가포르"
+      ],
+      "country_ko": "싱가포르",
+      "local_country": "Republic of Singapore",
+      "category_ko": "인스턴트 커피 믹스",
+      "category_en": "instant coffee mix",
+      "words": {
+        "review": "review",
+        "trend": "trend",
+        "price": "price",
+        "brands": "brands",
+        "distributors": "importers distributors",
+        "booth": "booth"
+      },
+      "tld": "sg",
+      "region_key": "southeast_asia",
+      "region_en": "Southeast Asia",
+      "region_ko": "동남아시아",
+      "region_terms": [
+        "southeast asia",
+        "south east asia",
+        "asean"
+      ],
+      "exhibition_names": [
+        "Restaurant Asia"
+      ],
+      "main_domains": [
+        "straitstimes.com",
+        "channelnewsasia.com",
+        "mothership.sg",
+        "asiaone.com",
+        "sethlui.com",
+        "eatbook.sg",
+        "foodnavigator-asia.com",
+        "retailasia.com",
+        "fairprice.com.sg",
+        "coldstorage.com.sg",
+        "giant.sg",
+        "redmart.lazada.sg",
+        "amazon.sg",
+        "sfa.gov.sg",
+        "customs.gov.sg",
+        "mti.gov.sg"
+      ]
+    },
+    "queries": [
+      "Maxim Mocha Gold Mild review",
+      "Maxim Mocha Gold Mild trend Republic of Singapore",
+      "Korean food trend Republic of Singapore",
+      "Maxim Mocha Gold Mild brands price Republic of Singapore",
+      "instant coffee mix brands Republic of Singapore",
+      "Maxim Mocha Gold Mild importers distributors Republic of Singapore",
+      "Korean food importers distributors Republic of Singapore",
+      "싱가포르 황금비율 오리지널 마일드믹스",
+      "싱가포르 인스턴트 커피 믹스 시장 동향",
+      "Restaurant Asia instant coffee mix trends",
+      "Restaurant Asia instant coffee mix booth",
+      "Maxim Mocha Gold Mild review",
+      "Maxim Mocha Gold Mild trend Republic of Singapore",
+      "Korean food trend Republic of Singapore",
+      "Maxim Mocha Gold Mild importers distributors Republic of Singapore",
+      "Korean food importers distributors Republic of Singapore"
+    ],
+    "query_details": [
+      {
+        "qid": "Q1",
+        "query": "Maxim Mocha Gold Mild review",
+        "tier": "main",
+        "include_domains": [
+          "straitstimes.com",
+          "channelnewsasia.com",
+          "mothership.sg",
+          "asiaone.com",
+          "sethlui.com",
+          "eatbook.sg"
+        ]
+      },
+      {
+        "qid": "Q1",
+        "query": "Maxim Mocha Gold Mild trend Republic of Singapore",
+        "tier": "main",
+        "include_domains": [
+          "straitstimes.com",
+          "channelnewsasia.com",
+          "mothership.sg",
+          "asiaone.com",
+          "sethlui.com",
+          "eatbook.sg"
+        ]
+      },
+      {
+        "qid": "Q1",
+        "query": "Korean food trend Republic of Singapore",
+        "tier": "main",
+        "include_domains": [
+          "straitstimes.com",
+          "channelnewsasia.com",
+          "mothership.sg",
+          "asiaone.com",
+          "sethlui.com",
+          "eatbook.sg"
+        ]
+      },
+      {
+        "qid": "Q2",
+        "query": "Maxim Mocha Gold Mild brands price Republic of Singapore",
+        "tier": "main",
+        "include_domains": [
+          "fairprice.com.sg",
+          "coldstorage.com.sg",
+          "giant.sg",
+          "redmart.lazada.sg",
+          "amazon.sg",
+          "foodnavigator-asia.com",
+          "retailasia.com"
+        ]
+      },
+      {
+        "qid": "Q2",
+        "query": "instant coffee mix brands Republic of Singapore",
+        "tier": "main",
+        "include_domains": [
+          "fairprice.com.sg",
+          "coldstorage.com.sg",
+          "giant.sg",
+          "redmart.lazada.sg",
+          "amazon.sg",
+          "foodnavigator-asia.com",
+          "retailasia.com"
+        ]
+      },
+      {
+        "qid": "Q3",
+        "query": "Maxim Mocha Gold Mild importers distributors Republic of Singapore",
+        "tier": "main",
+        "include_domains": [
+          "foodnavigator-asia.com",
+          "retailasia.com",
+          "sfa.gov.sg",
+          "customs.gov.sg",
+          "mti.gov.sg"
+        ]
+      },
+      {
+        "qid": "Q3",
+        "query": "Korean food importers distributors Republic of Singapore",
+        "tier": "main",
+        "include_domains": [
+          "foodnavigator-asia.com",
+          "retailasia.com",
+          "sfa.gov.sg",
+          "customs.gov.sg",
+          "mti.gov.sg"
+        ]
+      },
+      {
+        "qid": "KR",
+        "query": "싱가포르 황금비율 오리지널 마일드믹스",
+        "tier": "main",
+        "include_domains": [
+          "kotra.or.kr",
+          "dream.kotra.or.kr",
+          "kati.net"
+        ]
+      },
+      {
+        "qid": "KR",
+        "query": "싱가포르 인스턴트 커피 믹스 시장 동향",
+        "tier": "main",
+        "include_domains": [
+          "kotra.or.kr",
+          "dream.kotra.or.kr",
+          "kati.net"
+        ]
+      },
+      {
+        "qid": "Q4",
+        "query": "Restaurant Asia instant coffee mix trends",
+        "tier": "main",
+        "include_domains": [
+          "restaurantasia.com.sg"
+        ]
+      },
+      {
+        "qid": "Q4",
+        "query": "Restaurant Asia instant coffee mix booth",
+        "tier": "main",
+        "include_domains": [
+          "foodnavigator-asia.com",
+          "retailasia.com"
+        ]
+      },
+      {
+        "qid": "Q1",
+        "query": "Maxim Mocha Gold Mild review",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q1",
+        "query": "Maxim Mocha Gold Mild trend Republic of Singapore",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q1",
+        "query": "Korean food trend Republic of Singapore",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q3",
+        "query": "Maxim Mocha Gold Mild importers distributors Republic of Singapore",
+        "tier": "open",
+        "include_domains": []
+      },
+      {
+        "qid": "Q3",
+        "query": "Korean food importers distributors Republic of Singapore",
+        "tier": "open",
+        "include_domains": []
+      }
+    ],
+    "site_profile": {
+      "source": "ai",
+      "reviewed": false,
+      "groups": {
+        "media": [
+          "straitstimes.com",
+          "channelnewsasia.com",
+          "mothership.sg",
+          "asiaone.com",
+          "sethlui.com",
+          "eatbook.sg"
+        ],
+        "trade": [
+          "foodnavigator-asia.com",
+          "retailasia.com"
+        ],
+        "retail": [
+          "fairprice.com.sg",
+          "coldstorage.com.sg",
+          "giant.sg",
+          "redmart.lazada.sg",
+          "amazon.sg"
+        ],
+        "public": [
+          "sfa.gov.sg",
+          "customs.gov.sg",
+          "mti.gov.sg"
+        ]
+      },
+      "dropped": [
+        {
+          "domain": "foodindustryasia.org",
+          "reason": "DNS 조회 실패(존재하지 않음)",
+          "group": "trade"
+        },
+        {
+          "domain": "enterprise.gov.sg",
+          "reason": "DNS 조회 실패(존재하지 않음)",
+          "group": "public"
+        }
+      ]
+    },
+    "cards": [
+      {
+        "qid": "Q1",
+        "title": "소비자",
+        "question": "현지 소비자는 이 제품군을 언제, 왜 먹고, 무엇에 불만이 있는가",
+        "quote_ids": [
+          "E23",
+          "E25",
+          "E29"
+        ],
+        "source_count": 3,
+        "product_quotes": 0,
+        "country_quotes": 3,
+        "conclusion": {
+          "text": "싱가포르에서 한국 식품 전반은 요리하기 싫은 날의 즉석식·밀키트 선택지로 이용될 수 있으며, 풍부한 맛·독특한 조리법·함께 먹는 식습관과 전통성·장인적 콘셉트에 대한 수용성이 확인됨; 다만 불만 사항은 발췌만으로 확인 불가.",
+          "quote_ids": [
+            "E23",
+            "E25",
+            "E29"
+          ]
+        },
+        "points": [
+          {
+            "text": "요리하기 싫은 날, 매운 돼지국밥과 삼계탕 등 인기 한국 즉석요리가 포함된 주간 밀키트 선택 가능성.",
+            "quote_ids": [
+              "E29"
+            ]
+          },
+          {
+            "text": "한국 요리는 풍부한 맛, 독특한 조리법, 함께 먹는 식습관을 바탕으로 싱가포르의 다양한 음식 문화 속에 자리 잡은 상태.",
+            "quote_ids": [
+              "E25"
+            ]
+          },
+          {
+            "text": "전통성과 장인적 콘셉트의 인기는 싱가포르 식사객의 고도화된 한국 미식 경험 수용 준비를 시사.",
+            "quote_ids": [
+              "E23"
+            ]
+          }
+        ],
+        "interpretation": "AI 해석: 부스에서는 간편식·밀키트와 연계 가능한 한국식 식사 경험을 제시하고, 맛의 특징과 전통성·장인적 콘셉트를 상담 핵심 메시지로 활용할 필요. 다만 해당 발췌는 개별 제품의 효능·선호를 직접 뒷받침하지 않으므로 제품 자체의 소비 상황으로 단정하지 않는 것이 필요.",
+        "gaps": "황금비율 오리지널 마일드믹스 또는 해당 상위 제품군의 구체적 섭취 시점·구매 이유·맛·가격·용량·불편 사항에 관한 현지 소비자 근거의 추가 확인 필요.",
+        "dropped": [],
+        "notice": "황금비율 오리지널 마일드믹스에 대한 싱가포르 현지 자료를 찾지 못했습니다. 아래는 제품군·한국 식품·권역 자료입니다 (배지 참고).",
+        "diagnostics": {
+          "searched": 24,
+          "market_other": 13,
+          "off_scope": 13
+        },
+        "criteria": [
+          {
+            "id": "Q1-1",
+            "label_ko": "음용 상황",
+            "essential": true,
+            "search_hint": "Singapore coffee consumption"
+          },
+          {
+            "id": "Q1-2",
+            "label_ko": "구매 동기",
+            "essential": false,
+            "search_hint": "3 in 1 coffee Singapore"
+          },
+          {
+            "id": "Q1-3",
+            "label_ko": "불만 요인",
+            "essential": false,
+            "search_hint": "instant coffee complaints"
+          }
+        ],
+        "search": {
+          "used": true,
+          "stage": "code",
+          "reasons": [
+            "원문 확인 발췌 0건 (기준 2건)",
+            "출처 0곳 (기준 2곳)"
+          ],
+          "covered": {},
+          "missing": [
+            "음용 상황",
+            "구매 동기",
+            "불만 요인"
+          ],
+          "followup_queries": []
+        },
+        "main_quotes": 0,
+        "open_quotes": 3
+      },
+      {
+        "qid": "Q2",
+        "title": "경쟁 제품",
+        "question": "현지에서 팔리는 경쟁 제품은 무엇이고, 얼마에, 어떤 메시지로 파는가",
+        "quote_ids": [
+          "E3",
+          "E4",
+          "E24"
+        ],
+        "source_count": 3,
+        "product_quotes": 0,
+        "country_quotes": 3,
+        "conclusion": {
+          "text": "싱가포르 현지 3-in-1 인스턴트 커피 믹스 제품군에서는 Gold Roast 저당 제품이 $6.35, G7 제품이 특가 $6.15(정가 $6.45)로 판매되며, 확인된 메시지는 ‘저당’ 및 ‘특가 할인’ 중심임.",
+          "quote_ids": [
+            "E3",
+            "E4"
+          ]
+        },
+        "points": [
+          {
+            "text": "Gold Roast 3-in-1 인스턴트 커피 믹스 저당 제품은 22개입×15g 구성으로 $6.35에 제시됨.",
+            "quote_ids": [
+              "E3"
+            ]
+          }
+        ],
+        "interpretation": "AI 해석: 부스 및 바이어 상담에서는 현지 3-in-1 커피 믹스의 확인 가격대와 함께, 저당·할인과 같은 명확한 구매 유인 메시지에 대응할 수 있는 제품 특장점 및 프로모션 조건 제시가 필요함.",
+        "gaps": "발췌만으로는 추가 경쟁 브랜드, 황금비율 오리지널 마일드믹스 자체의 현지 판매가격·유통채널·핵심 판매 메시지는 확인 불가함.",
+        "dropped": [
+          {
+            "text": "G7 3-in-1 인스턴트 커피 믹스는 20개입×16g 구성으로 특가 $6.15, 정가 $6.45에 제시되며, 2026년 10월 1일까지 $0.30 할인 메시지를 사용함.",
+            "reason": "근거에 없는 숫자"
+          },
+          {
+            "text": "한국 식품 전반에서는 한국 베이커리 체인 Tous Les Jours가 2024년 12월 Yishun Northpoint에 첫 매장을 열었으며, ‘32 Layered Tissue Bread’로 알려진 브랜드로 소개됨.",
+            "reason": "근거에 없는 숫자"
+          }
+        ],
+        "notice": "황금비율 오리지널 마일드믹스에 대한 싱가포르 현지 자료를 찾지 못했습니다. 아래는 제품군·한국 식품·권역 자료입니다 (배지 참고).",
+        "diagnostics": {
+          "searched": 8,
+          "off_scope": 21,
+          "not_in_source": 1
+        },
+        "criteria": [
+          {
+            "id": "Q2-1",
+            "label_ko": "경쟁 브랜드",
+            "essential": true,
+            "search_hint": "coffee mix Singapore"
+          },
+          {
+            "id": "Q2-2",
+            "label_ko": "판매 가격",
+            "essential": false,
+            "search_hint": "3 in 1 coffee price"
+          },
+          {
+            "id": "Q2-3",
+            "label_ko": "판촉 메시지",
+            "essential": false,
+            "search_hint": "instant coffee promotion"
+          }
+        ],
+        "search": {
+          "used": false,
+          "stage": null,
+          "reasons": [],
+          "covered": {
+            "경쟁 브랜드": [
+              "E3",
+              "E4"
+            ],
+            "판매 가격": [
+              "E3",
+              "E4"
+            ],
+            "판촉 메시지": [
+              "E4"
+            ]
+          },
+          "missing": [],
+          "followup_queries": []
+        },
+        "main_quotes": 2,
+        "open_quotes": 1
+      },
+      {
+        "qid": "Q3",
+        "title": "바이어·유통",
+        "question": "바이어·유통사는 무엇을 보고 제품을 들여오는가 (인증, 가격, 패키지, 유통기한, 채널)",
+        "quote_ids": [
+          "E27",
+          "E2",
+          "E5",
+          "E6",
+          "E7",
+          "E8",
+          "E9",
+          "E10",
+          "E11",
+          "E13",
+          "E14",
+          "E26",
+          "E30",
+          "E12",
+          "E18",
+          "E19"
+        ],
+        "source_count": 13,
+        "product_quotes": 0,
+        "country_quotes": 14,
+        "conclusion": {
+          "text": "확인된 싱가포르 시장 자료상 바이어·유통사 판단의 직접 근거는 수입·식품안전 준수 및 리콜 대응 가능성, 오프라인 식료품점·슈퍼마켓 중심 유통 적합성이며, 가격·패키지·유통기한의 구체적 기준은 본 발췌만으로 확인 불가.",
+          "quote_ids": [
+            "E6",
+            "E13",
+            "E14"
+          ]
+        },
+        "points": [
+          {
+            "text": "싱가포르는 식품의 90% 이상을 수입하며, 수입처 다변화가 식품 회복력 전략의 핵심 축으로 제시됨.",
+            "quote_ids": [
+              "E7",
+              "E10"
+            ]
+          },
+          {
+            "text": "식품안전 위험이 높은 가축·육류·계란 등은 싱가포르 식품안전 기준 및 규제 요건 충족을 위해 원산지 인증이 요구됨.",
+            "quote_ids": [
+              "E11"
+            ]
+          },
+          {
+            "text": "SFA의 리콜 지시 시 수입업체는 창고 재고를 폐기하고 소매업체와 협력해 시중 유통 제품을 회수해야 함.",
+            "quote_ids": [
+              "E6"
+            ]
+          },
+          {
+            "text": "싱가포르 간편조리식품 유통은 오프라인 식료품점 비중이 93.5%이며, 슈퍼마켓이 전체 유통의 59.8%를 차지함.",
+            "quote_ids": [
+              "E13",
+              "E14"
+            ]
+          }
+        ],
+        "interpretation": "AI 해석: 부스 상담에서는 수입·식품안전 관련 준수 자료와 리콜 발생 시 수입사·소매점 간 회수 협력 체계를 설명할 필요가 있음. 유통 제안은 오프라인 식료품점과 슈퍼마켓을 우선 검토 대상으로 제시하는 방식이 적절함.",
+        "gaps": "가격대, 소비자가격·도매조건, 패키지 규격·표시 요건, 유통기한 및 최소 잔여유통기한, 해당 제품군의 실제 입점 채널·인증 요건은 추가 확인 필요.",
+        "dropped": [],
+        "notice": null,
+        "diagnostics": {
+          "searched": 13,
+          "not_in_source": 2,
+          "market_other": 5
+        },
+        "criteria": [
+          {
+            "id": "Q3-1",
+            "label_ko": "수입 인증 요건",
+            "essential": true,
+            "search_hint": "Singapore food import requirements"
+          },
+          {
+            "id": "Q3-2",
+            "label_ko": "납품 수익성",
+            "essential": false,
+            "search_hint": "Singapore grocery distributor margin"
+          },
+          {
+            "id": "Q3-3",
+            "label_ko": "포장·유통 조건",
+            "essential": false,
+            "search_hint": "Singapore food labelling shelf life"
+          }
+        ],
+        "search": {
+          "used": true,
+          "stage": "ai",
+          "reasons": [
+            "필수 측면 '수입 인증 요건' 자료 없음",
+            "측면 충족 1/3 (기준 2개)"
+          ],
+          "covered": {
+            "포장·유통 조건": [
+              "E13",
+              "E14"
+            ]
+          },
+          "missing": [
+            "수입 인증 요건",
+            "납품 수익성"
+          ],
+          "followup_queries": []
+        },
+        "main_quotes": 13,
+        "open_quotes": 3
+      },
+      {
+        "qid": "Q4",
+        "title": "박람회·부스",
+        "question": "이 박람회의 트렌드와 부스 운영·시식 사례는 무엇인가",
+        "quote_ids": [
+          "E28",
+          "E1",
+          "E20",
+          "E21",
+          "E22",
+          "E15",
+          "E16",
+          "E17"
+        ],
+        "source_count": 4,
+        "product_quotes": 0,
+        "country_quotes": 8,
+        "conclusion": {
+          "text": "싱가포르 F&B 박람회·시장 맥락에서는 건강 지향 및 디지털 고객경험이 핵심 트렌드이며, 부스는 현장 조리 시연과 몰입형 시각 연출을 활용하고 셰프·레스토랑 경영자 대상 솔루션 상담에 초점을 둘 수 있음.",
+          "quote_ids": [
+            "E20",
+            "E21",
+            "E22",
+            "E28",
+            "E1"
+          ]
+        },
+        "points": [
+          {
+            "text": "싱가포르 F&B 부문에서는 영양가 있는 메뉴, 슈퍼푸드, 저·무알코올 음료, 기능성 원료 및 영양정보 제공 등을 포함한 건강한 선택지 수요 대응 추세.",
+            "quote_ids": [
+              "E21"
+            ]
+          },
+          {
+            "text": "디지털 메뉴와 앱 기반 주문 등 기술을 통한 고객경험 고도화가 핵심 요소로 제시됨.",
+            "quote_ids": [
+              "E20"
+            ]
+          },
+          {
+            "text": "한국 식품 전반의 현장 사례로, 한우·한돈을 라이브 그릴링 시연으로 소개하는 방식 확인.",
+            "quote_ids": [
+              "E28"
+            ]
+          },
+          {
+            "text": "현장 연출 사례로, LED 화면과 좌석을 갖춘 JR 열차 객실 형태의 공간이 공개되자 관람객이 휴대전화를 꺼내는 장면 확인.",
+            "quote_ids": [
+              "E1"
+            ]
+          }
+        ],
+        "interpretation": "AI 해석: 부스에서는 건강·영양 관련 정보를 디지털 화면 또는 메뉴 형태로 명확히 제시하고, 조리 시연처럼 제품 특성을 즉시 이해시키는 체험 요소를 결합하는 방향 검토 필요. 셰프와 레스토랑 경영자를 위한 솔루션 중심 행사라는 점을 고려해 상담에서는 제품 자체 설명뿐 아니라 활용 방식 중심의 제안 준비 필요.",
+        "gaps": "발췌만으로는 해당 박람회의 실제 시식 제공량·위생 절차·시식 동선 및 참가 바이어의 구체적 구매요건은 확인 불가.",
+        "dropped": [],
+        "notice": null,
+        "diagnostics": {
+          "searched": 8,
+          "market_other": 5
+        },
+        "criteria": [
+          {
+            "id": "Q4-1",
+            "label_ko": "박람회 핵심 트렌드",
+            "essential": true,
+            "search_hint": "Singapore food expo trends"
+          },
+          {
+            "id": "Q4-2",
+            "label_ko": "부스 운영 사례",
+            "essential": false,
+            "search_hint": "Singapore food exhibition booth"
+          },
+          {
+            "id": "Q4-3",
+            "label_ko": "시식 운영 사례",
+            "essential": false,
+            "search_hint": "Singapore food sampling"
+          }
+        ],
+        "search": {
+          "used": false,
+          "stage": null,
+          "reasons": [],
+          "covered": {
+            "박람회 핵심 트렌드": [
+              "E20",
+              "E21"
+            ],
+            "부스 운영 사례": [
+              "E15",
+              "E16",
+              "E17"
+            ]
+          },
+          "missing": [
+            "시식 운영 사례"
+          ],
+          "followup_queries": []
+        },
+        "main_quotes": 7,
+        "open_quotes": 1
+      }
+    ],
+    "booth": null,
+    "booth_error": null,
+    "quotes": [
+      {
+        "id": "E1",
+        "question": "Q4",
+        "quote": "Phones are whipped out as the door slides open to reveal a brightly lit JR train “cabin” that includes plush seats and an LED screen showing a typical town scene in Osaka.",
+        "translation_ko": "문이 열려 푹신한 좌석과 오사카의 전형적인 마을 풍경을 보여주는 LED 화면을 갖춘 밝은 JR 열차 ‘객실’이 드러나자 휴대전화들이 꺼내진다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          9
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E2",
+        "question": "Q3",
+        "quote": "## COUNTRY/PLACE OF ORIGIN\n\nSingapore\n\n## DIETARY\n\nHalal",
+        "translation_ko": "## 국가/원산지\n\nSingapore\n\n## 식이 특성\n\n할랄",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          17,
+          18
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E3",
+        "question": "Q2",
+        "quote": "$6.35\n\nGold Roast 3 in 1 Instant Coffee Mix - Reduced Sugar\n\n22 x 15g|Brand:Gold Roast",
+        "translation_ko": "$6.35\n\nGold Roast 3-in-1 인스턴트 커피 믹스 - 저당\n\n22 x 15g|브랜드:Gold Roast",
+        "translation_warning": false,
+        "scope": "category",
+        "scope_label": "제품군",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          18
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E4",
+        "question": "Q2",
+        "quote": "Offer\n\n$6.15\n\n$6.45\n\nSave $0.30Till 1st Oct 2026\n\nG7 Coffee 3-in-1 Instant Coffee Mix\n\n20 x 16g|Brand:G7",
+        "translation_ko": "특가\n\n$6.15\n\n$6.45\n\n2026년 10월 1일까지 $0.30 할인\n\nG7 커피 3-in-1 인스턴트 커피 믹스\n\n20 x 16g|브랜드:G7",
+        "translation_warning": true,
+        "scope": "category",
+        "scope_label": "제품군",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          19
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E5",
+        "question": "Q3",
+        "quote": "## COUNTRY/PLACE OF ORIGIN\n\nVietnam\n\n## ADDITIONAL INFORMATION\n\n Manufactured for:\n Trung Nguyen Singapore Pte Ltd",
+        "translation_ko": "## 국가/원산지\n\nVietnam\n\n## 추가 정보\n\n 제조처:\n Trung Nguyen Singapore Pte Ltd",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          19
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E6",
+        "question": "Q3",
+        "quote": "When SFA directs a recall, importers will be required to dispose the affected food products still in the warehouse, and work with retailers to recall and remove those already in the market.",
+        "translation_ko": "SFA가 리콜을 지시하면 수입업체는 아직 창고에 있는 해당 식품을 폐기하고, 소매업체와 협력해 이미 시장에 유통된 제품을 리콜·회수해야 합니다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          20,
+          21
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E7",
+        "question": "Q3",
+        "quote": "With over 90 per cent of our food imported, a large volume of food arrives on our shores every day.",
+        "translation_ko": "식품의 90 per cent 이상을 수입하기 때문에 매일 대량의 식품이 싱가포르에 들어옵니다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          20,
+          21
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E8",
+        "question": "Q3",
+        "quote": "Five (5) establishments in the Republic of Korea have been accredited to export the above products to Singapore.",
+        "translation_ko": "대한민국의 5개(5) 시설이 상기 제품을 싱가포르로 수출하도록 인증받았습니다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": 2025,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          24
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E9",
+        "question": "Q3",
+        "quote": "We are pleased to inform you that SFA has approved the Republic of Korea to export the following meat and meat products to Singapore:",
+        "translation_ko": "SFA가 대한민국이 다음 육류 및 육류 제품을 싱가포르로 수출하는 것을 승인했음을 알려드립니다:",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": 2025,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          24
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E10",
+        "question": "Q3",
+        "quote": "As Singapore imports more than 90 per cent of its food, diversifying import sources continues to be a key pillar of Singapore’s food resilience strategy.",
+        "translation_ko": "싱가포르는 식품의 90% 이상을 수입하므로, 수입처 다변화는 싱가포르 식품 회복력 전략의 핵심 축으로 계속되고 있다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": 2025,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          26
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E11",
+        "question": "Q3",
+        "quote": "For food items with higher food safety risk (e.g., livestock, meat, eggs), accreditation at source is required to ensure imports meet Singapore’s food safety standards and regulatory requirements.",
+        "translation_ko": "식품안전 위험이 더 높은 식품 품목(예: 가축, 육류, 계란)의 경우, 수입품이 싱가포르의 식품안전 기준 및 규제 요건을 충족하도록 원산지 인증이 요구된다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": 2025,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          26
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E12",
+        "question": "Q3",
+        "quote": "싱가포르 소비자의 스낵류 소비 패턴은 실속을 챙기는 소비자와 프리미엄을 지향하는 소비자 양극단으로 나뉘어져 있다.",
+        "translation_ko": "싱가포르 소비자의 스낵류 소비 패턴은 실속을 챙기는 소비자와 프리미엄을 지향하는 소비자 양극단으로 나뉘어져 있다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": 2023,
+        "is_stale": true,
+        "is_public_kr": true,
+        "source_ids": [
+          28,
+          29
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E13",
+        "question": "Q3",
+        "quote": "- 현재 싱가포르에서 유통되고 있는 간편조리식품의 유통구조를 살펴보면, 93.5%가 오프라인 식료품점에서 이루어 지고 있음.",
+        "translation_ko": "- 현재 싱가포르에서 유통되고 있는 간편조리식품의 유통구조를 살펴보면, 93.5%가 오프라인 식료품점에서 이루어 지고 있음.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": true,
+        "source_ids": [
+          30
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E14",
+        "question": "Q3",
+        "quote": "그 중에서도 가장 많은 비율을 차지하고 있는 유통채널은 슈퍼마켓(Supermarket)으로 전체유통의 59.8%을 차지함.",
+        "translation_ko": "그 중에서도 가장 많은 비율을 차지하고 있는 유통채널은 슈퍼마켓(Supermarket)으로 전체유통의 59.8%을 차지함.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": true,
+        "source_ids": [
+          30
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E15",
+        "question": "Q4",
+        "quote": "Visit us at Booth A10 during ICTA 2022 to talk about how the SCC and IES can help your business create better-tasting products!",
+        "translation_ko": "더 나은 맛의 제품을 만드는 데 SCC와 IES가 어떻게 도움이 될 수 있는지 알아보려면 ICTA 2022에서 부스 A10을 방문하세요!",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": 2022,
+        "is_stale": true,
+        "is_public_kr": false,
+        "source_ids": [
+          36
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E16",
+        "question": "Q4",
+        "quote": "Just for Cafe Owners: We have curated a selection of premium coffee beans! Visit us to select and purchase specialty beans at prices exclusive to Cafe Asia 2022.",
+        "translation_ko": "카페 오너만을 위해: 프리미엄 커피 원두 셀렉션을 엄선했습니다! Cafe Asia 2022 한정 가격으로 스페셜티 원두를 선택하고 구매하려면 방문하세요.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": 2022,
+        "is_stale": true,
+        "is_public_kr": false,
+        "source_ids": [
+          36
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E17",
+        "question": "Q4",
+        "quote": "Allpress Espresso Singapore Pte Ltd Booth D17 | Singapore Facebook Instagram: @allpressespresso",
+        "translation_ko": "Allpress Espresso Singapore Pte Ltd 부스 D17 | 싱가포르 Facebook Instagram: @allpressespresso",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": 2022,
+        "is_stale": true,
+        "is_public_kr": false,
+        "source_ids": [
+          36
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E18",
+        "question": "Q3",
+        "quote": "Boncafé, part of Massimo Zanetti Beverage Group, is a leading gourmet coffee manufacturer and supplier in South East Asia/East Asia and the Middle East.",
+        "translation_ko": "Massimo Zanetti Beverage Group의 일원인 Boncafé는 동남아시아/동아시아 및 중동의 선도적인 고급 커피 제조업체이자 공급업체입니다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "region",
+        "market_label": "권역 참고(동남아시아)",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          37
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E19",
+        "question": "Q3",
+        "quote": "The brand prides itself on its quality products and services to its valued, blue-chip customers in food service – international hotels, resorts, airlines, restaurants, clubs and retail outlets by being a one-stop beverage solution provider, supplying coffee, tea, RTD products, syrups, coffee machines, frappé mixes & plant-based milk alternatives.",
+        "translation_ko": "이 브랜드는 커피, 차, RTD 제품, 시럽, 커피머신, 프라페 믹스 및 식물성 우유 대체품을 공급하는 원스톱 음료 솔루션 제공업체로서, 국제 호텔, 리조트, 항공사, 레스토랑, 클럽 및 소매점 등 가치 있는 우량 식품서비스 고객에게 고품질 제품과 서비스를 제공하는 것을 자랑으로 여깁니다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "region",
+        "market_label": "권역 참고(동남아시아)",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          37
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E20",
+        "question": "Q4",
+        "quote": "Technology’s impact remains pivotal – from elevated customer experiences through digital menus to app-based ordering.",
+        "translation_ko": "디지털 메뉴를 통한 향상된 고객 경험부터 앱 기반 주문에 이르기까지 기술의 영향은 여전히 핵심적입니다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          38
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E21",
+        "question": "Q4",
+        "quote": "With growing emphasis on health awareness among consumers, Singapore’s F&B sector is poised to respond to the call for healthier options, from introducing nutritious menu choices, integrating superfoods, low/no-alcohol beverages, functional ingredients, and sharing nutrition details.",
+        "translation_ko": "소비자의 건강 인식에 대한 강조가 커지면서, 싱가포르 F&B 부문은 영양가 있는 메뉴 선택지 도입, 슈퍼푸드·저/무알코올 음료·기능성 원료 통합, 영양 정보 공유 등 더 건강한 선택지에 대한 요구에 대응할 준비가 되어 있습니다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          38
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E22",
+        "question": "Q4",
+        "quote": "This event is the only F&B trade show for the industry, by the industry and focuses on solutions for chefs and restauranteurs.",
+        "translation_ko": "이 행사는 업계에 의해, 업계를 위해 열리는 유일한 F&B 무역 박람회이며 셰프와 레스토랑 경영자를 위한 솔루션에 초점을 둡니다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          38
+        ],
+        "tier": "main",
+        "tier_label": "주요 사이트"
+      },
+      {
+        "id": "E23",
+        "question": "Q1",
+        "quote": "The popularity of heritage and artisanal concepts indicates that Singapore diners are ready for more sophisticated Korean culinary experiences.",
+        "translation_ko": "전통성과 장인적 콘셉트의 인기는 싱가포르 식사객들이 더 고도화된 한국 미식 경험을 받아들일 준비가 되어 있음을 보여준다.",
+        "translation_warning": false,
+        "scope": "kfood",
+        "scope_label": "한국 식품",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": 2025,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          52
+        ],
+        "tier": "open",
+        "tier_label": "일반 웹"
+      },
+      {
+        "id": "E24",
+        "question": "Q2",
+        "quote": "Tous Les Jours, a South Korean bakery chain famous for its 32 Layered Tissue Bread, opened its first store here in December 2024 at Northpoint in Yishun.",
+        "translation_ko": "32 Layered Tissue Bread로 유명한 한국 베이커리 체인 Tous Les Jours는 2024년 12월 Yishun의 Northpoint에 이곳 첫 매장을 열었다.",
+        "translation_warning": true,
+        "scope": "kfood",
+        "scope_label": "한국 식품",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          54
+        ],
+        "tier": "open",
+        "tier_label": "일반 웹"
+      },
+      {
+        "id": "E25",
+        "question": "Q1",
+        "quote": "Korean cuisine, with its rich flavours, unique cooking methods, and communal eating habits, has found a harmonious existence in Singapore’s diverse culinary landscape.",
+        "translation_ko": "풍부한 맛, 독특한 조리법 및 함께 먹는 식습관을 지닌 한국 요리는 싱가포르의 다양한 음식 문화 속에서 조화롭게 자리 잡았다.",
+        "translation_warning": false,
+        "scope": "kfood",
+        "scope_label": "한국 식품",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          55
+        ],
+        "tier": "open",
+        "tier_label": "일반 웹"
+      },
+      {
+        "id": "E26",
+        "question": "Q3",
+        "quote": "Organized in cooperation with the Hanwoo and the Handon Self-Help Fund, the event brought together Agriculture Minister Song Mi-ryeong, chef Ahn Seong-jae, Singaporean food safety officials, importers, distributors and media representatives.",
+        "translation_ko": "한우 및 한돈 자조금과 협력해 개최된 이 행사는 송미령 농림축산식품부 장관, 안성재 셰프, 싱가포르 식품안전 관계자, 수입업자, 유통업자 및 언론 관계자들을 한자리에 모았다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          58
+        ],
+        "tier": "open",
+        "tier_label": "일반 웹"
+      },
+      {
+        "id": "E27",
+        "question": "Q3",
+        "quote": "The Ministry of Agriculture, Food and Rural Affairs and the Korea Agro-Fisheries & Food Trade Corp. (aT) said last week that marketing efforts targeting Singapore’s premium food market have accelerated since quarantine procedures for Jeju Island-produced hanwoo and handon — Korean beef and pork, respectively — were completed in November 2025.",
+        "translation_ko": "농림축산식품부와 한국농수산식품유통공사(aT)는 제주산 한우와 한돈(각각 한국산 소고기와 돼지고기)의 검역 절차가 2025년 11월 완료된 이후 싱가포르 프리미엄 식품시장을 겨냥한 마케팅 노력이 가속화됐다고 지난주 밝혔다.",
+        "translation_warning": true,
+        "scope": "kfood",
+        "scope_label": "한국 식품",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          58
+        ],
+        "tier": "open",
+        "tier_label": "일반 웹"
+      },
+      {
+        "id": "E28",
+        "question": "Q4",
+        "quote": "Consumers learn about hanwoo and handon -- Korean beef and pork, respectively -- with a live grilling demonstration. (aT)",
+        "translation_ko": "소비자들은 라이브 그릴링 시연을 통해 한우와 한돈, 즉 각각 한국산 소고기와 돼지고기에 대해 배운다. (aT)",
+        "translation_warning": false,
+        "scope": "kfood",
+        "scope_label": "한국 식품",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          58
+        ],
+        "tier": "open",
+        "tier_label": "일반 웹"
+      },
+      {
+        "id": "E29",
+        "question": "Q1",
+        "quote": "On days when you don’t feel like cooking, you can opt for one of their weekly meal kits, which features popular ready-made Korean dishes such as spicy pork soup and samgyetang.",
+        "translation_ko": "요리하고 싶지 않은 날에는 매운 돼지국밥과 삼계탕 같은 인기 한국 즉석요리가 포함된 주간 밀키트를 선택할 수 있습니다.",
+        "translation_warning": false,
+        "scope": "kfood",
+        "scope_label": "한국 식품",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          60
+        ],
+        "tier": "open",
+        "tier_label": "일반 웹"
+      },
+      {
+        "id": "E30",
+        "question": "Q3",
+        "quote": "If not, you can also opt for their pre-marinated bulgogi meat or fresh banchan like spicy fish cake and seasoned cucumber to shorten your cooking time in the kitchen.",
+        "translation_ko": "그렇지 않으면 주방에서의 조리 시간을 줄이기 위해 미리 양념한 불고기 고기나 매운 어묵, 양념 오이 같은 신선한 반찬을 선택할 수도 있습니다.",
+        "translation_warning": false,
+        "scope": "general",
+        "scope_label": "시장 일반",
+        "market": "country",
+        "market_label": "대상 국가",
+        "year": null,
+        "is_stale": false,
+        "is_public_kr": false,
+        "source_ids": [
+          60
+        ],
+        "tier": "open",
+        "tier_label": "일반 웹"
+      }
+    ],
+    "sources": [
+      {
+        "id": 0,
+        "title": "'Potent' medicinal ingredients, banned substance found in 5 health products: HSA - CNA",
+        "url": "https://www.channelnewsasia.com/singapore/potent-medicinal-ingredients-banned-substance-found-in-5-health-products-hsa-5627931",
+        "domain": "channelnewsasia.com",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "main"
+      },
+      {
+        "id": 1,
+        "title": "orchard cafe Archives - Eatbook.sg - Local Singapore Food Guide And Review Site",
+        "url": "https://eatbook.sg/tag/orchard-cafe",
+        "domain": "eatbook.sg",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "main"
+      },
+      {
+        "id": 2,
+        "title": "Alchemist Review: Specialty Coffee In Somserset | Eatbook.sg",
+        "url": "https://eatbook.sg/alchemist-the-heeren",
+        "domain": "eatbook.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "main"
+      },
+      {
+        "id": 3,
+        "title": "Alchemist Review: Specialty Coffee In Somserset | Eatbook.sg",
+        "url": "https://eatbook.sg?p=206732",
+        "domain": "eatbook.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "main"
+      },
+      {
+        "id": 4,
+        "title": "Gold-buying trend takes hold in Singapore, Singapore News - AsiaOne",
+        "url": "https://www.asiaone.com/singapore/gold-buying-trend-takes-hold-singapore",
+        "domain": "asiaone.com",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "main"
+      },
+      {
+        "id": 5,
+        "title": "Singapore stocks edge up, bucking mild downward trend in Asia | The Straits Times",
+        "url": "https://www.straitstimes.com/business/companies-markets/singapore-stocks-edge-up-bucking-mild-downward-trend-in-asia",
+        "domain": "straitstimes.com",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "main"
+      },
+      {
+        "id": 6,
+        "title": "Gold-buying trend takes hold in Singapore, Singapore News - AsiaOne",
+        "url": "https://asiaone.com/singapore/gold-buying-trend-takes-hold-singapore",
+        "domain": "asiaone.com",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "main"
+      },
+      {
+        "id": 7,
+        "title": "Two RSAF C-130s deliver relief supplies to Myanmar to help victims of Cyclone Mocha | The Straits Times",
+        "url": "https://www.straitstimes.com/singapore/two-rsaf-c-130s-deployed-to-deliver-relief-supplies-for-cyclone-mocha-mindef",
+        "domain": "straitstimes.com",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "main"
+      },
+      {
+        "id": 8,
+        "title": "2026 food trends: Chefs foresee the rise of regional ingredients, sustainable cooking | The Straits Times",
+        "url": "https://www.straitstimes.com/life/food/2026-food-trends-chefs-foresee-the-rise-of-regional-ingredients-sustainable-cooking",
+        "domain": "straitstimes.com",
+        "published_date": null,
+        "year": 2026,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "main"
+      },
+      {
+        "id": 9,
+        "title": "Escape Singapore: Enter cave-like eateries, an OTT Peranakan restaurant and a train to ‘Osaka’ | The Straits Times",
+        "url": "https://www.straitstimes.com/life/food/escape-singapore-enter-cave-like-eateries-an-ott-peranakan-restaurant-and-a-train-to-osaka",
+        "domain": "straitstimes.com",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "main"
+      },
+      {
+        "id": 10,
+        "title": "12 New Korean Eateries That Opened In 2026 | Eatbook.sg",
+        "url": "https://eatbook.sg/new-korean-eateries-2026",
+        "domain": "eatbook.sg",
+        "published_date": null,
+        "year": 2026,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "main"
+      },
+      {
+        "id": 11,
+        "title": "Bibimbap boom: Eateries offering the dish and K-style cai fan, with free-flow sides, are on the rise | The Straits Times",
+        "url": "https://www.straitstimes.com/life/food/k-comfort-rice-k-style-cai-fan-bibimbap-with-free-flow-sides-on-the-rise",
+        "domain": "straitstimes.com",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "main"
+      },
+      {
+        "id": 12,
+        "title": "Korean Coffee Maxim 4 Flavor Ready Soluble Coffee Kit - 20 Sachets : Amazon.sg: Grocery",
+        "url": "https://www.amazon.sg/Korean-Coffee-Maxim-Flavor-Soluble/dp/B08R3MX9WM",
+        "domain": "amazon.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q2",
+        "tier": "main"
+      },
+      {
+        "id": 13,
+        "title": "| FairPrice Singapore",
+        "url": "https://fairprice.com.sg/product-listing?category=coffee&amp%3BpageType=category&amp%3Burl=coffee&amp%3BmetaData=%5Bobject+Object%5D&amp%3Bsorting=POPULARITY",
+        "domain": "fairprice.com.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q2",
+        "tier": "main"
+      },
+      {
+        "id": 14,
+        "title": "| FairPrice Singapore",
+        "url": "https://payment.fairprice.com.sg/product-listing?brand=nescafe&pageType=brand&url=nescafe&metaData=%5Bobject+Object%5D",
+        "domain": "payment.fairprice.com.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q2",
+        "tier": "main"
+      },
+      {
+        "id": 15,
+        "title": "Nescafe | FairPrice Singapore",
+        "url": "https://www.fairprice.com.sg/tag/nestle-nescafe",
+        "domain": "fairprice.com.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q2",
+        "tier": "main"
+      },
+      {
+        "id": 16,
+        "title": "Trung Nguyen G7 Instant 3 in 1 Coffee Mix - Strong",
+        "url": "https://www.fairprice.com.sg/product/trung-nguyen-g7-instant-3-in-1-coffee-mix-strong-24-x-25g-13074833",
+        "domain": "fairprice.com.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q2",
+        "tier": "main"
+      },
+      {
+        "id": 17,
+        "title": "Cafe 21 2in1 Instant Coffeemix | NTUC FairPrice",
+        "url": "https://www.fairprice.com.sg/product/cafe-21-2in1-instant-coffeemix-250ml-13218401",
+        "domain": "fairprice.com.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q2",
+        "tier": "main"
+      },
+      {
+        "id": 18,
+        "title": "Gold Roast 3 in 1 Instant Coffee Mix - Reduced Sugar | NTUC FairPrice",
+        "url": "https://www.fairprice.com.sg/product/gold-roast-3-in-1-instant-coffee-mix-reduced-sugar-22-x-15g-13218400",
+        "domain": "fairprice.com.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q2",
+        "tier": "main"
+      },
+      {
+        "id": 19,
+        "title": "G7 Coffee 3-in-1 Instant Coffee Mix | NTUC FairPrice",
+        "url": "https://omni.fairprice.com.sg/product/g7-coffee-3-in-1-instant-coffee-mix-20-x-16g-13214545",
+        "domain": "omni.fairprice.com.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q2",
+        "tier": "main"
+      },
+      {
+        "id": 20,
+        "title": "Food for Thought | Safeguarding Food Safety Through Food Recalls",
+        "url": "https://www.sfa.gov.sg/food-for-thought/article/detail/safeguarding-food-safety-through-food-recalls/1000",
+        "domain": "sfa.gov.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "main"
+      },
+      {
+        "id": 21,
+        "title": "Food for Thought | Safeguarding Food Safety Through Food Recalls",
+        "url": "https://www.sfa.gov.sg/food-for-thought/article/detail/safeguarding-food-safety-through-food-recalls",
+        "domain": "sfa.gov.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "main"
+      },
+      {
+        "id": 22,
+        "title": "Applying for Singapore Customs' Assessments for Dutiable Motor Vehicles | Singapore Customs",
+        "url": "https://www.customs.gov.sg/personal-shipment/importing-vehicles-and-boats/applying-for-singapore-customs-assessments-for-dutiable-motor-vehicles",
+        "domain": "customs.gov.sg",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "main"
+      },
+      {
+        "id": 23,
+        "title": "Joint Statement on the launch of negotiations on the upgrade of the Free Trade Agreement between the Government of the Republic of Korea and the Government of the Republic of Singapore | Ministry of Trade and Industry",
+        "url": "https://www.mti.gov.sg/newsroom/joint-statement-on-the-launch-of-negotiations-on-the-upgrade-of-the-free-trade-agreement-between-the-government-of-the-republic-of-korea-and-the-government-of-the-republic-of-singapore",
+        "domain": "mti.gov.sg",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "main"
+      },
+      {
+        "id": 24,
+        "title": "Trade Circular on Approval of The Republic of Korea as a New Source for Beef and Pork from the Island of Jeju, and Processed Eggs to Singapore",
+        "url": "https://www.sfa.gov.sg/news-publications/circulars-and-notices/circulars/2025/trade-circular-on-approval-of-the-republic-of-korea-as-a-new-source-for-beef-and-pork-from-the-island-of-jeju--and-processed-eggs-to-singapore",
+        "domain": "sfa.gov.sg",
+        "published_date": null,
+        "year": 2025,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "main"
+      },
+      {
+        "id": 25,
+        "title": "Inside Food Republic’s win at the Retail Asia Awards 2026",
+        "url": "https://retailasia.com/videos/inside-food-republics-win-retail-asia-awards-2026",
+        "domain": "retailasia.com",
+        "published_date": null,
+        "year": 2026,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "main"
+      },
+      {
+        "id": 26,
+        "title": "Singapore Food Statistics 2025",
+        "url": "https://www.sfa.gov.sg/news-publications/newsroom/singapore-food-statistics-2025",
+        "domain": "sfa.gov.sg",
+        "published_date": null,
+        "year": 2025,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "main"
+      },
+      {
+        "id": 27,
+        "title": "Track Records for Licensed Food Establishments",
+        "url": "https://www.sfa.gov.sg/tools-and-resources/track-records",
+        "domain": "sfa.gov.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "main"
+      },
+      {
+        "id": 28,
+        "title": "[싱가포르] 싱가포르 스낵류 시장 동향 - KATI 농식품수출정보",
+        "url": "https://m.kati.net/board/exportNewsView.do?board_seq=99681&menu_dept2=35&menu_dept3=71&srchFr=2023-05-17&srchTo=2024-05-17&srchTp=&srchWord=&page=27",
+        "domain": "m.kati.net",
+        "published_date": null,
+        "year": 2023,
+        "market": "country",
+        "is_public_kr": true,
+        "found_by": "KR",
+        "tier": "main"
+      },
+      {
+        "id": 29,
+        "title": "[싱가포르] 싱가포르 스낵류 시장 동향 - KATI 농식품수출정보",
+        "url": "https://www.kati.net/board/exportNewsView.do?board_seq=99681&menu_dept2=35&menu_dept3=71",
+        "domain": "kati.net",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": true,
+        "found_by": "KR",
+        "tier": "main"
+      },
+      {
+        "id": 30,
+        "title": "싱가포르 간편조리식품 시장동향",
+        "url": "https://dream.kotra.or.kr/user/extra/kotranews/bbs/linkView/jsp/Page.do?dataIdx=175793",
+        "domain": "dream.kotra.or.kr",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": true,
+        "found_by": "KR",
+        "tier": "main"
+      },
+      {
+        "id": 31,
+        "title": "싱가포르 아이스크림 시장동향",
+        "url": "https://dream.kotra.or.kr/user/extra/kotranews/bbs/linkView/jsp/Page.do?dataIdx=192084",
+        "domain": "dream.kotra.or.kr",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": true,
+        "found_by": "KR",
+        "tier": "main"
+      },
+      {
+        "id": 32,
+        "title": "품목별조사 - KATI 농식품수출정보",
+        "url": "https://m.kati.net/board/etcReportList.do?srchFr=&srchTo=&srchTp=&srchWord=&page=59&menu_dept3=368",
+        "domain": "m.kati.net",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": true,
+        "found_by": "KR",
+        "tier": "main"
+      },
+      {
+        "id": 33,
+        "title": "카드뉴스",
+        "url": "https://m.kati.net/board/cardNewsList.do?page=33",
+        "domain": "m.kati.net",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": true,
+        "found_by": "KR",
+        "tier": "main"
+      },
+      {
+        "id": 34,
+        "title": "[말레이시아] 커피 시장 동향 - KATI 농식품수출정보",
+        "url": "https://m.kati.net/board/exportNewsView.do?board_seq=99950&menu_dept2=35&menu_dept3=71",
+        "domain": "m.kati.net",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": true,
+        "found_by": "KR",
+        "tier": "main"
+      },
+      {
+        "id": 35,
+        "title": "2024 미국 인스턴트 커피믹스 (시장분석형)",
+        "url": "https://m.kati.net/board/reportORpubilcationView.do?board_seq=101182&menu_dept2=49",
+        "domain": "m.kati.net",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": true,
+        "found_by": "KR",
+        "tier": "main"
+      },
+      {
+        "id": 36,
+        "title": "[PDF] Exhibitor Highlights - Restaurant ASIA",
+        "url": "http://restaurantasia.com.sg/wp-content/uploads/2022/04/CRA-2022-PRE-Exh-Highlights-11-Apr.pdf",
+        "domain": "restaurantasia.com.sg",
+        "published_date": null,
+        "year": 2022,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q4",
+        "tier": "main"
+      },
+      {
+        "id": 37,
+        "title": "Boncafé International Pte Ltd - Restaurant ASIA",
+        "url": "https://restaurantasia.com.sg/featured_item/boncafe-international-pte-ltd",
+        "domain": "restaurantasia.com.sg",
+        "published_date": null,
+        "year": null,
+        "market": "region",
+        "is_public_kr": false,
+        "found_by": "Q4",
+        "tier": "main"
+      },
+      {
+        "id": 38,
+        "title": "Restaurant Asia - Restaurant ASIA",
+        "url": "https://restaurantasia.com.sg/about/restaurant-asia",
+        "domain": "restaurantasia.com.sg",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q4",
+        "tier": "main"
+      },
+      {
+        "id": 39,
+        "title": "The Coffee Folks SG - Restaurant ASIA",
+        "url": "https://restaurantasia.com.sg/featured_item/the-coffee-folks-sg",
+        "domain": "restaurantasia.com.sg",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q4",
+        "tier": "main"
+      },
+      {
+        "id": 40,
+        "title": "Asia leads the way in global coffee growth",
+        "url": "https://www.foodnavigator-asia.com/Article/2017/03/02/Asia-leads-the-way-in-global-coffee-growth",
+        "domain": "foodnavigator-asia.com",
+        "published_date": null,
+        "year": 2017,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q4",
+        "tier": "main"
+      },
+      {
+        "id": 41,
+        "title": "Comfort and convenience behind the rise of China's new coffee culture",
+        "url": "https://www.foodnavigator-asia.com/Article/2014/10/22/Comfort-and-convenience-behind-the-rise-of-China-s-new-coffee-culture",
+        "domain": "foodnavigator-asia.com",
+        "published_date": null,
+        "year": 2014,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q4",
+        "tier": "main"
+      },
+      {
+        "id": 42,
+        "title": "Nestle to focus on coffee mixes at Asian innovation hub",
+        "url": "https://www.foodnavigator-asia.com/Article/2010/07/23/Nestle-to-focus-on-coffee-mixes-at-Asian-innovation-hub",
+        "domain": "foodnavigator-asia.com",
+        "published_date": null,
+        "year": 2010,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q4",
+        "tier": "main"
+      },
+      {
+        "id": 43,
+        "title": "China wakes up to instant coffee",
+        "url": "https://www.foodnavigator-asia.com/Article/2004/09/27/China-wakes-up-to-instant-coffee",
+        "domain": "foodnavigator-asia.com",
+        "published_date": null,
+        "year": 2004,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q4",
+        "tier": "main"
+      },
+      {
+        "id": 44,
+        "title": "Maxim Mocha Gold Mild Review: Is Korea’s Favorite Coffee Mix Still Good?",
+        "url": "https://www.myfreshdash.com/post/maxim-mocha-gold-mild-review",
+        "domain": "myfreshdash.com",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "open"
+      },
+      {
+        "id": 45,
+        "title": "Maxim Mocha Gold Mild Coffee Mix 100 Sticks – Smooth & Mild Korean Instant Coffee – Woori Marketplace",
+        "url": "https://woorimarketplace.com/products/maxim-mocha-gold-mild-100ct",
+        "domain": "woorimarketplace.com",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "open"
+      },
+      {
+        "id": 46,
+        "title": "Maxim Mocha Gold Mild Coffee Mix - 100 ct - Pack of 2",
+        "url": "https://www.wal-mart.com/ip/Maxim-Mocha-Gold-Mild-Coffee-Mix-100-ct-Pack-of-2/323654122",
+        "domain": "wal-mart.com",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "open"
+      },
+      {
+        "id": 47,
+        "title": "Maxim Korean Instant Coffee Review — #1 Office Staple",
+        "url": "https://thekimchiboy.com/korean-instant-coffee-maxim",
+        "domain": "thekimchiboy.com",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "open"
+      },
+      {
+        "id": 48,
+        "title": "Maxim Mocha Gold Korean 3 in 1 Instant Coffee Mix 10 ...",
+        "url": "https://www.ubuy.bt/en/product/2R2DHHU0-maxim-mocha-gold-instant-korean-coffee-mix-10-20-50-stick-100-box-cafe-latte",
+        "domain": "ubuy.bt",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "open"
+      },
+      {
+        "id": 49,
+        "title": "Dongsuh Maxim Mocha Gold Coffee Mix 200 Sticks (180+20 Sticks) | OLIVE YOUNG Global",
+        "url": "https://global.oliveyoung.com/product/detail?prdtNo=GA250933741",
+        "domain": "global.oliveyoung.com",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "open"
+      },
+      {
+        "id": 50,
+        "title": "Maxim Mocha Gold marks 37 years as Korea’s top coffee mix - The Korea Herald",
+        "url": "https://www.koreaherald.com/article/10755900",
+        "domain": "koreaherald.com",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "open"
+      },
+      {
+        "id": 51,
+        "title": "15 Best Instant Coffee Brands Around The World",
+        "url": "https://nawon.com.vn/15-best-instant-coffee-brand-around-the-world",
+        "domain": "nawon.com.vn",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "open"
+      },
+      {
+        "id": 52,
+        "title": "Singapore’s Korean Food Revolution Reaches New Heights",
+        "url": "https://blog.maxthon.com/2025/09/17/singapores-korean-food-revolution-reaches-new-heights",
+        "domain": "blog.maxthon.com",
+        "published_date": null,
+        "year": 2025,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "open"
+      },
+      {
+        "id": 53,
+        "title": "The Korean Wave in Singapore’s Multi-cultural Food Scene ...Korean Food in Singapore: A Fusion of Flavors and CulturesBibimbap boom: Eateries offering the dish and K-style cai fan ...Singapore’s Korean Food Revolution Reaches New HeightsKorean Food in Singapore: A Guide to the Best Dishes28 best Korean restaurants and cafes in Singapore – 2026",
+        "url": "https://link.springer.com/chapter/10.1007/978-981-13-8695-4_6",
+        "domain": "link.springer.com",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "open"
+      },
+      {
+        "id": 54,
+        "title": "The rise and rise of K-food – get your fix at these new Korean restaurants | The Straits Times",
+        "url": "https://www.straitstimes.com/life/food/the-rise-and-rise-of-k-food-new-wave-of-korean-restaurants-hits-singapore",
+        "domain": "straitstimes.com",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "open"
+      },
+      {
+        "id": 55,
+        "title": "Korean Food in Singapore: A Fusion of Flavors and Cultures",
+        "url": "https://sg.reviewranger.co/singapore/food/korean/korean-food",
+        "domain": "sg.reviewranger.co",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q1",
+        "tier": "open"
+      },
+      {
+        "id": 56,
+        "title": "Korean Coffee Chain Wars: Ediya vs Mega vs Starbucks",
+        "url": "https://daebak.co/en-au/blogs/magazine/korean-coffee-chains-ediya-mega-twosome-versus-starbucks",
+        "domain": "daebak.co",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "open"
+      },
+      {
+        "id": 57,
+        "title": "BYIT DEAL - I-DLE 2026 SEASON'S GREETING",
+        "url": "https://www.byitkpop.com/en-sg/products/coming-soon-2",
+        "domain": "byitkpop.com",
+        "published_date": null,
+        "year": null,
+        "market": "other",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "open"
+      },
+      {
+        "id": 58,
+        "title": "K-meat gains ground in Singapore as hanwoo, handon exports expand - The Korea Herald",
+        "url": "https://www.koreaherald.com/article/10850411",
+        "domain": "koreaherald.com",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "open"
+      },
+      {
+        "id": 59,
+        "title": "Korean Food Wholesale to Singapore | FCL & LCL from Incheon",
+        "url": "https://www.thekcn.com/export/k-food/singapore",
+        "domain": "thekcn.com",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "open"
+      },
+      {
+        "id": 60,
+        "title": "10 Best Korean Supermarkets In Singapore With Home Delivery",
+        "url": "https://thesmartlocal.com/read/korean-supermarkets-singapore",
+        "domain": "thesmartlocal.com",
+        "published_date": null,
+        "year": null,
+        "market": "country",
+        "is_public_kr": false,
+        "found_by": "Q3",
+        "tier": "open"
+      }
+    ],
+    "excluded_sources": [],
+    "stats": {
+      "sources_found": 61,
+      "quotes_used": 30,
+      "excluded_source": 0,
+      "market_other": 26,
+      "not_in_source": 3,
+      "off_scope": 34,
+      "country_quotes": 28,
+      "region_quotes": 2,
+      "stale_quotes": 4,
+      "translation_warnings": 3,
+      "main_quotes": 22,
+      "open_quotes": 8,
+      "main_sources": 44,
+      "open_sources": 17,
+      "fallback_questions": [
+        "Q1",
+        "Q3"
+      ]
+    },
+    "failed_queries": [],
+    "search_error": null,
+    "fetched_at": "2026-09-27T05:12:15.267934+00:00",
+    "from_cache": false,
+    "version": "v14.0"
+  },
+  "research_error": null,
+  "view": {
+    "articles": {
+      "Q1": [
+        {
+          "id": "E23",
+          "question": "Q1",
+          "quote": "The popularity of heritage and artisanal concepts indicates that Singapore diners are ready for more sophisticated Korean culinary experiences.",
+          "translation_ko": "전통성과 장인적 콘셉트의 인기는 싱가포르 식사객들이 더 고도화된 한국 미식 경험을 받아들일 준비가 되어 있음을 보여준다.",
+          "translation_warning": false,
+          "scope": "kfood",
+          "scope_label": "한국 식품",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": 2025,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            52
+          ],
+          "tier": "open",
+          "tier_label": "일반 웹",
+          "url": "https://blog.maxthon.com/2025/09/17/singapores-korean-food-revolution-reaches-new-heights",
+          "domain": "blog.maxthon.com",
+          "title": "Singapore’s Korean Food Revolution Reaches New Heights"
+        },
+        {
+          "id": "E25",
+          "question": "Q1",
+          "quote": "Korean cuisine, with its rich flavours, unique cooking methods, and communal eating habits, has found a harmonious existence in Singapore’s diverse culinary landscape.",
+          "translation_ko": "풍부한 맛, 독특한 조리법 및 함께 먹는 식습관을 지닌 한국 요리는 싱가포르의 다양한 음식 문화 속에서 조화롭게 자리 잡았다.",
+          "translation_warning": false,
+          "scope": "kfood",
+          "scope_label": "한국 식품",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            55
+          ],
+          "tier": "open",
+          "tier_label": "일반 웹",
+          "url": "https://sg.reviewranger.co/singapore/food/korean/korean-food",
+          "domain": "sg.reviewranger.co",
+          "title": "Korean Food in Singapore: A Fusion of Flavors and Cultures"
+        },
+        {
+          "id": "E29",
+          "question": "Q1",
+          "quote": "On days when you don’t feel like cooking, you can opt for one of their weekly meal kits, which features popular ready-made Korean dishes such as spicy pork soup and samgyetang.",
+          "translation_ko": "요리하고 싶지 않은 날에는 매운 돼지국밥과 삼계탕 같은 인기 한국 즉석요리가 포함된 주간 밀키트를 선택할 수 있습니다.",
+          "translation_warning": false,
+          "scope": "kfood",
+          "scope_label": "한국 식품",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            60
+          ],
+          "tier": "open",
+          "tier_label": "일반 웹",
+          "url": "https://thesmartlocal.com/read/korean-supermarkets-singapore",
+          "domain": "thesmartlocal.com",
+          "title": "10 Best Korean Supermarkets In Singapore With Home Delivery"
+        }
+      ],
+      "Q2": [
+        {
+          "id": "E3",
+          "question": "Q2",
+          "quote": "$6.35\n\nGold Roast 3 in 1 Instant Coffee Mix - Reduced Sugar\n\n22 x 15g|Brand:Gold Roast",
+          "translation_ko": "$6.35\n\nGold Roast 3-in-1 인스턴트 커피 믹스 - 저당\n\n22 x 15g|브랜드:Gold Roast",
+          "translation_warning": false,
+          "scope": "category",
+          "scope_label": "제품군",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            18
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://www.fairprice.com.sg/product/gold-roast-3-in-1-instant-coffee-mix-reduced-sugar-22-x-15g-13218400",
+          "domain": "fairprice.com.sg",
+          "title": "Gold Roast 3 in 1 Instant Coffee Mix - Reduced Sugar | NTUC FairPrice"
+        },
+        {
+          "id": "E4",
+          "question": "Q2",
+          "quote": "Offer\n\n$6.15\n\n$6.45\n\nSave $0.30Till 1st Oct 2026\n\nG7 Coffee 3-in-1 Instant Coffee Mix\n\n20 x 16g|Brand:G7",
+          "translation_ko": "특가\n\n$6.15\n\n$6.45\n\n2026년 10월 1일까지 $0.30 할인\n\nG7 커피 3-in-1 인스턴트 커피 믹스\n\n20 x 16g|브랜드:G7",
+          "translation_warning": true,
+          "scope": "category",
+          "scope_label": "제품군",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            19
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://omni.fairprice.com.sg/product/g7-coffee-3-in-1-instant-coffee-mix-20-x-16g-13214545",
+          "domain": "omni.fairprice.com.sg",
+          "title": "G7 Coffee 3-in-1 Instant Coffee Mix | NTUC FairPrice"
+        },
+        {
+          "id": "E24",
+          "question": "Q2",
+          "quote": "Tous Les Jours, a South Korean bakery chain famous for its 32 Layered Tissue Bread, opened its first store here in December 2024 at Northpoint in Yishun.",
+          "translation_ko": "32 Layered Tissue Bread로 유명한 한국 베이커리 체인 Tous Les Jours는 2024년 12월 Yishun의 Northpoint에 이곳 첫 매장을 열었다.",
+          "translation_warning": true,
+          "scope": "kfood",
+          "scope_label": "한국 식품",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            54
+          ],
+          "tier": "open",
+          "tier_label": "일반 웹",
+          "url": "https://www.straitstimes.com/life/food/the-rise-and-rise-of-k-food-new-wave-of-korean-restaurants-hits-singapore",
+          "domain": "straitstimes.com",
+          "title": "The rise and rise of K-food – get your fix at these new Korean restaurants | The Straits Times"
+        }
+      ],
+      "Q3": [
+        {
+          "id": "E27",
+          "question": "Q3",
+          "quote": "The Ministry of Agriculture, Food and Rural Affairs and the Korea Agro-Fisheries & Food Trade Corp. (aT) said last week that marketing efforts targeting Singapore’s premium food market have accelerated since quarantine procedures for Jeju Island-produced hanwoo and handon — Korean beef and pork, respectively — were completed in November 2025.",
+          "translation_ko": "농림축산식품부와 한국농수산식품유통공사(aT)는 제주산 한우와 한돈(각각 한국산 소고기와 돼지고기)의 검역 절차가 2025년 11월 완료된 이후 싱가포르 프리미엄 식품시장을 겨냥한 마케팅 노력이 가속화됐다고 지난주 밝혔다.",
+          "translation_warning": true,
+          "scope": "kfood",
+          "scope_label": "한국 식품",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            58
+          ],
+          "tier": "open",
+          "tier_label": "일반 웹",
+          "url": "https://www.koreaherald.com/article/10850411",
+          "domain": "koreaherald.com",
+          "title": "K-meat gains ground in Singapore as hanwoo, handon exports expand - The Korea Herald"
+        },
+        {
+          "id": "E2",
+          "question": "Q3",
+          "quote": "## COUNTRY/PLACE OF ORIGIN\n\nSingapore\n\n## DIETARY\n\nHalal",
+          "translation_ko": "## 국가/원산지\n\nSingapore\n\n## 식이 특성\n\n할랄",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            17,
+            18
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://www.fairprice.com.sg/product/cafe-21-2in1-instant-coffeemix-250ml-13218401",
+          "domain": "fairprice.com.sg",
+          "title": "Cafe 21 2in1 Instant Coffeemix | NTUC FairPrice"
+        },
+        {
+          "id": "E5",
+          "question": "Q3",
+          "quote": "## COUNTRY/PLACE OF ORIGIN\n\nVietnam\n\n## ADDITIONAL INFORMATION\n\n Manufactured for:\n Trung Nguyen Singapore Pte Ltd",
+          "translation_ko": "## 국가/원산지\n\nVietnam\n\n## 추가 정보\n\n 제조처:\n Trung Nguyen Singapore Pte Ltd",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            19
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://omni.fairprice.com.sg/product/g7-coffee-3-in-1-instant-coffee-mix-20-x-16g-13214545",
+          "domain": "omni.fairprice.com.sg",
+          "title": "G7 Coffee 3-in-1 Instant Coffee Mix | NTUC FairPrice"
+        },
+        {
+          "id": "E6",
+          "question": "Q3",
+          "quote": "When SFA directs a recall, importers will be required to dispose the affected food products still in the warehouse, and work with retailers to recall and remove those already in the market.",
+          "translation_ko": "SFA가 리콜을 지시하면 수입업체는 아직 창고에 있는 해당 식품을 폐기하고, 소매업체와 협력해 이미 시장에 유통된 제품을 리콜·회수해야 합니다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            20,
+            21
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://www.sfa.gov.sg/food-for-thought/article/detail/safeguarding-food-safety-through-food-recalls/1000",
+          "domain": "sfa.gov.sg",
+          "title": "Food for Thought | Safeguarding Food Safety Through Food Recalls"
+        },
+        {
+          "id": "E7",
+          "question": "Q3",
+          "quote": "With over 90 per cent of our food imported, a large volume of food arrives on our shores every day.",
+          "translation_ko": "식품의 90 per cent 이상을 수입하기 때문에 매일 대량의 식품이 싱가포르에 들어옵니다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            20,
+            21
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://www.sfa.gov.sg/food-for-thought/article/detail/safeguarding-food-safety-through-food-recalls/1000",
+          "domain": "sfa.gov.sg",
+          "title": "Food for Thought | Safeguarding Food Safety Through Food Recalls"
+        },
+        {
+          "id": "E8",
+          "question": "Q3",
+          "quote": "Five (5) establishments in the Republic of Korea have been accredited to export the above products to Singapore.",
+          "translation_ko": "대한민국의 5개(5) 시설이 상기 제품을 싱가포르로 수출하도록 인증받았습니다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": 2025,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            24
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://www.sfa.gov.sg/news-publications/circulars-and-notices/circulars/2025/trade-circular-on-approval-of-the-republic-of-korea-as-a-new-source-for-beef-and-pork-from-the-island-of-jeju--and-processed-eggs-to-singapore",
+          "domain": "sfa.gov.sg",
+          "title": "Trade Circular on Approval of The Republic of Korea as a New Source for Beef and Pork from the Island of Jeju, and Processed Eggs to Singapore"
+        },
+        {
+          "id": "E9",
+          "question": "Q3",
+          "quote": "We are pleased to inform you that SFA has approved the Republic of Korea to export the following meat and meat products to Singapore:",
+          "translation_ko": "SFA가 대한민국이 다음 육류 및 육류 제품을 싱가포르로 수출하는 것을 승인했음을 알려드립니다:",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": 2025,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            24
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://www.sfa.gov.sg/news-publications/circulars-and-notices/circulars/2025/trade-circular-on-approval-of-the-republic-of-korea-as-a-new-source-for-beef-and-pork-from-the-island-of-jeju--and-processed-eggs-to-singapore",
+          "domain": "sfa.gov.sg",
+          "title": "Trade Circular on Approval of The Republic of Korea as a New Source for Beef and Pork from the Island of Jeju, and Processed Eggs to Singapore"
+        },
+        {
+          "id": "E10",
+          "question": "Q3",
+          "quote": "As Singapore imports more than 90 per cent of its food, diversifying import sources continues to be a key pillar of Singapore’s food resilience strategy.",
+          "translation_ko": "싱가포르는 식품의 90% 이상을 수입하므로, 수입처 다변화는 싱가포르 식품 회복력 전략의 핵심 축으로 계속되고 있다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": 2025,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            26
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://www.sfa.gov.sg/news-publications/newsroom/singapore-food-statistics-2025",
+          "domain": "sfa.gov.sg",
+          "title": "Singapore Food Statistics 2025"
+        },
+        {
+          "id": "E11",
+          "question": "Q3",
+          "quote": "For food items with higher food safety risk (e.g., livestock, meat, eggs), accreditation at source is required to ensure imports meet Singapore’s food safety standards and regulatory requirements.",
+          "translation_ko": "식품안전 위험이 더 높은 식품 품목(예: 가축, 육류, 계란)의 경우, 수입품이 싱가포르의 식품안전 기준 및 규제 요건을 충족하도록 원산지 인증이 요구된다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": 2025,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            26
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://www.sfa.gov.sg/news-publications/newsroom/singapore-food-statistics-2025",
+          "domain": "sfa.gov.sg",
+          "title": "Singapore Food Statistics 2025"
+        },
+        {
+          "id": "E13",
+          "question": "Q3",
+          "quote": "- 현재 싱가포르에서 유통되고 있는 간편조리식품의 유통구조를 살펴보면, 93.5%가 오프라인 식료품점에서 이루어 지고 있음.",
+          "translation_ko": "- 현재 싱가포르에서 유통되고 있는 간편조리식품의 유통구조를 살펴보면, 93.5%가 오프라인 식료품점에서 이루어 지고 있음.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": true,
+          "source_ids": [
+            30
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://dream.kotra.or.kr/user/extra/kotranews/bbs/linkView/jsp/Page.do?dataIdx=175793",
+          "domain": "dream.kotra.or.kr",
+          "title": "싱가포르 간편조리식품 시장동향"
+        },
+        {
+          "id": "E14",
+          "question": "Q3",
+          "quote": "그 중에서도 가장 많은 비율을 차지하고 있는 유통채널은 슈퍼마켓(Supermarket)으로 전체유통의 59.8%을 차지함.",
+          "translation_ko": "그 중에서도 가장 많은 비율을 차지하고 있는 유통채널은 슈퍼마켓(Supermarket)으로 전체유통의 59.8%을 차지함.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": true,
+          "source_ids": [
+            30
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://dream.kotra.or.kr/user/extra/kotranews/bbs/linkView/jsp/Page.do?dataIdx=175793",
+          "domain": "dream.kotra.or.kr",
+          "title": "싱가포르 간편조리식품 시장동향"
+        },
+        {
+          "id": "E26",
+          "question": "Q3",
+          "quote": "Organized in cooperation with the Hanwoo and the Handon Self-Help Fund, the event brought together Agriculture Minister Song Mi-ryeong, chef Ahn Seong-jae, Singaporean food safety officials, importers, distributors and media representatives.",
+          "translation_ko": "한우 및 한돈 자조금과 협력해 개최된 이 행사는 송미령 농림축산식품부 장관, 안성재 셰프, 싱가포르 식품안전 관계자, 수입업자, 유통업자 및 언론 관계자들을 한자리에 모았다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            58
+          ],
+          "tier": "open",
+          "tier_label": "일반 웹",
+          "url": "https://www.koreaherald.com/article/10850411",
+          "domain": "koreaherald.com",
+          "title": "K-meat gains ground in Singapore as hanwoo, handon exports expand - The Korea Herald"
+        },
+        {
+          "id": "E30",
+          "question": "Q3",
+          "quote": "If not, you can also opt for their pre-marinated bulgogi meat or fresh banchan like spicy fish cake and seasoned cucumber to shorten your cooking time in the kitchen.",
+          "translation_ko": "그렇지 않으면 주방에서의 조리 시간을 줄이기 위해 미리 양념한 불고기 고기나 매운 어묵, 양념 오이 같은 신선한 반찬을 선택할 수도 있습니다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            60
+          ],
+          "tier": "open",
+          "tier_label": "일반 웹",
+          "url": "https://thesmartlocal.com/read/korean-supermarkets-singapore",
+          "domain": "thesmartlocal.com",
+          "title": "10 Best Korean Supermarkets In Singapore With Home Delivery"
+        },
+        {
+          "id": "E12",
+          "question": "Q3",
+          "quote": "싱가포르 소비자의 스낵류 소비 패턴은 실속을 챙기는 소비자와 프리미엄을 지향하는 소비자 양극단으로 나뉘어져 있다.",
+          "translation_ko": "싱가포르 소비자의 스낵류 소비 패턴은 실속을 챙기는 소비자와 프리미엄을 지향하는 소비자 양극단으로 나뉘어져 있다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": 2023,
+          "is_stale": true,
+          "is_public_kr": true,
+          "source_ids": [
+            28,
+            29
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://m.kati.net/board/exportNewsView.do?board_seq=99681&menu_dept2=35&menu_dept3=71&srchFr=2023-05-17&srchTo=2024-05-17&srchTp=&srchWord=&page=27",
+          "domain": "m.kati.net",
+          "title": "[싱가포르] 싱가포르 스낵류 시장 동향 - KATI 농식품수출정보"
+        },
+        {
+          "id": "E18",
+          "question": "Q3",
+          "quote": "Boncafé, part of Massimo Zanetti Beverage Group, is a leading gourmet coffee manufacturer and supplier in South East Asia/East Asia and the Middle East.",
+          "translation_ko": "Massimo Zanetti Beverage Group의 일원인 Boncafé는 동남아시아/동아시아 및 중동의 선도적인 고급 커피 제조업체이자 공급업체입니다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "region",
+          "market_label": "권역 참고(동남아시아)",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            37
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://restaurantasia.com.sg/featured_item/boncafe-international-pte-ltd",
+          "domain": "restaurantasia.com.sg",
+          "title": "Boncafé International Pte Ltd - Restaurant ASIA"
+        },
+        {
+          "id": "E19",
+          "question": "Q3",
+          "quote": "The brand prides itself on its quality products and services to its valued, blue-chip customers in food service – international hotels, resorts, airlines, restaurants, clubs and retail outlets by being a one-stop beverage solution provider, supplying coffee, tea, RTD products, syrups, coffee machines, frappé mixes & plant-based milk alternatives.",
+          "translation_ko": "이 브랜드는 커피, 차, RTD 제품, 시럽, 커피머신, 프라페 믹스 및 식물성 우유 대체품을 공급하는 원스톱 음료 솔루션 제공업체로서, 국제 호텔, 리조트, 항공사, 레스토랑, 클럽 및 소매점 등 가치 있는 우량 식품서비스 고객에게 고품질 제품과 서비스를 제공하는 것을 자랑으로 여깁니다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "region",
+          "market_label": "권역 참고(동남아시아)",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            37
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://restaurantasia.com.sg/featured_item/boncafe-international-pte-ltd",
+          "domain": "restaurantasia.com.sg",
+          "title": "Boncafé International Pte Ltd - Restaurant ASIA"
+        }
+      ],
+      "Q4": [
+        {
+          "id": "E28",
+          "question": "Q4",
+          "quote": "Consumers learn about hanwoo and handon -- Korean beef and pork, respectively -- with a live grilling demonstration. (aT)",
+          "translation_ko": "소비자들은 라이브 그릴링 시연을 통해 한우와 한돈, 즉 각각 한국산 소고기와 돼지고기에 대해 배운다. (aT)",
+          "translation_warning": false,
+          "scope": "kfood",
+          "scope_label": "한국 식품",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            58
+          ],
+          "tier": "open",
+          "tier_label": "일반 웹",
+          "url": "https://www.koreaherald.com/article/10850411",
+          "domain": "koreaherald.com",
+          "title": "K-meat gains ground in Singapore as hanwoo, handon exports expand - The Korea Herald"
+        },
+        {
+          "id": "E1",
+          "question": "Q4",
+          "quote": "Phones are whipped out as the door slides open to reveal a brightly lit JR train “cabin” that includes plush seats and an LED screen showing a typical town scene in Osaka.",
+          "translation_ko": "문이 열려 푹신한 좌석과 오사카의 전형적인 마을 풍경을 보여주는 LED 화면을 갖춘 밝은 JR 열차 ‘객실’이 드러나자 휴대전화들이 꺼내진다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            9
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://www.straitstimes.com/life/food/escape-singapore-enter-cave-like-eateries-an-ott-peranakan-restaurant-and-a-train-to-osaka",
+          "domain": "straitstimes.com",
+          "title": "Escape Singapore: Enter cave-like eateries, an OTT Peranakan restaurant and a train to ‘Osaka’ | The Straits Times"
+        },
+        {
+          "id": "E20",
+          "question": "Q4",
+          "quote": "Technology’s impact remains pivotal – from elevated customer experiences through digital menus to app-based ordering.",
+          "translation_ko": "디지털 메뉴를 통한 향상된 고객 경험부터 앱 기반 주문에 이르기까지 기술의 영향은 여전히 핵심적입니다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            38
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://restaurantasia.com.sg/about/restaurant-asia",
+          "domain": "restaurantasia.com.sg",
+          "title": "Restaurant Asia - Restaurant ASIA"
+        },
+        {
+          "id": "E21",
+          "question": "Q4",
+          "quote": "With growing emphasis on health awareness among consumers, Singapore’s F&B sector is poised to respond to the call for healthier options, from introducing nutritious menu choices, integrating superfoods, low/no-alcohol beverages, functional ingredients, and sharing nutrition details.",
+          "translation_ko": "소비자의 건강 인식에 대한 강조가 커지면서, 싱가포르 F&B 부문은 영양가 있는 메뉴 선택지 도입, 슈퍼푸드·저/무알코올 음료·기능성 원료 통합, 영양 정보 공유 등 더 건강한 선택지에 대한 요구에 대응할 준비가 되어 있습니다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            38
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://restaurantasia.com.sg/about/restaurant-asia",
+          "domain": "restaurantasia.com.sg",
+          "title": "Restaurant Asia - Restaurant ASIA"
+        },
+        {
+          "id": "E22",
+          "question": "Q4",
+          "quote": "This event is the only F&B trade show for the industry, by the industry and focuses on solutions for chefs and restauranteurs.",
+          "translation_ko": "이 행사는 업계에 의해, 업계를 위해 열리는 유일한 F&B 무역 박람회이며 셰프와 레스토랑 경영자를 위한 솔루션에 초점을 둡니다.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": null,
+          "is_stale": false,
+          "is_public_kr": false,
+          "source_ids": [
+            38
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "https://restaurantasia.com.sg/about/restaurant-asia",
+          "domain": "restaurantasia.com.sg",
+          "title": "Restaurant Asia - Restaurant ASIA"
+        },
+        {
+          "id": "E15",
+          "question": "Q4",
+          "quote": "Visit us at Booth A10 during ICTA 2022 to talk about how the SCC and IES can help your business create better-tasting products!",
+          "translation_ko": "더 나은 맛의 제품을 만드는 데 SCC와 IES가 어떻게 도움이 될 수 있는지 알아보려면 ICTA 2022에서 부스 A10을 방문하세요!",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": 2022,
+          "is_stale": true,
+          "is_public_kr": false,
+          "source_ids": [
+            36
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "http://restaurantasia.com.sg/wp-content/uploads/2022/04/CRA-2022-PRE-Exh-Highlights-11-Apr.pdf",
+          "domain": "restaurantasia.com.sg",
+          "title": "[PDF] Exhibitor Highlights - Restaurant ASIA"
+        },
+        {
+          "id": "E16",
+          "question": "Q4",
+          "quote": "Just for Cafe Owners: We have curated a selection of premium coffee beans! Visit us to select and purchase specialty beans at prices exclusive to Cafe Asia 2022.",
+          "translation_ko": "카페 오너만을 위해: 프리미엄 커피 원두 셀렉션을 엄선했습니다! Cafe Asia 2022 한정 가격으로 스페셜티 원두를 선택하고 구매하려면 방문하세요.",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": 2022,
+          "is_stale": true,
+          "is_public_kr": false,
+          "source_ids": [
+            36
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "http://restaurantasia.com.sg/wp-content/uploads/2022/04/CRA-2022-PRE-Exh-Highlights-11-Apr.pdf",
+          "domain": "restaurantasia.com.sg",
+          "title": "[PDF] Exhibitor Highlights - Restaurant ASIA"
+        },
+        {
+          "id": "E17",
+          "question": "Q4",
+          "quote": "Allpress Espresso Singapore Pte Ltd Booth D17 | Singapore Facebook Instagram: @allpressespresso",
+          "translation_ko": "Allpress Espresso Singapore Pte Ltd 부스 D17 | 싱가포르 Facebook Instagram: @allpressespresso",
+          "translation_warning": false,
+          "scope": "general",
+          "scope_label": "시장 일반",
+          "market": "country",
+          "market_label": "대상 국가",
+          "year": 2022,
+          "is_stale": true,
+          "is_public_kr": false,
+          "source_ids": [
+            36
+          ],
+          "tier": "main",
+          "tier_label": "주요 사이트",
+          "url": "http://restaurantasia.com.sg/wp-content/uploads/2022/04/CRA-2022-PRE-Exh-Highlights-11-Apr.pdf",
+          "domain": "restaurantasia.com.sg",
+          "title": "[PDF] Exhibitor Highlights - Restaurant ASIA"
+        }
+      ]
+    }
+  },
+  "models": {
+    "booth": "gpt-5.6-sol",
+    "booth_effort": "medium",
+    "task": "gpt-5.6-terra",
+    "task_effort": "low"
+  },
+  "fetched_at": "2026-09-27 14:12"
+}

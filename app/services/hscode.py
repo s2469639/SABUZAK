@@ -34,12 +34,21 @@ try:
 except ImportError:
     pycountry = None
 
-# 법령 제목/요약 텍스트로 필수/정보/주의 등급을 대략 나누는 키워드
+# 법령 제목/요약 텍스트로 필수/정보/주의 등급을 대략 나누는 키워드.
+# legislation_title(원문, 영어)과 measure_summary(AI가 만든 한국어 요약)를
+# 같이 검사하는데, 한국어 요약에는 영어 키워드가 안 걸려서 실제로는 등록/
+# 인증이 필요한 내용도 전부 "정보"로만 분류되던 버그가 있었다(그 결과
+# classify_regulation_strictness가 거의 항상 "낮음"만 나옴) - 한국어
+# 키워드도 같이 넣어서 고침.
 _MANDATORY_KEYWORDS = [
     "registration", "mandatory", "requirement", "authorization", "license",
     "certificat", "must", "prohibit", "ban",
+    "등록", "의무", "필수", "인증", "허가", "승인", "금지", "제한",
 ]
-_CAUTION_KEYWORDS = ["labelling", "labeling", "tbt", "sps", "inspection", "testing", "residue"]
+_CAUTION_KEYWORDS = [
+    "labelling", "labeling", "tbt", "sps", "inspection", "testing", "residue",
+    "표시", "라벨", "검역", "검사", "잔류",
+]
 
 # 국가 전체 규정 목록 중 식품/농산물 수출과 관련 있을 법한 것만 상위로 올리는 키워드
 _FOOD_RELEVANCE_KEYWORDS = [
@@ -161,6 +170,12 @@ def resolve_country_iso(country_name):
     # 흔한 약칭/표기 차이는 먼저 직접 매핑 (pycountry가 못 잡는 것들: USA, UK 등)
     if key in COUNTRY_ISO_MAP:
         return COUNTRY_ISO_MAP[key]
+
+    # "미국", "베트남"처럼 한글 국가명은 pycountry가 못 알아듣는다.
+    # un_comtrade.py에 이미 있는 한글 매핑(약 60개국)을 재사용한다.
+    from app.services.un_comtrade import KOREAN_NAME_TO_ISO3
+    if key in KOREAN_NAME_TO_ISO3:
+        return KOREAN_NAME_TO_ISO3[key]
 
     if pycountry is not None:
         try:
@@ -291,7 +306,10 @@ def build_hscode_context(expo, products):
     고정된 값이 아니라 제품마다 다를 수 있음 - 예전엔 국가만 보고 모든 제품에
     같은 값을 보여주는 버그가 있었다)."""
     country_iso = resolve_country_iso(expo.country)
-    has_country_data = tariff_lookup.has_country_data(country_iso) if country_iso else False
+    has_country_data = (
+        (tariff_lookup.has_country_data(country_iso) or tariff_lookup.has_mfn_data(country_iso))
+        if country_iso else False
+    )
 
     product_rows = []
     for product in products:
@@ -302,7 +320,13 @@ def build_hscode_context(expo, products):
             best = min(numeric_regimes, key=lambda r: r["tariff_ave"])
         for r in regimes:
             r["is_best"] = (r is best) if best else False
-        has_range = any(r.get("is_range") for r in regimes)
+        mfn_rate = (
+            tariff_lookup.get_mfn_rate(product.hs_code, country_iso) if country_iso else None
+        )
+        # FTA 협정 세율뿐 아니라 MFN(기본세율)이 세부품목별로 갈려도(예: 협정은
+        # 전부 0%인데 MFN만 8.3~54.3%처럼 다름) "우리 제품이 정확히 몇 %인지"를
+        # 알려줘야 하므로, 어느 쪽이 범위든 세부품목 표를 띄운다.
+        has_range = any(r.get("is_range") for r in regimes) or bool(mfn_rate and mfn_rate.get("is_range"))
         subitems = (
             tariff_lookup.get_subitem_breakdown(product.hs_code, country_iso)
             if (country_iso and has_range) else []
@@ -323,6 +347,7 @@ def build_hscode_context(expo, products):
             "has_data": bool(regimes),
             "has_range": has_range,
             "subitems": subitems,
+            "mfn_rate": mfn_rate,
             "certs": get_required_certs(country_iso, expo.food_yn),
             "regulation_notes": regulation_notes,
             "regulation_notes_is_live": is_synced,

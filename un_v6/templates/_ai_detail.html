@@ -1,0 +1,38 @@
+{# ⑥ 국가 상세 AI 박스. detail_ai_pending이면 자리만 만들고, 화면이 /ai/detail로 따로 불러온다 #}
+{% set ai = detail.ai_insight %}
+{% if ai and ai.summary is defined %}
+  <div class="ai-box">
+    <div class="ai-summary">{{ ai.summary }}</div>
+    <div><span class="ai-label">시장 매력도</span>{{ ai.market_attractiveness }}</div>
+    <div><span class="ai-label">경쟁 구도</span>{{ ai.competitive_position }}</div>
+    <div><span class="ai-label">한국 현황</span>{{ ai.korea_position }}</div>
+    {% if ai.risks %}
+      <div><span class="ai-label">리스크 · 유의점</span>
+        <ul class="ai-list">{% for r in ai.risks %}<li>{{ r }}</li>{% endfor %}</ul>
+      </div>
+    {% endif %}
+    <div><span class="ai-label">전략 제언</span>{{ ai.strategic_recommendation }}</div>
+    {% if ai.action_items %}
+      <div><span class="ai-label">실행 과제</span>
+        <ol class="ai-list">{% for r in ai.action_items %}<li>{{ r }}</li>{% endfor %}</ol>
+      </div>
+    {% endif %}
+    <p class="ai-foot">UN Comtrade·관세청 수치만으로 작성한 해석입니다. 관세·인증·유통 구조 같은 현지 정보는 별도 확인이 필요합니다.</p>
+  </div>
+{% elif detail_ai_pending %}
+  <div class="ai-box ai-loading" data-ai-src="/ai/detail">
+    <span class="spinner" aria-hidden="true"></span> AI가 {{ detail.target_country }} 시장을 분석하고 있습니다… (보통 10~30초, 위 수치는 먼저 보셔도 됩니다)
+  </div>
+{% elif ai %}
+  {# 예전 형식(3문단)으로 저장된 해석 #}
+  <div class="ai-box">
+    <div><span class="ai-label">시장 매력도</span>{{ ai.market_attractiveness }}</div>
+    <div><span class="ai-label">경쟁 구도</span>{{ ai.competitive_position }}</div>
+    <div><span class="ai-label">전략 제언</span>{{ ai.strategic_recommendation }}</div>
+  </div>
+{% else %}
+  <div class="ai-box empty">AI 해석 생성에 실패했습니다 (위 원본 수치는 그대로 유효합니다).
+    {% if detail.ai_error %}<div class="ai-error">원인: {{ detail.ai_error }}</div>{% endif %}
+    <button type="button" class="btn-link ai-retry" data-ai-retry="/ai/detail">다시 시도</button>
+  </div>
+{% endif %}

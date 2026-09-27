@@ -1,0 +1,5 @@
+{# 검색 실패 안내: rp.search_error = credits | key | failed #}
+<div class="slim-banner search-error" role="alert"><span class="ico">⚠️</span>
+  {%- if rp.search_error == "credits" %}검색 API 크레딧이 만료되어 자료 검색에 실패했어요. API 키나 요금제를 확인해 주세요.
+  {%- elif rp.search_error == "key" %}검색 API 키가 올바르지 않아 자료 검색에 실패했어요. API 키를 확인해 주세요.
+  {%- else %}자료 검색에 실패했어요. 잠시 후 다시 시도해 주세요.{% endif %}</div>
