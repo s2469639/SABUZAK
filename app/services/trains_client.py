@@ -89,13 +89,19 @@ def normalize_hs_code(hs_code: str) -> str:
 
 def _product_codes_for_query(hs_code: str) -> list:
     """제품의 HS코드로 TRAINS "products" 필터에 넣을 후보 코드 목록을 만든다.
-    원본 코드 그대로 + 4자리(챕터) 단위를 같이 보낸다 (챕터 단위까지 넣어야
-    TRAINS의 느슨한 품목 태깅에서 관련 규정을 놓치지 않음)."""
+    최대 6자리(HS6) + 4자리(챕터) 단위만 보낸다 (챕터 단위까지 넣어야
+    TRAINS의 느슨한 품목 태깅에서 관련 규정을 놓치지 않음).
+
+    8자리 이상(세부품목 단위)의 원본 코드를 그대로 보내면 TRAINS 서버가
+    500(`{"Error":"Unexpected error Occured"}`)을 내는 게 실제로 확인됐다
+    (products 필드가 TRAINS 자체 품목 마스터 목록에서 고르는 방식이라,
+    6자리보다 세밀한 코드는 그 목록에 없어서 서버 쪽에서 처리하다 죽는
+    것으로 보임). 그래서 6자리보다 길면 앞 6자리로 잘라서 보낸다."""
     digits = normalize_hs_code(hs_code)
     if not digits:
         return DEFAULT_DEBUG_HS_CODES
-    codes = [digits]
-    if len(digits) > 4:
+    codes = [digits[:6]] if len(digits) > 6 else [digits]
+    if len(digits) > 4 and codes[0] != digits[:4]:
         codes.append(digits[:4])
     return codes
 
