@@ -1,0 +1,10 @@
+{
+  "description": "Streamline the export process for K-traditional snacks with an automated dashboard that organizes trade show schedules, market research, and booth concept planning.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

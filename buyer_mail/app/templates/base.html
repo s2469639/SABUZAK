@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}사부작 팔로업 메일{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    {% if current_user.is_authenticated %}
+      <a class="brand" href="{{ url_for('contacts.list_contacts') }}">사부작 · 팔로업 메일 (프로토타입)</a>
+      <nav class="nav">
+        <a class="nav-link {{ 'nav-link-active' if request.endpoint and request.endpoint.startswith('mail_template.') else '' }}"
+           href="{{ url_for('mail_template.home') }}">메일 템플릿</a>
+        <a class="nav-link {{ 'nav-link-active' if request.endpoint == 'profile.edit_profile' else '' }}"
+           href="{{ url_for('profile.edit_profile') }}">내 정보</a>
+      </nav>
+      <span class="user">{{ current_user.name }} &lt;{{ current_user.google_email }}&gt;</span>
+      <a href="{{ url_for('auth.logout') }}" class="nav-link">로그아웃</a>
+    {% else %}
+      <span class="brand">사부작 · 팔로업 메일 (프로토타입)</span>
+    {% endif %}
+  </header>
+  <main>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flashes">
+        {% for m in messages %}<li>{{ m }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

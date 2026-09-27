@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ contact.name }}{% if contact.company %} ({{ contact.company }}){% endif %} 팔로업 메일</h2>
+<p class="meta">
+  받는 사람: {{ contact.email }} · 박람회: {{ contact.exhibition.name }}
+  {% if followup.template_version %} · {{ templates_by_version.get(followup.template_version).display_name if templates_by_version.get(followup.template_version) else '버전 ' ~ followup.template_version }} 기반{% endif %}
+</p>
+
+{% if followup.status != 'sent' %}
+<div class="template-pick-bar">
+  <span class="template-pick-label">템플릿으로 채우기:</span>
+  {% for v in template_versions %}
+  {% set t = templates_by_version.get(v) %}
+  <form method="post" action="{{ url_for('followup.fill_from_template', contact_id=contact.id) }}">
+    <input type="hidden" name="version" value="{{ v }}">
+    <button type="submit" class="btn-chip {{ 'btn-chip-active' if followup.template_version == v else '' }}"
+            {{ 'disabled' if not t or not t.body else '' }}>
+      {{ t.display_name if t else '버전 ' ~ v }}{% if not t or not t.body %} (미작성){% endif %}
+    </button>
+  </form>
+  {% endfor %}
+</div>
+
+<form method="post" action="{{ url_for('followup.revise', contact_id=contact.id) }}" class="revise-bar">
+  <input type="text" name="instruction" placeholder="수정 방향을 제시하세요 (예: 더 짧게, 캐주얼하게)">
+  <button type="submit" class="btn">AI로 내용 수정</button>
+</form>
+{% endif %}
+
+{% if followup.status == 'sent' %}
+<div class="form">
+  <label>제목 <input value="{{ followup.subject }}" readonly></label>
+  <label>본문 <textarea rows="14" readonly>{{ followup.body }}</textarea></label>
+</div>
+{% else %}
+<form method="post" action="{{ url_for('followup.save', contact_id=contact.id) }}" class="form">
+  <label>제목 <input name="subject" value="{{ followup.subject }}"></label>
+  <label>본문 <textarea name="body" rows="14">{{ followup.body }}</textarea></label>
+  <div class="actions">
+    <button type="submit" class="btn">저장</button>
+  </div>
+</form>
+
+<form method="post" action="{{ url_for('followup.send', contact_id=contact.id) }}"
+      onsubmit="return confirm('{{ contact.email }} 로 실제 메일을 발송합니다. 계속할까요?');">
+  <button type="submit" class="btn btn-danger">발송하기</button>
+</form>
+{% endif %}
+<p class="meta">
+  상태: {{ followup.status }}
+  {% if followup.sent_at %} · 발송시각: {{ followup.sent_at }}{% endif %}
+</p>
+
+<p><a href="{{ url_for('contacts.list_contacts') }}" class="btn-secondary">목록으로</a></p>
+{% endblock %}

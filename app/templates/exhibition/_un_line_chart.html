@@ -1,0 +1,29 @@
+{# 주요국 세계시장 점유율 추이 SVG 라인차트. exhibition.py의 _svg_line_series()가
+   미리 계산해준 chart 딕셔너리를 그대로 그린다 (un_v6/templates/_line_chart.html 그대로 이식). #}
+{% if chart and chart.lines %}
+  <div class="line-chart-legend">
+    {% for line in chart.lines %}
+      <span><span class="swatch" style="background: {{ line.color }};"></span>{{ line.label }}</span>
+    {% endfor %}
+  </div>
+  <svg width="100%" viewBox="0 0 {{ chart.width }} {{ chart.height }}" preserveAspectRatio="xMinYMin meet">
+    {% for i in range(4) %}
+      {% set gy = chart.pad_t + chart.plot_h * i / 3 %}
+      <line x1="{{ chart.pad_l }}" y1="{{ gy }}" x2="{{ chart.pad_l + chart.plot_w }}" y2="{{ gy }}" stroke="#eee" stroke-width="1"></line>
+      <text x="{{ chart.pad_l - 6 }}" y="{{ gy + 3 }}" text-anchor="end" class="axis-label-svg">{{ (chart.y_max * (3 - i) / 3) | round(1) }}%</text>
+    {% endfor %}
+    {% for lbl in chart.x_labels %}
+      <text x="{{ lbl.x }}" y="{{ chart.height - 6 }}" text-anchor="middle" class="axis-label-svg">{{ lbl.year }}</text>
+    {% endfor %}
+    {% for line in chart.lines %}
+      <polyline points="{{ line.points }}" fill="none" stroke="{{ line.color }}" stroke-width="2"></polyline>
+      {% for pt in line.coords %}
+        <circle cx="{{ pt.x }}" cy="{{ pt.y }}" r="3" fill="{{ line.color }}">
+          <title>{{ line.label }} {{ pt.year }}년: {{ pt.share_pct }}%</title>
+        </circle>
+      {% endfor %}
+    {% endfor %}
+  </svg>
+{% else %}
+  <div class="empty">데이터 없음</div>
+{% endif %}

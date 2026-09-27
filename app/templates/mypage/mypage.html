@@ -1,0 +1,380 @@
+{% extends "base.html" %}
+{% block title %}내 제품 관리 | FairMate{% endblock %}
+
+{% block content %}
+{% set checked_count = products | selectattr("is_checked") | list | length %}
+<style>
+  .check-all-form { margin-top: -6px; display: flex; align-items: center; gap: 10px; font-size: 14px; color: #374151; }
+  .check-all-form label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; }
+  .check-all-count { color: #6b7280; }
+  .bulk-delete-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .multi-selected-warning { margin: 0 0 16px; }
+  .product-group-title { margin: 8px 0 0; font-size: 13px; font-weight: 700; color: #6b7280; }
+  .product-group-title:first-child { margin-top: 0; }
+  .bulk-template-link { display: inline-flex; align-items: center; }
+  .meta-label { color: #9ca3af; font-weight: 600; }
+</style>
+<div class="page-header">
+  <div>
+    <h1>내 제품 관리</h1>
+    <p class="page-desc">'분석 제품'으로 선택한 제품 1개가 시장 분석·트렌드 조사·부스 컨셉에 반영됩니다.</p>
+    {% if products %}
+    {# 삭제용 선택: 전부 체크돼 있을 때만 전체 선택에 체크 표시, 개수는 스크립트가 바로 갱신 #}
+    <form method="post" action="{{ url_for('mypage.bulk_delete_products') }}" id="bulk-delete-form" class="check-all-form">
+      <label><input type="checkbox" id="delete-all"> 전체 선택</label>
+      <span class="check-all-count" id="delete-count">(0/{{ products | length }}개 선택됨)</span>
+      <button type="submit" class="btn-text-danger bulk-delete-btn" id="bulk-delete-btn" disabled>선택 삭제</button>
+    </form>
+    {% endif %}
+  </div>
+  <button type="button" class="btn-primary" data-modal-open="add-product-modal">
+    + 제품 추가
+  </button>
+</div>
+
+{% if checked_count > 1 %}
+<p class="flash flash-warning multi-selected-warning">분석 제품이 여러 개 선택돼 있어요. 남길 제품의 '✓ 분석 제품' 버튼을 누르면 그 제품 하나만 남습니다.</p>
+{% endif %}
+
+{% if products %}
+<div class="product-list">
+  {% for product in products %}
+  {# 분석 제품이 위로 정렬돼 오므로, 그룹이 바뀌는 곳에 제목을 넣는다 #}
+  {% if loop.first or loop.previtem.is_checked != product.is_checked %}
+  <p class="product-group-title">
+    {% if product.is_checked %}분석 제품 ({{ checked_count }}){% else %}다른 제품 ({{ products | length - checked_count }}){% endif %}
+  </p>
+  {% endif %}
+  <div class="product-row">
+    <input type="checkbox" class="delete-check" name="product_ids" value="{{ product.id }}" form="bulk-delete-form" aria-label="{{ product.name }} 삭제 선택">
+    <div class="product-info">
+      <strong>{{ product.name }}</strong>
+      {% if product.brand %}<span class="hs-tag">{{ product.brand }}</span>{% endif %}
+      <span class="hs-tag">{{ product.hs_code }}</span>
+      {% if product.product_form %}<span class="hs-tag">{{ product.product_form }}</span>{% endif %}
+      {% if product.ingredients %}
+        <p class="ingredients">{{ product.ingredients }}</p>
+      {% endif %}
+      {# 가격·인증·강점은 이모지 대신 글자 라벨로, 있는 항목만 " · "로 이어 붙인다 #}
+      {% set meta = [] %}
+      {% if product.target_price %}{% set _ = meta.append(("가격", product.target_price)) %}{% endif %}
+      {% if product.certifications %}{% set _ = meta.append(("인증", product.certifications)) %}{% endif %}
+      {% if product.strengths %}{% set _ = meta.append(("강점", product.strengths)) %}{% endif %}
+      {% if meta %}
+      <p class="ingredients">
+        {% for label, value in meta %}{% if not loop.first %} · {% endif %}<span class="meta-label">{{ label }}</span> {{ value }}{% endfor %}
+      </p>
+      {% endif %}
+    </div>
+    <div class="action-buttons">
+      <form method="post" action="{{ url_for('mypage.toggle_product', product_id=product.id) }}">
+        {% if product.is_checked %}
+        <button type="submit" class="btn-chip btn-chip-active" title="{{ '이 제품만 분석 제품으로 남기기' if checked_count > 1 else '다시 누르면 선택이 해제됩니다' }}">✓ 분석 제품</button>
+        {% else %}
+        <button type="submit" class="btn-chip">분석 제품으로 선택</button>
+        {% endif %}
+      </form>
+      <a class="btn-chip" href="{{ url_for('exhibition.market_matrix', hscode=product.hs_code) }}" data-market-loading>유망시장 조사</a>
+      <button type="button" class="btn-chip" data-modal-open="edit-product-modal" data-edit-product
+              data-edit-url="{{ url_for('mypage.edit_product', product_id=product.id) }}"
+              data-edit-name="{{ product.name }}"
+              data-edit-hscode="{{ product.hs_code }}"
+              data-edit-brand="{{ product.brand or '' }}"
+              data-edit-product-form="{{ product.product_form or '' }}"
+              data-edit-ingredients="{{ product.ingredients or '' }}"
+              data-edit-target-price="{{ product.target_price or '' }}"
+              data-edit-certifications="{{ product.certifications or '' }}"
+              data-edit-strengths="{{ product.strengths or '' }}">수정</button>
+      <form method="post" action="{{ url_for('mypage.delete_product', product_id=product.id) }}">
+        <button type="submit" class="btn-text-danger" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<script>
+(function () {
+  var all = document.getElementById("delete-all");
+  if (!all) return;
+  var boxes = Array.prototype.slice.call(document.querySelectorAll(".delete-check"));
+  var count = document.getElementById("delete-count");
+  var btn = document.getElementById("bulk-delete-btn");
+  function checkedCount() {
+    return boxes.filter(function (b) { return b.checked; }).length;
+  }
+  function update() {
+    var n = checkedCount();
+    all.checked = n === boxes.length;
+    count.textContent = "(" + n + "/" + boxes.length + "개 선택됨)";
+    btn.disabled = n === 0;
+  }
+  all.addEventListener("change", function () {
+    boxes.forEach(function (b) { b.checked = all.checked; });
+    update();
+  });
+  boxes.forEach(function (b) { b.addEventListener("change", update); });
+  document.getElementById("bulk-delete-form").addEventListener("submit", function (e) {
+    var n = checkedCount();
+    if (!n || !confirm("선택한 제품 " + n + "개를 삭제하시겠습니까?")) e.preventDefault();
+  });
+  // 뒤로가기로 돌아왔을 때 브라우저가 체크 상태를 복원해도 개수가 맞게
+  window.addEventListener("pageshow", update);
+  update();
+})();
+</script>
+{% endif %}
+
+<div class="modal-overlay{% if form_error %} open{% endif %}" id="add-product-modal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h2>제품 추가하기</h2>
+      <button type="button" class="modal-close" data-modal-close aria-label="닫기">✕</button>
+    </div>
+
+    {% if form_error %}
+    <p class="form-error">{{ form_error }}</p>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('mypage.add_product') }}">
+      <div class="form-row">
+        <div class="form-field hs-autocomplete-field">
+          <label for="add-name">제품명 *</label>
+          <input type="text" id="add-name" name="name" placeholder="예: 약과"
+                 value="{{ form_name or '' }}" autocomplete="off" required>
+          <div class="hs-autocomplete-dropdown" hidden></div>
+        </div>
+        <div class="form-field hs-autocomplete-field">
+          <label for="add-hs_code">HS코드 *</label>
+          <input type="text" id="add-hs_code" name="hs_code" placeholder="예: 1905.90"
+                 value="{{ form_hs_code or '' }}" autocomplete="off" required>
+          <div class="hs-autocomplete-dropdown" hidden></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="add-brand">브랜드명</label>
+          <input type="text" id="add-brand" name="brand" placeholder="예: 사부작푸드"
+                 value="{{ form_brand or '' }}">
+        </div>
+        <div class="form-field">
+          <label for="add-product_form">제품 형태</label>
+          <input type="text" id="add-product_form" name="product_form" placeholder="예: 냉동, 분말, 병조림"
+                 value="{{ form_product_form or '' }}">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="add-ingredients">원재료</label>
+        <textarea id="add-ingredients" name="ingredients" rows="3" placeholder="예: 밀가루, 꿀, 참기름, 계피...">{{ form_ingredients or '' }}</textarea>
+      </div>
+
+      <p class="page-desc">아래 항목은 박람회 상세 페이지의 "트렌드 조사" 탭에서 시장·트렌드 분석 시 자동으로 사용됩니다.</p>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="add-target_price">가격 (목표 소매 가격대/단위중량)</label>
+          <input type="text" id="add-target_price" name="target_price" placeholder="예: 4.99 GBP / 350g"
+                 value="{{ form_target_price or '' }}">
+        </div>
+        <div class="form-field">
+          <label for="add-certifications">보유 인증</label>
+          <input type="text" id="add-certifications" name="certifications" placeholder="예: 비건, 코셔, HACCP"
+                 value="{{ form_certifications or '' }}">
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="add-strengths">제품 강점</label>
+        <textarea id="add-strengths" name="strengths" rows="2" placeholder="예: 얇고 쫄깃한 만두피, 버섯 채즙으로 육즙 모사">{{ form_strengths or '' }}</textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" data-modal-close>취소</button>
+        <button type="submit" class="btn-primary">추가하기</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <h2>엑셀로 여러 제품 한번에 등록</h2>
+  <p class="page-desc">
+    엑셀 첫 행에 제품명, HS코드, 브랜드명, 제품 형태, 원재료, 보유 인증, 가격, 제품 강점 컬럼명을 넣고
+    행마다 제품 하나씩 채워서 올리면 한번에 등록됩니다. (제품명, HS코드는 필수)
+  </p>
+  <form method="post" action="{{ url_for('mypage.bulk_upload_products') }}" enctype="multipart/form-data" class="form-row">
+    <div class="form-field">
+      <input type="file" name="bulk_file" accept=".xlsx,.xlsm" required>
+    </div>
+    <div class="form-actions" style="margin:0;">
+      <a class="btn-secondary bulk-template-link" href="{{ url_for('mypage.download_bulk_template') }}">엑셀 양식 다운로드</a>
+      <button type="submit" class="btn-primary">엑셀 업로드</button>
+    </div>
+  </form>
+</div>
+
+<div class="modal-overlay" id="edit-product-modal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h2>제품 수정하기</h2>
+      <button type="button" class="modal-close" data-modal-close aria-label="닫기">✕</button>
+    </div>
+
+    <form method="post" action="" id="edit-product-form">
+      <div class="form-row">
+        <div class="form-field hs-autocomplete-field">
+          <label for="edit-name">제품명 *</label>
+          <input type="text" id="edit-name" name="name" placeholder="예: 약과" autocomplete="off" required>
+          <div class="hs-autocomplete-dropdown" hidden></div>
+        </div>
+        <div class="form-field hs-autocomplete-field">
+          <label for="edit-hs_code">HS코드 *</label>
+          <input type="text" id="edit-hs_code" name="hs_code" placeholder="예: 1905.90" autocomplete="off" required>
+          <div class="hs-autocomplete-dropdown" hidden></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="edit-brand">브랜드명</label>
+          <input type="text" id="edit-brand" name="brand" placeholder="예: 사부작푸드">
+        </div>
+        <div class="form-field">
+          <label for="edit-product_form">제품 형태</label>
+          <input type="text" id="edit-product_form" name="product_form" placeholder="예: 냉동, 분말, 병조림">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="edit-ingredients">원재료</label>
+        <textarea id="edit-ingredients" name="ingredients" rows="3" placeholder="예: 밀가루, 꿀, 참기름, 계피..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="edit-target_price">가격 (목표 소매 가격대/단위중량)</label>
+          <input type="text" id="edit-target_price" name="target_price" placeholder="예: 4.99 GBP / 350g">
+        </div>
+        <div class="form-field">
+          <label for="edit-certifications">보유 인증</label>
+          <input type="text" id="edit-certifications" name="certifications" placeholder="예: 비건, 코셔, HACCP">
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="edit-strengths">제품 강점</label>
+        <textarea id="edit-strengths" name="strengths" rows="2" placeholder="예: 얇고 쫄깃한 만두피, 버섯 채즙으로 육즙 모사"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" data-modal-close>취소</button>
+        <button type="submit" class="btn-primary">수정하기</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{# "유망시장 조사" 로딩 화면: market_matrix는 UN Comtrade를 동기로 호출해서 응답이
+   올 때까지 진행률을 받을 수 없으므로, 링크 클릭 시 이 화면을 띄우고 진행률은
+   시간에 따라 추정해서 보여준다. 단계 칩은 유망시장 조사 화면의 ①~⑤ 섹션 기준. #}
+<style>
+  .mm-loading { position: fixed; inset: 0; z-index: 1000; background: #fff; display: none; align-items: center; justify-content: center; padding: 24px; }
+  .mm-loading.show { display: flex; }
+  .mm-loading-box { text-align: center; max-width: 440px; width: 100%; }
+  .mm-ring { position: relative; width: 168px; height: 168px; margin: 0 auto 22px; }
+  .mm-ring svg { transform: rotate(-90deg); }
+  .mm-ring .track { stroke: #e5e7eb; }
+  .mm-ring .bar { stroke: url(#mmRingGrad); stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+  .mm-ring .pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 800; color: #0f172a; letter-spacing: -.02em; }
+  .mm-ring .pct small { font-size: 16px; color: #64748b; margin-left: 2px; }
+  .mm-loading-msg { font-size: 16px; font-weight: 700; color: #0f172a; min-height: 24px; }
+  .mm-loading-sub { font-size: 14px; color: #64748b; margin-top: 4px; }
+  .mm-loading-steps { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin: 16px 0 26px; }
+  .mm-chip { display: inline-block; font-size: 12px; border-radius: 4px; padding: 2px 7px; border: 1px solid #cbd5e1; color: #64748b; white-space: nowrap; background: #fff; }
+  .mm-chip.run { background: #fdf3ec; color: #ea580c; border-color: transparent; }
+  .mm-chip.run::before { content: "● "; }
+  .mm-chip.done { background: #ecfdf5; color: #047857; border-color: transparent; }
+  .mm-chip.done::before { content: "✓ "; }
+  .mm-slogan { border-top: 1px solid #e5e7eb; padding-top: 20px; }
+  .mm-slogan .line1 { font-size: 16px; color: #334155; font-weight: 600; }
+  .mm-slogan .line2 { font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 2px; }
+  .mm-slogan .brand { background: linear-gradient(90deg, #ea580c, #d95400); -webkit-background-clip: text; background-clip: text; color: transparent; }
+</style>
+
+<div class="mm-loading" id="mm-loading" role="status" aria-live="polite">
+  <div class="mm-loading-box">
+    <div class="mm-ring">
+      <svg width="168" height="168" viewBox="0 0 168 168" aria-hidden="true">
+        <defs><linearGradient id="mmRingGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ea580c"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>
+        <circle class="track" cx="84" cy="84" r="72" fill="none" stroke-width="12"/>
+        <circle class="bar" id="mm-ring-bar" cx="84" cy="84" r="72" fill="none" stroke-width="12" stroke-dasharray="452.39" stroke-dashoffset="452.39"/>
+      </svg>
+      <div class="pct"><span id="mm-ring-pct">0</span><small>%</small></div>
+    </div>
+    <div class="mm-loading-msg" id="mm-loading-msg">유망시장 조사를 준비하고 있어요</div>
+    <div class="mm-loading-sub">UN Comtrade 통계를 분석해요. 보통 몇 분 걸려요.</div>
+    <div class="mm-loading-steps" id="mm-loading-steps"></div>
+    <div class="mm-slogan">
+      <div class="line1">박람회 준비부터 바이어 팔로업까지.</div>
+      <div class="line2"><span class="brand">페어메이트</span>와 함께</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var overlay = document.getElementById("mm-loading");
+  if (!overlay) return;
+  var CIRC = 452.39;
+  var STEPS = [
+    {name: "세계시장 현황", msg: "세계시장 교역 현황을 불러오고 있어요", until: 30},
+    {name: "유망시장 매트릭스", msg: "유망시장 매트릭스를 계산하고 있어요", until: 60},
+    {name: "후보국별 상세", msg: "후보국별 상세 데이터를 정리하고 있어요", until: 85},
+    {name: "AI 분석", msg: "AI 분석 결과를 준비하고 있어요", until: 100}
+  ];
+  var timer = null;
+
+  function render(pct) {
+    document.getElementById("mm-ring-pct").textContent = pct;
+    document.getElementById("mm-ring-bar").style.strokeDashoffset = CIRC * (1 - pct / 100);
+    var current = 0;
+    while (current < STEPS.length - 1 && pct >= STEPS[current].until) current++;
+    document.getElementById("mm-loading-msg").textContent = STEPS[current].msg;
+    var box = document.getElementById("mm-loading-steps");
+    box.innerHTML = "";
+    STEPS.forEach(function (step, i) {
+      var chip = document.createElement("span");
+      chip.className = "mm-chip" + (i < current ? " done" : (i === current ? " run" : ""));
+      chip.textContent = step.name;
+      box.appendChild(chip);
+    });
+  }
+
+  function show() {
+    // 실제 진행률을 알 수 없으므로 95%까지 점점 느려지게 올린다.
+    var started = Date.now();
+    render(0);
+    overlay.classList.add("show");
+    clearInterval(timer);
+    timer = setInterval(function () {
+      var sec = (Date.now() - started) / 1000;
+      render(Math.floor(95 * (1 - Math.exp(-sec / 45))));
+    }, 500);
+  }
+
+  function hide() {
+    clearInterval(timer);
+    overlay.classList.remove("show");
+  }
+
+  document.querySelectorAll("a[data-market-loading]").forEach(function (link) {
+    link.addEventListener("click", function (e) {
+      // 새 탭으로 열 때는 현재 페이지를 가리지 않는다.
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+      show();
+    });
+  });
+
+  // 뒤로가기로 돌아왔을 때(bfcache) 로딩 화면이 남아 있지 않게 한다.
+  window.addEventListener("pageshow", function (e) { if (e.persisted) hide(); });
+})();
+</script>
+{% endblock %}

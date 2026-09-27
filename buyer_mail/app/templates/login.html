@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="login-box">
+  <h1>사부작 팔로업 메일 시스템</h1>
+  <p>Google 계정으로 로그인하면 본인 Gmail로 바로 발송할 수 있습니다.<br>비밀번호는 Google 로그인 화면에만 입력되며 이 앱은 저장하지 않습니다.</p>
+  <a class="google-btn" href="{{ url_for('auth.google_login') }}">Google로 로그인</a>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ '바이어 수정' if contact else '바이어 등록' }}</h2>
+<p class="meta">아래 항목은 모두 박람회에서 만난 <strong>상대방(바이어)</strong> 정보입니다.</p>
+
+{% if not exhibitions %}
+<p class="meta">등록된 박람회가 없습니다.</p>
+{% else %}
+
+{% if not contact %}
+<form method="post" action="{{ url_for('contacts.scan_card') }}" enctype="multipart/form-data" class="scan-bar">
+  <input type="file" name="card_image" accept="image/*" required>
+  <button type="submit" class="btn-secondary">명함 스캔해서 채우기</button>
+</form>
+{% endif %}
+
+<form method="post" class="form" autocomplete="off">
+  <label>박람회
+    <select name="exhibition_id" required>
+      <option value="" disabled {{ 'selected' if not contact else '' }}>선택하세요</option>
+      {% for e in exhibitions %}
+      <option value="{{ e.id }}" {{ 'selected' if contact and contact.exhibition_id == e.id else '' }}>{{ e.name }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>바이어 이름 <input name="name" required autocomplete="off" value="{{ contact.name if contact else (prefill.name if prefill else '') }}"></label>
+  <label>바이어 회사명 <input name="company" autocomplete="off" placeholder="상대방 회사명" value="{{ contact.company if contact else (prefill.company if prefill else '') }}"></label>
+  <label>바이어 직급 <input name="position" autocomplete="off" placeholder="예: 해외영업팀 대리" value="{{ contact.position if contact else (prefill.position if prefill else '') }}"></label>
+  <label>바이어 이메일 <input type="email" name="email" required autocomplete="off" value="{{ contact.email if contact else (prefill.email if prefill else '') }}"></label>
+  <label>바이어 전화번호 <input name="phone" autocomplete="off" value="{{ contact.phone if contact else (prefill.phone if prefill else '') }}"></label>
+  <label>바이어 주소 <input name="address" autocomplete="off" value="{{ contact.address if contact else (prefill.address if prefill else '') }}"></label>
+  <label>비고 <textarea name="remarks" rows="3" placeholder="기타 메모">{{ contact.remarks if contact else '' }}</textarea></label>
+  <label>메일 템플릿 버전
+    <select name="preferred_template_version">
+      {% for t in template_versions %}
+      <option value="{{ t.version }}"
+        {{ 'selected' if (contact and contact.preferred_template_version == t.version) or (not contact and t.is_active) else '' }}>
+        {{ t.display_name }}{% if t.is_active %} (현재 발송용){% endif %}{% if not t.body %} (미작성){% endif %}
+      </option>
+      {% endfor %}
+    </select>
+  </label>
+  <div class="actions">
+    <button type="submit" class="btn">저장</button>
+    <a href="{{ url_for('contacts.list_contacts') }}" class="btn-secondary">취소</a>
+  </div>
+</form>
+{% endif %}
+{% endblock %}

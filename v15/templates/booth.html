@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+{% block title %}부스 컨셉 기획 · 페어메이트{% endblock %}
+{% block start_url %}/api/booth/start{% endblock %}
+{% block kind %}booth{% endblock %}
+{% block result_base %}/booth/{% endblock %}
+{% block body_attrs %}{% if running %} data-running-job="{{ job_id }}"{% endif %}{% endblock %}
+{% block loading_sub %}부스 컨셉을 기획하고 있어요. 보통 2~4분 걸려요.{% endblock %}
+
+{% block content %}
+  {% set inp = data.inputs if data else form %}
+  <div class="page-head">
+    <div>
+      <a class="back-link" href="/trend/{{ job_id if job_id else (data.id if data else '') }}">← 트렌드 조사 결과로 돌아가기</a>
+      <h1 style="margin-top:6px">부스 컨셉 기획</h1>
+      {% if inp and inp.name %}<p class="desc" style="margin-bottom:0">{{ inp.name }} · {{ inp.country }}{% if inp.exhibition_name %} · {{ inp.exhibition_name }}{% endif %}</p>{% endif %}
+    </div>
+  </div>
+
+  {% if not data and not running %}
+    <div style="margin-top:20px">
+    {% set form_action = "/booth" %}{% set submit_label = "부스 컨셉 기획하기" %}
+    {% include "_form.html" %}
+    </div>
+  {% endif %}
+
+  {% if data %}
+  {% set b = data.booth %}
+  {% if b %}
+    {% set br = b.brief %}
+    {% set sec = b.sections %}
+    {% set vf = b.visitor_flow %}
+
+    {# ========================================== #}
+    {# 1. 슬로건 (메인 & 서브 카피)               #}
+    {# ========================================== #}
+    {% if sec.slogan %}
+      <div class="slogan-hero" style="background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:28px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <div class="lbl" style="color:#ff6b00; font-weight:700; font-size:13px; letter-spacing:0.05em; margin-bottom:8px;">1. SLOGAN</div>
+        {% if sec.slogan.main_en %}<div class="main" style="font-size:26px; font-weight:800; color:#111827; margin-bottom:6px;">“{{ sec.slogan.main_en }}”</div>{% endif %}
+        {% if sec.slogan.main_ko %}<div class="main-ko" style="font-size:18px; font-weight:600; color:#4b5563; margin-bottom:12px;">{{ sec.slogan.main_ko }}</div>{% endif %}
+        {% if sec.slogan.sub_en or sec.slogan.sub_ko %}
+          <div class="sub" style="font-size:15px; color:#6b7280; border-top:1px dashed #e5e7eb; padding-top:12px; margin-top:8px;">
+            {% if sec.slogan.sub_en %}<span>“{{ sec.slogan.sub_en }}”</span>{% endif %}
+            {% if sec.slogan.sub_ko %}<span style="margin-left:8px; color:#9ca3af;">({{ sec.slogan.sub_ko }})</span>{% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {# ========================================== #}
+    {# 2. 셀링 포인트 (Selling Points & Big Idea) #}
+    {# ========================================== #}
+    <div class="card" style="background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:24px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+      <div class="card-header" style="color:#ff6b00; font-weight:700; font-size:13px; letter-spacing:0.05em; margin-bottom:12px;">2. SELLING POINTS</div>
+      <div class="card-title" style="font-size:20px; font-weight:700; margin-bottom:16px;">
+        {{ br.big_idea.line_en or b.positioning.core_message or "핵심 셀링 포인트" }}
+        {% if br.big_idea.line_ko %}<div style="font-size:15px; font-weight:500; color:#4b5563; margin-top:4px;">{{ br.big_idea.line_ko }}</div>{% endif %}
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        {% if br.big_idea.why %}
+        <div style="background:#f9fafb; border-radius:8px; padding:16px;">
+          <div style="font-weight:700; font-size:14px; color:#374151; margin-bottom:6px;">💡 셀링 포인트 선정 이유</div>
+          <div style="font-size:14px; color:#4b5563; line-height:1.6;">{{ br.big_idea.why }}</div>
+        </div>
+        {% endif %}
+
+        {% if b.positioning.core_message %}
+        <div style="background:#f9fafb; border-radius:8px; padding:16px;">
+          <div style="font-weight:700; font-size:14px; color:#374151; margin-bottom:6px;">🎯 바이어 핵심 전달 메시지</div>
+          <div style="font-size:14px; color:#4b5563; line-height:1.6;">{{ b.positioning.core_message }}</div>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if br.target_buyers %}
+        <div style="margin-top:16px; border-top:1px solid #f3f4f6; padding-top:12px;">
+          <div style="font-size:13px; font-weight:600; color:#6b7280; margin-bottom:8px;">타깃 바이어 유형</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            {% for t in br.target_buyers %}
+              <span class="pill" style="background:#eef2ff; color:#4338ca; border-radius:6px; padding:4px 10px; font-size:13px;">
+                {{ t.priority or loop.index }}순위: <b>{{ t.type }}</b>{% if t.job %} ({{ t.job }}){% endif %}
+              </span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    {# ========================================== #}
+    {# 3. 이벤트 기획 (부스 체험 & 이벤트 프로그램)   #}
+    {# ========================================== #}
+    <div class="card" style="background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:24px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+      <div class="card-header" style="color:#ff6b00; font-weight:700; font-size:13px; letter-spacing:0.05em; margin-bottom:12px;">3. EVENT & EXPERIENCE</div>
+      {% set pair = sec.signature_pairing %}
+      {% if pair %}
+        <div style="margin-bottom:16px;">
+          <div style="font-size:18px; font-weight:700; color:#111827;">{{ pair.item or "방문객 참여 및 체험 이벤트" }}</div>
+          {% if pair.intent %}<div style="font-size:14px; color:#4b5563; margin-top:4px; line-height:1.5;"><b>기획 의도:</b> {{ pair.intent }}</div>{% endif %}
+        </div>
+        {% if pair.bullets %}
+          <ul class="fact-list" style="margin-top:8px; padding-left:20px;">
+            {% for b_item in pair.bullets %}
+              <li style="font-size:14px; color:#374151; margin-bottom:4px;">{{ b_item.text }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% else %}
+        <p style="color:#6b7280; font-size:14px;">기획된 현장 참여 이벤트가 없습니다.</p>
+      {% endif %}
+    </div>
+
+    {# ========================================== #}
+    {# 4. 3초 · 30초 · 3분 (Visitor Journey)     #}
+    {# ========================================== #}
+    {% set stages = [("3s", "3초", "시선 사로잡기"), ("30s", "30초", "흥미 및 탐색"), ("3min", "3분", "심층 상담 및 전환")] %}
+    {% if vf %}
+      <div class="card" style="background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:24px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <div class="card-header" style="color:#ff6b00; font-weight:700; font-size:13px; letter-spacing:0.05em; margin-bottom:12px;">4. VISITOR JOURNEY (3초 · 30초 · 3분)</div>
+        
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;">
+          {% for k, label, sub_title in stages %}
+            {% set st = vf[k] %}
+            <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:18px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <span style="font-size:18px; font-weight:800; color:#ff6b00;">{{ label }}</span>
+                <span style="font-size:12px; color:#6b7280; font-weight:500;">{{ sub_title }}</span>
+              </div>
+              
+              {% if st.headline %}
+                <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:8px;">{{ st.headline }}</div>
+              {% endif %}
+              
+              {% if st.goal %}
+                <div style="font-size:13px; color:#374151; margin-bottom:10px; background:#fff; padding:8px 10px; border-radius:6px; border:1px solid #f3f4f6;">
+                  <b>🎯 목표:</b> {{ st.goal }}
+                </div>
+              {% endif %}
+
+              {% if st.message %}
+                <div style="font-size:13px; color:#1e40af; background:#eff6ff; padding:8px 10px; border-radius:6px; margin-bottom:10px;">
+                  <b>💬 건넬 말:</b> “{{ st.message }}”
+                </div>
+              {% endif %}
+
+              {% if st.visitor %}
+                <div style="margin-top:8px;">
+                  <div style="font-size:12px; font-weight:600; color:#6b7280; margin-bottom:4px;">👀 방문객 행동</div>
+                  <ul style="font-size:12px; color:#4b5563; padding-left:16px; margin:0;">
+                    {% for item in st.visitor %}<li>{{ item }}</li>{% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {# ========================================== #}
+    {# 5. 3D 부스 컨셉 뷰어 (Three.js WebGL)      #}
+    {# ========================================== #}
+    <div class="card" style="background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:24px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+      <div class="card-header" style="color:#ff6b00; font-weight:700; font-size:13px; letter-spacing:0.05em; margin-bottom:6px;">3D BOOTH CONCEPT PREVIEW</div>
+      <div style="font-size:13px; color:#6b7280; margin-bottom:14px;">💡 <b>마우스 좌클릭 드래그</b>: 360도 회전 | <b>휠 스크롤</b>: 확대/축소</div>
+      
+      <!-- 3D 캔버스 영역 -->
+      <div id="booth-3d-container" style="width:100%; height:450px; background:#0f172a; border-radius:8px; position:relative; overflow:hidden;"></div>
+      
+      <!-- 3D 모델에 반영된 백엔드 메타 정보 -->
+      <div style="margin-top:16px; display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; font-size:13px;">
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:10px 14px; border-radius:8px;">
+          <span style="display:block; font-weight:700; color:#3b82f6; margin-bottom:2px;">🏢 메인 비주얼 월</span>
+          <span style="color:#475569;">{{ sec.main_visual.concept_ko or sec.main_visual.concept_en or "비주얼 백월 구조" }}</span>
+        </div>
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:10px 14px; border-radius:8px;">
+          <span style="display:block; font-weight:700; color:#ff6b00; margin-bottom:2px;">🏬 쇼케이스 매대</span>
+          <span style="color:#475569;">{{ sec.merchandising.zones|length if sec.merchandising.zones else 1 }}개 구역 진열대 배치</span>
+        </div>
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:10px 14px; border-radius:8px;">
+          <span style="display:block; font-weight:700; color:#10b981; margin-bottom:2px;">🎯 인터랙션 시연존</span>
+          <span style="color:#475569;">{{ sec.demonstration.title or "체험 및 바이어 상담 카운터" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Three.js 라이브러리 및 3D 부스 렌더링 스크립트 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+      (function() {
+        const container = document.getElementById('booth-3d-container');
+        if (!container) return;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0f172a); // 다크 프리미엄 배경
+
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(12, 10, 14);
+        camera.lookAt(0, 1, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
+
+        // 조명 설정
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        scene.add(ambientLight);
+
+        const spotLight = new THREE.SpotLight(0xffffff, 1.2);
+        spotLight.position.set(8, 16, 8);
+        spotLight.castShadow = true;
+        scene.add(spotLight);
+
+        const pointLight = new THREE.PointLight(0xff6b00, 0.8, 20);
+        pointLight.position.set(0, 4, 0);
+        scene.add(pointLight);
+
+        // 전체 부스를 묶을 그룹 생성
+        const boothGroup = new THREE.Group();
+        scene.add(boothGroup);
+
+        // 1. 부스 바닥 (Floor)
+        const floorGeo = new THREE.BoxGeometry(10, 0.2, 10);
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4 });
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.position.y = -0.1;
+        floor.receiveShadow = true;
+        boothGroup.add(floor);
+
+        // 그리드 보조선
+        const grid = new THREE.GridHelper(10, 10, 0xff6b00, 0x475569);
+        grid.position.y = 0.01;
+        boothGroup.add(grid);
+
+        // 2. 메인 비주얼 백월 (Back Wall)
+        const wallGeo = new THREE.BoxGeometry(9.6, 4.2, 0.3);
+        const wallMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, metalness: 0.1, roughness: 0.5 });
+        const wall = new THREE.Mesh(wallGeo, wallMat);
+        wall.position.set(0, 2.1, -4.7);
+        wall.castShadow = true;
+        boothGroup.add(wall);
+
+        // 백월 상단 헤더 간판 (Brand Header)
+        const headerGeo = new THREE.BoxGeometry(9.6, 0.8, 0.5);
+        const headerMat = new THREE.MeshStandardMaterial({ color: 0xff6b00 });
+        const header = new THREE.Mesh(headerGeo, headerMat);
+        header.position.set(0, 4.2, -4.6);
+        boothGroup.add(header);
+
+        // 3. 쇼케이스 진열 매대 (Merchandising Table)
+        const displayGeo = new THREE.BoxGeometry(3.6, 1.1, 1.2);
+        const displayMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.2 });
+        const displayTable = new THREE.Mesh(displayGeo, displayMat);
+        displayTable.position.set(-2, 0.55, 0);
+        displayTable.castShadow = true;
+        boothGroup.add(displayTable);
+
+        // 매대 위 제품 박스 오브젝트 3개
+        for(let i = -1; i <= 1; i++) {
+          const prodGeo = new THREE.BoxGeometry(0.5, 0.6, 0.5);
+          const prodMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b });
+          const prod = new THREE.Mesh(prodGeo, prodMat);
+          prod.position.set(-2 + (i * 0.9), 1.4, 0);
+          boothGroup.add(prod);
+        }
+
+        // 4. 인터랙션 시연 / 체험 카운터 (Demonstration Pod)
+        const demoGeo = new THREE.CylinderGeometry(1.2, 1.2, 1.1, 32);
+        const demoMat = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.3 });
+        const demoCounter = new THREE.Mesh(demoGeo, demoMat);
+        demoCounter.position.set(2.4, 0.55, 1.5);
+        demoCounter.castShadow = true;
+        boothGroup.add(demoCounter);
+
+        // 마우스 인터랙션 (드래그 회전 & 휠 줌)
+        let isDragging = false, prevMouse = { x: 0, y: 0 };
+        container.addEventListener('mousedown', e => {
+          isDragging = true;
+          prevMouse = { x: e.clientX, y: e.clientY };
+        });
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('mousemove', e => {
+          if (!isDragging) return;
+          const deltaX = e.clientX - prevMouse.x;
+          const deltaY = e.clientY - prevMouse.y;
+          boothGroup.rotation.y += deltaX * 0.008;
+          boothGroup.rotation.x += deltaY * 0.004;
+          // 상하 각도 제한
+          boothGroup.rotation.x = Math.max(-0.4, Math.min(0.6, boothGroup.rotation.x));
+          prevMouse = { x: e.clientX, y: e.clientY };
+        });
+
+        container.addEventListener('wheel', e => {
+          e.preventDefault();
+          camera.position.z = Math.max(8, Math.min(24, camera.position.z + e.deltaY * 0.02));
+        }, { passive: false });
+
+        // 창 크기 대응
+        window.addEventListener('resize', () => {
+          camera.aspect = container.clientWidth / container.clientHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        // 렌더 루프
+        function animate() {
+          requestAnimationFrame(animate);
+          if (!isDragging) {
+            boothGroup.rotation.y += 0.002; // 은은한 자동 회전
+          }
+          renderer.render(scene, camera);
+        }
+        animate();
+      })();
+    </script>
+
+  {% else %}
+    <div class="empty-panel" style="margin-top:20px">
+      부스 컨셉을 만들지 못했어요. {{ data.booth_error or "" }}
+      <a href="/booth">다시 시도하기 →</a>
+    </div>
+  {% endif %}
+  {% endif %}
+{% endblock %}

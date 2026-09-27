@@ -1,0 +1,38 @@
+{% extends "auth_base.html" %}
+{% block title %}회원가입 | FairMate{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+  <div class="auth-logo">
+    <div class="auth-logo-badge">{% include "_logo_icon.html" %}</div>
+    <h1>FairMate 회원가입</h1>
+    <p class="auth-logo-sub">박람회 준비 대시보드</p>
+  </div>
+
+  <form method="post" action="{{ url_for('auth.register') }}" class="auth-form">
+    <label for="name">이름</label>
+    <input type="text" id="name" name="name" value="{{ name or '' }}" required autofocus>
+
+    <label for="company">회사명</label>
+    <input type="text" id="company" name="company" value="{{ company or '' }}">
+
+    <label for="position">소속·직급</label>
+    <input type="text" id="position" name="position" placeholder="예: 해외영업팀 대리" value="{{ position or '' }}">
+
+    <label for="email">이메일</label>
+    <input type="email" id="email" name="email" value="{{ email or '' }}" required>
+
+    <label for="password">비밀번호</label>
+    <input type="password" id="password" name="password" required>
+
+    <label for="password_confirm">비밀번호 확인</label>
+    <input type="password" id="password_confirm" name="password_confirm" required>
+
+    <button type="submit" class="btn-primary auth-submit">가입하기</button>
+  </form>
+
+  <p class="auth-switch">
+    이미 계정이 있으신가요? <a href="{{ url_for('auth.login') }}">로그인</a>
+  </p>
+</div>
+{% endblock %}

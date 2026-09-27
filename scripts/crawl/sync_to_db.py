@@ -41,6 +41,17 @@ from datetime import datetime, timezone
 
 import requests
 
+# Windows 콘솔 기본 인코딩(cp949 등)은 é, ń 같은 문자를 못 담아서 박람회 이름을
+# print()하다가 UnicodeEncodeError로 스크립트 전체가 죽는 걸 막기 위해 강제로 UTF-8 사용.
+# line_buffering=True: 파일로 리다이렉트해도 줄 단위로 바로바로 flush되게 해서,
+# 오래 걸리는 --details 크롤링 중에도 진행 상황을 실시간으로 볼 수 있게 한다.
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+else:
+    sys.stdout.reconfigure(line_buffering=True)
+    sys.stderr.reconfigure(line_buffering=True)
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tradefairdates_scraper as tfd
 
@@ -71,6 +82,8 @@ CREATE TABLE IF NOT EXISTS raw_exhibitions (
     audience_note   TEXT,
     website         TEXT,
     intro           TEXT,
+    image_url       TEXT,
+    hero_image_url  TEXT,
     category        TEXT,
     continent       TEXT,
     food_yn         INTEGER,
@@ -78,16 +91,40 @@ CREATE TABLE IF NOT EXISTS raw_exhibitions (
     keywords        TEXT,
     intro_ko        TEXT,
     classified_at   TEXT,
+    classify_relevant_updated_at TEXT,
     is_active       INTEGER NOT NULL DEFAULT 1,
-    last_updated_at TEXT NOT NULL
+    last_updated_at TEXT NOT NULL,
+    country_ko          TEXT,
+    organizer_email     TEXT,
+    organizer_phone     TEXT,
+    contact_synced_at   TEXT
 );
 """
 
+# 이 스크립트가 직접 만들고 채우는 컬럼들. country_ko/organizer_email/organizer_phone/
+# contact_synced_at은 다른 스크립트(country_name.py, enrich_contact_from_website.py)가
+# 채우는 컬럼이라 여기서는 건드리지 않지만, 기존 DB에 이미 있는 값을 마이그레이션 때
+# 실수로 날리지 않도록 스키마 정의에는 포함해둔다.
 NEW_COLUMNS = [
     "id", "detail_url", "name", "start_date", "end_date", "country", "city", "venue",
-    "audience_note", "website", "intro", "category", "continent", "food_yn", "scale",
-    "keywords", "intro_ko", "classified_at", "is_active", "last_updated_at",
+    "audience_note", "website", "intro", "image_url", "hero_image_url", "category",
+    "continent", "food_yn",
+    "scale", "keywords", "intro_ko", "classified_at", "classify_relevant_updated_at",
+    "is_active", "last_updated_at",
+    "country_ko", "organizer_email", "organizer_phone", "contact_synced_at",
 ]
+
+# 위 컬럼 중 이 스크립트가 실제로 크롤링해서 채우는 것들 (나머지는 다른 스크립트 소관).
+# 레거시 스키마 감지 시 전체 재구성 없이 부족한 컬럼만 추가할 때 이 목록을 기준으로 삼는다.
+OWN_COLUMNS = [
+    c for c in NEW_COLUMNS
+    if c not in ("country_ko", "organizer_email", "organizer_phone", "contact_synced_at")
+]
+
+# 이런 컬럼(옛 한글 컬럼명, period 등)이 보이면 진짜 레거시 스키마로 보고 전체 재구성한다.
+# (전체 재구성은 id가 새로 매겨져서 다른 테이블의 exhibition_id 참조가 깨지므로,
+# 반드시 필요할 때만 해야 한다 — 그냥 컬럼 하나 추가하는 경우는 ALTER TABLE로 충분함)
+LEGACY_MARKERS = {"박람회명", "period", "first_seen_at", "last_seen_at"}
 
 
 def now_iso():
@@ -134,6 +171,8 @@ def _old_row_to_new(old_cols, row):
         "audience_note": pick("audience_note", "참관대상", default=""),
         "website": pick("website", "웹사이트", default=""),
         "intro": pick("intro", "상세설명", default=""),
+        "image_url": pick("image_url", default=None),
+        "hero_image_url": pick("hero_image_url", default=None),
         "category": pick("category", default=""),
         "continent": pick("continent", "대륙", default=None),
         "food_yn": pick("food_yn", default=None),
@@ -141,24 +180,47 @@ def _old_row_to_new(old_cols, row):
         "keywords": pick("keywords", "키워드", default=None),
         "intro_ko": pick("intro_ko", default=None),
         "classified_at": pick("classified_at", default=None),
+        "classify_relevant_updated_at": pick("classify_relevant_updated_at", default=None),
         "is_active": pick("is_active", default=1),
         "last_updated_at": pick("last_updated_at", default=now_iso()),
+        "country_ko": pick("country_ko", default=None),
+        "organizer_email": pick("organizer_email", default=None),
+        "organizer_phone": pick("organizer_phone", default=None),
+        "contact_synced_at": pick("contact_synced_at", default=None),
     }
 
 
 def init_db(conn):
-    """raw_exhibitions를 최신 스키마로 만든다. 테이블이 없으면 새로 만들고,
-    예전 스키마로 이미 있으면 데이터를 보존하면서 새 스키마로 옮긴다."""
+    """raw_exhibitions를 최신 스키마로 만든다.
+    - 테이블이 아예 없으면 새로 만든다.
+    - 있는데 컬럼이 몇 개 부족하기만 하면(레거시 마커 없음) ALTER TABLE ADD COLUMN으로만
+      채운다 — id/rowid가 그대로 유지되어야 app_data.db 쪽의 exhibition_id 참조가
+      안 깨지기 때문에, 꼭 필요한 경우가 아니면 테이블을 통째로 다시 만들지 않는다.
+    - 옛 한글 컬럼명(예: "박람회명", "period")처럼 진짜 호환 안 되는 레거시 스키마일
+      때만 예외적으로 전체 재구성(데이터는 보존하되 id는 새로 매겨짐)한다."""
     if not _table_exists(conn, "raw_exhibitions"):
         conn.execute(SCHEMA)
         conn.commit()
         return
 
     cols = {row[1] for row in conn.execute("PRAGMA table_info(raw_exhibitions)")}
-    if cols == set(NEW_COLUMNS):
-        return  # 이미 최신 스키마
+    if set(OWN_COLUMNS) <= cols:
+        return  # 이 스크립트가 다루는 컬럼은 이미 다 있음
 
-    print("  -> 예전 스키마 감지, 데이터를 보존하며 새 스키마로 마이그레이션합니다...")
+    if not (cols & LEGACY_MARKERS):
+        missing = [c for c in OWN_COLUMNS if c not in cols]
+        print(f"  -> 컬럼 추가: {missing}")
+        col_types = {"start_date": "INTEGER", "end_date": "INTEGER", "food_yn": "INTEGER",
+                     "is_active": "INTEGER NOT NULL DEFAULT 1"}
+        for col in missing:
+            conn.execute(
+                f"ALTER TABLE raw_exhibitions ADD COLUMN {col} {col_types.get(col, 'TEXT')}"
+            )
+        conn.commit()
+        return
+
+    print("  -> 레거시 스키마 감지, 데이터를 보존하며 새 스키마로 마이그레이션합니다...")
+    print("     (주의: id가 새로 매겨집니다 — app_data.db의 exhibition_id 참조와 어긋날 수 있음)")
     conn.row_factory = sqlite3.Row
     old_rows = [dict(r) for r in conn.execute("SELECT * FROM raw_exhibitions")]
     conn.row_factory = None
@@ -171,17 +233,25 @@ def init_db(conn):
         conn.execute(
             """
             INSERT INTO raw_exhibitions
-                (detail_url, name, start_date, end_date, country, city, venue,
-                 audience_note, website, intro, category, continent, food_yn, scale, keywords,
-                 intro_ko, classified_at, is_active, last_updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (id, detail_url, name, start_date, end_date, country, city, venue,
+                 audience_note, website, intro, image_url, hero_image_url, category,
+                 continent, food_yn,
+                 scale, keywords, intro_ko, classified_at, classify_relevant_updated_at,
+                 is_active, last_updated_at,
+                 country_ko, organizer_email, organizer_phone, contact_synced_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
-                new_row["detail_url"], new_row["name"], new_row["start_date"], new_row["end_date"],
-                new_row["country"], new_row["city"], new_row["venue"], new_row["audience_note"],
-                new_row["website"], new_row["intro"], new_row["category"], new_row["continent"],
+                row.get("id"), new_row["detail_url"], new_row["name"], new_row["start_date"],
+                new_row["end_date"], new_row["country"], new_row["city"], new_row["venue"],
+                new_row["audience_note"], new_row["website"], new_row["intro"],
+                new_row["image_url"], new_row["hero_image_url"], new_row["category"],
+                new_row["continent"],
                 new_row["food_yn"], new_row["scale"], new_row["keywords"], new_row["intro_ko"],
-                new_row["classified_at"], new_row["is_active"], new_row["last_updated_at"],
+                new_row["classified_at"], new_row["classify_relevant_updated_at"],
+                new_row["is_active"], new_row["last_updated_at"],
+                new_row["country_ko"], new_row["organizer_email"], new_row["organizer_phone"],
+                new_row["contact_synced_at"],
             ),
         )
 
@@ -244,11 +314,19 @@ def crawl_selected_sites(labels_urls, with_details, verbose=True):
                 detail = tfd.parse_detail(detail_url)
                 row["축제URL"] = detail["축제URL"]
                 row["축제소개"] = detail["축제소개"]
+                row["이미지URL"] = detail["이미지URL"]
             except requests.exceptions.RequestException as e:
                 print(f"    -> 실패: {e}")
             tfd.polite_sleep()
 
     return all_rows, failed_labels
+
+
+# new_values 튜플에서 AI 분류(preprocess.py)가 실제로 프롬프트에 넣는 필드의 인덱스
+# (name=0, country=3, audience_note=6, website=7, intro=8). 날짜/장소/카테고리처럼
+# 분류랑 무관한 필드만 바뀌었을 땐 재분류를 트리거하면 안 되므로, "뭐든 바뀜"과
+# "분류에 쓰이는 필드가 바뀜"을 별도 컬럼(classify_relevant_updated_at)으로 추적한다.
+_CLASSIFY_RELEVANT_IDX = (0, 3, 6, 7, 8)
 
 
 def sync_rows(conn, rows):
@@ -269,7 +347,7 @@ def sync_rows(conn, rows):
 
         cur.execute(
             "SELECT name, start_date, end_date, country, city, venue, audience_note, "
-            "website, intro, category FROM raw_exhibitions WHERE detail_url = ?",
+            "website, intro, image_url, category FROM raw_exhibitions WHERE detail_url = ?",
             (detail_url,),
         )
         existing = cur.fetchone()
@@ -286,6 +364,7 @@ def sync_rows(conn, rows):
             row.get("참관대상", ""),
             row.get("축제URL", ""),
             row.get("축제소개", ""),
+            row.get("이미지URL", ""),
             row.get("category", ""),
         )
 
@@ -294,31 +373,38 @@ def sync_rows(conn, rows):
                 """
                 INSERT INTO raw_exhibitions
                     (detail_url, name, start_date, end_date, country, city, venue,
-                     audience_note, website, intro, category, is_active, last_updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
+                     audience_note, website, intro, image_url, category, is_active,
+                     last_updated_at, classify_relevant_updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
                 """,
-                (detail_url, *new_values, ts),
+                (detail_url, *new_values, ts, ts),
             )
             new_count += 1
         else:
-            # 상세페이지를 이번에 안 가져왔으면(웹사이트/상세설명이 빈 값) 기존 값 보존
+            # 상세페이지를 이번에 안 가져왔으면(웹사이트/상세설명/이미지가 빈 값) 기존 값 보존
             merged = list(new_values)
             if not row.get("축제URL") and existing[7]:
                 merged[7] = existing[7]
             if not row.get("축제소개") and existing[8]:
                 merged[8] = existing[8]
+            if not row.get("이미지URL") and existing[9]:
+                merged[9] = existing[9]
 
             changed = tuple(merged) != tuple(existing)
             if changed:
+                classify_changed = any(
+                    merged[i] != existing[i] for i in _CLASSIFY_RELEVANT_IDX
+                )
                 cur.execute(
                     """
                     UPDATE raw_exhibitions
                     SET name=?, start_date=?, end_date=?, country=?, city=?, venue=?,
-                        audience_note=?, website=?, intro=?, category=?, is_active=1,
-                        last_updated_at=?
+                        audience_note=?, website=?, intro=?, image_url=?, category=?, is_active=1,
+                        last_updated_at=?,
+                        classify_relevant_updated_at=COALESCE(?, classify_relevant_updated_at)
                     WHERE detail_url=?
                     """,
-                    (*merged, ts, detail_url),
+                    (*merged, ts, ts if classify_changed else None, detail_url),
                 )
                 updated_count += 1
             else:
@@ -381,23 +467,48 @@ def main():
     conn = sqlite3.connect(args.db)
     init_db(conn)
 
-    rows, failed_labels = crawl_selected_sites(labels_urls, with_details=args.details)
-    new_count, updated_count, unchanged_count, seen_urls = sync_rows(conn, rows)
+    # 카테고리 하나씩 끝날 때마다 바로 DB에 커밋한다 (--details일 때 전체가 오래 걸리는데,
+    # 끝까지 기다렸다가 한 번에 저장하면 중간에 죽었을 때 아무것도 안 남고, 진행 상황도
+    # 전혀 안 보여서 카테고리 단위로 쪼갰다).
+    failed_labels = []
+    all_seen_urls = set()
+    seen_this_run = set()
+    total_new = total_updated = total_unchanged = 0
+
+    for i, (label, url) in enumerate(labels_urls, 1):
+        print(f"\n[{i}/{len(labels_urls)}] === {label} ===")
+        rows, failed = crawl_selected_sites([(label, url)], with_details=args.details)
+        failed_labels.extend(failed)
+
+        # 이전 카테고리에서 이미 본 박람회(같은 전시회가 여러 카테고리 목록에 겹쳐 나오는
+        # 경우)는 건너뛴다 — 먼저 분류된 카테고리를 그대로 유지.
+        fresh_rows = [r for r in rows if row_key(r) not in seen_this_run]
+        seen_this_run.update(row_key(r) for r in rows)
+
+        new_count, updated_count, unchanged_count, seen_urls = sync_rows(conn, fresh_rows)
+        all_seen_urls |= seen_urls
+        total_new += new_count
+        total_updated += updated_count
+        total_unchanged += unchanged_count
+        print(
+            f"  -> {label} 저장 완료: 신규 {new_count}건, 업데이트 {updated_count}건, "
+            f"변경없음 {unchanged_count}건"
+        )
 
     deactivated = 0
     if failed_labels:
         print(f"\n경고: 다음 카테고리는 크롤링 자체가 실패해서 비활성 처리에서 제외합니다: {failed_labels}")
     succeeded_labels = [label for label in labels if label not in failed_labels]
     if not args.no_deactivate and succeeded_labels:
-        deactivated = deactivate_missing(conn, succeeded_labels, seen_urls)
+        deactivated = deactivate_missing(conn, succeeded_labels, all_seen_urls)
 
     conn.close()
 
     print("\n=== 동기화 완료 ===")
     print(f"DB 파일: {args.db}")
-    print(f"신규 추가: {new_count}건")
-    print(f"내용 업데이트: {updated_count}건")
-    print(f"변경 없음: {unchanged_count}건")
+    print(f"신규 추가: {total_new}건")
+    print(f"내용 업데이트: {total_updated}건")
+    print(f"변경 없음: {total_unchanged}건")
     print(f"목록에서 사라져 비활성 처리: {deactivated}건")
 
 

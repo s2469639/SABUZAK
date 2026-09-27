@@ -36,7 +36,7 @@ import csv
 import time
 from pathlib import Path
 
-import requests
+import ㅊ
 
 BASE = "https://www.macmap.org"
 UA = (

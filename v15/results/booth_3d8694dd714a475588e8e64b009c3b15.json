@@ -1,0 +1,772 @@
+{
+  "inputs": {
+    "name": "구운 통곡물 모닝시리얼",
+    "country": "독일",
+    "exhibition_name": "GrillGut",
+    "exhibition_website": "grillgut-bremen.de",
+    "strengths": "통곡물을 튀기지 않고 구워내 아침 대용으로 담백함",
+    "ingredients": "통귀리, 통밀, 옥수수그리츠, 프락토올리고당",
+    "certifications": "HACCP, ISO 9001",
+    "price": "500g (6,500원)",
+    "country_en": "Germany"
+  },
+  "booth": {
+    "summary": "통귀리·통밀과 비유탕 베이킹을 보여주고, 담백한 맛을 직접 평가하게 하는 ‘아침 식사 대안’ 부스를 제안한다. 제공 조사 메모는 원출처 미확인 상태이므로 잠정 자료로 사용하며, GrillGut에서는 소비자 반응 검증과 사전 약속 바이어 상담을 분리하고 출품·설비 승인이 확보된 경우에만 실행한다.",
+    "positioning": {
+      "target_buyer": "1순위는 독일 내 아시아 식품·수입 가공식품 수입·유통사, 2순위는 독립 스페셜티·고메 리테일 바이어다. 행사 참석은 확인되지 않았으므로 개별 연락으로 상담을 확보한다.",
+      "core_message": "아침 식사 상품의 선택지를 넓히려는 바이어에게 우리 통곡물 시리얼은 통귀리와 통밀을 사용하고 튀기지 않고 구워 만든 담백한 대안을 제공한다."
+    },
+    "sections": {
+      "main_visual": {
+        "concept_en": "From Whole Grains to Your Breakfast Bowl",
+        "concept_ko": "통곡물에서 아침 식탁까지",
+        "key_message": "통귀리·통밀을 사용한 아침 시리얼, 튀기지 않고 구운 담백한 선택.",
+        "bullets": [
+          {
+            "text": "백월에는 시리얼이 담긴 아침 식사 볼 확대 사진 한 장과 메인 슬로건만 크게 배치한다. 하단에 제품명 ‘Wholegrain Breakfast Cereal’을 넣고, 출력 전 5m 거리에서 제품 종류와 비유탕 메시지가 읽히는지 확인한다.",
+            "quote_ids": [],
+            "company": [
+              "강점",
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "백월 아래에는 밀폐된 통귀리·통밀 원료 전시병과 실제 500g 제품을 나란히 놓는다. 전시병에 ‘원료 예시·시식용 아님’을 표시하고, 실제 배합비를 연상시키는 비례 연출이나 ‘100% 통곡물’ 표기는 하지 않는다.",
+            "quote_ids": [
+              "R8"
+            ],
+            "company": [
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "오트 베이지 배경과 짙은 갈색 글자로 곡물과 제품을 먼저 보이게 한다. 야외 자연광에서도 읽히는 무광 출력물을 쓰고, 실물 제품은 통로 쪽 눈높이 선반에 고정한다. 조명은 승인된 전원이 있을 때만 보조적으로 사용한다.",
+            "quote_ids": [
+              "R10",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "slogan": {
+        "main_en": "Mild Wholegrain Breakfast. Baked, Not Fried.",
+        "main_ko": "담백한 통곡물 아침, 튀기지 않고 구웠습니다.",
+        "sub_en": "Made with whole oats and whole wheat.",
+        "sub_ko": "통귀리와 통밀을 사용했습니다.",
+        "bullets": [
+          {
+            "text": "메인은 7단어로 아침 용도·담백한 맛·비유탕 공정을 함께 전달한다. 서브는 원료 두 가지를 명시해 추상적인 품질 표현 대신 제품 설명으로 연결한다.",
+            "quote_ids": [],
+            "company": [
+              "강점",
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "담백함은 기업이 설명한 맛의 특성이지 독일 소비자의 선호가 확인된 결과는 아니다. 시식 직원은 ‘덜 달다’ 또는 ‘더 건강하다’로 바꾸어 설명하지 않고 단맛 강도와 전반적 선호를 각각 질문한다.",
+            "quote_ids": [
+              "R2",
+              "R9"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "경쟁사도 베이킹과 통곡물을 강조하므로 이 문구를 독점적 차별점으로 주장하지 않는다. 교체 가능한 표현이라는 한계는 인정하고, 실제 제품 사진·원료·맛 평가 결과를 결합해 추가 취급 이유를 검증한다.",
+            "quote_ids": [
+              "R3",
+              "R4"
+            ],
+            "company": [
+              "원료"
+            ],
+            "is_idea": false
+          }
+        ]
+      },
+      "signature_pairing": {
+        "item": "플레인 요거트 20g + 구운 통곡물 시리얼 5g의 한입 아침 볼",
+        "intent": "현지 판매자가 제안하는 익숙한 조합을 통해 아침 식사 용도를 설명하되, 실제 취식 빈도와 구매 의향은 현장에서 확인한다.",
+        "bullets": [
+          {
+            "text": "먼저 시리얼 단독 3g을 맛보게 한 뒤 요거트 조합을 제공한다. 요거트의 맛이 제품 평가를 덮지 않도록 단독 시식과 조합 시식의 선호를 구분해 기록한다.",
+            "quote_ids": [
+              "R1"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "승인된 재사용 시식 용기와 스푼으로 제공하고, 냉장고·온도계·손 씻기 시설·용기 회수 및 세척 체계가 확보될 때만 운영한다. 시식 전 귀리·밀과 요거트의 우유 알레르겐을 안내한다.",
+            "quote_ids": [
+              "R8",
+              "R11",
+              "R12"
+            ],
+            "company": [
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "바이어에게는 시리얼 매대 옆 요거트 활용 카드나 공동 프로모션 가능성을 제안한다. 실제 냉장 요거트를 상온 매대에 놓지 않으며, BBQ 디저트 토핑은 작은 활용 카드로만 제시해 관심도를 별도로 묻는다.",
+            "quote_ids": [
+              "R1",
+              "R10",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "냉장이나 세척 조건이 충족되지 않으면 요거트 제공을 취소하고, 당국과 협의한 건식 소분 시식으로 전환한다. 건식 시식도 허용되지 않으면 승인된 표시를 갖춘 밀봉 샘플 배포 가능 여부를 확인하고, 승인 전에는 식품을 제공하지 않는다.",
+            "quote_ids": [
+              "R11",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "demonstration": {
+        "title": "30초 아침 볼 조립과 3분 맛·취급 조건 확인",
+        "bullets": [
+          {
+            "text": "30초 시연: 0~5초 알레르겐 안내와 시식 의사 확인 → 5~12초 원료 전시병과 ‘튀기지 않고 구움’ 공정 카드 설명 → 12~25초 단독 시식 후 요거트 위에 시리얼을 올려 제공 → 25~30초 ‘아침·간식·토핑 중 어디에 쓰겠습니까?’를 묻는다. 비유탕 공정은 기업 설명으로 제시하며 현장 조립이 공정을 입증한다고 말하지 않는다.",
+            "quote_ids": [
+              "R1",
+              "R8"
+            ],
+            "company": [
+              "강점",
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "3분 상담 시연: 첫 1분에 실제 500g 팩과 밀폐 원료병을 보여주고, 다음 1분에 단독·요거트 조합을 소량 맛보게 하며, 마지막 1분에 아침용 추가 취급 의향과 샘플 요청을 확인한다. 공정 사진은 기업이 실제 생산 공정임을 확인한 자료만 사용하고, 없으면 제공 정보에 따른 공정 설명 카드로 대체한다.",
+            "quote_ids": [],
+            "company": [
+              "강점",
+              "원료",
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "화기·인덕션·확성기 없이 소분과 조립만 진행한다. 승인 후 시식 100명 기준으로 단독 3g과 페어링 5g을 합쳐 시리얼 800g, 요거트 2kg을 준비하고 시리얼만 20% 예비량을 둔다. 요거트는 냉장 능력과 실제 소진 속도에 맞춰 나눠 반입하고, 담당자가 온도·개봉 시간·폐기 내역을 기록한다.",
+            "quote_ids": [
+              "R11",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "일반 방문객에게는 활용법·성분 정보·설문 QR 카드를, 구매 담당 바이어에게는 승인된 표시를 갖춘 밀봉 샘플과 원페이저를 제공한다. 샘플 표시나 현장 반출 조건이 준비되지 않았으면 요청만 접수하고 적합성 확인 후 발송한다.",
+            "quote_ids": [
+              "R8",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "packaging": {
+        "direction": "실제 500g 제품을 중심으로 원료·공정은 명확하게, 영양·수입 조건은 검증 상태에 맞게 표시한다.",
+        "bullets": [
+          {
+            "text": "전면은 제품명과 순중량을 명확히 두고 핵심 판매 메시지는 ‘Baked, Not Fried’ 한 개로 제한한다. 통귀리·통밀 표기는 보조 정보로 배치하며 저당·저지방·무첨가당·고식이섬유·100% 통곡물 문구는 분석과 요건 검토 전 사용하지 않는다.",
+            "quote_ids": [
+              "R8",
+              "R9"
+            ],
+            "company": [
+              "강점",
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "독일어 후면 라벨 시안에 식품명, 전체 원재료, 강조 원료 함량, 순중량, MHD, 보관조건, 영양정보, EU 책임사업자 또는 수입자 명칭·주소를 위한 공간을 확보한다. 원재료 목록의 HAFER·WEIZEN을 강조하고 최종 배합표로 추가 알레르겐을 확인한다. 미확정 정보가 있는 시안은 판매 가능한 완성 라벨처럼 제시하지 않는다.",
+            "quote_ids": [
+              "R8"
+            ],
+            "company": [
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "사이즈는 현재 제공된 500g을 실물 판매단위로 전시하고, 40g 체험용과 250g 소포장은 바이어 수요 확인용 목업으로만 제안한다. 재밀봉 포장도 개발안으로 구분하고, 개봉 후 품질 유지 기간은 시험 없이 표시하지 않는다.",
+            "quote_ids": [
+              "R7"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "HACCP·ISO 9001은 범위와 유효기간을 확인한 인증서 사본으로 상담 자료에 제시한다. 유기농·비건 마크는 사용하지 않으며, 추가 인증은 목표 채널 요구를 받은 뒤 취득 검토 항목으로 관리한다.",
+            "quote_ids": [
+              "R3",
+              "R6"
+            ],
+            "company": [
+              "인증"
+            ],
+            "is_idea": false
+          }
+        ]
+      },
+      "merchandising": {
+        "bullets": [
+          {
+            "text": "선반에는 원재료와 비유탕 공정 카드만 붙이고 독일 판매가가 확정되기 전에는 유로 가격표를 달지 않는다. 500g 6,500원은 기업 제공 가격이며 수출 공급가인지 국내 판매가인지 미확인으로 표시한다. 경쟁 가격은 출처·조회일·단위를 재확인한 뒤 상담용 비교표에만 사용한다.",
+            "quote_ids": [
+              "R3",
+              "R4"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "상담 테이블 원페이저는 가격·거래조건, MOQ, 생산 리드타임, 총 보존기한, 입고 시 잔여기한, 보관·운송조건, 인증, 독일어 라벨 상태를 한 장에 정리한다. 빈칸 대신 ‘미확정·회신 담당자·회신 예정일’을 적고 입점 가능성을 보장하지 않는다.",
+            "quote_ids": [
+              "R6",
+              "R7",
+              "R8"
+            ],
+            "company": [
+              "인증"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "야외 선반·백월은 주최자 승인 방식으로 고정하고 인쇄물은 클립으로 잡는다. 부스 크기가 작으면 리테일 선반을 상담 존 측면에 결합하되, 시식 대기열·회수 용기·상담 의자를 피난 동선에 두지 않는다.",
+            "quote_ids": [
+              "R10",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ],
+        "zones": [
+          {
+            "name": "1. 아침 선택지 발견 존",
+            "position": "통로와 맞닿은 전면 한쪽",
+            "purpose": "확대 제품 사진·슬로건·500g 실물로 시리얼 부스라는 점과 원료·비유탕 공정을 3초 안에 전달한다.",
+            "quote_ids": [],
+            "company": [
+              "강점",
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "name": "2. 단독 맛과 아침 볼 체험 존",
+            "position": "전면 반대쪽에서 안쪽으로 이어지는 위치",
+            "purpose": "덮개 있는 시식대에서 맛을 평가하고 선호 용도 한 가지를 기록한다. 반환 용기는 깨끗한 제공 구역과 분리한다.",
+            "quote_ids": [
+              "R1",
+              "R11",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "name": "3. 리테일 레디 존",
+            "position": "시식대 뒤 측면 선반",
+            "purpose": "500g 제품을 2단·단별 3페이싱으로 배치해 실제 아침 시리얼 매대 모습을 보여준다. 대형 유통 담당자에게도 상품 크기와 진열 효율을 설명할 수 있게 한다.",
+            "quote_ids": [],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "name": "4. 구매 담당자 상담 존",
+            "position": "부스 가장 안쪽의 통로와 대기열을 피한 위치",
+            "purpose": "사전 약속 바이어와 수입·소매·PB 채널을 구분해 상담하고, 샘플 발송 또는 견적 검토 일정을 확정한다.",
+            "quote_ids": [
+              "R6",
+              "R10"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      }
+    },
+    "visitor_flow": {
+      "3s": {
+        "headline": "통로에서 3초: 아침 볼 사진과 ‘Baked, Not Fried’",
+        "goal": "BBQ 행사 방문객에게도 아침용 통곡물 시리얼임을 즉시 알린다.",
+        "visitor": [
+          "시리얼 볼 사진과 500g 제품을 본다.",
+          "통귀리·통밀과 비유탕 설명을 확인한다."
+        ],
+        "staff": [
+          "통로를 막지 않고 ‘구운 통곡물 아침 시리얼을 맛보시겠습니까?’라고 제안한다."
+        ],
+        "props": [
+          "무광 백월과 고정된 500g 제품",
+          "밀폐 원료 전시병"
+        ],
+        "message": "통귀리와 통밀을 사용하고 튀기지 않고 구운 아침 시리얼입니다."
+      },
+      "30s": {
+        "headline": "제품 그대로 맛보고 아침 볼로 연결",
+        "goal": "담백함의 수용성을 확인하고 아침·간식·토핑의 관심을 구분한다.",
+        "visitor": [
+          "알레르겐 안내를 확인하고 시식 여부를 선택한다.",
+          "단독 시식 후 허가된 경우 요거트 조합을 맛본다.",
+          "가장 관심 있는 용도를 한 가지 고른다."
+        ],
+        "staff": [
+          "승인된 위생 절차로 소분·제공한다.",
+          "단맛 강도와 맛의 선호를 같은 질문으로 묶지 않는다.",
+          "구매 담당 여부를 확인해 상담 또는 소비자 설문으로 안내한다."
+        ],
+        "props": [
+          "보호 덮개·집게·승인된 시식 용기",
+          "알레르겐 안내판",
+          "용도 선택 카드와 설문 태블릿"
+        ],
+        "message": "담백한 맛이 취향에 맞는지, 어떤 식사 장면에 어울리는지 평가해 주세요."
+      },
+      "3min": {
+        "headline": "매대에 놓을 이유와 수입 조건을 함께 확인",
+        "goal": "실제 구매 담당자를 샘플 요청 또는 후속 견적 검토로 전환한다.",
+        "visitor": [
+          "소속·구매 역할·판매채널을 설명한다.",
+          "500g 진열과 단독·페어링 맛을 확인한다.",
+          "샘플 수령 또는 후속 미팅 일정을 선택한다."
+        ],
+        "staff": [
+          "원료·공정 카드와 실제 제품을 보여준다.",
+          "가격·MOQ·보존기한·물류의 확정과 미확정을 구분한다.",
+          "연락 동의를 받고 평가 목적·수령처·다음 일정을 기록한다."
+        ],
+        "props": [
+          "리테일 레디 선반과 실제 제품",
+          "거래조건 원페이저·인증서 사본",
+          "표시 적합성을 확인한 샘플과 상담 기록지"
+        ],
+        "message": "귀사 아침 상품군의 추가 선택지가 되는지 맛과 취급 조건을 함께 검토해 주세요."
+      }
+    },
+    "key_actions": [
+      {
+        "title": "식품 제공 전에 출품·설비·위생 승인을 확인한다",
+        "detail": "운영 책임자가 즉시 주최자와 관할 기관에 시리얼 출품, 추가 참가, 냉장·급배수, 재사용 용기 회수·세척 조건을 서면 확인한다. 현재 행사 시작일이고 신청 마감이 지난 만큼 승인되지 않으면 2026 현장 운영을 강행하지 않고 후속 바이어 미팅과 다음 승인 행사로 전환한다.",
+        "quote_ids": [
+          "R10",
+          "R11",
+          "R12"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      {
+        "title": "담백함과 가격 수용성을 구분해 검증한다",
+        "detail": "시식 담당자가 성인 응답자를 대상으로 단맛 강도 5점, 곡물 맛 선호 5점, 전반적 선호 5점, 선호 용도, 구매 이유를 각각 기록한다. 가격 질문은 수입원가와 유통마진을 반영한 가설 유로 판매가가 마련된 경우에만 추가한다. 경쟁 대비 검증은 적법한 비교용 제품과 표시 정보가 준비됐을 때 별도 동의자를 대상으로 무작위 순서의 소량 블라인드 시식을 실시하며, 편의표본 결과를 독일 전체 수요로 일반화하지 않는다.",
+        "quote_ids": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "company": [
+          "강점",
+          "가격대"
+        ],
+        "is_idea": false
+      },
+      {
+        "title": "사전 약속 바이어를 샘플 요청과 다음 일정으로 연결한다",
+        "detail": "영업 담당자가 수입·유통사와 고메 리테일에 개별 연락해 현장 또는 온라인 상담을 잡는다. 매일 시작 전 슬로건의 과장 여부, 여섯 실행 항목의 약속 일치, 라벨·알레르겐, 수량·설비·허가, 원페이저 미확정 항목을 점검한다. 상담 말미에는 평가할 채널, 샘플 수량, 수령처, 회신일을 합의하고 2영업일 이내 상담 요약을 보낸다.",
+        "quote_ids": [
+          "R6",
+          "R7",
+          "R8",
+          "R10"
+        ],
+        "company": [],
+        "is_idea": false
+      }
+    ],
+    "kpis": [
+      {
+        "metric": "유효 소비자 평가 수",
+        "target": "승인된 현장 운영기간 합계 60건",
+        "how": "성인 응답자 중 제품 단독 시식 후 단맛 강도·곡물 맛 선호·전반적 선호·선호 용도·구매 이유를 모두 응답한 건만 집계한다. 중복은 제외하고 페어링 및 경쟁 비교 참여 여부를 별도 표시한다. 시장 대표 표본으로 해석하지 않는다."
+      },
+      {
+        "metric": "유효 바이어 상담 수",
+        "target": "현장 및 행사 연계 온라인 상담 합계 5건",
+        "how": "회사·구매 역할·대상 채널이 확인되고 맛 또는 취급 조건을 검토한 고유 회사 수를 센다. 일반 방문객 명함과 단순 인사는 제외하며 현장·온라인 실적을 구분한다. 목표는 기획 가정이며 참석 가능성을 확인해 조정한다."
+      },
+      {
+        "metric": "바이어 상담 대비 샘플 발송 요청률",
+        "target": "40% 이상, 유효 상담 5건 기준 2개사",
+        "how": "평가 목적·수령처·요청 수량·후속 확인일이 합의된 고유 회사 수를 유효 상담 회사 수로 나눈다. 단순 현장 샘플 수령은 제외하고, 발송 요청과 실제 발송 완료를 분리 기록한다."
+      }
+    ],
+    "risks": [
+      {
+        "text": "행사 정보와 신청 조건의 원출처를 재확인해야 한다. 출품 적합성·추가 참가·설비 제공·야외 풍하중 및 악천후 대책을 서면 승인받기 전에는 제작·현장 운영을 확정하지 않는다. 시식은 재사용 용기 관련 조건과 최신 위생 지침까지 충족해야 하며 건식 제공도 자동 허용으로 간주하지 않는다.",
+        "quote_ids": [
+          "R10",
+          "R11",
+          "R12"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      {
+        "text": "독일어 표시, 알레르겐, 영양분석, 강조 원료 함량, EU 책임사업자 및 영양 강조표현의 적합성을 출시 전에 검토해야 한다. HACCP·ISO 9001만으로 채널 입점이 보장되지 않으며 인증 범위·유효기간과 추가 채널 요건을 확인한다.",
+        "quote_ids": [
+          "R6",
+          "R8",
+          "R9"
+        ],
+        "company": [
+          "인증"
+        ],
+        "is_idea": false
+      },
+      {
+        "text": "수출가격·MOQ·공급능력·총 보존기한·입고 잔여기한·운송 및 보관조건이 미확정이다. 고온·습기 노출 시 품질 유지 자료, 로트 추적·회수 절차, 기업과 제조시설의 리콜 이력도 확인하고 자료 부재를 ‘이력 없음’으로 표현하지 않는다.",
+        "quote_ids": [
+          "R7"
+        ],
+        "company": [
+          "가격대"
+        ],
+        "is_idea": false
+      }
+    ],
+    "questions": [
+      "전체 배합비와 통곡물 함량, 프락토올리고당의 사용 목적, 100g당 영양분석, 최종 알레르겐 정보, 비유탕 공정 자료 및 HACCP·ISO 9001 인증서의 범위·유효기간을 제공할 수 있습니까?",
+      "500g 6,500원은 어떤 가격 기준입니까? 수출 공급가·거래조건·MOQ·생산능력·리드타임·박스 및 팔레트 규격·총 보존기한과 시험 근거·보관조건·리콜 및 로트 추적 자료를 확인할 수 있습니까?",
+      "2026 행사 출품 및 시식 승인을 이미 받았습니까? 확보된 부스 크기·전기·급배수·냉장·용기 세척 조건, 독일어 라벨과 EU 수입자 준비 상태, 현지 바이어 연락망 및 배포 가능한 샘플 수량은 어떻게 됩니까?"
+    ],
+    "brief": {
+      "insights": [
+        {
+          "fact": "제공 메모에 따르면 dm은 귀리 Crunchy의 용도로 우유·요거트·식물성 음료와의 조합 및 디저트·Quark 토핑을 제시한다. 이는 판매자의 활용 제안이지, 독일 소비자의 실제 취식 빈도를 입증하는 자료는 아니다. 원출처는 미확인 상태다.",
+          "insight": "낯선 수입 시리얼도 익숙한 식사에 어떻게 넣는지 이해하면 구매 검토가 쉬워질 수 있다. 다만 아침용과 토핑용 중 어느 용도가 더 매력적인지는 검증해야 한다.",
+          "implication": "제품 설명의 출발점을 아침 대용으로 두고, 소비자에게 선호 용도와 구매 이유를 분리해 질문한다. 바이어에게는 검증된 반응만 전달하고, 토핑 수요를 이미 확보한 것처럼 설명하지 않는다.",
+          "quote_ids": [
+            "R1"
+          ],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        },
+        {
+          "fact": "제공 메모상 dmBio는 오븐 베이킹을, Dr. Oetker는 통귀리와 비교 제품 대비 저감당을 강조한다. 기업이 제공한 강점은 비유탕 베이킹과 담백함이며 완제품 영양성분은 제공되지 않았다. 경쟁 제품 정보의 원출처는 미확인 상태다.",
+          "insight": "바이어에게 '구운 통곡물'만으로는 새로운 입점 이유가 충분하지 않다. 기존 상품과 구별되는 맛의 선호와 현지 판매가격의 타당성이 필요하다.",
+          "implication": "담백한 맛을 차별화 가설로 삼되 경쟁 제품 대비 우월성을 주장하지 않는다. 맛 선호와 예상 판매가격 수용성을 검증하고, 비유탕을 저당·저지방으로 바꾸어 설명하지 않는다.",
+          "quote_ids": [
+            "R3",
+            "R4",
+            "R9"
+          ],
+          "company": [
+            "강점",
+            "가격대"
+          ],
+          "is_idea": false
+        },
+        {
+          "fact": "기업은 HACCP·ISO 9001을 제시했으나 인증 범위·유효기간, 유통기한, MOQ, 수출가격은 제공하지 않았다. 제공 메모의 REWE 품질요건은 자체브랜드 공급업체에 관한 내용이며 모든 수입 브랜드에 일률적으로 적용되는 조건은 아니다. 원출처는 미확인 상태다.",
+          "insight": "바이어는 제품의 맛뿐 아니라 자신의 채널에서 합법적이고 안정적으로 판매할 수 있는지 판단해야 한다. 인증 명칭만으로는 이 불확실성이 해소되지 않는다.",
+          "implication": "상담에서 수입·브랜드 소매·PB를 구분하고 채널별 요구조건을 확인한다. 가격, MOQ, 보존기한, 물류, 독일어 표시 및 EU 책임사업자 정보를 미확정 과제로 관리하며 입점 가능성을 보장하지 않는다.",
+          "quote_ids": [
+            "R6",
+            "R7",
+            "R8"
+          ],
+          "company": [
+            "인증"
+          ],
+          "is_idea": false
+        },
+        {
+          "fact": "제공 메모상 GrillGut은 가족·친구·취미 그릴러를 대상으로 하는 야외 BBQ 행사이며 전문 수입바이어 중심 행사로 확인되지 않았다. 메모에 기재된 2026년 일정은 9월 25~27일로 현재 행사 시작일이고, 참가·설비 신청 마감은 지났다. 행사 정보의 원출처는 미확인 상태다.",
+          "insight": "현장 방문객 수를 바이어 상담 기회로 간주하면 성과를 과대평가할 수 있다. 이 행사에서는 소비자 반응 검증과 실제 구매권한을 가진 바이어 확보를 별개로 설계해야 한다.",
+          "implication": "주최자의 시리얼 출품 허가와 추가 참가 가능 여부를 먼저 확인한다. 허가와 접촉 가능성이 확보된 경우에만 바이어 상담을 별도 약속으로 추진하고, BBQ 디저트 활용은 수요가 확인되지 않은 가설로 취급한다.",
+          "quote_ids": [
+            "R10",
+            "R11"
+          ],
+          "company": [],
+          "is_idea": false
+        }
+      ],
+      "target_buyers": [
+        {
+          "priority": 1,
+          "type": "독일 내 아시아 식품 또는 수입 가공식품을 취급하는 수입·유통사 — 기획상 우선 타깃이며 GrillGut 참석 여부는 미확인",
+          "job": "현지 시리얼 대비 추가 취급 이유와 목표 판매채널을 판단하고, 수입원가·유통마진·MOQ·공급능력·잔여 유통기한·독일어 표시·인증 범위를 확인한다."
+        },
+        {
+          "priority": 2,
+          "type": "독립 스페셜티·고메 리테일의 시리얼·수입식품 바이어 — 기획상 차순위 타깃이며 GrillGut 참석 여부는 미확인",
+          "job": "담백한 맛이 기존 상품과 다른 구매 이유가 되는지, 아침 식사 상품으로 설명하기 쉬운지, 500g 판매단위의 현지 가격 수용성·마진·소량 시험발주 가능성이 있는지 확인한다."
+        }
+      ],
+      "big_idea": {
+        "line_en": "For buyers seeking an additional breakfast option, our wholegrain cereal offers a mild-tasting alternative made with whole oats and whole wheat, baked rather than fried.",
+        "line_ko": "아침 식사 상품의 선택지를 넓히려는 바이어에게 우리 통곡물 시리얼은 통귀리와 통밀을 사용하고 튀기지 않고 구워 만든 담백한 대안을 제공한다.",
+        "why": "현재 기업 정보로 뒷받침할 수 있는 약속은 원료·비유탕 공정·기업이 설명한 담백함의 조합이다. 경쟁사도 베이킹과 통곡물을 강조하므로 독점적 차별점이나 영양 우위로 포장하지 않는다. 이 조합이 실제 추가 입점 이유가 되는지는 경쟁 제품 대비 맛 선호와 현지 가격 수용성으로 검증해야 한다. 조사 메모는 원출처가 미확인되어 시장 판단의 잠정 근거로만 사용했다.",
+        "quote_ids": [
+          "R3",
+          "R4"
+        ],
+        "company": [
+          "강점",
+          "원료"
+        ],
+        "is_idea": false
+      },
+      "rtb": [
+        {
+          "text": "기업 제공 정보상 통곡물을 튀기지 않고 굽는 공정이므로 빅 아이디어의 'baked rather than fried'를 직접 뒷받침한다. 다만 비유탕은 저지방이나 경쟁 제품 대비 영양 우위의 증거가 아니다.",
+          "quote_ids": [],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "기업이 제시한 원료에 통귀리와 통밀이 포함되어 있어 통곡물 원료를 사용하는 아침 식사 대안이라는 설명을 뒷받침한다. 통곡물 함량과 완제품 영양분석이 없으므로 100% 통곡물·고식이섬유·무첨가당 주장은 하지 않는다.",
+          "quote_ids": [
+            "R9"
+          ],
+          "company": [
+            "원료"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "담백함은 기업이 제시한 제품 강점으로 약속의 출발점이지만 독일 소비자에게 검증된 선호는 아니다. 현장에서 단맛 강도, 곡물 맛, 전반적 선호를 구분해 확인하면 이 약속의 수용성을 검증할 수 있다. 이는 예정된 검증 방법이지 확보된 성과가 아니다.",
+          "quote_ids": [],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        }
+      ]
+    },
+    "mode": "B",
+    "stage": "draft",
+    "revise_below": 4,
+    "scores": [
+      {
+        "id": "insight",
+        "label": "인사이트 연결",
+        "score": null,
+        "reason": ""
+      },
+      {
+        "id": "single_minded",
+        "label": "빅 아이디어 일관성",
+        "score": null,
+        "reason": ""
+      },
+      {
+        "id": "buyer_value",
+        "label": "바이어 가치",
+        "score": null,
+        "reason": ""
+      },
+      {
+        "id": "specificity",
+        "label": "구체성",
+        "score": null,
+        "reason": ""
+      },
+      {
+        "id": "distinctiveness",
+        "label": "차별성",
+        "score": null,
+        "reason": ""
+      },
+      {
+        "id": "feasibility",
+        "label": "실행 가능성",
+        "score": null,
+        "reason": ""
+      }
+    ],
+    "skill": {
+      "name": "booth_marketing",
+      "folder": "booth_marketing",
+      "files": [
+        "SKILL.md",
+        "examples.md",
+        "rubric.md"
+      ],
+      "chars": 5249,
+      "fingerprint": "52255d5798cb",
+      "warnings": []
+    },
+    "planner_persona": "당신은 해외 식품 박람회 부스 기획 15년차 마케터입니다. Summer Fancy Food Show, ANUGA, FOODEX Japan 등에서 K-푸드 부스를 30회 이상 총괄했고, 부스 방문 바이어의 상담 전환율을 끌어올린 경험이 있습니다. 미국·유럽 대형 유통 바이어와 입점 협상을 해 봤습니다. 조사 자료로 확인된 사실과 기획 아이디어를 구분해서 쓰고, 실제 부스에서 바로 실행할 수 있게 구체적으로 제안합니다.",
+    "reviewer_persona": "당신은 미국 대형 유통 식품 MD 10년차입니다. 박람회에서 하루 50개 부스를 도는 바이어 입장에서, 입점 판단에 필요한 정보(가격, 유통기한, 인증, 물류, 진열 형태)가 빠졌거나 과장된 곳, 바이어 눈에 띄지 않을 연출, 실제 부스에서 실행하기 어려운 계획을 날카롭게 지적합니다.",
+    "review": {
+      "overall": "",
+      "comments": []
+    },
+    "applied": [],
+    "has_profile": true,
+    "has_product_evidence": null,
+    "model": "gpt-6-astra",
+    "research": {
+      "method": "web_search",
+      "notes": [
+        {
+          "id": "R1",
+          "topic": "consumer",
+          "topic_label": "소비자",
+          "text": "[확인] 독일 dm은 귀리 Crunchy의 섭취법으로 우유·요거트·식물성 음료와의 조합, 간식, 디저트·Quark 토핑을 제시한다는 점에서 아침 외 사용 장면도 확인된다. [조사 제안] 실제 소비 빈도·구매 이유를 입증하는 소비자조사는 아니므로, 시식 설문에서 ‘아침·간식·토핑’ 용도와 ‘간편함·맛·통곡물’ 선택 이유를 각각 질문한다.",
+          "source_url": "https://www.dm.de/p/d/1590014/dmbio-muesli-crunchy-hafer",
+          "source_title": "dmBio Müsli Crunchy, Hafer, 500 g | dm",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R2",
+          "topic": "consumer",
+          "topic_label": "소비자",
+          "text": "[확인] Verbraucherzentrale의 2026-08-07 갱신 자료는 어린이용 시리얼의 높은 당·지방 함량과 건강한 아침이라는 광고의 괴리를 지적하며, 인용된 조사에서는 응답자의 83%가 어린이 대상 식품의 당·지방·소금 상한에 찬성했다. [기획 시사점] 가족 방문객에게는 ‘건강한 시리얼’이라는 포괄적 표현보다 실제 100 g당 영양정보를 제시하고, 단맛 만족도와 당 함량 우려를 분리해 조사한다.",
+          "source_url": "https://www.verbraucherzentrale.de/wissen/lebensmittel/gesund-ernaehren/kinderlebensmittel-extrawurst-fuer-den-nachwuchs-10725",
+          "source_title": "Kinderlebensmittel: Extrawurst für den Nachwuchs? | Verbraucherzentrale",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R3",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[확인] 2026-09-25 조회 기준 dmBio Müsli Crunchy, Hafer는 500 g에 2,25 €(4,50 €/kg, 배송비 별도)이며 Bio·Vegan·수작업 오븐 베이킹을 강조한다. [기획 시사점] ‘구웠다’만으로는 차별화가 부족하므로 기업의 비유탕 공정·담백함(기업:강점)을 관능 비교로 검증하고, 500g 6,500원(기업:가격대)은 독일 수입·유통 비용을 반영한 현지 판매가와 구분해 검토한다.",
+          "source_url": "https://www.dm.de/p/d/1590014/dmbio-muesli-crunchy-hafer",
+          "source_title": "dmBio Müsli Crunchy, Hafer, 500 g | dm",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R4",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[확인] 2026-09-25 조회 기준 Dr. Oetker 공식몰의 Vitalis Weniger süß Knusper Pur는 600 g에 3,99 €(6,65 €/kg, 배송비 별도)이며 ‘다른 Knusper-Müslis보다 30% 적은 당’, 통귀리 Crunchies·볶은 밀 배아·꿀을 내세운다. [기획 시사점] 경쟁 메시지가 이미 통곡물·저감당을 결합하므로 비교표에는 가격뿐 아니라 당·지방·식이섬유와 시식 후 단맛 평가를 함께 넣는다.",
+          "source_url": "https://www.oetker-shop.de/vitalis-weniger-suess-knusper-pur/?affiliateCode=oetkerde&amp%3BCampaignCode=oetkerde-produkt",
+          "source_title": "Vitalis Weniger süß Knusper Pur online kaufen | Dr. Oetker Shop",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R5",
+          "topic": "trend",
+          "topic_label": "트렌드",
+          "text": "[확인] Dr. Oetker는 2026-09-10 발표에서 Vitalis Weniger Süß Knusper Nuss & Schoko를 2026년 10월 출시 예정으로 소개했으며, 400 g 권장소비자가 3,99 Euro, 당 15 g/100 g, 비교 제품 대비 30% 저감당과 Nutri-Score를 강조했다. [해석] 2026-09-25 현재 판매 중인 제품이 아닌 출시 예고 사례이며, ‘덜 달아도 바삭하고 맛있는 아침’이 경쟁사의 최신 개발 방향임을 보여준다.",
+          "source_url": "https://www.oetker.com/de/press/weniger-suess-vitalis-knusper-nuss-schoko",
+          "source_title": "Weniger süß, voller Müsli-Geschmack: Dr. Oetker Vitalis Knusper Nuss & Schoko",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R6",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "[확인] REWE Group은 자체브랜드 공급업체 선정에서 IFS 등 인정된 기준과 추가 자체 품질요건을 적용한다고 설명하며, 이는 모든 수입 브랜드의 일률적인 입점조건이라는 뜻은 아니다. [준비 제안] HACCP·ISO 9001(기업:인증)만으로 입점 가능하다고 설명하지 말고 인증서의 범위·유효기간을 준비하며, 상담표에서 수입사·일반 소매·드러그스토어·PB 채널과 추가 인증 요구를 구분한다.",
+          "source_url": "https://www.rewe-group.com/de/unternehmen/produktqualitaet/",
+          "source_title": "Produktqualität | REWE Group",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R7",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "[확인] Bremen 식품감독기관의 MHD 안내는 Mindesthaltbarkeitsdatum을 적절한 보관조건에서 제품의 고유 특성이 유지되는 기한으로 설명하며, 수입 시리얼의 공통 최소 잔여기한을 제시하지는 않는다. [준비 제안] 기업 제공자료에는 보존기한이 없으므로 총 보존기한·시험 근거·보관조건·운송기간을 확보하고, 바이어별 입고 시 최소 잔여기한과 개봉 후 바삭함 유지조건을 상담 항목으로 둔다.",
+          "source_url": "https://www.lmtvet.bremen.de/sixcms/media.php/13/Info_13_MHD_Verbrauchsdatum%20.pdf",
+          "source_title": "Informationen zum Mindesthaltbarkeitsdatum und zum Verbrauchsdatum | LMTVet Bremen",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R8",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "[확인] EU의 포장식품 표시 안내에는 식품명·원재료·알레르겐·강조 원료의 함량·순중량·MHD·보관조건·영양정보·EU 소재 책임사업자 또는 수입자 명칭과 주소가 포함되며, 알레르겐은 원재료 목록에서 강조해야 한다. [준비 제안] 독일어 라벨 시안을 마련하고 통귀리·통밀(기업:원료)의 HAFER·WEIZEN 표시와 통곡물 함량을 점검하며, EU 수입자 정보가 미정이면 상담 전 확정 과제로 표시한다.",
+          "source_url": "https://europa.eu/youreurope/business/product-rules-compliance/food/labelling-rules/index_de.htm",
+          "source_title": "Vorschriften für die Kennzeichnung von Lebensmitteln | Your Europe",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R9",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "[확인] EU에서 고형식품의 ‘저당’은 당 ≤5 g/100 g, ‘고식이섬유’는 식이섬유 ≥6 g/100 g 또는 ≥3 g/100 kcal가 기준이며, ‘무첨가당’은 단당류·이당류뿐 아니라 감미 목적으로 사용한 다른 식품도 없어야 한다. [준비 제안] 비유탕·담백함(기업:강점)을 저당·저지방으로 바꾸어 표현하지 말고, 프락토올리고당(기업:원료)의 사용 목적과 완제품 영양분석을 확인하기 전에는 무첨가당·고식이섬유 문구를 보류한다.",
+          "source_url": "https://food.ec.europa.eu/food-safety/labelling-and-nutrition/nutrition-and-health-claims/nutrition-claims_en",
+          "source_title": "Nutrition claims | European Commission",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R10",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "[확인] GrillGut 2026은 2026-09-25~27 MESSE BREMEN 야외에서 열리는 BBQ 행사로, 가족·친구·취미 그릴러를 대상으로 Street Food·장비 체험·Bremer Landesgrillmeisterschaft를 운영하며 2026년에는 Bremer Wild-Meister 일반인 심사위원도 모집한다. [기획 판단] 전문 식품 수입바이어 중심 행사로 간주하지 말고 소비자 반응 검증을 우선하며, 시리얼의 BBQ 디저트 토핑 활용은 현지 수요로 단정하지 않고 별도 테스트하고 바이어 상담은 사전 약속으로 확보한다.",
+          "source_url": "https://grillgut-bremen.de/",
+          "source_title": "GrillGut – Dein BBQ-Event",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R11",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "[확인] 2026 참가조건상 출품 허가는 행사 품목 적합성에 따라 주최자가 결정하며, 신청 마감은 2026-08-01, 전기·급배수 등 별도 유료 서비스 주문 마감은 2026-08-12로 조사일 현재 지났고 야외 구조물에는 풍하중·악천후 안전조치가 요구된다. [실행 제안] 시리얼 출품 가능 여부와 추가 참가·설비 제공 가능성을 먼저 서면 확인하고, 현장 소비자 판매는 허용되지만 무료 시식을 포함한 식음 제공에도 Bremisches Mehrweggebot 및 식품감독기관 지침이 적용되므로 시식 용기·회수·세척 방식을 승인받는다.",
+          "source_url": "https://www.m3b-bremen.de/content/uploads/sites/17/2026/04/GG26_Anmeldung_mit-AA-FB_beschreibbar_GESAMT-1.pdf",
+          "source_title": "Anmeldung und Besondere Teilnahmebedingungen GrillGut 2026",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R12",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "[확인] Bremen이 현재 공개하는 이동식 식품부스 위생안내는 비말·먼지로부터 식품 보호, 유제품 등 부패하기 쉬운 식품의 지속 냉장, 온도계가 있는 냉장설비와 온·냉수 손 씻기 시설, 알레르겐 정보 및 위생관리 기록을 요구하며 문서 개정일은 2016-06-01이다. [실행 제안] 최신 현장 적용조건은 LMTVet에 재확인하고, 요거트 시식은 냉장·세척 설비가 확보될 때만 진행하며 설비가 부족하면 보호 덮개와 집게를 사용하는 건식 소분 시식안을 협의한다.",
+          "source_url": "https://www.lmtvet.bremen.de/sixcms/media.php/13/Info_14_mobile_Verkaufswagen.pdf",
+          "source_title": "Informationen über hygienische Mindestanforderungen für mobile Lebensmittel- und Imbißstände | LMTVet Bremen",
+          "source_status": "출처 미확인"
+        }
+      ],
+      "citations": [],
+      "error": ""
+    },
+    "source_mode": "openai_self_research",
+    "short": {},
+    "short_error": "Error code: 429 - {'error': {'message': 'You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.', 'type': 'insufficient_quota', 'param': None, 'code': 'credit_balance_exhausted'}}",
+    "from_cache": false
+  },
+  "booth_error": null,
+  "models": {
+    "booth": "gpt-6-astra",
+    "booth_effort": "medium",
+    "task": "gpt-5.6-terra",
+    "task_effort": "low"
+  },
+  "fetched_at": "2026-09-26 08:37"
+}

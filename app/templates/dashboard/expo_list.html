@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} 박람회 | FairMate{% endblock %}
+
+{% block content %}
+{% if pipeline_banner %}
+<ul class="flash-list"><li class="flash flash-success">{{ pipeline_banner }}</li></ul>
+{% endif %}
+
+{% include "dashboard/_expo_list_partial.html" %}
+{% endblock %}

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UN Comtrade 시장 분석 매트릭스</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f4f6f9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #333; }
+        .dashboard-header { background: #fff; padding: 20px 0; border-bottom: 1px solid #e3e6f0; margin-bottom: 25px; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1); margin-bottom: 24px; }
+        .card-header { background-color: #fff; border-bottom: 1px solid #e3e6f0; font-weight: 700; padding: 16px 20px; }
+        .stat-card { border-left: 4px solid #4e73df; }
+        .stat-card.success { border-left-color: #1cc88a; }
+        .stat-card.warning { border-left-color: #f6c23e; }
+        .stat-card.info { border-left-color: #36b9cc; }
+        .chart-area { position: relative; height: 350px; width: 100%; }
+        .table th { background-color: #f8f9fc; color: #4e73df; font-weight: 600; }
+        .ai-summary-box { background: #f8fafd; border: 1px solid #d1e3ff; border-radius: 10px; padding: 20px; line-height: 1.7; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-header">
+    <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+        <div>
+            <h3 class="fw-bold mb-0 text-primary"><i class="fa-solid fa-chart-line me-2"></i>UN Comtrade 종합 무역 분석 매트릭스</h3>
+            <small class="text-muted">HS Code 및 대상 국가 기반 실시간 무역 데이터 시각화 & AI 리포트</small>
+        </div>
+        <div>
+            <a href="/" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-house me-1"></i> 메인 홈</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid px-4">
+    <!-- 검색 및 필터 폼 -->
+    <div class="card">
+        <div class="card-header"><i class="fa-solid fa-filter me-2"></i>분석 조건 설정</div>
+        <div class="card-body">
+            <form method="GET" action="/matrix" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">HS Code (6자리)</label>
+                    <input type="text" name="cmd_code" class="form-control" value="{{ request.args.get('cmd_code', '') }}" placeholder="예: 851713" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">보고국 (Reporter)</label>
+                    <input type="text" name="reporter_code" class="form-control" value="{{ request.args.get('reporter_code', '') }}" placeholder="기본값: 전체 또는 410(한국)">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">상대국 (Partner)</label>
+                    <input type="text" name="partner_code" class="form-control" value="{{ request.args.get('partner_code', '') }}" placeholder="예: 전체 또는 특정 국가코드">
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="fa-solid fa-magnifying-glass me-1"></i> 데이터 분석 실행</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 에러 알림 -->
+    {% if error %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fa-solid fa-triangle-exclamation me-2"></i>{{ error }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    {% if data %}
+    <!-- 주요 요약 지표 카드 -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card h-100 py-2">
+                <div class="card-body">
+                    <div class="text-xs fw-bold text-primary text-uppercase mb-1">총 거래 건수</div>
+                    <div class="h5 mb-0 fw-bold text-gray-800">{{ total_count or data|length }} 건</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card success h-100 py-2">
+                <div class="card-body">
+                    <div class="text-xs fw-bold text-success text-uppercase mb-1">총 무역 금액 (USD)</div>
+                    <div class="h5 mb-0 fw-bold text-gray-800">${{ "{:,.0f}".format(total_value) if total_value else '-' }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card warning h-100 py-2">
+                <div class="card-body">
+                    <div class="text-xs fw-bold text-warning text-uppercase mb-1">총 순중량 (Net Weight)</div>
+                    <div class="h5 mb-0 fw-bold text-gray-800">{{ "{:,.1f}".format(total_weight) if total_weight else '-' }} kg</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card info h-100 py-2">
+                <div class="card-body">
+                    <div class="text-xs fw-bold text-info text-uppercase mb-1">조회 HS Code</div>
+                    <div class="h5 mb-0 fw-bold text-gray-800">{{ request.args.get('cmd_code', '-') }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI 시장 분석 인사이트 리포트 영역 -->
+    {% if ai_summary %}
+    <div class="card mb-4">
+        <div class="card-header text-primary fw-bold">
+            <i class="fa-solid fa-robot me-2"></i>AI 해외 시장 진출 전략 분석 리포트
+        </div>
+        <div class="card-body">
+            <div class="ai-summary-box">
+                {{ ai_summary | safe }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 차트 시각화 영역 -->
+    <div class="row">
+        <div class="col-xl-6 col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header"><i class="fa-solid fa-chart-column me-2"></i>연도별 / 기간별 수출입 추이</div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header"><i class="fa-solid fa-chart-pie me-2"></i>주요 교역국 거래 비중</div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="partnerChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상세 데이터 테이블 매트릭스 -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="fa-solid fa-table me-2"></i>상세 무역 매트릭스 목록</span>
+            <span class="badge bg-secondary">총 {{ data|length }}개 레코드</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>기간(Period)</th>
+                            <th>보고국(Reporter)</th>
+                            <th>상대국(Partner)</th>
+                            <th>거래 흐름(Flow)</th>
+                            <th>거래 금액 (Trade Value USD)</th>
+                            <th>순중량 (Net Wgt kg)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                        <tr>
+                            <td><span class="badge bg-light text-dark border">{{ row.period or row.ref_year or '-' }}</span></td>
+                            <td>{{ row.reporter_desc or '-' }}</td>
+                            <td><strong>{{ row.partner2_desc or row.partner_desc or '-' }}</strong></td>
+                            <td>
+                                {% if row.flow_desc and 'Export' in row.flow_desc %}
+                                    <span class="badge bg-success">수출 (Export)</span>
+                                {% elif row.flow_desc and 'Import' in row.flow_desc %}
+                                    <span class="badge bg-primary">수입 (Import)</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ row.flow_desc or '-' }}</span>
+                                {% endif %}
+                            </td>
+                            <td>${{ "{:,.0f}".format(row.primary_value) if row.primary_value is not none else '0' }}</td>
+                            <td>{{ "{:,.1f}".format(row.net_wgt) if row.net_wgt is not none else '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="card text-center p-5 text-muted">
+        <i class="fa-solid fa-folder-open fa-3x mb-3 text-secondary"></i>
+        <h5>조회된 데이터가 없습니다.</h5>
+        <p class="mb-0">상단 검색창에 HS 코드(6자리)를 입력하고 분석을 실행해 주세요.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- 차트 데이터 렌더링 스크립트 -->
+<script>
+    {% if chart_labels and chart_values %}
+    const ctxTrend = document.getElementById('trendChart').getContext('2d');
+    new Chart(ctxTrend, {
+        type: 'bar',
+        data: {
+            labels: {{ chart_labels | tojson }},
+            datasets: [{
+                label: '거래 금액 (USD)',
+                data: {{ chart_values | tojson }},
+                backgroundColor: 'rgba(78, 115, 223, 0.7)',
+                borderColor: 'rgba(78, 115, 223, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) { return '$' + value.toLocaleString(); }
+                    }
+                }
+            }
+        }
+    });
+    {% endif %}
+
+    {% if partner_labels and partner_values %}
+    const ctxPartner = document.getElementById('partnerChart').getContext('2d');
+    new Chart(ctxPartner, {
+        type: 'doughnut',
+        data: {
+            labels: {{ partner_labels | tojson }},
+            datasets: [{
+                data: {{ partner_values | tojson }},
+                backgroundColor: [
+                    '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b',
+                    '#6f42c1', '#fd7e14', '#20c997', '#6c757d', '#adb5bd'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+    {% endif %}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
