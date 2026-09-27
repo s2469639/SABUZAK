@@ -1,0 +1,880 @@
+{
+  "inputs": {
+    "name": "황금비율 오리지널 마일드믹스",
+    "country": "알제리",
+    "exhibition_name": "Djazagro",
+    "exhibition_website": "www.djazagro.com",
+    "strengths": "부드러운 우유 풍미와 깊고 진한 커피 원두의 조화",
+    "ingredients": "인스턴트커피, 식물성크림, 자일로스설탕",
+    "certifications": "HACCP, ISO 22000",
+    "price": "12g×100입 (14,900원)",
+    "country_en": "알제리"
+  },
+  "booth": {
+    "summary": "‘진한 커피 풍미와 부드러운 마무리를 자일로스설탕까지 미리 배합한 스틱’이라는 맛의 약속 하나를 전면에 세우고, 수입 준비도와 아침 페어링은 상담 전환 장치로만 사용한다. 아래 운영 수량은 3m×3m 부스와 1일 300회 시음을 기준으로 한 기획값이며, 권장 온수량·수출가격·포장 규격은 개막 30일 전까지 확정해야 한다.",
+    "positioning": {
+      "target_buyer": "1순위 알제리 식품·음료 수입·유통사, 2순위 하이퍼마켓·대형 유통 식품 MD",
+      "core_message": "황금비율은 진한 커피 풍미와 부드러운 마무리를 위해 커피·식물성크림·자일로스설탕을 한 스틱에 미리 배합해, 정해진 물의 양만 따르면 매번 같은 맛을 제공하는 완성형 믹스커피다."
+    },
+    "sections": {
+      "main_visual": {
+        "concept_en": "Café intense. Finale douce. Équilibré au xylose.",
+        "concept_ko": "진한 커피, 부드러운 마무리, 자일로스로 맞춘 균형.",
+        "key_message": "일반적인 3-in-1 원료 나열 대신 ‘진한 커피 풍미와 부드러운 마무리’라는 두 축과 자일로스설탕 배합을 5m 밖에서 읽히게 만든다.",
+        "bullets": [
+          {
+            "text": "3m×3m 부스 기준 백월 상단 70%에는 French 헤드라인 ‘Café intense. Finale douce. Équilibré au xylose.’를 배치하고, 바로 아래에 Arabic 번역 ‘قهوة غنية. مذاق ناعم. متوازنة بسكر الزيلوز.’을 병기한다. Arabic 문안은 인쇄 전에 현지 전문 번역자와 규제 검토자의 확인을 받는다.",
+            "quote_ids": [
+              "R7",
+              "R10"
+            ],
+            "company": [
+              "원료",
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "백월 중앙에는 확대된 스틱에서 한 잔이 완성되는 일반적인 3-in-1 그림 대신, 왼쪽의 ‘Deep Coffee’와 오른쪽의 ‘Smooth Finish’가 중앙의 ‘Golden Ratio Stick’에서 균형을 이루는 2축 그래픽을 사용한다. 실제 배합비나 관능 수치가 공개 가능할 때만 숫자로 표시하고, 미확정 상태에서는 수치나 독자 배합 주장을 하지 않는다.",
+            "quote_ids": [
+              "R3",
+              "R5"
+            ],
+            "company": [
+              "강점",
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "백월 하단에는 ‘12g × 100 sticks’와 실제 제품 박스를 놓고, HACCP·ISO 22000은 작은 ‘Food Safety Management’ 띠에서만 제시한다. 인증을 알제리 수입 적합성 또는 할랄 인증처럼 보이게 하지 않는다.",
+            "quote_ids": [
+              "R8"
+            ],
+            "company": [
+              "가격대",
+              "인증"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "색상은 커피 브라운 55%, 크림 베이지 35%, 골드 10%로 제한하고, 제품과 컵에는 4000K 조명을 집중한다. 커피 이미지에는 우유 원액이나 원두 원산지를 암시하는 연출을 사용하지 않고 실제 원료인 식물성크림과 인스턴트커피에 맞춰 표현한다.",
+            "quote_ids": [],
+            "company": [
+              "원료",
+              "강점"
+            ],
+            "is_idea": false
+          }
+        ]
+      },
+      "slogan": {
+        "main_en": "Café intense. Finale douce. Équilibré au xylose.",
+        "main_ko": "진한 커피, 부드러운 마무리, 자일로스로 맞춘 균형.",
+        "sub_en": "Café, crème végétale et sucre xylose, pré-dosés.",
+        "sub_ko": "커피·식물성크림·자일로스설탕을 한 스틱에 미리 정량.",
+        "bullets": [
+          {
+            "text": "메인 슬로건은 편의성만 말하는 일반적인 3-in-1 표현에서 벗어나 기업이 제시한 ‘깊고 진한 커피 풍미와 부드러운 풍미의 조화’ 및 자일로스설탕이라는 실제 원료를 결합한다.",
+            "quote_ids": [
+              "R5"
+            ],
+            "company": [
+              "강점",
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "‘건강한 설탕’, ‘저당’, ‘혈당 관리’ 같은 효능 표현은 사용하지 않는다. 자일로스설탕은 배합 원료로만 설명하고, 건강·영양 주장은 영양성분과 현지 표시 기준 검토 후 별도로 결정한다.",
+            "quote_ids": [
+              "R9"
+            ],
+            "company": [
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "통로와 시식대에는 French와 Arabic을 우선 적용하고 영어는 상담 원페이저의 보조 언어로 사용한다. ‘수입 준비 완료’는 빅 아이디어와 섞지 않고 상담 테이블의 별도 메시지로 제한한다.",
+            "quote_ids": [
+              "R7",
+              "R10"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "signature_pairing": {
+        "item": "상시 통로 시음은 커피 단독 30ml, 예약·적격 바이어 상담에는 현지 조달 개별 밀봉 플레인 비스킷 1개 추가",
+        "intent": "첫 시음에서는 커피 자체의 진한 풍미·부드러움·단맛을 방해 없이 평가하고, 상담 단계에서만 알제리의 익숙한 아침 식사 및 호텔·사무실 공급 장면을 보여준다.",
+        "bullets": [
+          {
+            "text": "통로에서는 페어링 없이 30ml 커피만 제공한다. 시식 직후 ‘이 맛의 가장 적합한 사용처는?’이라는 한 문항에 Retail, Office, Hotel Breakfast, Other 중 하나를 선택하게 해 혼잡을 줄인다.",
+            "quote_ids": [
+              "R1",
+              "R3",
+              "R6"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "비스킷 페어링은 상담 예약자와 적격 바이어에게만 하루 최대 30개 제공한다. 현지에서 개별 밀봉 제품을 조달하고, 공급업체 성분표·알레르기·유통기한을 파일로 보관하며 직원이 포장을 뜯어 직접 접촉하지 않는다.",
+            "quote_ids": [
+              "R1",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "상담 테이블에는 ‘Breakfast / Office Pantry / Hotel’ 3개 사용 장면 카드를 두되, 100입 상품은 우선 사무실 팬트리·호텔 조식용 가설로 제안한다. 대형 소비자 포장으로서의 수용성은 바이어에게 별도로 확인한다.",
+            "quote_ids": [
+              "R1",
+              "R4",
+              "R6"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          }
+        ]
+      },
+      "demonstration": {
+        "title": "20초 표준 제조 시연과 3분 바이어 적합성 검증",
+        "bullets": [
+          {
+            "text": "30초 시연은 ‘한 스틱 개봉 → 기업이 확정한 온도와 물량의 온수 투입 → 확정된 횟수만큼 교반 → 완성’으로 통일한다. 권장 온수량·온도·교반 횟수는 개막 30일 전 제품팀이 확정하며, 확정 전에는 백월이나 시음컵에 수치를 인쇄하지 않는다.",
+            "quote_ids": [
+              "R2"
+            ],
+            "company": [
+              "원료",
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "통로 평가 문항은 ‘Smooth / Balanced / Too sweet / Too strong’ 중 하나를 고르는 방식으로 10초 안에 끝낸다. 부드러움·커피 강도·단맛·뒷맛의 4항목 심층 평가는 구매 권한과 예상 물량을 확인한 적격 바이어에게만 하루 최대 20건 실시한다.",
+            "quote_ids": [
+              "R3"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "3m×3m 부스의 운영 기준은 직원 3명으로 설정한다. 1명은 통로 응대와 바이어 선별, 1명은 제조·위생 전담, 1명은 상담·리드 입력을 담당하며 피크 시간 목표 처리량은 시간당 60회, 일일 상한은 300회다.",
+            "quote_ids": [
+              "R10",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "일일 300회 시음 기준으로 30ml 컵 330개, 냅킨 330장, 샘플 제조용 스틱 110개를 준비한다. 한 스틱으로 제조한 표준 한 잔을 위생적으로 3개 시음컵에 즉시 나누는 기획값이며, 실제 산출량은 확정 온수량에 맞춰 조정한다. 음용수는 ‘110개 스틱 × 확정 온수량’에 세척용 15L를 더해 산출하고, 재고가 20% 남으면 신규 일반 시음을 중단하고 적격 바이어 시음만 유지한다.",
+            "quote_ids": [
+              "R11"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          }
+        ]
+      },
+      "packaging": {
+        "direction": "100입은 사무실·호텔·업소용 중심의 채널 가설로 보여주고, 소매용 10입·20입은 생산 가능성과 원가가 확인된 경우에만 개발 예정안으로 제시한다. 실제 판매 패키지는 규제 검토가 끝난 Arabic/French 라벨과 물류 수치까지 포함해야 한다.",
+        "bullets": [
+          {
+            "text": "전면 정보는 브랜드명, ‘Deep Coffee / Smooth Finish’, ‘Coffee + Vegetable Creamer + Xylose Sugar’, ‘12g × 100 sticks’로 제한한다. 자일로스설탕은 건강 효능 없이 원료 차별점으로만 표시한다.",
+            "quote_ids": [
+              "R9"
+            ],
+            "company": [
+              "강점",
+              "원료",
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "개막 30일 전까지 현지 전문가가 검토한 Arabic/French 라벨 샘플을 완성한다. 제품명, 순중량, 제조·포장·수입업자 정보, 원산지, 로트, 조리법, 제조일·최소품질유지기한 또는 소비기한, 전체 원재료, 알레르기, 영양성분, 보관조건을 실제 판매 패키지와 동일한 위치에 배치한다.",
+            "quote_ids": [
+              "R7",
+              "R8",
+              "R9"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "할랄 상태는 ‘인증 보유·신청 중·미보유’ 중 하나로 상담 원페이저에 명시한다. 인증이 없으면 할랄 마크나 유사 문양을 사용하지 않으며, 식물성크림의 유제품·대두 등 세부 성분과 제조공정 교차접촉 정보를 함께 제시한다.",
+            "quote_ids": [
+              "R8",
+              "R9"
+            ],
+            "company": [
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "개막 45일 전 실제 100입 박스와 케이스의 가로·세로·높이, 총중량, 케이스 입수, 팔레트당 케이스 수를 측정한다. 10입·20입은 생산 가능할 때만 ‘Concept—Not Yet Available’로 표시하며, 각 SKU 카드에 선반 한 단당 진열 수량과 예상 판매기간을 기입한다.",
+            "quote_ids": [
+              "R4",
+              "R6",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "merchandising": {
+        "bullets": [
+          {
+            "text": "리테일 선반에는 실제 치수의 100입 박스를 1:1로 진열하고 ‘Office/Hotel Hypothesis’ 카드를 부착한다. 생산이 확정되지 않은 10입·20입 목업은 판매 가능 제품처럼 섞지 않고 별도의 개발안 선반에 둔다.",
+            "quote_ids": [
+              "R4",
+              "R6"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "상담 원페이저에는 EXW·FOB·CIF 단가, MOQ 3구간, 결제 조건, 프로모션 분담, 케이스팩, 컨테이너 적재량, 리드타임, 유통기한, 보관조건, Arabic 라벨, 할랄 상태, 제공 서류를 넣는다. 모든 수치는 개막 30일 전 승인하고, 미확정 항목이 하나라도 있으면 ‘견적 가능일’을 명시한다.",
+            "quote_ids": [
+              "R7",
+              "R8",
+              "R9"
+            ],
+            "company": [
+              "인증"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "내부 상담용 가격표에는 R4의 현지 제품 가격을 동일 중량이 아니라 ‘스틱당·1회 제공량당’으로 환산하되, 조사 가격과 전시 시점 가격을 다시 확인한다. 바이어 마진은 ‘목표 소비자가－세금·물류·수입원가－프로모션비’로 계산하며 검증되지 않은 경쟁사 대비 우위 문구는 외부에 게시하지 않는다.",
+            "quote_ids": [
+              "R4"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          }
+        ],
+        "zones": [
+          {
+            "name": "1. Golden Ratio 시선 존",
+            "position": "3m×3m 기준 통로 전면 코너와 백월 상단",
+            "purpose": "French·Arabic 헤드라인과 두 축 맛 그래픽으로 ‘진한 커피와 부드러운 마무리를 자일로스설탕까지 미리 맞춘 스틱’임을 3초 안에 전달한다.",
+            "quote_ids": [
+              "R5",
+              "R10"
+            ],
+            "company": [
+              "강점",
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "name": "2. One-Question Tasting 존",
+            "position": "통로에서 0.6m 안쪽의 폭 1.2m 오픈 카운터",
+            "purpose": "표준 제조 시연, 30ml 단독 시음, 한 문항 평가를 30초 안에 끝내고 구매 역할과 관심 채널을 확인한다.",
+            "quote_ids": [
+              "R2",
+              "R3",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "name": "3. Channel-Fit Shelf 존",
+            "position": "시식대에서 상담 테이블로 이동하는 측면 벽",
+            "purpose": "100입 상품의 사무실·호텔 공급안과 실제 Arabic/French 라벨, 케이스팩·선반 점유 면적을 검토하게 한다.",
+            "quote_ids": [
+              "R4",
+              "R6",
+              "R7"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "name": "4. Margin & Import Desk",
+            "position": "부스 가장 안쪽의 2인 상담 테이블",
+            "purpose": "EXW·FOB·CIF 가격, MOQ별 단가, 도착원가, 목표 소비자가, 바이어 마진, 유통기한, 라벨·통관·추적 서류를 한 번에 검토하고 다음 일정을 확정한다.",
+            "quote_ids": [
+              "R8",
+              "R9",
+              "R10"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      }
+    },
+    "visitor_flow": {
+      "3s": {
+        "headline": "통로에서 3초: 진한 커피와 부드러운 마무리의 두 축을 본다",
+        "goal": "일반적인 편의성보다 황금비율이 약속하는 구체적 맛과 자일로스설탕 배합을 먼저 인지시킨다.",
+        "visitor": [
+          "French·Arabic 헤드라인과 Deep Coffee–Smooth Finish 그래픽을 본다.",
+          "실제 12g×100입 박스와 낱개 스틱을 확인한다."
+        ],
+        "staff": [
+          "시선이 2초 이상 머문 방문객에게 30ml 단독 시음을 제안한다.",
+          "‘수입·유통 또는 리테일 소싱을 담당하십니까?’라는 한 문장으로 역할을 확인한다."
+        ],
+        "props": [
+          "French·Arabic 대형 백월",
+          "두 축 Golden Ratio 맛 그래픽",
+          "실제 100입 박스와 스틱"
+        ],
+        "message": "진한 커피 풍미와 부드러운 마무리를 자일로스설탕까지 한 스틱에 미리 맞췄습니다."
+      },
+      "30s": {
+        "headline": "표준 제조를 보고 커피만 맛본다",
+        "goal": "미리 배합된 편의성과 맛의 균형을 방해 없이 경험시키고 관심 채널을 판별한다.",
+        "visitor": [
+          "한 스틱과 정해진 온수량으로 커피가 완성되는 과정을 본다.",
+          "30ml 커피를 단독 시음한다.",
+          "맛 평가 한 문항과 적합 사용처 한 문항에 답한다."
+        ],
+        "staff": [
+          "제조 담당자는 확정된 온도·물량·교반 횟수를 지킨다.",
+          "응대 담당자는 시음컵을 전달하고 한 문항 평가만 받아 대기열을 이동시킨다.",
+          "구매 담당자와 구체적 유통 관심을 보인 방문객만 상담 존으로 안내한다."
+        ],
+        "props": [
+          "공식 연결 온수기 또는 승인된 보온 디스펜서",
+          "눈금 내열컵과 타이머",
+          "30ml 시음컵",
+          "French·Arabic 한 문항 평가 보드"
+        ],
+        "message": "추가 계량 없이 정해진 물만 더하면 같은 맛의 한 잔이 완성됩니다."
+      },
+      "3min": {
+        "headline": "채널·마진·수입 가능성을 숫자로 판단한다",
+        "goal": "시식자를 샘플 발송, 정식 견적 또는 후속 미팅으로 전환한다.",
+        "visitor": [
+          "100입 제품의 사무실·호텔 공급안과 소매 SKU 개발안을 구분해 확인한다.",
+          "Arabic/French 라벨, 할랄 상태, 전체 원재료와 수입 서류를 검토한다.",
+          "MOQ별 가격, 예상 도착원가, 목표 소비자가와 마진 시뮬레이션을 확인한다.",
+          "샘플 수령 주소와 견적·미팅 일정을 확정한다."
+        ],
+        "staff": [
+          "판매 채널·예상 연간 물량·목표 소비자가를 먼저 질문한다.",
+          "해당 조건에 맞는 EXW·FOB·CIF 가격과 마진 시뮬레이션만 제시한다.",
+          "확정 정보와 추가 확인 정보를 구분하고 회신 날짜를 현장에서 등록한다."
+        ],
+        "props": [
+          "Arabic/French 규제 검토 라벨 샘플",
+          "SKU별 실제 치수 플래노그램",
+          "가격·MOQ·도착원가·마진 계산 원페이저",
+          "3~5개 스틱 샘플팩과 제품 규격서 QR"
+        ],
+        "message": "맛 평가에서 끝내지 않고 귀사의 채널에서 가능한 가격·마진·수입 조건까지 바로 검토할 수 있습니다."
+      }
+    },
+    "key_actions": [
+      {
+        "title": "개막 30일 전 ‘판매판단 원페이저’를 수치까지 잠근다",
+        "detail": "수출영업 책임자가 EXW·FOB·CIF 단가, MOQ별 가격, 결제 조건, 케이스팩, 컨테이너 적재량, 리드타임, 유통기한, 할랄 상태와 제공 가능 서류를 확정한다. 현지 목표 소비자가와 수입사·유통사 마진을 DA 기준으로 계산해 대표 승인 후 상담 테이블에 비치한다.",
+        "quote_ids": [
+          "R4",
+          "R8",
+          "R9"
+        ],
+        "company": [
+          "가격대"
+        ],
+        "is_idea": false
+      },
+      {
+        "title": "3명이 응대·제조·상담을 분리하고 일일 300회에서 시음을 마감한다",
+        "detail": "개장 전 15분 동안 제조 담당자가 온수 온도·물량과 위생용품을 확인하고, 응대 담당자는 구매 역할과 관심 채널을 선별하며, 영업 담당자는 예상 물량과 가격 조건이 확인된 바이어만 상담한다. 매시간 제공 수량을 기록하고 재고 20% 시점부터 적격 바이어 우선 모드로 전환한다.",
+        "quote_ids": [
+          "R10",
+          "R11"
+        ],
+        "company": [
+          "강점"
+        ],
+        "is_idea": false
+      },
+      {
+        "title": "시식 데이터와 후속 영업 약속을 하나의 리드 기록으로 연결한다",
+        "detail": "통로에서는 한 문항 맛 평가와 관심 채널만 기록하고, 적격 바이어에게만 4항목 관능 평가를 진행한다. 상담 종료 전에 샘플 수량·주소·견적 회신일·필요 서류·후속 미팅 날짜를 CRM 또는 공용 시트에 등록하며 명함만 받은 건은 완료 상담으로 집계하지 않는다.",
+        "quote_ids": [
+          "R3",
+          "R6",
+          "R8",
+          "R10"
+        ],
+        "company": [],
+        "is_idea": false
+      }
+    ],
+    "kpis": [
+      {
+        "metric": "적격 바이어 상담 전환율",
+        "target": "구매 역할이 확인된 시식자의 40% 이상",
+        "how": "수입사·유통사·대형 유통 MD로 확인된 시식자를 분모로 하고, 판매 채널과 예상 물량을 기록한 뒤 상담 테이블로 이동한 인원을 분자로 계산한다."
+      },
+      {
+        "metric": "완전정보 샘플 발송 요청",
+        "target": "박람회 전체 20건 이상",
+        "how": "회사명, 담당자, 채널, 예상 물량, 배송 주소, 필요 서류와 발송 희망일이 모두 기록된 요청만 집계한다."
+      },
+      {
+        "metric": "견적 또는 후속 미팅 확정",
+        "target": "박람회 전체 10건 이상",
+        "how": "MOQ·Incoterms·목표 가격 중 하나 이상이 합의되고 견적 회신일 또는 미팅 날짜가 캘린더와 확인 메일에 등록된 건만 집계한다."
+      }
+    ],
+    "risks": [
+      {
+        "text": "온수기 전력, 급수, 폐수 처리, 시음 허가와 위생 운영은 주최 측 공식 서비스로 신청하고 서면 승인을 받아야 한다. 승인되지 않으면 현장 제조 대신 공식 케이터링 구역에서 제조한 제품을 시간 기록이 가능한 보온 디스펜서로 제공한다.",
+        "quote_ids": [
+          "R11"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      {
+        "text": "Arabic 라벨과 알제리 통관·적합성 서류는 현지 수입사 및 규제 전문가가 최종 확인해야 한다. HACCP·ISO 22000은 품질 신뢰 자료일 뿐 할랄 인증이나 현지 적합성 증명서를 대체하지 않는다.",
+        "quote_ids": [
+          "R7",
+          "R8"
+        ],
+        "company": [
+          "인증"
+        ],
+        "is_idea": false
+      },
+      {
+        "text": "식물성크림의 전체 성분·알레르기·교차접촉 정보, 제품 유통기한, 고온 물류 안정성, 로트 추적 범위와 리콜 이력을 확인하기 전에는 무알레르기·장기보관·현지 물류 적합성을 주장하지 않는다.",
+        "quote_ids": [
+          "R9",
+          "R12"
+        ],
+        "company": [
+          "원료"
+        ],
+        "is_idea": false
+      }
+    ],
+    "questions": [
+      "수출용 EXW·FOB·CIF 단가, MOQ별 가격 구간, 결제 조건, 월 생산능력, 리드타임, 유통기한과 권장 보관조건을 확정할 수 있습니까?",
+      "한 스틱의 공식 권장 온수량·온도·교반 방법, 전체 원재료·알레르기·영양성분, 할랄 인증 상태와 공개 가능한 배합 또는 관능 관리 기준은 무엇입니까?",
+      "100입 박스와 수출 케이스의 실제 치수·중량·케이스 입수·팔레트 적재량 및 생산 가능한 10입·20입 SKU의 원가와 출시 가능 시점은 언제입니까?"
+    ],
+    "brief": {
+      "insights": [
+        {
+          "fact": "조사 메모에서는 알제리 인스턴트커피 수요가 빠른 준비, 편의성, 긴 보관성 때문에 증가하며 도시화와 젊은 소비자의 이동 중 소비가 성장 요인이라고 설명한다.",
+          "insight": "도시 소비자는 별도의 계량이나 배합 없이 짧은 시간에 일정한 맛을 낼 수 있는 커피를 원한다.",
+          "implication": "우리 부스는 1회분 스틱에 커피·크림·설탕이 미리 배합되어 있다는 점과 간편한 준비 방식을 바이어에게 우선 설명해야 한다.",
+          "quote_ids": [
+            "R2"
+          ],
+          "company": [
+            "원료"
+          ],
+          "is_idea": false
+        },
+        {
+          "fact": "비대표 온라인 반응이지만 일부 현지 인스턴트커피의 탄 맛과 뒷맛이 불만으로 언급됐고, 경쟁 제품 PRÓMA CAFÉ는 브라질산 100% 순수 커피와 진한 향을 중심으로 소구한다.",
+          "insight": "진하고 향이 강한 블랙 인스턴트커피와 달리, 쓴맛 부담이 적고 부드럽게 마무리되는 완성형 믹스가 차별화 선택지가 될 가능성이 있다.",
+          "implication": "우리 부스는 검증되지 않은 우월성 주장을 피하면서, 제품의 부드러운 우유 풍미와 커피의 균형을 직접 확인하게 하고 현지 바이어의 맛 선호를 검증해야 한다.",
+          "quote_ids": [
+            "R3",
+            "R5"
+          ],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        },
+        {
+          "fact": "조사 메모에서는 알제리 커피 판매 채널 중 소형 지역 식료품점이 가장 강하고 하이퍼마켓이 가장 빠르게 성장하며, 대형 유통 관계자는 물류·재고관리·추적성을 소싱 기준으로 확인한다고 설명한다.",
+          "insight": "유통 바이어는 맛뿐 아니라 여러 매장에 안정적으로 공급하고 재고와 품질을 추적할 수 있는 상품인지 확인하려 한다.",
+          "implication": "우리 부스는 100입 상품의 채널 적합성과 함께 MOQ, 공급 리드타임, 유통기한, 보관조건, 로트 추적 및 원료 추적 자료를 상담 핵심 정보로 준비해야 한다.",
+          "quote_ids": [
+            "R6",
+            "R9"
+          ],
+          "company": [
+            "가격대"
+          ],
+          "is_idea": false
+        },
+        {
+          "fact": "알제리 식품은 Arabic 라벨이 의무이며, 통관 과정에서 수입사 정보, 원산지·포장 명세, 적합성 및 품질 관련 서류 등이 요구될 수 있다. Djazagro 방문객의 95%는 알제리에서 왔다.",
+          "insight": "현지 바이어에게는 해외 브랜드 이미지보다 실제 수입·등록·유통을 진행할 수 있는 준비도가 상담 전환의 핵심이다.",
+          "implication": "우리 부스는 Arabic 라벨 적용 가능 여부와 수출 서류 준비 범위를 명확히 제시하고, HACCP·ISO 22000이 현지 적합성 서류를 대체하지 않는다는 전제에서 바이어별 요구사항을 확인해야 한다.",
+          "quote_ids": [
+            "R7",
+            "R8",
+            "R10"
+          ],
+          "company": [
+            "인증"
+          ],
+          "is_idea": false
+        }
+      ],
+      "target_buyers": [
+        {
+          "priority": 1,
+          "type": "알제리 식품·음료 수입 및 유통사",
+          "job": "현지 판매 가능 가격과 마진, MOQ, 공급 안정성, 유통기한과 보관조건, Arabic 라벨 대응, 통관·적합성 서류, 로트 추적 가능 여부를 확인하는 것"
+        },
+        {
+          "priority": 2,
+          "type": "하이퍼마켓·대형 유통 식품 MD",
+          "job": "기존 블랙 인스턴트커피와 구별되는 카테고리 역할, 소비자 수용 가능한 맛, 100입 포장의 회전 가능성, 매장 진열 적합성, 재고관리와 추적성을 확인하는 것"
+        }
+      ],
+      "big_idea": {
+        "line_en": "For importers seeking differentiated convenience coffee, Golden Ratio delivers the same smooth, complete cup from every stick—pre-balanced with coffee, creamer and xylose sugar.",
+        "line_ko": "차별화된 간편 커피를 찾는 수입 바이어에게 황금비율은 커피·크림·자일로스설탕을 미리 맞춘 스틱으로 매번 동일하게 부드럽고 완성된 한 잔을 제공합니다.",
+        "why": "현지 수요의 핵심으로 제시된 간편성과 1회분 사용성을 충족하면서, 원산지와 진한 향을 강조하는 블랙 인스턴트커피와 달리 부드러운 우유 풍미와 일관된 완성형 맛으로 차별화할 수 있기 때문이다. 다만 탄 맛이 적다는 평가는 비대표 반응에 근거한 가설이므로 현장 시음으로 검증해야 한다.",
+        "quote_ids": [
+          "R2",
+          "R3",
+          "R5"
+        ],
+        "company": [
+          "강점",
+          "원료"
+        ],
+        "is_idea": false
+      },
+      "rtb": [
+        {
+          "text": "인스턴트커피, 식물성크림, 자일로스설탕이 한 스틱에 미리 배합되어 별도 계량 없이 일정한 맛을 구현할 수 있다.",
+          "quote_ids": [],
+          "company": [
+            "원료",
+            "가격대"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "제품 자체의 차별 근거는 부드러운 우유 풍미와 깊고 진한 커피 원두 풍미의 조화다.",
+          "quote_ids": [],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "12g 단위의 100입 구성은 1회분 편의 수요에 대응하며, 현지 시장의 Maxwell 100 sachets 상품과 같은 대용량 스틱 카테고리에서 비교 가능한 규격이다.",
+          "quote_ids": [
+            "R2",
+            "R4"
+          ],
+          "company": [
+            "가격대"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "HACCP와 ISO 22000 인증은 식품안전 관리체계의 신뢰 자료로 제시할 수 있다. 단, 알제리의 수입 적합성·통관 서류를 대체하지는 않는다.",
+          "quote_ids": [
+            "R8"
+          ],
+          "company": [
+            "인증"
+          ],
+          "is_idea": false
+        }
+      ]
+    },
+    "mode": "B",
+    "stage": "revised",
+    "revise_below": 4,
+    "scores": [
+      {
+        "id": "insight",
+        "label": "인사이트 연결",
+        "score": 5,
+        "reason": "각 실행안에 R1~R12와 기업 강점이 명시적으로 연결되고, 확인 사실과 현장 검증 가설도 비교적 신중하게 구분했다."
+      },
+      {
+        "id": "single_minded",
+        "label": "빅 아이디어 일관성",
+        "score": 4,
+        "reason": "‘미리 배합된 스틱으로 매번 동일한 완성형 한 잔’이 전반을 관통하지만, 아침 페어링과 수입 준비도 메시지가 동시에 전면화되어 초점이 다소 분산된다."
+      },
+      {
+        "id": "buyer_value",
+        "label": "바이어 가치",
+        "score": 3,
+        "reason": "가격·MOQ·유통기한·리드타임·물류·할랄·마진을 질문 목록에는 넣었지만 실제 수치와 확정 답변이 없어 바이어가 현장에서 입점 손익을 판단할 수 없다."
+      },
+      {
+        "id": "specificity",
+        "label": "구체성",
+        "score": 3,
+        "reason": "동선과 시연 절차는 구체적이나 부스 면적, 권장 물량, 일일 시음 수량, 인력, 패키지 치수, 팔레트 적재량 등 실행 핵심값이 미확정이다."
+      },
+      {
+        "id": "distinctiveness",
+        "label": "차별성",
+        "score": 3,
+        "reason": "커피·크리머·설탕의 3-in-1 편의성과 ‘완성된 한 잔’은 경쟁 믹스커피에도 적용 가능한 표현이며 ‘황금비율’만의 배합 근거가 보이지 않는다."
+      },
+      {
+        "id": "feasibility",
+        "label": "실행 가능성",
+        "score": 3,
+        "reason": "공식 전기·급수 대응은 적절하지만 연속 제조·페어링 배식·설문·바이어 선별을 동시에 수행할 인력과 처리량 계획이 없어 혼잡 가능성이 높다."
+      }
+    ],
+    "skill": {
+      "name": "booth_marketing",
+      "folder": "booth_marketing",
+      "files": [
+        "SKILL.md",
+        "examples.md",
+        "rubric.md"
+      ],
+      "chars": 5249,
+      "fingerprint": "52255d5798cb",
+      "warnings": []
+    },
+    "planner_persona": "당신은 해외 식품 박람회 부스 기획 15년차 마케터입니다. Summer Fancy Food Show, ANUGA, FOODEX Japan 등에서 K-푸드 부스를 30회 이상 총괄했고, 부스 방문 바이어의 상담 전환율을 끌어올린 경험이 있습니다. 미국·유럽 대형 유통 바이어와 입점 협상을 해 봤습니다. 조사 자료로 확인된 사실과 기획 아이디어를 구분해서 쓰고, 실제 부스에서 바로 실행할 수 있게 구체적으로 제안합니다.",
+    "reviewer_persona": "당신은 미국 대형 유통 식품 MD 10년차입니다. 박람회에서 하루 50개 부스를 도는 바이어 입장에서, 입점 판단에 필요한 정보(가격, 유통기한, 인증, 물류, 진열 형태)가 빠졌거나 과장된 곳, 바이어 눈에 띄지 않을 연출, 실제 부스에서 실행하기 어려운 계획을 날카롭게 지적합니다.",
+    "review": {
+      "overall": "조사 연결과 B2B 상담 구조는 좋지만, 현재는 ‘준비할 정보 목록’에 가깝고 실제 가격·유통기한·할랄·물류 수치와 현장 처리량이 없어 바이어가 입점 여부를 결정하기에는 부족하다.",
+      "comments": [
+        {
+          "section": "overall",
+          "issue": "14,900원 소비자가 외에 수출 공급가, Incoterms, MOQ, 결제 조건, 프로모션 부담, 예상 알제리 도착원가와 유통 마진이 없다.",
+          "suggestion": "부스 운영 전 EXW·FOB·CIF 기준 단가표, MOQ별 가격 구간, 케이스 입수, 컨테이너 적재량과 목표 소비자가(DA)를 확정하고 경쟁 제품 대비 스틱당 가격·바이어 마진 시뮬레이션을 한 장으로 제시한다."
+        },
+        {
+          "section": "패키징",
+          "issue": "알제리에서 중요한 할랄 상태와 식물성크림의 유제품·대두 등 알레르기 정보가 미확정이며, Arabic 라벨도 ‘공간 확보’와 목업 수준이다.",
+          "suggestion": "할랄 인증 보유·신청·미보유 상태를 명확히 표시하고 전체 원재료, 알레르기, 영양성분, 제조사·원산지·날짜 표기까지 포함한 규제 검토 완료 Arabic/French 라벨 샘플을 준비한다."
+        },
+        {
+          "section": "진열 가이드",
+          "issue": "100입은 대형 소비자 포장인지 업소·사무실용인지 역할이 불명확하고, 실제 박스 크기와 선반 점유 면적도 없어 회전성과 진열 효율을 판단하기 어렵다.",
+          "suggestion": "100입은 B2B 팬트리·호텔용으로 포지셔닝하고 소매 채널에는 생산 가능한 10입·20입 SKU의 원가와 출시 일정을 제시한다. 각 SKU의 가로·세로·높이, 중량, 케이스팩, 선반당 진열 수량과 예상 판매기간을 플래노그램에 넣는다."
+        },
+        {
+          "section": "메인 비주얼",
+          "issue": "‘One Stick to a Complete Cup’과 세 성분이 컵으로 합쳐지는 이미지는 일반적인 3-in-1 커피 부스와 쉽게 바꿔 쓸 수 있고, 현지 방문객이 많은데 핵심 백월이 영어 중심이다.",
+          "suggestion": "기업이 실제로 공개할 수 있는 커피·크리머·자일로스설탕의 배합 설계 또는 관능 기준을 ‘Golden Ratio’의 고유 증거로 시각화하고, 통로 헤드라인은 French와 Arabic을 우선 적용한다."
+        },
+        {
+          "section": "시연",
+          "issue": "권장 온수량이 미정이고, 세 잔 연속 제조와 4항목 설문은 30초 메시지와 맞지 않으며 혼잡 시간대 처리량과 하루 샘플 재고가 계산되지 않았다.",
+          "suggestion": "온수량·온도·교반 횟수를 사전 확정하고 통로 시음은 20~30초 제조와 한 문항 평가로 축소한다. 심층 4항목 평가는 예약 또는 적격 바이어에게만 실시하며 시간당 처리 인원, 직원 최소 3명, 일일 스틱·컵·물·폐기물 수량과 품절 기준을 산출한다."
+        },
+        {
+          "section": "시그니처 페어링",
+          "issue": "브리오슈 배식은 추가 알레르기·보관·위생·부스 인력 부담을 만들고 커피 자체의 맛 평가를 방해할 수 있다.",
+          "suggestion": "상시 통로 시음에서는 커피만 제공하고, 페어링은 개별 밀봉된 현지 조달 비스킷을 사용한 예약 상담용으로 제한한다. 공급업체 성분표, 유통기한, 집게·폐기 절차와 일일 제공 수량도 확정한다."
+        }
+      ]
+    },
+    "applied": [
+      "아침 페어링과 수입 준비도를 전면 메시지에서 내리고 ‘진한 커피 풍미·부드러운 마무리·자일로스설탕 배합’이라는 하나의 맛 약속으로 초점을 좁혔다.",
+      "EXW·FOB·CIF, MOQ별 가격, 도착원가, 목표 소비자가와 바이어 마진을 포함한 판매판단 원페이저를 개막 30일 전 확정하도록 반영했다.",
+      "100입은 사무실·호텔용 채널 가설로 구분하고, 10입·20입은 생산성이 확인된 경우에만 개발 예정안으로 제시하도록 수정했다.",
+      "통로 시음은 커피 단독과 한 문항 평가로 축소하고, 직원 3명·일일 300회·시간당 60회·소모품 수량과 품절 전환 기준을 추가했다.",
+      "French·Arabic 우선 백월, 할랄 상태의 명확한 표시, 전체 원재료·알레르기·규제 검토 완료 라벨 샘플과 실제 물류 치수 준비를 반영했다."
+    ],
+    "has_profile": true,
+    "has_product_evidence": null,
+    "model": "gpt-5.6-sol",
+    "research": {
+      "method": "web_search",
+      "notes": [
+        {
+          "id": "R1",
+          "topic": "consumer",
+          "topic_label": "소비자",
+          "text": "[확인 사실] 알제리 성인의 일반적인 아침 식사는 곡물류·유제품·단 음식에 커피 또는 차를 곁들이는 형태로 조사됐다. [기획 시사점] 부드러운 우유 풍미의 제품을 ‘간편한 아침용 café au lait’로 시음시키기 좋다.",
+          "source_url": "https://www.sciencedirect.com/science/article/pii/S0985056223000274",
+          "source_title": "La consommation du petit déjeuner est-elle associée à l’état pondéral : enquête auprès d’adultes algériens ?",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R2",
+          "topic": "consumer",
+          "topic_label": "소비자",
+          "text": "[확인 사실] 알제리 인스턴트커피 수요는 빠른 준비, 편의성, 긴 보관성 때문에 증가하며 도시화와 젊은 소비자의 on-the-go 수요가 성장 요인으로 제시된다. [기획 시사점] 1회분 스틱의 ‘물만 부으면 완성’ 메시지를 전면에 배치할 필요가 있다.",
+          "source_url": "https://www.6wresearch.com/industry-report/algeria-instant-coffee-market",
+          "source_title": "Algeria Instant Coffee Market (2025-2031) | Share & Trends",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R3",
+          "topic": "consumer",
+          "topic_label": "소비자",
+          "text": "[확인 사실] 2026년 알제리 온라인 소비자 반응에서는 PRÓMA CAFÉ 45g을 330 DA에 구매했다는 사례와 함께 일부 현지 인스턴트커피의 ‘burnt’ 맛과 aftertaste가 불만으로 언급됐다(비대표 표본). [기획 시사점] 시음에서는 ‘마일드함·쓴맛/탄맛이 적은 피니시’를 직접 비교 체험시키는 것이 유효하다.",
+          "source_url": "https://www.reddit.com/r/AlgeriaRates/comments/1s5f0sc/proma_instant_coffee/",
+          "source_title": "Proma instant coffee",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R4",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[확인 사실] 알제리 온라인 소매점 Mati Plus의 최근 표시 가격은 NESCAFÉ Classic 45g 390 DA, NESCAFÉ GOLD 95g 1,180 DA, PRÓMA CAFÉ 45g 450 DA, Maxwell 100 sachets 2,480 DA이며 CARTE NOIRE는 2,500 DA에 품절로 표시됐다. 100입 제품은 Maxwell의 대용량 sachet 상품과 직접 비교될 가능성이 높다.",
+          "source_url": "https://matiplus.dz/",
+          "source_title": "Mati Plus Algeria Online Store",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R5",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[확인 사실] PRÓMA CAFÉ는 ‘premium blend of 100% pure Brazilian coffee’, ‘rich and aromatic’, ‘convenient, economical and versatile’를 핵심 메시지로 사용하며 2g single serve sachet도 운영한다. 황금비율은 원산지 프리미엄보다 ‘커피·크림·자일로스설탕이 이미 맞춰진 일관된 맛’을 차별점으로 제시해야 한다.",
+          "source_url": "https://corporate.promasidor.com/fr/brands/beverages/proma-cafe/",
+          "source_title": "Promasidor - Proma Café",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R6",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[확인 사실] Euromonitor의 2025년 알제리 커피 분석에서는 Eurl Facto의 Facto가 선두이며, Jacobs Douwe Egberts의 Maxwell House와 Carte Noire 인스턴트커피가 modern retail에서 유통을 확대하고 있다고 설명한다. 판매 채널은 small local grocers가 가장 강하고 hypermarkets가 가장 빠르게 성장하는 것으로 제시된다.",
+          "source_url": "https://www.euromonitor.com/coffee-in-algeria/report",
+          "source_title": "Coffee in Algeria | Market Research Report",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R7",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "[확인 사실] 알제리 식품 라벨은 Arabic 표기가 의무이며 제품명, 순중량, 제조·포장·수입업자 정보, 원산지, lot, 사용법, 제조일·최소품질유지기한 또는 소비기한, 원재료, 보관조건 등을 표시해야 한다. French는 보조 언어로 함께 사용할 수 있다.",
+          "source_url": "https://commerce.gov.dz/fr/questions-frequentes/themes/etiquetage-des-produits",
+          "source_title": "Ministère du Commerce Algérie - Étiquetage des produits",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R8",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "[확인 사실] 알제리 통관 서류에는 bank domiciliation이 포함된 invoice, 수입사 trade registration·tax card, border inspection document, 원산지 증빙, 상세 packing list, 독립 제3자의 conformity 및 quality certificates 등이 요구될 수 있다. 기업:HACCP와 기업:ISO 22000은 품질 신뢰 자료로 제시하되 현지 수입 적합성 서류를 대체하지 않으므로 바이어별 요구 문서를 확인해야 한다.",
+          "source_url": "https://www.trade.gov/country-commercial-guides/algeria-import-requirements-and-documentation",
+          "source_title": "Algeria - Import Requirements and Documentation",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R9",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "[확인 사실] Carrefour Algeria 관계자는 소싱 시 제품뿐 아니라 물류, 재고관리, traceability를 확인하며, 소비자의 local/authentic 제품 선호와 투명성·추적성 요구, healthier 또는 organic 제품 성장세를 주요 변화로 꼽았다. 자일로스설탕은 건강 효능을 단정하지 말고 당류 함량·영양성분·원료 추적자료를 준비하는 편이 안전하다.",
+          "source_url": "https://www.djazagro.com/en/news-trends/newsroom/new-market-trends-news",
+          "source_title": "Carrefour Algeria’s Vision: Innovation and Local Sourcing at Djazagro",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R10",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "[확인 사실] Djazagro 2025에는 39개국 650개 기업·브랜드와 전문 방문객 25,000명이 참가했고 방문객의 95%가 알제리에서 왔다. 식품 가공업체, 유통업체, 제과·제빵업자, 외식·물류·기술 서비스 관계자 등이 방문하므로 소비자 홍보보다 수입·유통 및 B2B 공급 상담 중심으로 운영해야 한다.",
+          "source_url": "https://www.djazagro.com/en/news-trends/newsroom/why-exhibit-at-djazagro-2026",
+          "source_title": "Why exhibit at Djazagro 2026?",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R11",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "[확인 사실] Djazagro 2026 Exhibitors Guide는 식음료를 제공하는 부스에 행사 기간 내내 물을 공급하고 위생 규정을 준수하도록 요구한다. 전기·급수 연결은 출품사가 직접 하면 안 되므로 커피 시음 운영 전 급수, 온수기 전력, 폐수 처리와 위생용품을 공식 서비스로 신청해야 한다.",
+          "source_url": "https://event.djazagro.com/Data/ElFinder/s971/2026/EE/GT/Guide-Exposants-Djaz-26-GB.pdf",
+          "source_title": "DJAZAGRO 2026 Exhibitors Guide",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R12",
+          "topic": "trend",
+          "topic_label": "트렌드",
+          "text": "[확인 사실] Djazagro 2025 출품 분야 중 food packaging and conditioning이 27%를 차지했으며 Djaz’Pack에서는 재활용·폐기물 관리와 지속가능 패키징이 핵심 주제로 다뤄졌다. 12g 개별 스틱과 100입 외포장의 수분·산소 차단 성능, 재질 구성, 재활용 가능성 자료를 상담 테이블에 준비할 필요가 있다.",
+          "source_url": "https://www.djazagro.com/en/news-trends/newsroom/review-key-sectors",
+          "source_title": "Djazagro 2025: top sectors shaping the show",
+          "source_status": "출처 미확인"
+        }
+      ],
+      "citations": [],
+      "error": ""
+    },
+    "source_mode": "openai_self_research",
+    "short": {
+      "summary": "3m×3m·일 300회 시음 기획 기준",
+      "core_message": "커피·식물성크림·자일로스설탕 완성형 스틱",
+      "big_idea_why": "부드러운 우유 풍미의 완성형 맛 차별화",
+      "insight.0.fact": "알제리 간편 인스턴트커피 수요 증가",
+      "insight.1.fact": "탄 맛 불만과 PRÓMA CAFÉ 진한 향 소구",
+      "insight.1.implication": "부드러운 우유 풍미·커피 균형 현장 검증",
+      "insight.2.fact": "소형 식료품점 강세·하이퍼마켓 고성장",
+      "insight.2.implication": "100입 채널 적합성·MOQ·추적 자료 준비",
+      "insight.3.fact": "Arabic 라벨 의무·통관 서류 요구 가능",
+      "insight.3.implication": "Arabic 라벨·수출 서류와 바이어 요구 확인",
+      "action.0": "EXW·FOB·CIF·MOQ별 가격 확정",
+      "action.1": "시간당 제공 기록·재고 20% 바이어 우선",
+      "action.2": "적격 바이어 관능평가·CRM 후속 등록",
+      "kpi.0": "채널·예상 물량 기반 상담 전환율 산정",
+      "bullet.main_visual.0": "French·Arabic 백월 헤드라인 병기",
+      "bullet.main_visual.1": "Deep Coffee·Smooth Finish 2축 그래픽",
+      "bullet.main_visual.2": "12g × 100 sticks·Food Safety Management",
+      "bullet.main_visual.3": "커피 브라운 55%·크림 베이지 35%·골드 10%",
+      "bullet.slogan.0": "진한 커피·부드러운 풍미·자일로스설탕",
+      "bullet.slogan.1": "자일로스설탕 건강·영양 표현 미사용",
+      "bullet.slogan.2": "French·Arabic 우선, 영어는 상담 보조",
+      "bullet.signature_pairing.0": "30ml 커피 시음·사용처 1문항 조사",
+      "bullet.signature_pairing.1": "적격 바이어 대상 비스킷 하루 최대 30개",
+      "bullet.signature_pairing.2": "100입 사무실 팬트리·호텔 조식 가설",
+      "bullet.demonstration.0": "한 스틱 온수·교반 30초 시연",
+      "bullet.demonstration.1": "10초 통로 평가·적격 바이어 4항목 평가",
+      "bullet.demonstration.2": "직원 3명·시간당 60회·일 300회",
+      "bullet.demonstration.3": "300회 기준 컵·냅킨 330개·스틱 110개",
+      "bullet.packaging.0": "Deep Coffee·Smooth Finish·12g × 100 sticks",
+      "bullet.packaging.1": "Arabic/French 실제 판매 패키지 라벨 완성",
+      "bullet.packaging.2": "할랄 상태·식물성크림 성분 정보 명시",
+      "bullet.packaging.3": "100입 실제 규격 측정·10입·20입 개발안 표시",
+      "bullet.merchandising.0": "100입 실물 진열·Office/Hotel 가설 부착",
+      "bullet.merchandising.1": "가격·MOQ·Arabic 라벨·할랄 원페이저",
+      "bullet.merchandising.2": "스틱당·1회 제공량당 가격과 바이어 마진 산정",
+      "zone.merchandising.0": "진한 커피·부드러운 마무리 스틱 3초 전달",
+      "zone.merchandising.3": "가격·마진·유통기한·통관 서류 일괄 검토",
+      "risk.0": "공식 서비스 승인·보온 디스펜서 대안",
+      "risk.1": "Arabic 라벨·통관 서류 현지 최종 확인",
+      "risk.2": "성분·알레르기·물류·추적 확인 전 주장 금지",
+      "question.1": "온수·성분·알레르기·할랄 상태 확인",
+      "question.2": "100입 규격·10입·20입 출시 시점 확인"
+    },
+    "from_cache": false
+  },
+  "booth_error": null,
+  "models": {
+    "booth": "gpt-5.6-sol",
+    "booth_effort": "medium",
+    "task": "gpt-5.6-terra",
+    "task_effort": "low"
+  },
+  "fetched_at": "2026-09-27 14:44"
+}
