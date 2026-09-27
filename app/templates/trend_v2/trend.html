@@ -20,6 +20,19 @@
   .tip:hover::after, .tip:focus::after { bottom: auto; top: calc(100% + 8px); max-width: min(320px, 80vw); line-height: 1.6; }
   .sec-info.tip:hover::after, .sec-info.tip:focus::after { left: 0; right: auto; font-size: 13px; font-weight: 500; }
   .tooltip-text { bottom: auto; top: calc(100% + 8px); width: 320px; max-width: 80vw; padding: 10px 12px; font-size: 13px; line-height: 1.6; }
+  /* 1번 섹션 조사 정보: 한 줄로 나열 (좁은 화면에선 줄바꿈 대신 옆으로 밀어서 보기) */
+  .meta-row { flex-wrap: nowrap; overflow: hidden; margin-bottom: 6px; }
+  .meta { flex: none; white-space: nowrap; font-size: 12px; padding: 3px 10px; }
+  /* 폭이 모자라면 가장 긴 '검색 언어'만 말줄임(…), 마우스를 올리면 전체 표시 */
+  .meta.meta-langs { flex: 0 1 auto; min-width: 0; }
+  .meta.meta-langs b { overflow: hidden; text-overflow: ellipsis; }
+  .meta-legend { margin-bottom: 12px; }
+  /* 2·3번 섹션 카드는 화면 폭에 따라 3+1로 깨지지 않게 한 줄에 하나씩(1열) */
+  .card-grid { grid-template-columns: 1fr; }
+  /* 2번 섹션: 타깃 제품·가격 전략은 전체 폭, 리테일 가격·판매 채널(2·3번째 카드)은 나란히 2열 */
+  .s2-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .s2-grid > .card:first-child, .s2-grid > .card:last-child { grid-column: 1 / -1; }
+  @media (max-width: 600px) { .s2-grid { grid-template-columns: 1fr; } }
   /* 3. 현지 시장 트렌드 분석: 대시보드 본문 크기에 맞춤 */
   .stat-pill { font-size: 12px; padding: 2px 8px; gap: 6px; }
   .research-card .card-title { font-size: 15px; }
@@ -75,16 +88,12 @@
   {% if s1 %}
     <div class="meta-row">
       <span class="meta">대상 시장 <b>{{ s1.country_ko }} ({{ s1.geo }})</b></span>
-      <span class="meta">검색 언어 <b>{{ s1.languages|join(", ") }}</b></span>
-      <span class="meta">데이터 <b>{{ s1.data_level_label_ko }}</b></span>
+      <span class="meta meta-langs" title="검색 언어: {{ s1.languages|join(', ') }}">검색 언어 <b>{{ s1.languages|join(", ") }}</b></span>
       <span class="meta">Google 데이터 신뢰도 <b class="lv-{{ s1.reliability }}">{{ s1.reliability_label_ko }}</b></span>
-      <span class="meta">바이어 언어 <b>{{ s1.buyer_language }}</b></span>
       <span class="meta">조회 <b>{{ data.fetched_at }}</b></span>
-      <span class="meta-legend">급상승 % = 최근 급증 폭 (Google 트렌드) · 전년 대비 % = 작년 같은 기간 대비</span>
     </div>
+    <div class="meta-legend">급상승 % = 최근 급증 폭 (Google 트렌드) · 전년 대비 % = 작년 같은 기간 대비</div>
     {% if s1.reliability_note_ko %}<div class="slim-banner" role="note"><span class="ico info" aria-hidden="true">i</span>{{ s1.reliability_note_ko }}</div>{% endif %}
-    {# "연관 검색어가 적어 … 데이터를 함께 사용했습니다." 안내는 숨긴다 (저장된 예전 결과 포함) #}
-    {% for w in s1.warnings if not w.startswith("연관 검색어가 적어") %}<div class="slim-banner" role="note">{{ w }}</div>{% endfor %}
     <div class="cluster-grid">
       {% for c in s1.clusters %}
       {% if not c.keywords %}
@@ -128,7 +137,7 @@
   {% set s2 = data.section2 %}
   {% if s2 %}
     {% set rp = s2.retail_price %}
-    <div class="card-grid">
+    <div class="card-grid s2-grid">
       <div class="card">
         <div class="card-header">TARGET PRODUCT</div>
         <div class="card-title">{{ s2.target_product.title }}</div>
