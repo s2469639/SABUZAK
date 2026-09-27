@@ -27,7 +27,7 @@ from flask import Blueprint, jsonify, redirect, render_template, request
 from flask_login import current_user, login_required
 
 from app.extensions import db
-from app.models import TrendResult
+from app.models import ConceptDraft, Exhibition, TrendResult
 
 _V15_ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "v15")
 if _V15_ROOT not in sys.path:
@@ -157,6 +157,12 @@ def _get_or_create_trend_result(expo_id, product_id):
     if existing is None:
         existing = TrendResult(user_id=current_user.id, exhibition_id=expo_id, product_id=product_id, job_id="")
         db.session.add(existing)
+    # 부스 컨셉 기획(AI 생성, 토큰 비용 큼)을 안 눌러도 트렌드/부스 조사를
+    # 해봤으면 '작성 중인 박람회'/바이어 메일 박람회 목록에 뜨도록 draft를
+    # 만들어둔다 (draft 자체는 AI를 호출하지 않는 빈 초안).
+    expo = Exhibition.query.get(expo_id)
+    if expo is not None:
+        ConceptDraft.get_or_create(current_user.id, expo)
     return existing
 
 
