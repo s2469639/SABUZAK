@@ -7,7 +7,7 @@ from flask import Blueprint, abort, flash, redirect, render_template, request, u
 from flask_login import current_user, login_required
 
 from app.extensions import db
-from app.models import Exhibition, NtmMeasure, Product, TrendResult
+from app.models import ConceptDraft, Exhibition, NtmMeasure, Product, TrendResult
 from app.routes.dashboard import CONTINENT_DB_VALUES, is_pipeline_running, pop_pipeline_banner
 from app.routes.trend_v2 import _get_job as get_trend_job
 from app.services.hscode import build_hscode_context, resolve_country_iso
@@ -707,6 +707,9 @@ def market_research(expo_id, product_id):
     try:
         # 성공 시엔 시장 개요 탭에 결과가 바로 보이므로 따로 알리지 않는다
         un_comtrade.get_market_research(hs6, expo.country, force=force)
+        # 부스 컨셉 기획(AI 생성, 토큰 비용 큼)을 안 눌러도 시장 조사를 해봤으면
+        # '작성 중인 박람회'/바이어 메일 박람회 목록에 뜨도록 draft를 만들어둔다
+        ConceptDraft.get_or_create(current_user.id, expo)
     except Exception as e:
         flash(f"UN Comtrade 조사 중 오류가 발생했습니다: {e}", "danger")
 
