@@ -2552,6 +2552,18 @@ p.page-desc:not(:last-child) {
     flex-wrap: wrap;
   }
 
+  /* "수출 주의사항" 제목 줄: 제목+긴 부연설명+배지 여러 개+"TRAINS 데이터
+     다시 가져오기" 버튼이 전부 줄바꿈 없는 한 줄이라, 같은 이유로
+     제목/배지가 좁게 눌리고 버튼이 구석으로 밀렸다. */
+  .section-label-row {
+    flex-wrap: wrap;
+    gap: 8px 0;
+  }
+
+  .section-label-row form {
+    margin-left: auto;
+  }
+
   /* 부스 컨셉 기획의 삭제 버튼(.concept-header-side): 페이지 헤더가
      줄바꿈되면 이 칸이 내용 폭만큼만(shrink-to-fit) 차지한 채 화면
      왼쪽에 놓이고, 그 안에서만 오른쪽 정렬이 돼서 "화면 가운데쯤"에
