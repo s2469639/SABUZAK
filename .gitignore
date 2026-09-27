@@ -16,10 +16,13 @@ venv/
 *.log
 
 # Render 등 배포 환경은 재시작마다 파일시스템이 초기화되므로,
-# 시딩용 DB(박람회/HS코드 데이터)는 git에 포함해 배포 이미지에 실어 보낸다.
-# app_data.db(계정 데이터)는 프로젝트용이라 유실돼도 무방 -> 계속 무시.
+# 시딩용 DB/캐시(박람회·HS코드·관세율·번역 캐시 등)는 git에 포함해 배포 이미지에 실어 보낸다.
+# app_data.db(계정 데이터)와 logs/는 재생성 가능/유실돼도 무방 -> 계속 무시.
 !instance/sabuzak.db
 !instance/hscode.db
+!instance/un_comtrade_cache.db
+!instance/item_desc_ko_cache.json
+!instance/trains_country_cache.json
 .DS_Store
 ._*                  # macOS 리소스포크 파일 (._competitor_analyzer.pyc 같은 것들)
 node_modules/
