@@ -13,7 +13,6 @@
     <span class="exchange-rate-label">현재 환율 ({{ exchange_info.currency_code }} → KRW)</span>
     <strong class="exchange-rate-value">{{ "{:,}".format(exchange_info.display_unit) }} {{ exchange_info.currency_code }} = 약 {{ "{:,.0f}".format(exchange_info.display_rate_krw) }}원</strong>
   </div>
-  <span class="exchange-rate-note">참고용 · 실시간 아님</span>
 </div>
 {% endif %}
 
