@@ -239,8 +239,19 @@ def _fetch_pages(reporter_code: str, product_codes: list, page_size: int, max_pa
                 print(f"  [TRAINS] {log_key} page {page} 요청 실패: {exc}", flush=True)
                 raise
             print(f"  [TRAINS] {log_key} page {page} 응답: {resp.status_code}", flush=True)
-            if resp.status_code != 429:
+            if resp.status_code not in (429, 500, 502, 503, 504):
                 break
+            if resp.status_code != 429:
+                # 500/502/503/504도 TRAINS 쪽에서 종종 일시적으로 나는 걸로
+                # 확인돼서(같은 요청을 잠시 후 다시 보내면 성공하는 경우가
+                # 많음), 429와 같은 backoff 스케줄로 재시도한다.
+                if attempt < len(RETRY_BACKOFF_SEC):
+                    print(
+                        f"  [TRAINS] {log_key} page {page} {resp.status_code} - "
+                        f"{RETRY_BACKOFF_SEC[attempt]}초 후 재시도",
+                        flush=True,
+                    )
+                continue
             # 서버가 Retry-After로 대기시간을 알려주기도 하는데, 이 값을 그대로
             # 믿고 sleep하면 서버가 큰 값(몇십초~그 이상)을 줄 경우 아무 로그도
             # 없이 통째로 멈춰버린 것처럼 보인다. 그래서 상한(MAX_RETRY_AFTER_SEC)을
@@ -262,7 +273,15 @@ def _fetch_pages(reporter_code: str, product_codes: list, page_size: int, max_pa
                     wait_sec = min(retry_after_sec, MAX_RETRY_AFTER_SEC)
                     print(f"  [TRAINS] {log_key} page {page} 429, Retry-After={retry_after}s -> {wait_sec}s 대기", flush=True)
                     time.sleep(wait_sec)
-        resp.raise_for_status()
+        try:
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError as exc:
+            body_preview = (resp.text or "")[:300]
+            raise requests.exceptions.HTTPError(
+                f"{exc} (요청 국가={reporter_code}, HS코드후보={product_codes}, "
+                f"응답 본문 앞부분: {body_preview!r})",
+                response=resp,
+            ) from exc
 
         if total_count is None:
             header_total = resp.headers.get("X-Total-Count")
