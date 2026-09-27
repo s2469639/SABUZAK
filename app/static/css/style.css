@@ -2554,14 +2554,24 @@ p.page-desc:not(:last-child) {
 
   /* 제품 목록 행: 제품 정보(flex:1)와 액션 버튼들(모두 white-space:nowrap)이
      한 줄에 같이 있다 보니, 버튼들이 줄어들지 않고 제품명 쪽만 극단적으로
-     좁아져서 한 글자씩 줄바꿈되는 문제가 있었다. 모바일에서는 세로로 쌓는다. */
+     좁아져서 한 글자씩 줄바꿈되는 문제가 있었다.
+     처음엔 flex-direction:column으로 세로로 쌓았더니, 체크박스가 (product-info와
+     같은 줄이 아니라) 독립된 한 칸을 차지해서 제품명 위에 혼자 붕 떠 보이는
+     문제가 생겼다. 대신 줄바꿈만 허용해서 체크박스+제품정보는 첫 줄에 같이
+     두고, 버튼들만 다음 줄로 내려가게 한다. */
   .product-row {
-    flex-direction: column;
-    align-items: stretch;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .product-row > input[type="checkbox"] {
+    margin-top: 4px;
   }
 
   .action-buttons {
+    flex: 1 1 100%;
     flex-wrap: wrap;
+    margin-top: 8px;
   }
 
   /* 바이어 관리 탭(바이어 목록/메일 템플릿/발신 정보)과 Gmail 연동 상태가
