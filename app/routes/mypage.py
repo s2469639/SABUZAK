@@ -90,6 +90,20 @@ def _next_redirect(default="mypage.index"):
     return redirect(url_for(endpoint))
 
 
+# 박람회 상세의 탭(시장 개요·관세·트렌드)에서 제품을 추가·선택했을 때 돌아갈 탭. 정해진 이름만 허용해서
+# 폼 값을 바꿔 임의 주소로 보내는 걸 막는다.
+_RETURN_TABS = {"market", "hscode", "trend"}
+
+
+def _return_to_expo(**query):
+    """폼에 return_expo·return_tab이 있으면 그 박람회의 같은 탭으로 가는 redirect, 없으면 None."""
+    return_expo = request.form.get("return_expo", type=int)
+    return_tab = request.form.get("return_tab")
+    if return_expo and return_tab in _RETURN_TABS:
+        return redirect(url_for("exhibition.detail", expo_id=return_expo, **query) + "#" + return_tab)
+    return None
+
+
 @bp.route("/products", methods=["POST"])
 @login_required
 def add_product():
@@ -108,9 +122,9 @@ def add_product():
         if not is_valid:
             # 대시보드 모달에서 온 요청은 입력값을 그 자리에 다시 채워줄 방법이 없으니
             # (전체 페이지 이동이라) flash로만 에러를 보여주고 원래 페이지로 돌려보낸다.
-            if next_param:
+            if next_param or _return_to_expo():
                 flash(error, "danger")
-                return _next_redirect()
+                return _return_to_expo() or _next_redirect()
 
             products = (
                 Product.query.filter_by(user_id=current_user.id)
@@ -146,7 +160,7 @@ def add_product():
         db.session.add(product)
         db.session.commit()
 
-    return _next_redirect()
+    return _return_to_expo() or _next_redirect()
 
 
 # 엑셀 일괄등록 헤더 -> Product 필드. 한글 헤더 이름으로 매칭해서, 사용자가
@@ -225,11 +239,11 @@ def bulk_upload_products():
     file = request.files.get("bulk_file")
     if not file or not file.filename:
         flash("업로드할 엑셀 파일을 선택해주세요.", "danger")
-        return redirect(url_for("mypage.index"))
+        return _return_to_expo() or redirect(url_for("mypage.index"))
 
     if not file.filename.lower().endswith((".xlsx", ".xlsm")):
         flash("엑셀(.xlsx) 파일만 업로드할 수 있습니다.", "danger")
-        return redirect(url_for("mypage.index"))
+        return _return_to_expo() or redirect(url_for("mypage.index"))
 
     try:
         wb = openpyxl.load_workbook(file, data_only=True, read_only=True)
@@ -238,11 +252,11 @@ def bulk_upload_products():
         header = next(rows_iter, None)
     except Exception as e:
         flash(f"엑셀 파일을 읽는 중 오류가 발생했습니다: {e}", "danger")
-        return redirect(url_for("mypage.index"))
+        return _return_to_expo() or redirect(url_for("mypage.index"))
 
     if not header:
         flash("엑셀 파일에 데이터가 없습니다.", "danger")
-        return redirect(url_for("mypage.index"))
+        return _return_to_expo() or redirect(url_for("mypage.index"))
 
     col_map = {}  # 컬럼 인덱스 -> Product 필드명
     for i, cell in enumerate(header):
@@ -257,10 +271,14 @@ def bulk_upload_products():
             "(인식된 컬럼: " + ", ".join(str(header[i]) for i in col_map) + ")",
             "danger",
         )
-        return redirect(url_for("mypage.index"))
+        return _return_to_expo() or redirect(url_for("mypage.index"))
 
     added, skipped = 0, []
-    has_selected = _has_selected_product()  # 분석 제품이 없으면 첫 번째로 등록되는 제품만 선택
+    from_expo = _return_to_expo() is not None
+    # 분석 제품이 없으면 첫 번째로 등록되는 제품만 선택. 단, 박람회 상세 창에서 올린 경우엔
+    # 자동으로 고르지 않고 업로드 뒤 창에서 사용자가 직접 고르게 한다 (1개만 올렸으면 그걸 선택).
+    has_selected = from_expo or _has_selected_product()
+    new_products = []
     for row_num, row in enumerate(rows_iter, start=2):
         values = {field: str(row[i]).strip() if row[i] is not None else "" for i, field in col_map.items()}
         name = values.get("name", "")
@@ -276,7 +294,7 @@ def bulk_upload_products():
             skipped.append(f"{row_num}행 '{name}' ({error})")
             continue
 
-        db.session.add(Product(
+        product = Product(
             user_id=current_user.id,
             name=name,
             hs_code=hs_code,
@@ -287,10 +305,14 @@ def bulk_upload_products():
             certifications=values.get("certifications") or None,
             strengths=values.get("strengths") or None,
             is_checked=not has_selected,
-        ))
+        )
+        db.session.add(product)
+        new_products.append(product)
         has_selected = True
         added += 1
 
+    if from_expo and len(new_products) == 1 and not _has_selected_product():
+        new_products[0].is_checked = True
     db.session.commit()
 
     # 성공 시엔 목록에 바로 보이므로 따로 알리지 않고, 문제가 있을 때만 안내한다
@@ -299,6 +321,9 @@ def bulk_upload_products():
     if not added and not skipped:
         flash("등록할 제품 데이터가 없습니다.", "danger")
 
+    if from_expo:
+        # 여러 개를 올렸으면 돌아간 화면에서 '분석할 제품 선택' 창을 바로 연다
+        return _return_to_expo(pick=added) if added > 1 else _return_to_expo()
     return redirect(url_for("mypage.index"))
 
 
@@ -349,13 +374,16 @@ def toggle_product(product_id):
     others = Product.query.filter(
         Product.user_id == current_user.id, Product.id != product.id, Product.is_checked == True,  # noqa: E712
     )
-    if product.is_checked and others.count() == 0:
+    # 박람회 상세의 '이 제품으로 분석'(select_only)은 누를 때마다 선택만 한다 (해제하지 않음)
+    if product.is_checked and others.count() == 0 and not request.form.get("select_only"):
         product.is_checked = False
     else:
         others.update({"is_checked": False})
         product.is_checked = True
     db.session.commit()
-    return redirect(url_for("mypage.index"))
+
+    # 박람회 상세에서 골랐으면 그 박람회의 같은 탭으로 돌아간다
+    return _return_to_expo() or redirect(url_for("mypage.index"))
 
 
 def _has_selected_product():
