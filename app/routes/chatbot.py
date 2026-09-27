@@ -7,6 +7,7 @@ function calling으로 실제 DB/서비스를 직접 조회해서 답하게 한�
 """
 
 import json
+import re
 
 from flask import Blueprint, jsonify, request, url_for
 from flask_login import login_required
@@ -128,16 +129,26 @@ TOOLS = [
 
 
 def _lookup_hscode(query):
+    """제품명으로 관세청 마스터를 검색한다. name_ko는 공식 품목명이라 "냉동
+    손만두"처럼 실제 제품명을 통째로 넣으면 거의 매칭이 안 된다 (실제로는
+    "만두 냉동한 것"처럼 순서/표현이 다름). 그래서 문구 전체로 먼저
+    시도하고, 안 걸리면 단어 단위로 쪼개서 OR 검색한다."""
     if not query or not _hs_master_query_available():
         return []
-    like = f"%{query.strip()}%"
-    rows = (
-        HsCodeMaster.query.filter(
-            (HsCodeMaster.name_ko.ilike(like)) | (HsCodeMaster.hsk_name.ilike(like))
-        )
-        .limit(8)
-        .all()
-    )
+    query = query.strip()
+
+    def _search(like_terms):
+        conditions = [
+            HsCodeMaster.name_ko.ilike(f"%{t}%") | HsCodeMaster.hsk_name.ilike(f"%{t}%")
+            for t in like_terms
+        ]
+        return HsCodeMaster.query.filter(or_(*conditions)).limit(8).all()
+
+    rows = _search([query])
+    if not rows:
+        words = [w for w in re.split(r"\s+", query) if len(w) >= 2]
+        if words:
+            rows = _search(words)
     return [{"hscode": r.hscode, "name_ko": r.name_ko or r.hsk_name} for r in rows]
 
 
@@ -235,7 +246,13 @@ def message():
         )
         choice = response.choices[0].message
 
-        if choice.tool_calls:
+        # 최대 3라운드까지 tool을 반복 호출할 수 있게 한다. 이전엔 tool 결과를
+        # 받은 뒤 마지막 응답 요청에 tools를 안 넘겨서, 검색이 비었을 때
+        # "다른 키워드로 다시 검색해보라"는 지침이 있어도 모델이 실제로는
+        # 두 번째 검색을 시도할 방법이 없었다 (그래서 계속 "못 찾음"만 반복).
+        for _ in range(3):
+            if not choice.tool_calls:
+                break
             messages.append(choice.model_dump(exclude_none=True))
             for call in choice.tool_calls:
                 args = json.loads(call.function.arguments or "{}")
@@ -246,7 +263,9 @@ def message():
                     "tool_call_id": call.id,
                     "content": json.dumps(results, ensure_ascii=False),
                 })
-            response = client.chat.completions.create(model=MODEL, messages=messages, max_tokens=500)
+            response = client.chat.completions.create(
+                model=MODEL, messages=messages, tools=TOOLS, max_tokens=500,
+            )
             choice = response.choices[0].message
 
         return jsonify({"reply": choice.content or "죄송해요, 답변을 만들지 못했어요."})
