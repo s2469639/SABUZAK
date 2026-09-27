@@ -5,10 +5,6 @@
 {% if pipeline_banner %}
 <ul class="flash-list"><li class="flash flash-success">{{ pipeline_banner }}</li></ul>
 {% endif %}
-<div class="page-header">
-  <div></div>
-  <a href="{{ url_for('dashboard.index') }}" class="btn-secondary">← 대시보드로</a>
-</div>
 
 {% include "dashboard/_expo_list_partial.html" %}
 {% endblock %}
