@@ -1,0 +1,993 @@
+{
+  "inputs": {
+    "name": "참나무 훈연 후랑크소시지",
+    "country": "사우디아라비아",
+    "exhibition_name": "The Saudi Food Show",
+    "exhibition_website": "www.thesaudifoodshow.com",
+    "strengths": "참나무 훈연으로 향을 더하고 톡 터지는 육즙 식감",
+    "ingredients": "국산 돼지고기 85%, 정제수, 천일염, 복합향신료",
+    "certifications": "HACCP",
+    "price": "300g×2개입 (6,900원)",
+    "country_en": "Saudi Arabia"
+  },
+  "booth": {
+    "summary": "현재 돼지고기 85% 제품과 미인증 닭고기 시제품은 Saudi Arabia에서 홍보·반입·시식하지 않는다. 2026년 9월 27일 기준으로 제품·Halal·시설·시식 승인이 완료되지 않았다면 ‘Saudi Halal OEM·수입 파트너 모집’ 상담 부스로만 운영하고, 완제품 런칭형 부스는 차기 참가를 위한 T-12주 Go/No-Go 심사를 통과했을 때만 실행한다.",
+    "positioning": {
+      "target_buyer": "1순위 Saudi 육가공품 수입·유통사, 2순위 Panda·Othaim·Tamimi·LuLu·Danube 등 대형 유통 체인 식품 MD",
+      "core_message": "단일 제품 약속은 ‘참나무 훈연 향과 톡 터지는 육즙 식감의 Halal 치킨 프랑크’다. 수입 준비 상태는 전면 소비자 메시지가 아니라 이 약속을 실제 사업으로 만들 수 있는지를 확인하는 상담 증빙으로 분리한다."
+    },
+    "sections": {
+      "main_visual": {
+        "concept_en": "HEAR THE OAK-SMOKED SNAP",
+        "concept_ko": "참나무 훈연 스냅을 들어보세요",
+        "key_message": "Oak-Smoked Chicken. Hear the Juicy Snap.",
+        "bullets": [
+          {
+            "text": "Go 모드에서는 3m×3m 부스를 가정해 백월 중앙 1.8m 폭에 치킨 프랑크가 꺾이는 3단계 이미지인 ‘Bend–Snap–Juice’를 배치한다. 제품명과 ‘Chicken Franks’를 최소 15cm 높이로 표시하고, 패키지는 눈높이 1.4m 선반에 한 규격만 6면 진열한다.",
+            "quote_ids": [
+              "R6",
+              "R7"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "전면 숫자 증거는 닭고기 함량, 사전 관능평가의 Juicy Snap 선호율, 첨가물 관련 검증 결과 중 실제 확정된 한 가지만 사용한다. 최소 30명 관능평가에서 식감 선호 또는 ‘Juicy Snap’ 응답이 60% 이상일 때만 해당 수치를 노출하며, 미달이면 snap 주장을 재검토한다.",
+            "quote_ids": [
+              "R6",
+              "R7",
+              "R8"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "참나무 종류·훈연 시간·공정이 확정되면 밀봉된 참나무 칩 표본과 3단계 훈연 공정 사진을 백월 하단에 설치한다. 미확정이면 참나무 실물과 공정 수치를 사용하지 않는다. No-Go 모드에서는 식품 이미지와 Halal 표현을 모두 제거하고 ‘Seeking Saudi Halal Chicken Manufacturing & Import Partners’만 표시한다.",
+            "quote_ids": [
+              "R1",
+              "R2",
+              "R3",
+              "R10"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          }
+        ]
+      },
+      "slogan": {
+        "main_en": "Oak-Smoked Chicken. Hear the Juicy Snap.",
+        "main_ko": "참나무 훈연 치킨, 육즙 스냅을 들어보세요.",
+        "sub_en": "Smoked with oak, tuned for a juicy bite.",
+        "sub_ko": "참나무로 훈연하고 육즙 가득한 식감으로 설계했습니다.",
+        "bullets": [
+          {
+            "text": "전면 약속을 맛과 식감 하나로 좁혔다. 현지 경쟁 제품의 일반적인 ‘smoky flavor’보다 참나무 훈연 방식과 깨물 때의 snap을 구체적으로 제시하며, 수입 준비 여부는 슬로건에서 제외한다.",
+            "quote_ids": [
+              "R6",
+              "R7"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "두 문구는 닭고기 시제품의 참나무 훈연 공정과 관능평가가 검증된 Go 모드에서만 사용한다. Halal 표시는 인정 가능한 인증기관명·인증번호·유효기간을 QR 증빙으로 연결할 수 있을 때만 별도 인증 영역에 표시하며, ‘Import-Ready’는 전면 문구로 사용하지 않는다.",
+            "quote_ids": [
+              "R1",
+              "R2",
+              "R3"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "signature_pairing": {
+        "item": "한입 미니 khubz 치킨 프랑크 포켓",
+        "intent": "현지에서 이해하기 쉬운 빵·샌드위치 취식 장면으로 제품의 아침식사, lunchbox, 가족 간식 활용도를 보여주되, 강한 소스로 참나무 훈연 향과 snap을 가리지 않는다.",
+        "bullets": [
+          {
+            "text": "승인된 미니 khubz에 12g 치킨 프랑크와 3g의 순한 토마토 렐리시를 넣어 총 25~30g의 한입 샘플로 사전 조립한다. 견과류 소스와 매운 소스는 제외하고 원재료·알레르기 정보를 트레이 앞에 Arabic·영문으로 표시한다.",
+            "quote_ids": [
+              "R4",
+              "R5"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "샘플 컵에는 ‘Breakfast / Lunchbox / Family Snack’ 중 하나를 무작위로 인쇄해 제품이 들어갈 식사 장면을 전달한다. 세 가지 모두 같은 레시피를 사용해 제공 속도와 맛의 일관성을 유지한다.",
+            "quote_ids": [
+              "R5"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "바이어 자료에는 khubz·번 코너 교차 진열 이미지와 Arabic 온라인 장보기용 한입 레시피 이미지를 함께 제시한다. 실제 번들 판매는 현지 유통사의 냉장·냉동 진열 조건을 확인한 후 제안한다.",
+            "quote_ids": [
+              "R5",
+              "R9"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "demonstration": {
+        "title": "10분 소량 배치 스냅 시연",
+        "bullets": [
+          {
+            "text": "30초 시연은 직원이 승인된 가열 제품 한 개를 집게로 들어 방문객 앞에서 한 번 꺾고, 단면을 보여준 뒤 즉시 미니 khubz 샘플을 제공하는 방식으로 제한한다. 상부 카메라와 별도 모니터는 삭제해 공간·인력·장비 부담을 줄인다.",
+            "quote_ids": [
+              "R6",
+              "R7"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "박람회 전 보온 0분·5분·10분·15분 조건으로 향, 육즙, 케이싱 snap을 평가한다. 10분에서 기준 시료 대비 관능 품질이 유지될 때만 10분 보온을 허용하고, 그렇지 않으면 배치 크기와 보온시간을 더 줄인다. 승인된 중심온도·보관온도·폐기시간은 온도기록표에 매 배치 기록한다.",
+            "quote_ids": [
+              "R12"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "하루 500명 시식을 기준으로 1인당 소시지 12g, 20% 준비 여유를 적용해 하루 7.2kg, 360g 환산 20팩을 준비한다. 20인분씩 10분 간격으로 공급해 이론상 시간당 120명까지 처리하고, 하루 khubz 600개와 컵·포크 600세트를 준비한다.",
+            "quote_ids": [
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "3분 시연은 30초 Snap Cut, 45초 실제 참나무 훈연 공정, 45초 khubz·hot dog 활용 이미지, 60초 제품 스펙 설명으로 구성한다. 시식 후 일반 방문객에게는 QR 레시피 카드를, 적격 바이어에게는 규정상 반출 가능한 경우에만 콜드체인 샘플과 상업조건표를 제공한다.",
+            "quote_ids": [
+              "R3",
+              "R5",
+              "R12"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          }
+        ]
+      },
+      "packaging": {
+        "direction": "Go 모드에서는 Arabic 우선 360g 리테일 팩과 1kg HoReCa 냉동 팩을 분리하고, 전면 메시지는 ‘Oak-Smoked Juicy Snap’ 하나만 사용한다. 모든 상업 수치가 확정되지 않으면 패키지 목업을 완제품처럼 전시하지 않는다.",
+        "bullets": [
+          {
+            "text": "360g은 현지 경쟁 제품의 340~400g 규격을 기준으로 검토하고, 목표 소비자가격은 우선 SAR 7.50의 기획 가설로 테스트한다. 순매출 기준 소매 마진 25% 시 retailer buy price 상한은 SAR 5.63, 30% 시 SAR 5.25로 역산하며, 세금·수입비용·디스트리뷰터 마진을 반영한 최종 가격은 현지 파트너와 별도 확정한다.",
+            "quote_ids": [
+              "R6",
+              "R7",
+              "R8"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "T-12주 Go 심사표에는 포장별 EXW·FOB 공급가, 예상 Saudi 도착원가, 목표 소비자가, 수입사·유통사·소매 마진, MOQ, 케이스입수, 케이스 크기·중량, 팔레트 적재량, 월 생산능력, 리드타임, 냉장 또는 냉동 유통기한을 빈칸 없이 기입한다. 하나라도 미확정이면 가격 상담은 가설로 명확히 표시한다.",
+            "quote_ids": [
+              "R3",
+              "R8",
+              "R9",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "전면에는 Arabic 제품명, Chicken Franks, 확정된 핵심 메시지 하나만 크게 표시한다. Halal 마크는 인정 가능한 인증 취득 후에만 사용하고, 후면에는 원재료, 닭고기 함량, 알레르기, 영양정보, 보관·조리법, 제조자·수입자, 생산일·유통기한 표시 공간을 확보한다.",
+            "quote_ids": [
+              "R1",
+              "R2",
+              "R4",
+              "R8"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "온라인 grocery용 이미지 세트는 Arabic 전면, 후면 라벨, 영양표, 실제 크기, khubz 활용 장면의 5장으로 만든다. 나트륨·첨가물·무첨가 표현은 확정 배합과 시험성적서가 있을 때만 사용한다.",
+            "quote_ids": [
+              "R4",
+              "R8",
+              "R9"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "merchandising": {
+        "bullets": [
+          {
+            "text": "전면 개방 폭은 3m로 유지하고 시식대와 상담 입구 사이에 최소 1m 이동 폭을 둔다. 룰렛과 포토존은 상시 설치하지 않고, A1 투표판 또는 손에 드는 포토 프레임만 시간대별로 교체해 사용한다.",
+            "quote_ids": [],
+            "company": [],
+            "is_idea": true
+          },
+          {
+            "text": "Go 모드 최소 운영인원은 상시 4명과 교대 1명이다. 시식·위생 2명, 통로·리드 분류 1명, 상담 1명으로 운영하고 교대 인원이 휴식과 피크 시간을 지원한다. No-Go 파트너 모집 부스는 시식 장비 없이 상담 2명과 통로 응대 1명으로 축소한다.",
+            "quote_ids": [
+              "R11",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "시식대 하부에는 최소 150L 냉장 또는 냉동 설비, 최대 40인분을 분리 보관할 수 있는 승인된 보온 장비, 온도계, 배치 기록표, 손 위생 설비와 밀폐 폐기통을 둔다. 전력·급배수·손 씻기 요건은 장비 발주 전 운영팀 승인을 받는다.",
+            "quote_ids": [
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ],
+        "zones": [
+          {
+            "name": "1. Stop & Taste Zone",
+            "position": "3m×3m 가정 부스의 전면 우측, 1.2m×0.6m 시식 카운터",
+            "purpose": "Bend–Snap–Juice 비주얼을 보고 멈춘 방문객에게 30초 시연과 한입 khubz 샘플을 제공한다.",
+            "quote_ids": [
+              "R5",
+              "R12"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "name": "2. Saudi Shelf Zone",
+            "position": "부스 좌측 벽, 폭 0.9m·깊이 0.35m 선반",
+            "purpose": "360g 리테일 팩 6면과 1kg HoReCa 팩을 Arabic 라벨 상태로 보여주고 실제 매대 점유 모습을 확인시킨다.",
+            "quote_ids": [
+              "R4",
+              "R9"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "name": "3. Buyer Proof Zone",
+            "position": "부스 후면, 1.2m×0.7m 상담 테이블과 의자 3개",
+            "purpose": "맛 약속의 증거와 Halal·시설·가격·MOQ·유통기한·물류 조건을 검토하고 다음 행동을 확정한다.",
+            "quote_ids": [
+              "R2",
+              "R3",
+              "R10",
+              "R11"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      }
+    },
+    "visitor_flow": {
+      "3s": {
+        "headline": "통로에서 3초: HEAR THE OAK-SMOKED SNAP",
+        "goal": "제품이 치킨 프랑크이고 차별 약속이 참나무 훈연 향과 juicy snap이라는 점을 즉시 인지시킨다.",
+        "visitor": [
+          "Bend–Snap–Juice 3단계 확대 이미지 확인",
+          "Chicken Franks와 검증된 숫자 증거 한 개 확인"
+        ],
+        "staff": [
+          "통로를 막지 않고 시식대 방향만 제시",
+          "미검증 Halal·수입 준비 표현이 노출되지 않았는지 매일 점검"
+        ],
+        "props": [
+          "1.8m 폭 백월",
+          "360g 패키지 6면 진열",
+          "검증된 숫자 증거 패널"
+        ],
+        "message": "일반적인 부드러운 치킨 프랑크가 아니라 참나무 훈연 향과 깨물 때의 육즙 스냅을 제안한다."
+      },
+      "30s": {
+        "headline": "꺾는 순간 보고 한입으로 확인",
+        "goal": "단일 약속인 참나무 훈연 향과 juicy snap을 즉석 시연과 시식으로 검증한다.",
+        "visitor": [
+          "직원이 제품을 꺾는 장면 관찰",
+          "미니 khubz 포켓 한입 시식",
+          "향과 식감에 스티커 한 장 투표"
+        ],
+        "staff": [
+          "10분 이내 배치만 제공하고 온도·폐기시간 기록",
+          "시식 전에 원재료·알레르기·Halal 정보를 표시",
+          "상업 관심 방문객만 후면 상담석으로 안내"
+        ],
+        "props": [
+          "집게와 절단 보드",
+          "20인분 배치 트레이",
+          "A1 맛 투표판과 컬러 스티커"
+        ],
+        "message": "참나무 훈연과 juicy snap은 그래픽이 아니라 한입으로 확인하는 차이다."
+      },
+      "3min": {
+        "headline": "맛의 차이를 사업 조건으로 전환",
+        "goal": "적격 바이어가 제품 차별성, 가격 구조와 수입 가능성을 판단하고 다음 단계를 선택하게 한다.",
+        "visitor": [
+          "360g·1kg 포장과 Arabic 라벨 확인",
+          "관능평가·배합·Halal 증빙 상태 확인",
+          "공급가·MOQ·유통기한·물류조건 검토"
+        ],
+        "staff": [
+          "회사·채널·수입 자격을 먼저 확인",
+          "확정 수치와 기획 가설을 구분해 설명",
+          "샘플 발송·견적·OEM 미팅 중 하나를 CRM에 등록"
+        ],
+        "props": [
+          "영문·Arabic 상업조건 원페이저",
+          "관능평가 결과와 Halal 증빙 QR",
+          "태블릿 CRM과 샘플 발송 신청서"
+        ],
+        "message": "맛의 차이를 확인한 뒤 Saudi에서 실제로 공급할 수 있는 조건까지 검토한다."
+      }
+    },
+    "events": [
+      {
+        "title": "오크 스냅 맛 투표",
+        "type": "시식·스티커 투표",
+        "summary": "한입 khubz 포켓을 맛보고 훈연 향과 첫 식감을 1분 안에 선택하는 이벤트다.",
+        "why": "재개발 닭고기 제품에서 참나무 훈연 향과 juicy snap이 실제로 체감되는지를 가장 간단하게 검증할 수 있다.",
+        "steps": [
+          "직원이 승인된 제품을 한 번 꺾어 단면을 보여준다.",
+          "방문객이 사전 조립된 미니 khubz 포켓 한입을 시식한다.",
+          "A1 투표판에 질문별 컬러 스티커를 붙인다.",
+          "QR 레시피 카드 또는 제품 관련 굿즈를 받는다."
+        ],
+        "details": [
+          {
+            "heading": "투표 방식과 질문",
+            "lines": [
+              "훈연 향은 어떤가요: Light / Just Right / Bold",
+              "첫 식감은 어떤가요: Soft / Juicy Snap / Too Firm",
+              "육즙감은 어떤가요: Low / Just Right / High",
+              "가장 어울리는 순간은 언제인가요: Breakfast / Lunchbox / Family Snack",
+              "다시 먹고 싶은가요: Yes / Maybe / No"
+            ]
+          },
+          {
+            "heading": "운영 조건",
+            "lines": [
+              "Go 승인을 받은 Halal 닭고기 제품과 사전 승인 메뉴로만 운영한다.",
+              "오전·오후 각 45분씩 운영하고 다른 일반 이벤트와 동시에 열지 않는다.",
+              "방문객 1명당 1분, 스태프 2명, 20인분 단위로 제공한다."
+            ]
+          }
+        ],
+        "reward": "Arabic·영문 khubz 레시피 QR 카드와 참나무 연기 모양 스티커",
+        "prep": "승인된 시식품, 미니 khubz, 20인분 트레이, 컵·포크, A1 투표판, 컬러 스티커, 위생용품, 스태프 2명"
+      },
+      {
+        "title": "치킨 프랑크 OX",
+        "type": "30초 O/X 퀴즈",
+        "summary": "먹는 방법과 제품 식감에 관한 쉬운 O/X 세 문제에 답하는 짧은 퀴즈다.",
+        "why": "서류나 규정 학습 없이 제품 이름, 참나무 훈연, khubz 활용 장면을 반복해서 기억하게 한다.",
+        "steps": [
+          "방문객이 O 또는 X 양면 카드를 받는다.",
+          "직원이 세 문제를 한 문제씩 화면에 표시한다.",
+          "방문객이 카드를 들어 답을 고르고 한 줄 해설을 확인한다.",
+          "3문제 중 2문제 이상 정답이면 제품 관련 굿즈를 받는다."
+        ],
+        "details": [
+          {
+            "heading": "문제·정답·해설",
+            "lines": [
+              "Q1. 이 제품은 닭고기 프랑크로 개발됐다. 정답 O — Saudi용 제품은 돼지고기가 아닌 Halal 적합 닭고기를 전제로 한다.",
+              "Q2. 이 제품이 목표로 하는 식감은 부드럽기만 한 식감이다. 정답 X — 핵심은 깨물 때 톡 터지는 juicy snap이다.",
+              "Q3. 미니 khubz 샌드위치는 아침식사나 lunchbox 활용법이 될 수 있다. 정답 O — 현지 판매 페이지에서도 프랑크를 샌드위치와 간편식으로 제안한다."
+            ]
+          },
+          {
+            "heading": "참여 규칙",
+            "lines": [
+              "Go 모드에서만 운영하고 제품 인증 상태를 과장하는 문제는 출제하지 않는다.",
+              "1인 1회, 30~45초 내 종료한다.",
+              "오전·오후 각 30분만 운영하며 맛 투표와 동시에 진행하지 않는다."
+            ]
+          }
+        ],
+        "reward": "Oak-Smoked Snap 핀 배지 또는 패키지 모양 자석",
+        "prep": "O/X 양면 카드 10개, A3 문제 보드 3장, 핀 배지·자석, 스태프 2명"
+      },
+      {
+        "title": "스냅 프레임 인증샷",
+        "type": "SNS 포토 인증",
+        "summary": "Bend–Snap–Juice 프레임으로 사진을 찍고 Instagram 또는 Snapchat에 공유하는 1분 이벤트다.",
+        "why": "별도 포토존 없이 제품의 꺾이는 순간과 이름을 사진에 남겨 공간 부담을 줄이면서 확산을 유도한다.",
+        "steps": [
+          "방문객이 ‘HEAR THE SNAP’ 손잡이 프레임을 선택한다.",
+          "백월의 Bend–Snap–Juice 이미지 앞에서 개인 휴대전화로 촬영한다.",
+          "브랜드 계정 태그와 지정 해시태그를 넣어 게시물 또는 스토리를 올린다.",
+          "직원이 화면을 확인하고 굿즈를 제공한다."
+        ],
+        "details": [
+          {
+            "heading": "인증 방법",
+            "lines": [
+              "Instagram 또는 Snapchat의 실제 브랜드 공식 계정을 태그한다.",
+              "해시태그는 #OakSmokedSnap과 #SaudiFoodShow를 사용한다.",
+              "공개 게시물 또는 현장에서 확인 가능한 스토리 화면을 제시한다.",
+              "SNS 참여를 원하지 않으면 촬영만 가능하며 개인정보 제출은 요구하지 않는다."
+            ]
+          },
+          {
+            "heading": "운영 방식",
+            "lines": [
+              "별도 링 조명과 대형 구조물 없이 백월과 손잡이 프레임만 사용한다.",
+              "1인당 1분 이내, 스태프 2명으로 운영한다.",
+              "오후 2회 각 30분만 열어 시식·상담 동선 혼잡을 피한다."
+            ]
+          }
+        ],
+        "reward": "참나무 연기 모양 스티커 또는 Oak-Smoked Snap 핀 배지",
+        "prep": "손잡이 포토 프레임 2종, 계정·해시태그 A4 안내판, 굿즈, 스태프 2명"
+      },
+      {
+        "title": "5분 Saudi 사업상담",
+        "type": "바이어 상담",
+        "summary": "제품 차별성, 수입 적합성, 가격·MOQ와 다음 단계를 5분 안에 판별하는 예약형 상담이다.",
+        "why": "사전 매칭 중심 B2B 행사에서 단순 시식 리드를 샘플 발송, 견적 또는 현지 OEM 논의로 전환할 수 있다.",
+        "steps": [
+          "Tawasul 또는 부스 QR로 회사·직함·채널·수입 자격을 등록한다.",
+          "1분 동안 바이어 유형과 목표 채널을 확인한다.",
+          "3분 동안 제품 증거, Halal·시설 상태와 상업조건표를 검토한다.",
+          "1분 동안 샘플 발송, 견적 제출 또는 OEM 후속 미팅을 확정한다."
+        ],
+        "details": [
+          {
+            "heading": "예약 방식과 시간 배분",
+            "lines": [
+              "Tawasul Meeting Programme과 사전 이메일로 5분 기본 슬롯을 예약한다.",
+              "현장 QR 폼에서 회사명, 직함, 유통 채널, Saudi 수입업자 여부, 희망 포장과 연락처를 받는다.",
+              "심화 가격·OEM 협의는 별도 15분 후속 슬롯으로 분리한다."
+            ]
+          },
+          {
+            "heading": "상담 자료",
+            "lines": [
+              "영문·Arabic 제품 및 상업조건 원페이저",
+              "닭고기 함량, 케이싱, 첨가물, 나트륨, 관능평가와 훈연 공정 자료",
+              "Halal Certificate, 도축증명서, 원산지증명서, 시설 승인·제품 등록 상태 인덱스",
+              "EXW·FOB, 예상 도착원가, 목표 소비자가, MOQ, 케이스·팔레트, 생산능력, 리드타임, 유통기한과 콜드체인 조건"
+            ]
+          },
+          {
+            "heading": "샘플 구성",
+            "lines": [
+              "Go 모드에서는 승인된 360g 리테일 샘플, Arabic 라벨 시안, 조리법과 콜드체인 안내를 제공한다.",
+              "식품 반출이 제한되면 샘플 발송 신청서와 제품 QR만 제공한다.",
+              "No-Go 모드에서는 식품 샘플 없이 OEM 요구사양서, 회사 소개서와 개발 브리프만 제공한다."
+            ]
+          }
+        ],
+        "reward": "적격 바이어에게 승인된 샘플 키트 또는 박람회 후 콜드체인 샘플 발송",
+        "prep": "상담 테이블, 태블릿 CRM, QR 예약폼, 원페이저, 증빙 인덱스, 승인된 샘플 보관설비, 상담 담당 1명과 제품·품질 담당 1명"
+      }
+    ],
+    "buyer_appeal": [
+      {
+        "title": "검증된 오크 스냅",
+        "why": "현지 경쟁 제품도 훈연 풍미를 주장하므로 바이어에게는 소비자가 실제로 구분하는 향과 식감의 증거가 필요하다.",
+        "show": "확정된 참나무 종류·훈연 시간·공정 사진, 최소 30명 관능평가의 향·식감 결과, Snap Cut 실연과 제품 단면"
+      },
+      {
+        "title": "Halal·SFDA 증빙",
+        "why": "HACCP만으로는 Saudi 육가공품 수입이 불가능하며 원료·도축·케이싱·생산라인과 제조시설 적합성을 확인해야 한다.",
+        "show": "인증기관명·인증번호·유효기간이 포함된 Halal Certificate, 도축증명서, 원산지증명서, 케이싱·향신료 확인서, 시설 승인과 제품 등록 상태 QR"
+      },
+      {
+        "title": "가격·마진 구조",
+        "why": "SAR 4.50~8.50의 경쟁 가격대에서 목표 소비자가와 채널 마진을 역산하지 않으면 입점 가능성을 판단할 수 없다.",
+        "show": "SAR 7.50 목표 가설과 실제 확정 EXW·FOB, 예상 도착원가, retailer buy price, 수입사·유통사·소매 마진, 프로모션 비용을 구분한 가격표"
+      },
+      {
+        "title": "공급·물류 조건",
+        "why": "수입·유통사는 맛 외에도 MOQ, 납기, 유통기한과 콜드체인 안정성을 확인해야 거래를 진행할 수 있다.",
+        "show": "360g·1kg별 MOQ, 케이스입수, 팔레트 수량, 월 생산능력, 리드타임, 냉장·냉동 유통기한, 온도조건과 Saudi OEM 대안"
+      }
+    ],
+    "key_actions": [
+      {
+        "title": "T-12주에 런칭 여부를 확정한다",
+        "detail": "부스 책임자·품질책임자·수출책임자가 닭고기 배합, 돼지 유래 성분 배제, 케이싱·향신료·생산라인 Halal 적합성, 인정 가능한 인증, 제조시설 승인 가능성, 반입·시식 승인, 관능평가와 상업조건표를 공동 확인한다. 하나라도 미완료이면 Go 모드를 취소하고 No-Go 파트너 모집 부스로 전환한다. 2026 행사처럼 T-12주가 이미 지난 경우 사후 보완으로 Go 처리하지 않는다.",
+        "quote_ids": [
+          "R1",
+          "R2",
+          "R3",
+          "R12"
+        ],
+        "company": [
+          "원료"
+        ],
+        "is_idea": false
+      },
+      {
+        "title": "10분 배치로 스냅을 지킨다",
+        "detail": "시식 담당 2명이 20인분 단위로 제품을 받아 승인된 보온시간 내 제공하고, 배치 시작·온도·폐기시간을 기록한다. 보온시간이 지나거나 케이싱이 물러진 제품은 제공하지 않으며 다음 배치 수량을 줄인다.",
+        "quote_ids": [
+          "R12"
+        ],
+        "company": [
+          "강점"
+        ],
+        "is_idea": false
+      },
+      {
+        "title": "가격표 빈칸을 상담 전에 없앤다",
+        "detail": "수출 담당자가 행사 전 포장별 공급가, MOQ, 케이스·팔레트 정보, 생산능력, 리드타임, 유통기한과 콜드체인 조건을 승인받아 원페이저에 입력한다. 현지 비용이 미확정이면 SAR 7.50은 목표 가설로 표시하고 확정 가격처럼 제시하지 않는다.",
+        "quote_ids": [
+          "R3",
+          "R8",
+          "R9",
+          "R11"
+        ],
+        "company": [],
+        "is_idea": false
+      }
+    ],
+    "kpis": [
+      {
+        "metric": "적격 바이어 상담 수",
+        "target": "행사 3일간 40건",
+        "how": "수입·유통사, 대형 유통 MD 또는 육가공 제조사이며 회사·직함·채널·연락처와 관심 조건이 CRM에 등록된 5분 이상 상담만 집계한다."
+      },
+      {
+        "metric": "샘플·개발 요청 수",
+        "target": "15건 이상",
+        "how": "Go 모드에서는 제품 규격·배송지·수령일이 등록된 샘플 요청, No-Go 모드에서는 요구 배합·목표 가격·예상 물량이 등록된 공동개발 요청만 집계한다."
+      },
+      {
+        "metric": "후속 상업 미팅 확정 수",
+        "target": "8건 이상",
+        "how": "견적, 수입 등록, 유통 테스트 또는 OEM 검토를 위한 날짜·참석자·의제가 CRM에 확정된 미팅만 집계한다."
+      }
+    ],
+    "risks": [
+      {
+        "text": "현재 돼지고기 85% 제품과 돼지 유래 원료가 포함되거나 Halal 적합성이 확인되지 않은 시제품은 전시·시식·경품·상업 샘플로 사용하지 않는다. Halal과 제조시설 요건이 미완료이면 No-Go 파트너 모집 부스로만 운영한다.",
+        "quote_ids": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "company": [
+          "원료"
+        ],
+        "is_idea": false
+      },
+      {
+        "text": "시식 메뉴, 반입 수량, 조리·보온 장비, 냉장·냉동 보관, 알레르기·Halal 표시, 손 위생과 폐기물 처리 계획은 Exhibitor E-portal 및 운영팀 승인을 받아야 한다.",
+        "quote_ids": [
+          "R12"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      {
+        "text": "입점 전 Saudi 수입업자 자격, SFDA 제품·시설 등록, Arabic 라벨, 실제 유통기한, 콜드체인 책임과 보험, 제조시설의 과거 리콜·클레임·수출 중단 이력을 확인한다.",
+        "quote_ids": [
+          "R2",
+          "R3",
+          "R4",
+          "R9"
+        ],
+        "company": [],
+        "is_idea": false
+      }
+    ],
+    "questions": [
+      "닭고기 함량, 케이싱, 첨가물, 나트륨, 참나무 종류·훈연 시간과 최소 30명 관능평가 결과가 언제 확정되는가?",
+      "Halal 인증기관·취득 일정, 도축증명서, 전용 또는 세척 검증 생산라인, Saudi 제조시설 승인과 제품 등록 준비 상태는 무엇인가?",
+      "360g·1kg별 EXW·FOB, MOQ, 케이스입수, 팔레트 수량, 월 생산능력, 리드타임, 냉장·냉동 유통기한을 확정할 수 있는가?"
+    ],
+    "brief": {
+      "insights": [
+        {
+          "fact": "조사 메모상 Saudi Arabia는 돼지고기와 돼지 유래 식품의 수입을 금지하므로, 돼지고기 85%인 현 제품은 전시 반입·시식·상업 수입이 불가능하다.",
+          "insight": "Saudi 시장의 육가공품 바이어에게 맛보다 먼저 충족되어야 하는 구매 조건은 돼지 유래 성분이 없는 Halal 적합 제품과 이를 증명하는 서류다.",
+          "implication": "현 돼지고기 제품은 홍보하지 않고, 닭고기 또는 쇠고기 기반 제품으로 재개발한 뒤 원료·향신료·케이싱·생산라인까지 Halal 적합성을 입증할 수 있을 때만 Saudi 시장용 상담을 진행해야 한다.",
+          "quote_ids": [
+            "R1",
+            "R2"
+          ],
+          "company": [
+            "원료"
+          ],
+          "is_idea": false
+        },
+        {
+          "fact": "Saudi의 주요 경쟁 치킨 프랑크는 Halal을 기본으로 저가, 부드러운 식감, 훈연 풍미, 고품질 닭고기, 인공 색소·향료 무첨가와 다양한 조리법을 강조한다.",
+          "insight": "Halal과 훈연 표기만으로는 차별화하기 어렵고, 바이어는 기존 제품보다 소비자가 분명히 체감할 수 있는 맛·식감의 차이와 원료 경쟁력을 원한다.",
+          "implication": "재개발 제품은 참나무 훈연 향과 톡 터지는 육즙 식감을 핵심 차별점으로 설정하되, 경쟁 제품과 비교 가능한 육함량·첨가물·나트륨·가격 정보를 함께 준비해야 한다.",
+          "quote_ids": [
+            "R6",
+            "R7",
+            "R8"
+          ],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        },
+        {
+          "fact": "조사 메모상 Saudi 소비자의 식품 선택에는 가격, 브랜드 신뢰, 맛이 중요하며, 60% 이상이 초가공식품의 위험을 우려한다.",
+          "insight": "소비자는 새로운 가공육의 맛뿐 아니라 가격 대비 가치와 제품 안에 무엇이 들어 있는지를 확인해야 구매를 정당화할 수 있다.",
+          "implication": "바이어 상담에서는 관능적 차별성만 주장하지 말고 육함량, 첨가물, 나트륨, Halal 근거, 소비자가격 구조를 투명하게 비교할 수 있어야 한다.",
+          "quote_ids": [
+            "R8"
+          ],
+          "company": [],
+          "is_idea": false
+        },
+        {
+          "fact": "육류·가금육 제품은 승인된 국가와 제조시설에서 생산되어야 하며 제품·시설 등록, Saudi 수입업자, Halal Certificate와 도축증명서 등이 요구된다. 박람회는 유통·수입 바이어뿐 아니라 현지 생산·OEM 상담도 가능한 B2B 소싱 행사다.",
+          "insight": "바이어의 일은 맛있는 제품을 찾는 데서 끝나지 않고, 실제로 등록·수입·유통할 수 있는 공급 구조인지 빠르게 판별하는 것이다.",
+          "implication": "Saudi 수입 파트너, 제조시설 승인 가능성, Halal 인증 계획, 생산능력, MOQ, 유통기한, 냉장·냉동 조건을 하나의 사업화 검토 항목으로 묶고, 직접 수출이 어렵다면 현지 OEM·라이선스 생산 가능성도 상담 의제로 포함해야 한다.",
+          "quote_ids": [
+            "R2",
+            "R3",
+            "R10",
+            "R11"
+          ],
+          "company": [],
+          "is_idea": false
+        }
+      ],
+      "target_buyers": [
+        {
+          "priority": 1,
+          "type": "Saudi 육가공품 수입·유통사",
+          "job": "돼지 유래 성분이 없는 Halal 전환 제품인지, 제조시설 승인과 SFDA 등록이 가능한지, 원산지증명서·Halal Certificate·도축증명서 등 수입 서류를 제공할 수 있는지 확인하고 MOQ·가격·생산능력·유통기한·냉동 또는 냉장 물류조건을 검토하는 것"
+        },
+        {
+          "priority": 2,
+          "type": "대형 유통 체인 식품 MD",
+          "job": "기존 저가 Halal 치킨 프랑크 대비 맛과 식감의 차별성, 목표 소비자가격과 마진, 회전 가능성, Arabic 라벨 적합성, 리테일 포장 규격과 안정적인 공급 가능성을 확인하는 것"
+        }
+      ],
+      "big_idea": {
+        "line_en": "Halal chicken franks with oak-smoked aroma and juicy snap, import-ready.",
+        "line_ko": "참나무 훈연 향과 톡 터지는 육즙, 수입 준비까지 갖춘 Halal 치킨 프랑크.",
+        "why": "Saudi 시장에서는 Halal이 진입의 필수조건이고 기존 치킨 프랑크도 훈연 풍미를 강조하므로, 기업이 보유한 참나무 훈연과 육즙 식감의 강점을 닭고기 제품으로 재현하면서 수입·등록 서류까지 갖추는 것을 하나의 약속으로 묶어야 한다. 단, 이는 현재 돼지고기 제품에 대한 주장이 아니라 닭고기 재개발, Halal 인증, 제조시설 승인 및 제품 등록을 완료한 뒤에만 사용할 수 있는 조건부 포지셔닝이다.",
+        "quote_ids": [
+          "R1",
+          "R2",
+          "R3",
+          "R6",
+          "R7"
+        ],
+        "company": [
+          "강점",
+          "원료"
+        ],
+        "is_idea": false
+      },
+      "rtb": [
+        {
+          "text": "기업은 기존 제품에서 참나무 훈연으로 향을 더하고 톡 터지는 육즙 식감을 구현한 제품 개발 경험을 보유하고 있다. 다만 이 특성이 닭고기 제품에서도 재현되는지는 시제품 관능평가로 별도 검증해야 한다.",
+          "quote_ids": [],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "기업은 HACCP 인증을 보유해 기본적인 식품안전 관리체계를 갖추고 있다. 단, HACCP은 Saudi 수입에 필요한 Halal 인증이나 제조시설 승인을 대체하지 않는다.",
+          "quote_ids": [
+            "R2",
+            "R3"
+          ],
+          "company": [
+            "인증"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "Saudi 소매시장에 이미 naturally smoked 또는 rich smoky flavor를 강조하는 Halal 치킨 프랑크가 판매되고 있어, 훈연 치킨 프랑크라는 제품군의 현지 이해 기반이 존재한다.",
+          "quote_ids": [
+            "R6",
+            "R7"
+          ],
+          "company": [],
+          "is_idea": false
+        },
+        {
+          "text": "이 약속의 최종 신뢰 근거는 닭고기·향신료·케이싱·도축·생산라인 전체의 Halal 적합성, 원본 인증·도축 서류, 승인 가능한 제조시설과 제품 등록 자료다. 해당 요건이 준비되기 전에는 'Halal' 또는 'import-ready'를 확정적으로 주장할 수 없다.",
+          "quote_ids": [
+            "R1",
+            "R2",
+            "R3"
+          ],
+          "company": [],
+          "is_idea": false
+        }
+      ]
+    },
+    "mode": "B",
+    "stage": "revised",
+    "revise_below": 4,
+    "scores": [
+      {
+        "id": "insight",
+        "label": "인사이트 연결",
+        "score": 5,
+        "reason": "돼지고기 반입 금지, Halal·SFDA 요건, 경쟁 가격대, 현지 섭취 장면을 실행안과 명시적으로 연결했다."
+      },
+      {
+        "id": "single_minded",
+        "label": "빅 아이디어 일관성",
+        "score": 3,
+        "reason": "‘Oak-Smoked Snap’과 ‘Import-Ready’라는 두 약속이 경쟁하며, 룰렛·포토존은 어느 약속도 실질적으로 증명하지 못한다."
+      },
+      {
+        "id": "buyer_value",
+        "label": "바이어 가치",
+        "score": 3,
+        "reason": "가격·MOQ·마진·생산능력·유통기한·물류를 보여주겠다고 했지만 실제 수치와 확정 증빙이 없어 입점 판단은 할 수 없다."
+      },
+      {
+        "id": "specificity",
+        "label": "구체성",
+        "score": 3,
+        "reason": "동선과 시연 시간은 상세하지만 부스 면적, 일일 샘플 수량, 시간당 처리량, 장비 용량, 총 운영인원과 재고 계획이 빠졌다."
+      },
+      {
+        "id": "distinctiveness",
+        "label": "차별성",
+        "score": 3,
+        "reason": "참나무와 snap은 잠재력이 있으나 닭고기 시제품에서 검증되지 않았고, 단면 확대·훈연 그래픽은 경쟁 소시지 부스에도 바꿔 쓸 수 있다."
+      },
+      {
+        "id": "feasibility",
+        "label": "실행 가능성",
+        "score": 2,
+        "reason": "현재 적법하게 전시·시식할 제품과 Halal 인증이 없으며, 여러 이벤트·카메라 시연·시식·상담을 동시에 운영할 공간과 인력 계획도 없다."
+      }
+    ],
+    "skill": {
+      "name": "booth_marketing",
+      "folder": "booth_marketing",
+      "files": [
+        "SKILL.md",
+        "examples.md",
+        "rubric.md"
+      ],
+      "chars": 5249,
+      "fingerprint": "52255d5798cb",
+      "warnings": []
+    },
+    "planner_persona": "당신은 해외 식품 박람회 부스 기획 15년차 마케터입니다. Summer Fancy Food Show, ANUGA, FOODEX Japan 등에서 K-푸드 부스를 30회 이상 총괄했고, 부스 방문 바이어의 상담 전환율을 끌어올린 경험이 있습니다. 미국·유럽 대형 유통 바이어와 입점 협상을 해 봤습니다. 조사 자료로 확인된 사실과 기획 아이디어를 구분해서 쓰고, 실제 부스에서 바로 실행할 수 있게 구체적으로 제안합니다.",
+    "reviewer_persona": "당신은 미국 대형 유통 식품 MD 10년차입니다. 박람회에서 하루 50개 부스를 도는 바이어 입장에서, 입점 판단에 필요한 정보(가격, 유통기한, 인증, 물류, 진열 형태)가 빠졌거나 과장된 곳, 바이어 눈에 띄지 않을 연출, 실제 부스에서 실행하기 어려운 계획을 날카롭게 지적합니다.",
+    "review": {
+      "overall": "시장 진입 불가 사유를 정확히 짚은 전략 문서지만, 현재는 판매 가능한 제품과 상업 조건이 없는 상태라 실제 박람회 부스안이라기보다 조건부 개발 제안서에 가깝다.",
+      "comments": [
+        {
+          "section": "overall",
+          "issue": "닭고기 배합, Halal 인증, 제조시설 승인, 반입 허가가 모두 미확정인데 완제품 런칭형 부스가 대부분을 차지한다.",
+          "suggestion": "행사 12주 전까지 인증·반입·시제품 관능평가를 완료하는 Go/No-Go 게이트를 두고, 미완료 시에는 시식과 제품 홍보를 전부 빼고 ‘Saudi Halal OEM·수입 파트너 모집’ 상담 부스로 전환하는 별도 실행안을 작성하라."
+        },
+        {
+          "section": "슬로건",
+          "issue": "‘Halal Import-Ready’는 인증 보유뿐 아니라 시설 승인, 등록 자료, 수입 서류와 콜드체인 조건까지 확정됐다는 의미로 읽혀 과장 위험이 크다.",
+          "suggestion": "모든 증빙이 완료되기 전에는 ‘Halal’과 ‘Import-Ready’를 전면에서 제거하고, 완료 후에는 인증기관명·인증번호·유효기간 및 SFDA 시설 상태를 QR 증빙과 함께 제시하라."
+        },
+        {
+          "section": "패키징",
+          "issue": "360g과 1kg 규격만 제안했을 뿐 바이어가 필요한 EXW 또는 FOB 가격, Saudi 도착원가, 권장 소비자가, 유통 마진, MOQ, 케이스입수, 팔레트 적재량, 유통기한이 없다.",
+          "suggestion": "경쟁가 SAR 4.50~8.50 대비 목표 소비자가와 마진 역산표를 만들고, 포장별 공급가·케이스 규격·팔레트 수량·MOQ·리드타임·냉동 또는 냉장 유통기한을 확정 수치로 표시하라."
+        },
+        {
+          "section": "시연",
+          "issue": "사전 가열 후 워머에 보관한 프랑크는 시간이 지나면 케이싱의 snap과 육즙이 약해져 핵심 주장을 오히려 훼손할 수 있으며 일일 시식량도 계산되지 않았다.",
+          "suggestion": "보온 유지시간별 관능 테스트를 먼저 하고 배치당 수량·폐기시간·중심온도·시간당 제공량을 정하라. 예를 들어 10분 단위 소량 가열, 샘플 1개 중량, 하루 예상 500명 기준 필요 팩 수와 20% 폐기 여유를 운영표에 넣어라."
+        },
+        {
+          "section": "진열 가이드",
+          "issue": "부스 크기 없이 4개 존, 상담석, 시식대, 냉동·냉장고, 상부 카메라, 룰렛과 포토존을 모두 배치해 통로 혼잡과 인력 과부하가 예상된다.",
+          "suggestion": "실제 부스 가로·세로와 전력·급배수 조건을 기준으로 평면도를 만들고, 핵심을 시식 1존과 바이어 상담 1존으로 축소하라. 룰렛과 포토존은 삭제하고 최소 운영인원, 교대 인원과 시간대별 역할을 명시하라."
+        },
+        {
+          "section": "메인 비주얼",
+          "issue": "대형 육즙 단면과 브라운 훈연 이미지는 시선을 끌 수 있지만 경쟁 치킨 프랑크 대비 참나무의 차이를 객관적으로 보여주지 못한다.",
+          "suggestion": "실제 참나무 훈연 공정, 사용 목재 규격, 훈연 시간과 관능평가 결과가 확보된 경우에만 이를 시각화하고, 전면에는 경쟁 제품 대비 육함량·snap 선호도·첨가물·목표 가격 중 검증된 한 가지 우위를 숫자로 제시하라."
+        }
+      ]
+    },
+    "applied": [
+      "‘Oak-Smoked Juicy Snap’을 단일 전면 약속으로 정하고, ‘Import-Ready’는 슬로건에서 삭제해 상담 증빙으로 분리했다.",
+      "T-12주 Go/No-Go 게이트와 미완료 시 ‘Saudi Halal OEM·수입 파트너 모집’으로 전환하는 별도 운영안을 반영했다.",
+      "3m×3m 가정 평면, 3개 존, 최소 운영인원, 장비 용량, 하루 500명 기준 시식 수량과 10분 배치 운영을 구체화하고 룰렛·대형 포토존·상부 카메라를 삭제했다.",
+      "SAR 7.50 목표 소비자가 가설과 소매 마진 역산을 추가하고, EXW·FOB·MOQ·케이스·팔레트·유통기한 등 필수 상업 수치는 Go 심사 전 확정하도록 했다.",
+      "참나무 공정 수치와 juicy snap은 실제 공정자료 및 사전 관능평가를 통과한 경우에만 전면에 표시하도록 과장 방지 기준을 추가했다."
+    ],
+    "has_profile": true,
+    "has_product_evidence": null,
+    "model": "gpt-5.6-sol",
+    "research": {
+      "method": "web_search",
+      "notes": [
+        {
+          "id": "R1",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "확인 사실: Saudi Arabia는 돼지고기 및 돼지 유래 식품의 수입을 금지하므로, 기업:원료의 ‘국산 돼지고기 85%’ 제품은 전시 반입·시식·상업 수입이 불가능하다. 기획 전제: 닭고기 또는 쇠고기로 재개발하고 SFDA가 인정하는 Halal 인증을 확보하기 전에는 현 제품을 홍보하지 않아야 한다.",
+          "source_url": "https://www.sfda.gov.sa/sites/default/files/2025-04/SFDAHajj1446E.pdf",
+          "source_title": "List of food commodities prohibited from being imported according to the terms of the customs tariff",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R2",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "확인 사실: 육류 가공품 수입 시 Saudi 수입업자의 SFDA 계정과 제품 사전등록 외에 원산지증명서, 원본 Halal Certificate, 원본 도축증명서 등이 요구된다. 기업:HACCP만으로는 부족하며, Halal 원료·도축·생산라인·향신료와 케이싱까지 확인 가능한 서류 패키지가 필요하다.",
+          "source_url": "https://beta.sfda.gov.sa/en/imported-food",
+          "source_title": "Executive Management of Food Import Control",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R3",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "확인 사실: 육류·가금육 제품은 SFDA가 승인한 국가 및 해외 제조시설에서 생산되어야 하고, 제품과 제조시설 모두 관련 전자시스템에 등록해야 한다. 상담 때는 현지 수입 파트너 유무, 제조시설 승인 가능 여부, 냉동·냉장 유통조건과 생산능력을 한 장으로 제시해야 한다.",
+          "source_url": "https://sfda.gov.sa/sites/default/files/2021-06/SFDAF2452-En.pdf",
+          "source_title": "Guide for Import Permit of Poultry, Fish, Aquatic Products and Eggs",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R4",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "확인 사실: 소비자 판매용 포장식품의 라벨과 설명은 Arabic이 필수이며, 병기한 다른 언어의 내용은 Arabic과 일치해야 한다. 영양표시·건강 및 영양 강조표현·유통기한은 각각 SFDA.FD/GSO 2233, SFDA.FD 2333, SFDA.FD/GSO 150-1 기준을 함께 검토해야 한다.",
+          "source_url": "https://www.wideip.sfda.gov.sa/sites/default/files/2025-04/ConditionsRequirementsFoodClearanceE.pdf",
+          "source_title": "Conditions and Requirements for Food Clearance",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R5",
+          "topic": "consumer",
+          "topic_label": "소비자",
+          "text": "확인 사실: 현지 판매 페이지는 smoked chicken franks를 hot dog, 샌드위치, 아침식사, lunchbox, 가족 식사, 간식·메인 요리에 쓰는 빠른 조리식으로 제안한다. 즉 시식은 단품보다 빵·달걀 또는 한입 샌드위치 형태로 제공해야 실제 섭취 장면이 바로 전달된다.",
+          "source_url": "https://danube.sa/en/products/sadia-chicken-franks-smoked-340g",
+          "source_title": "Sadia Chicken Franks Smoked 10 pieces 340g - Danube",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R6",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "확인 사실: Carrefour KSA 기준 Seara naturally smoked chicken franks 360g은 SAR 4.50에 판매되며 ‘tender and delicious’, ‘made from halal chicken’을 강조한다. 저가·Halal·부드러운 식감이 기본 경쟁선이므로, 재개발 제품은 기업:강점의 참나무 훈연 향과 톡 터지는 육즙 식감을 시식으로 명확히 증명해야 한다.",
+          "source_url": "https://www.carrefourksa.com/mafsau/ar/chicken-franks/seara-ckn-franks-coked-smoked-340g/p/676078",
+          "source_title": "Seara Naturally Smoked Chicken Franks 360g - Carrefour Saudi Arabia",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R7",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "확인 사실: Doux Smoked Chicken Franks 400g은 LuLu에서 SAR 8.50이며 ‘100% high-quality chicken’, ‘rich smoky flavor’, ‘halal certified’, grill·boil·pan-fry·microwave 활용성을 메시지로 사용한다. Sadia 340g은 Danube에서 SAR 6.50으로 ‘rich smoky flavor’, ‘free from artificial colors and flavors’를 내세워 가격뿐 아니라 원료와 clean-label 메시지도 경쟁 요소다.",
+          "source_url": "https://gcc.luluhypermarket.com/en-sa/doux-chicken-franks-smoked-400-g/p/1369673/",
+          "source_title": "Doux Chicken Franks Smoked 400 g - Lulu KSA",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R8",
+          "topic": "trend",
+          "topic_label": "트렌드",
+          "text": "확인 사실: Saudi 소비자의 식품 선택 상위 요소는 가격 47%, brand trust 35%, 맛 34%이며, 브랜드 전환 이유는 더 좋은 맛 47%, value 40%, 건강상 이점 32%였다. 또한 60% 이상이 ultra-processed food 위험을 우려하므로 육함량, 첨가물, sodium, Halal 근거를 숨기지 않고 비교표로 제시하는 것이 유리하다.",
+          "source_url": "https://www.pwc.com/m1/en/publications/voice-of-the-consumer-2025-saudi-arabia-findings.html",
+          "source_title": "Voice of the Consumer 2025: Saudi Arabia findings",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R9",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "확인 사실: 주요 유통 채널은 Panda, Othaim, Tamimi, LuLu, Danube 등이며 이들 5개 체인이 식품 소매 매출의 80% 이상을 차지한다. 온라인 grocery도 성장 중이므로 바이어 자료에는 retail용 소포장과 HoReCa용 대용량 포장, 냉동 물류조건, 온라인용 Arabic 제품 이미지까지 함께 준비해야 한다.",
+          "source_url": "https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Retail+Foods+Annual_Riyadh_Saudi+Arabia_SA2025-0015.pdf",
+          "source_title": "Saudi Arabia Retail Foods Annual 2025",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R10",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "확인 사실: The Saudi Food Show 2026은 2026년 9월 27~29일 Jeddah Superdome에서 열리며, buyers·retailers·distributors·importers·foodservice·hospitality 의사결정자를 대상으로 하는 Saudi Arabia 최대 F&B sourcing event다. Saudifood Manufacturing과 동시 개최되어 완제품 유통뿐 아니라 현지 생산·OEM·원료 전환 상담도 병행할 수 있다.",
+          "source_url": "https://www.thesaudifoodshow.com/faqs",
+          "source_title": "The Saudifood Show 2026 FAQs",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R11",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "확인 사실: 주최 측은 1,000+ exhibitors, 95+ countries, 12K+ business meetings와 사전 매칭형 Tawasul Meeting Programme을 안내한다. 부스는 불특정 방문객 집객보다 ‘Halal 전환 제품·목표 채널·MOQ·가격·유통기한’을 먼저 묻는 5분 바이어 상담 구조로 운영하는 편이 행사 성격에 맞다.",
+          "source_url": "https://www.thesaudifoodshow.com/",
+          "source_title": "The Saudi Food Show 2026",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R12",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "확인 사실: 공식 국가관 운영 문서에는 wet sampling area와 일별 사전 승인 sample menu가 명시되어 있어 시식은 계획·승인 대상임을 알 수 있다. 개별 부스도 조리기기, 냉동·냉장 보관, 메뉴, 알레르기·Halal 표시와 폐기물 처리 계획을 Exhibitor E-portal 및 operations팀에 사전 확인해야 하며, 돼지고기 시식은 불가하다.",
+          "source_url": "https://apeda.gov.in/sites/default/files/announcements/Tor_SAUDI_FOOD%20SHOW_2026.pdf",
+          "source_title": "APEDA Terms of Reference for Saudi Food Show 2026",
+          "source_status": "출처 미확인"
+        }
+      ],
+      "citations": [],
+      "error": ""
+    },
+    "source_mode": "openai_self_research",
+    "short": {
+      "summary": "승인 전 Saudi Halal OEM·수입 파트너 상담 부스 운영",
+      "core_message": "참나무 훈연 향·육즙 식감 Halal 치킨 프랑크",
+      "big_idea_why": "Halal 닭고기 재개발·등록 완료 후 조건부 포지셔닝",
+      "insight.0.fact": "돼지고기 85% 제품 Saudi 전시·수입·시식 불가",
+      "insight.0.insight": "돼지 유래 성분 없는 Halal 제품·증빙 서류",
+      "insight.0.implication": "Halal 입증 후 닭고기·쇠고기 제품 상담",
+      "insight.1.fact": "Saudi 치킨 프랑크 경쟁 요소: Halal·저가·훈연 풍미",
+      "insight.1.insight": "맛·식감 차이와 원료 경쟁력 요구",
+      "insight.1.implication": "훈연·육즙 차별점과 성분·가격 비교 정보",
+      "insight.2.implication": "육함량·첨가물·나트륨·가격 투명 비교",
+      "insight.3.fact": "승인 제조시설·등록·수입업자·Halal 증빙 요건",
+      "insight.3.implication": "수입·OEM·생산·MOQ·콜드체인 사업화 검토",
+      "action.0": "미완료 시 Go 취소·No-Go 파트너 부스 전환",
+      "action.1": "20인분 단위 보온·온도·폐기시간 기록",
+      "action.2": "SAR 7.50 목표 가설 표기와 상업조건 원페이저",
+      "kpi.1": "Go 샘플 요청·No-Go 공동개발 요청 집계",
+      "bullet.main_visual.0": "3m×3m 부스 Bend–Snap–Juice 진열",
+      "bullet.main_visual.1": "30명 평가 60% 이상 시 Juicy Snap 수치 노출",
+      "bullet.main_visual.2": "No-Go 시 식품 이미지·Halal 표현 제거",
+      "bullet.slogan.0": "참나무 훈연과 snap 중심 맛·식감 약속",
+      "bullet.slogan.1": "검증된 Go 모드만 문구·Halal QR 증빙 사용",
+      "bullet.signature_pairing.0": "12g 치킨 프랑크·3g 렐리시 한입 샘플",
+      "bullet.signature_pairing.1": "동일 레시피의 식사 장면별 샘플 컵",
+      "bullet.signature_pairing.2": "khubz·번 교차 진열과 Arabic 레시피 이미지",
+      "bullet.demonstration.0": "30초 Snap Cut 후 미니 khubz 샘플 제공",
+      "bullet.demonstration.1": "10분 보온 관능 유지 시에만 보온 허용",
+      "bullet.demonstration.2": "하루 500명 시식: 7.2kg·20팩·khubz 600개",
+      "bullet.demonstration.3": "3분 시연·바이어 대상 콜드체인 샘플 제공",
+      "bullet.packaging.0": "360g·SAR 7.50 목표 소비자가 가설 테스트",
+      "bullet.packaging.1": "T-12주 가격·물류·생산 조건 전 항목 기입",
+      "bullet.packaging.2": "Arabic 제품명·Chicken Franks·핵심 메시지 전면 표기",
+      "bullet.packaging.3": "Arabic 전면 등 온라인 grocery 이미지 5장",
+      "bullet.merchandising.0": "3m 전면·최소 1m 이동 폭·교체형 참여물",
+      "bullet.merchandising.1": "Go 5명·No-Go 3명 최소 운영 인력",
+      "bullet.merchandising.2": "150L 냉장·냉동 및 보온·위생 장비 설치",
+      "risk.0": "미확인 Halal 제품 전시·시식·샘플 사용 금지",
+      "risk.1": "시식·장비·보관·위생 계획 운영팀 승인",
+      "risk.2": "수입업자·SFDA 등록·Arabic 라벨·이력 확인"
+    },
+    "from_cache": false
+  },
+  "booth_error": null,
+  "models": {
+    "booth": "gpt-5.6-sol",
+    "booth_effort": "medium",
+    "task": "gpt-5.6-terra",
+    "task_effort": "low"
+  },
+  "fetched_at": "2026-09-27 15:02"
+}
