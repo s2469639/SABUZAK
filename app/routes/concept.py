@@ -1,13 +1,12 @@
 import json
-import os
 
-from flask import Blueprint, current_app, flash, redirect, render_template, url_for
+from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.models import ConceptDraft, Exhibition, Product
 from app.routes.trend_v2 import _get_job, start_booth_job
-from app.services.booth_concept import company_name, draft_fields, generate_booth_image, v15_form
+from app.services.booth_concept import draft_fields, v15_form
 
 bp = Blueprint("concept", __name__, url_prefix="/concept")
 
@@ -33,18 +32,16 @@ def _save_extra(draft, extra):
 
 
 def _apply_booth(draft, expo, booth, products):
-    """v15 부스 기획 결과를 draft 항목에 옮긴다. 방문객 여정은 extra에 담아 돌려준다."""
+    """v15 부스 기획 결과를 draft 항목에 옮긴다. 바이어 어필 포인트는 extra에 담아 돌려준다."""
     product_name = products[0].name if products else ""
-    fields = draft_fields(booth, product_name, expo.name, company_name(current_user.company, products))
+    fields = draft_fields(booth, product_name)
     draft.theme = fields["theme"]
     draft.slogan = fields["slogan"]
     draft.description = fields["description"]
     draft.selling_points = json.dumps(fields["selling_points"], ensure_ascii=False)
     draft.events = json.dumps(fields["events"], ensure_ascii=False)
     draft.target_buyers = json.dumps(fields["target_buyers"], ensure_ascii=False)
-    draft.image_prompt = fields["image_prompt"]
-    draft.image_path = None
-    return fields["visitor_journey"]
+    return fields["buyer_appeal"]
 
 
 def _sync_booth_job(draft, expo, products):
@@ -66,7 +63,8 @@ def _sync_booth_job(draft, expo, products):
     result = job.get("result") or {}
     booth = result.get("booth")
     if job["status"] == "done" and booth:
-        extra["visitor_journey"] = _apply_booth(draft, expo, booth, products)
+        extra["buyer_appeal"] = _apply_booth(draft, expo, booth, products)
+        extra.pop("visitor_journey", None)
         extra.pop("booth_error", None)
     else:
         extra["booth_error"] = job.get("error") or result.get("booth_error") or "부스 기획안을 만들지 못했습니다."
@@ -110,7 +108,7 @@ def detail(draft_id):
         selling_points=json.loads(draft.selling_points) if draft.selling_points else [],
         events=json.loads(draft.events) if draft.events else [],
         target_buyers=json.loads(draft.target_buyers) if draft.target_buyers else [],
-        visitor_journey=extra.get("visitor_journey"),
+        buyer_appeal=extra.get("buyer_appeal") or [],
         booth_job_id=extra.get("booth_job_id") if running else None,
         booth_error=extra.get("booth_error"),
     )
@@ -142,30 +140,4 @@ def generate(draft_id):
     extra["booth_job_id"] = job_id
     extra.pop("booth_error", None)
     _save_extra(draft, extra)
-    return redirect(url_for("concept.detail", draft_id=draft.id))
-
-
-@bp.route("/<int:draft_id>/generate-image", methods=["POST"])
-@login_required
-def generate_image(draft_id):
-    draft = ConceptDraft.query.filter_by(id=draft_id, user_id=current_user.id).first_or_404()
-    if not draft.image_prompt:
-        flash("먼저 컨셉을 생성해주세요.", "danger")
-        return redirect(url_for("concept.detail", draft_id=draft.id))
-
-    try:
-        image_bytes = generate_booth_image(draft.image_prompt)
-    except Exception as e:
-        flash(f"이미지 생성에 실패했습니다: {e}", "danger")
-        return redirect(url_for("concept.detail", draft_id=draft.id))
-
-    rel_path = f"generated/concept/{draft.id}.png"
-    abs_path = os.path.join(current_app.static_folder, rel_path)
-    os.makedirs(os.path.dirname(abs_path), exist_ok=True)
-    with open(abs_path, "wb") as f:
-        f.write(image_bytes)
-
-    draft.image_path = rel_path
-    db.session.commit()
-    flash("부스 예상 이미지를 생성했습니다.", "success")
     return redirect(url_for("concept.detail", draft_id=draft.id))

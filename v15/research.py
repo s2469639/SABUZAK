@@ -1164,6 +1164,13 @@ BOOTH_SCHEMA = """{
     "30s": {"headline": "30초: 시식·시연", "goal": "", "visitor": [], "staff": [], "props": [], "message": ""},
     "3min": {"headline": "3분: 상담 테이블", "goal": "", "visitor": [], "staff": [], "props": [], "message": ""}
   },
+  "events": [{"title": "15자 안팎의 짧은 제목", "type": "유형 (자유: 시식·투표, 게임, 체험, SNS 등. 마지막 1개는 반드시 바이어 상담)",
+              "summary": "한 줄 소개", "why": "이 제품·박람회·현지 문화에 맞는 이유 한 줄",
+              "steps": ["진행 단계 2~4개"],
+              "details": [{"heading": "이 이벤트에 맞는 실행 자료 이름 (예: 투표 방식과 설문 질문, 룰렛 칸 구성, 인증 방법, 상담 시간 배분)",
+                           "lines": ["구체적인 내용 (설문 질문 예시, 칸 구성, 해시태그 등)"]}],
+              "reward": "경품·혜택 (없으면 빈 문자열)", "prep": "준비물과 인원"}],
+  "buyer_appeal": [{"title": "바이어에게 어필할 점 (짧게)", "why": "왜 바이어에게 중요한가", "show": "부스에서 보여줄 것·자료"}],
   "kpis": [{"metric": "지표 이름 (예: 바이어 상담 전환율)", "target": "목표 수치 (예: 35%)",
             "how": "측정 방법·정의"}],
   "risks": [{"text": "부스 운영·입점 시 확인할 점", "basis": []}],
@@ -1204,7 +1211,35 @@ BOOTH_RULES = """작성 규칙:
 - 추상적 표현보다 부스에서 바로 실행할 수 있는 구체적 연출·동선·소품·문구로 쓰세요.
 - 항목마다 불릿 2~4개. 진열 가이드는 존 2~4개(이름·위치·목적) + 진열 팁.
 - risks: 부스 운영·입점 시 확인할 점(규제, 허가, 리콜 이력, 물류 등) 0~3개.
-- questions: 기획을 더 정확하게 하려면 기업에 확인할 것 1~3개."""
+- questions: 기획을 더 정확하게 하려면 기업에 확인할 것 1~3개.
+
+현장 이벤트(events) 작성 규칙:
+- 정확히 4개. 앞의 3개는 지나가는 일반 방문객이 부담 없이 참여하는 가벼운 이벤트, 마지막 4번째는 항상 바이어 상담 이벤트입니다.
+- "실제 박람회 부스에서 정말 하는 이벤트"만 쓰세요. 참고할 수 있는 흔한 유형: 시식 코너(+간단한 맛 투표·설문), 룰렛·뽑기·럭키드로우(제품·미니 샘플 경품),
+  SNS 팔로우·해시태그 인증 후 샘플 증정, 포토존, 설문 참여 후 샘플·쿠폰 증정, 명함·연락처 응모 추첨, 제품 배경·재료·먹는 법에 관한 간단한 O/X 퀴즈(정답 시 사은품), 제품 활용법 시연(미리 준비한 완제품 시식), 한정 샘플 팩 증정, 시식 후 즉석 구매·주문 쿠폰.
+  이 유형을 이 제품·박람회·현지 문화에 맞게 바꾸어 쓰되, 앞의 3개는 서로 다른 유형이어야 하고 매번 같은 조합을 반복하지 마세요.
+- 방문객이 "재미있겠다, 해볼까?" 하고 발걸음을 멈출 만한가를 기준으로 고르세요. 서류·인증·라벨·유통기한·규정·가격표를 찾거나 읽게 하는 활동,
+  어렵거나 오래 걸리는 퀴즈, 미션·과제 수행은 재미가 없으므로 이벤트로 만들지 마세요. 그런 정보는 바이어 어필(buyer_appeal)에서 다룹니다.
+  퀴즈는 제품 이야기(유래·재료·먹는 법·재미있는 사실)를 묻는 쉬운 O/X 3문제 안팎, 30초~1분 안에 끝나는 것만 허용합니다.
+  quiz를 쓸 때 details에 문제와 정답(O/X)·한 줄 해설을 실제로 적고, 정답자에게 제품 미니 샘플이나 굿즈를 주세요.
+- 금지: 부스에서 직접 요리·조립·빚기 등을 하는 체험이나 요리 챌린지 (시식품은 미리 만들어 데우거나 덜어 주는 수준까지만), 타사·경쟁 브랜드 제품을 열어 놓고 비교하는 이벤트,
+  타이머·기록 경쟁, 방문객이 긴 시간(2분 초과) 머무르거나 줄이 길어지는 이벤트.
+- 제품 직결: 재미 요소(게임 칸, 투표 항목, 경품)가 이 제품의 맛·재료·먹는 방법·특징에서 나와야 하고, 경품은 이 제품의 미니 샘플이나 관련 굿즈여야 합니다.
+  현지 문화 요소는 제품과 직접 이어질 때만 쓰세요. 참여 후 제품 이름과 맛이 기억에 남고 사진·SNS로 퍼질 요소가 있어야 합니다.
+- 종류는 고정하지 말고 제품 특성(종류·맛·식감·먹는 법·원재료·가격대), 박람회 특성(B2B/일반 관람객, 규모, 주제),
+  개최국의 식문화·정서·유행(실제로 쓰는 SNS 플랫폼 포함)에 맞춰 고르세요. 현지에서 쓸 수 없는 서비스, 종교·식품 규정에 어긋나는 것(예: 이슬람권의 돼지고기·주류 관련)은 쓰지 마세요.
+- 현실 가능성: 방문객 1명당 1~2분 이내, 스태프 2명으로 운영, 흔한 준비물(스티커·투표판·룰렛판·QR·시식 접시).
+- 세세하게: 이벤트마다 steps(진행 순서), details(그 이벤트에 맞는 실행 자료), reward, prep을 채우세요. 안내 멘트(방문객에게 건넬 말)는 쓰지 마세요.
+  시식 투표·설문이면 투표 방식(투표판·QR 등)과 설문 질문 예시 3~5개, 룰렛이면 칸 구성·경품 종류·참여 규칙, SNS면 계정·해시태그·확인 방법,
+  상담이면 예약 방식·시간 배분·자료·샘플 구성을 구체적으로 쓰세요.
+- title은 15자 안팎으로 한눈에 들어오게(제목만 봐도 무슨 이벤트인지), 상세 내용은 steps·details에. 성과 지표(KPI)나 기대 효과 수치는 이 항목에 쓰지 마세요.
+- 앞의 3개 이벤트에는 바이어·상담·입점 이야기를 넣지 말고, 바이어 상담은 4번째에서만 다루세요.
+- 마지막으로 스스로 점검하세요: 앞의 3개 중 "부스에서 직접 조리", "미션·어려운 퀴즈로 서류 찾기", "경쟁 제품 비교"가 하나라도 있으면 다른 흔한 유형으로 바꿔서 답하세요.
+
+바이어 어필(buyer_appeal) 작성 규칙:
+- 3~4개. 바이어가 상담에서 궁금해하는 점(제품 차별점, 인증·통관·수출 적합성, 가격·최소 주문·납기, 샘플·후속 제안 등)에서 이 제품에 중요한 것만 고르세요.
+- 각 카드는 짧은 title, 왜 바이어에게 중요한지(why), 부스에서 보여줄 것(show).
+- 4번째 이벤트(상담 운영 방법)와 겹치지 않게: 이벤트는 "어떻게 운영하는지", 여기는 "무엇을 말하고 보여줄지"만 다루세요."""
 
 
 def _clean_bullets(items, quote_index, profile):
@@ -1259,6 +1294,8 @@ def normalize_booth(data, quote_index, profile):
         "positioning": {"target_buyer": text(pos, "target_buyer"), "core_message": text(pos, "core_message")},
         "sections": sections,
         "visitor_flow": normalize_visitor_flow(data.get("visitor_flow")),
+        "events": normalize_events(data.get("events")),
+        "buyer_appeal": normalize_buyer_appeal(data.get("buyer_appeal")),
         "key_actions": normalize_key_actions(data.get("key_actions"), quote_index, profile),
         "kpis": normalize_kpis(data.get("kpis")),
         "risks": _clean_bullets(data.get("risks"), quote_index, profile),
@@ -1272,6 +1309,111 @@ EVIDENCE_IN_TEXT = re.compile(r"\s*[\(\[]?\s*근거\s*[:：][^\)\]\n]*[\)\]]?\.?
 def _strip_evidence(text):
     """모델이 본문 끝에 붙인 '근거: R11·R12, 기획' 같은 표기를 뗀다 (근거는 basis 뱃지로 보여줌)."""
     return EVIDENCE_IN_TEXT.sub("", str(text or "")).strip()
+
+
+# 앞의 3개(방문객용) 이벤트에서 허용하지 않는 패턴: (이름, 정규식). 제목·소개·진행·실행 자료 전체에서 찾는다.
+EVENT_BANNED = [
+    ("서류·인증·라벨을 찾거나 읽는 활동", re.compile(
+        r"(인증|라벨|유통기한|서류|성분표|원산지|수입사|규정|표기|마크|certificate|label)[^.\n]{0,15}(찾|맞히|읽|확인|고르|스캔)"
+        r"|(찾|맞히|읽|확인)[^.\n]{0,10}(인증|라벨|유통기한|서류|성분표|마크)|(인증|라벨|마크)\s*(찾기|미션|룰렛|퀴즈|게임|빙고)", re.I)),
+    ("부스에서 직접 조리·제작하는 활동", re.compile(
+        r"(요리|조리|레시피|빚기|만들기|플레이팅|샐러드 만들|샌드위치 만들|직접 만들)[^.\n]{0,8}(챌린지|대결|경쟁|체험|도전|미션|콘테스트)"
+        r"|(챌린지|대결|경쟁|도전)[^.\n]{0,8}(요리|조리|레시피)|3분 내|타이머|제한 ?시간|기록 경쟁", re.I)),
+    ("타사·경쟁 제품과 비교하는 활동", re.compile(
+        r"(타사|경쟁|현지 브랜드|로컬 브랜드|다른 브랜드|일반)[^.\n]{0,10}(제품|브랜드|캔|참치|만두|과자)?[^.\n]{0,10}(비교|대결|블라인드)"
+        r"|(비교|대결|블라인드)[^.\n]{0,10}(타사|경쟁|현지 브랜드|로컬 브랜드)", re.I)),
+]
+
+
+def _event_text(e):
+    parts = [e.get("title"), e.get("summary"), e.get("type")] + list(e.get("steps") or [])
+    for d in e.get("details") or []:
+        if isinstance(d, dict):
+            parts += [d.get("heading")] + list(d.get("lines") or [])
+    return " ".join(str(x) for x in parts if x)
+
+
+def event_problems(events):
+    """앞의 3개(방문객용) 이벤트가 금지 패턴에 걸리면 [(순서, 이유)]. 4번째(바이어 상담)는 검사하지 않는다."""
+    problems = []
+    for i, e in enumerate((events or [])[:3]):
+        if not isinstance(e, dict):
+            continue
+        text = _event_text(e)
+        for reason, pat in EVENT_BANNED:
+            if pat.search(text):
+                problems.append((i, reason))
+                break
+    return problems
+
+
+def repair_events(client, plan, facts, model, tries=2):
+    """금지 패턴에 걸린 이벤트를 걸린 이유와 함께 알려 주고 그 이벤트만 다시 쓰게 한다. 실패해도 원래 계획을 그대로 쓴다."""
+    events = plan.get("events") if isinstance(plan, dict) else None
+    for _ in range(tries):
+        problems = event_problems(events)
+        if not problems:
+            break
+        bad = "\n".join(f"- {i + 1}번 「{events[i].get('title')}」: {reason}" for i, reason in problems)
+        try:
+            fixed = _ask_json(client, f"""아래 현장 이벤트 중 규칙에 어긋나는 것이 있습니다. 걸린 이벤트만 다른 이벤트로 바꿔서 events 전체(4개)를 다시 답하세요.
+바꾸지 않는 이벤트는 그대로 두세요. 4번째는 바이어 상담 이벤트로 유지합니다.
+
+{facts}
+
+[걸린 이벤트]
+{bad}
+
+[현재 events]
+{json.dumps(events, ensure_ascii=False, indent=1)}
+
+{BOOTH_RULES[BOOTH_RULES.index("현장 이벤트(events) 작성 규칙:"):BOOTH_RULES.index("바이어 어필(buyer_appeal) 작성 규칙:")]}
+JSON: {{"events": [위 events와 같은 구조 4개]}}""", temperature=0.6, model=model)
+        except Exception as e:
+            print(f"이벤트 재작성 실패 (그대로 사용): {e}")
+            break
+        new = fixed.get("events") if isinstance(fixed, dict) else None
+        if not (isinstance(new, list) and len(new) >= 4 and all(isinstance(x, dict) for x in new)):
+            break
+        events = new
+    if events is not None:
+        plan = {**plan, "events": events}
+    return plan
+
+
+MAX_EVENTS = 4
+MAX_EVENT_DETAILS = 3
+MAX_BUYER_APPEAL = 4
+
+
+def normalize_events(items):
+    """[{title, type, summary, why, steps, details[{heading, lines}], reward, prep}]. 제목 없는 항목은 버린다."""
+    out = []
+    for e in items or []:
+        if not isinstance(e, dict) or not str(e.get("title") or "").strip():
+            continue
+        details = []
+        for d in e.get("details") or []:
+            if isinstance(d, dict):
+                lines = _str_list(d.get("lines"), limit=8)
+                heading = str(d.get("heading") or "").strip()
+                if heading and lines:
+                    details.append({"heading": heading, "lines": lines})
+        out.append({"title": str(e["title"]).strip(), "type": str(e.get("type") or "").strip(),
+                    "summary": str(e.get("summary") or "").strip(), "why": str(e.get("why") or "").strip(),
+                    "steps": _str_list(e.get("steps"), limit=5), "details": details[:MAX_EVENT_DETAILS],
+                    "reward": str(e.get("reward") or "").strip(), "prep": str(e.get("prep") or "").strip()})
+    return out[:MAX_EVENTS]
+
+
+def normalize_buyer_appeal(items):
+    """[{title, why, show}]. 제목 없는 항목은 버린다."""
+    out = []
+    for a in items or []:
+        if isinstance(a, dict) and str(a.get("title") or "").strip():
+            out.append({"title": str(a["title"]).strip(), "why": str(a.get("why") or "").strip(),
+                        "show": str(a.get("show") or "").strip()})
+    return out[:MAX_BUYER_APPEAL]
 
 
 def normalize_key_actions(items, quote_index, profile):
@@ -1433,7 +1575,7 @@ def normalize_scores(review, criteria):
     return scores
 
 
-BOOTH_STEPS = 5   # 진행률 표시용: 자체 조사, 전략 뼈대, 초안, 채점, 수정
+BOOTH_STEPS = 6   # 진행률 표시용: 자체 조사, 전략 뼈대, 초안, 채점, 수정, 이벤트 규칙 점검
 
 
 def plan_booth_concept(client, product_name, country, exhibition_name, cards, quote_index, profile, facts=None,
@@ -1539,7 +1681,7 @@ JSON: {{"scores": {{"insight": {{"score": 4, "reason": ""}}}}, "overall": "", "c
 기준 점수({REVISE_BELOW}점) 미만: {", ".join(f"{x['label']}({x['score']}점)" for x in low)}
 
 {BOOTH_RULES}
-- key_actions·visitor_flow(단계별 headline·goal·visitor·staff·props·message)·kpis도 유지하세요.
+- key_actions·visitor_flow(단계별 headline·goal·visitor·staff·props·message)·kpis·events·buyer_appeal도 유지하세요.
 - applied: 반영한 의견 요약 1~5개 (한국어)
 
 JSON 형식 (위 초안과 같은 구조 + applied):
@@ -1553,6 +1695,8 @@ JSON 형식 (위 초안과 같은 구조 + applied):
         elif review:
             stage = "passed"
 
+    step("이벤트 규칙 점검")
+    final = repair_events(client, final, facts, BOOTH_MODEL)
     booth = normalize_booth(final, quote_index, profile)
     review = review if isinstance(review, dict) else {}
     booth.update({
