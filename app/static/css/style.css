@@ -1903,6 +1903,7 @@ p.page-desc:not(:last-child) {
 /* ---- 바이어 관리 (buyer_mail 통합) ---- */
 
 .buyer-mail-gmail-status { font-size: 12px; color: #6b7280; }
+.buyer-mail-gmail-connected { display: flex; align-items: center; gap: 8px; }
 
 .callout-warning {
   padding: 12px 16px;

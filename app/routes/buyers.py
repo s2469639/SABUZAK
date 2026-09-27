@@ -823,3 +823,16 @@ def callback():
 
     flash(f"{userinfo['email']} 계정으로 Gmail 발송이 연동되었습니다.", "success")
     return redirect(url_for("contacts.list_contacts"))
+
+
+@buyer_gmail_bp.route("/disconnect", methods=["POST"])
+@login_required
+def disconnect():
+    """기존 Gmail 발송 연동 해제. 구글쪽 권한 승인 자체를 취소하는 게 아니라
+    (그건 사용자가 구글 계정 설정에서 직접 해야 함), 저장해둔 refresh_token만
+    지워서 이 서비스에서 더는 그 계정으로 발송 못 하게 한다."""
+    current_user.google_email = None
+    current_user.google_refresh_token = None
+    db.session.commit()
+    flash("Gmail 발송 연동을 해제했습니다.", "success")
+    return redirect(request.referrer or url_for("contacts.list_contacts"))
