@@ -128,8 +128,12 @@ def generate(draft_id):
         return redirect(url_for("concept.detail", draft_id=draft.id))
 
     try:
-        # 다시 생성할 때는 v15의 30일 캐시를 건너뛰고 새로 기획한다.
-        job_id = start_booth_job(v15_form(expo, products[0]), force=bool(draft.theme))
+        # v15의 부스 기획 캐시는 draft 단위가 아니라 (제품명,국가,박람회명,
+        # 웹사이트) 조합으로 전역 공유된다 - 이 draft가 처음 생성하는 것이어도
+        # 같은 제품/국가로 다른 draft나 v15 테스트 화면에서 이미 만들어둔
+        # 결과가 있으면 그게 그대로 재사용돼 "예전 결과가 뜬다"는 문제가
+        # 있었다. "생성하기"를 누른 이상 항상 새로 기획하도록 강제한다.
+        job_id = start_booth_job(v15_form(expo, products[0]), force=True)
     except ValueError as e:
         flash(str(e), "danger")
         return redirect(url_for("concept.detail", draft_id=draft.id))
