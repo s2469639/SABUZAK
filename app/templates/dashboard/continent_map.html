@@ -131,6 +131,39 @@
         if (enId && mapEl._worldMapSetActive) mapEl._worldMapSetActive(enId);
       });
     });
+
+    // 지도 크기를 실제 화면 높이에 맞춰 정확히 계산한다 (vh %로 어림잡으면
+    // 모니터마다 검색창이 화면 밖으로 밀리거나 반대로 너무 작아지는 문제가
+    // 있었음). "필터 적용" 버튼까지만(체크박스+검색창+날짜) 뷰포트 안에
+    // 들어오면 되고, 그 아래 줄바꿈되는 "초기화" 버튼은 화면 밖으로 밀려도
+    // 된다 - 그래서 기준을 filter-bar 전체가 아니라 "필터 적용" 버튼으로 잡는다.
+    var MIN_MAP_H = 240;
+    var MAX_MAP_H = 900;
+    var BOTTOM_MARGIN = 10; // 기준 요소 밑에 남길 여유
+
+    function fitMapToViewport() {
+      var anchor = document.querySelector(".filter-bar .btn-primary") || document.querySelector(".filter-bar");
+      if (!anchor) return;
+
+      var mapRect = mapEl.getBoundingClientRect();
+      var anchorRect = anchor.getBoundingClientRect();
+      var delta = (window.innerHeight - BOTTOM_MARGIN) - anchorRect.bottom;
+      var newHeight = mapRect.height + delta;
+      newHeight = Math.max(MIN_MAP_H, Math.min(MAX_MAP_H, newHeight));
+
+      mapEl.style.height = newHeight + "px";
+    }
+
+    fitMapToViewport();
+    // 지도(svg)가 비동기로 그려진 뒤 실제 렌더 크기가 안정되면 한 번 더
+    // 보정한다 (폰트/이미지 로드로 레이아웃이 미세하게 밀릴 수 있어서).
+    window.addEventListener("load", fitMapToViewport);
+
+    var resizeTimer = null;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(fitMapToViewport, 150);
+    });
   });
 </script>
 {% endblock %}

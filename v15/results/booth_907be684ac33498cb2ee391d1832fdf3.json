@@ -1,0 +1,22 @@
+{
+  "inputs": {
+    "name": "참치살코기캔",
+    "country": "France",
+    "exhibition_name": "Salon CPV",
+    "exhibition_website": "",
+    "strengths": "",
+    "ingredients": "",
+    "certifications": "",
+    "price": "",
+    "country_en": "France"
+  },
+  "booth": null,
+  "booth_error": "TAVILY_API_KEY가 설정되어 있지 않습니다 (C:\\Users\\user\\SABUZAK\\.env 확인).",
+  "models": {
+    "booth": "gpt-6-astra",
+    "booth_effort": "medium",
+    "task": "gpt-5.6-terra",
+    "task_effort": "low"
+  },
+  "fetched_at": "2026-09-26 20:55"
+}

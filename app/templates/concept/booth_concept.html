@@ -26,7 +26,7 @@
 
 {% if booth_error %}
 <div class="card concept-error" role="alert" style="border-left:4px solid #dc2626; color:#b91c1c;">
-  ⚠️ 부스 기획을 만들지 못했어요: {{ booth_error }}
+  부스 기획을 만들지 못했어요: {{ booth_error }}
 </div>
 {% endif %}
 
@@ -60,7 +60,6 @@
 </script>
 {% elif not draft.theme %}
 <div class="concept-empty-state">
-  <div class="concept-empty-icon">🧭</div>
   <h2>AI 부스 컨셉 자동 생성</h2>
   <p>
     {% if products %}
