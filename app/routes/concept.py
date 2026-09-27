@@ -127,11 +127,13 @@ def generate(draft_id):
 
     try:
         # v15의 부스 기획 캐시는 draft 단위가 아니라 (제품명,국가,박람회명,
-        # 웹사이트) 조합으로 전역 공유된다 - 이 draft가 처음 생성하는 것이어도
-        # 같은 제품/국가로 다른 draft나 v15 테스트 화면에서 이미 만들어둔
-        # 결과가 있으면 그게 그대로 재사용돼 "예전 결과가 뜬다"는 문제가
-        # 있었다. "생성하기"를 누른 이상 항상 새로 기획하도록 강제한다.
-        job_id = start_booth_job(v15_form(expo, products[0]), force=True)
+        # 웹사이트) 조합으로 전역 공유되고, 웹검색+상위 모델(gpt-5.6-sol)을
+        # 쓰는 무거운 작업이라 매번 강제로 새로 돌리면 토큰 비용이 크게
+        # 늘어난다. 그래서 절충안: 처음 생성할 때(draft.theme이 비어있을
+        # 때)는 캐시를 허용하고(v15/services.py BOOTH_CACHE_DAYS=7일),
+        # 이미 결과가 있는 draft를 "생성하기"로 다시 누른 경우(재생성 의도가
+        # 분명한 경우)만 캐시를 건너뛰고 강제로 새로 기획한다.
+        job_id = start_booth_job(v15_form(expo, products[0]), force=bool(draft.theme))
     except ValueError as e:
         flash(str(e), "danger")
         return redirect(url_for("concept.detail", draft_id=draft.id))
