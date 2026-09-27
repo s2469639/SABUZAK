@@ -20,6 +20,12 @@
   .tip:hover::after, .tip:focus::after { bottom: auto; top: calc(100% + 8px); max-width: min(320px, 80vw); line-height: 1.6; }
   .sec-info.tip:hover::after, .sec-info.tip:focus::after { left: 0; right: auto; font-size: 13px; font-weight: 500; }
   .tooltip-text { bottom: auto; top: calc(100% + 8px); width: 320px; max-width: 80vw; padding: 10px 12px; font-size: 13px; line-height: 1.6; }
+  /* 2·3번 섹션 카드는 화면 폭에 따라 3+1로 깨지지 않게 한 줄에 하나씩(1열) */
+  .card-grid { grid-template-columns: 1fr; }
+  /* 2번 섹션: 타깃 제품·가격 전략은 전체 폭, 리테일 가격·판매 채널(2·3번째 카드)은 나란히 2열 */
+  .s2-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .s2-grid > .card:first-child, .s2-grid > .card:last-child { grid-column: 1 / -1; }
+  @media (max-width: 600px) { .s2-grid { grid-template-columns: 1fr; } }
   /* 3. 현지 시장 트렌드 분석: 대시보드 본문 크기에 맞춤 */
   .stat-pill { font-size: 12px; padding: 2px 8px; gap: 6px; }
   .research-card .card-title { font-size: 15px; }
@@ -128,7 +134,7 @@
   {% set s2 = data.section2 %}
   {% if s2 %}
     {% set rp = s2.retail_price %}
-    <div class="card-grid">
+    <div class="card-grid s2-grid">
       <div class="card">
         <div class="card-header">TARGET PRODUCT</div>
         <div class="card-title">{{ s2.target_product.title }}</div>
