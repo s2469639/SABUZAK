@@ -1217,6 +1217,10 @@ p.page-desc:not(:last-child) {
   font-size: 14px;
 }
 
+.section-label-row + .placeholder-note {
+  margin-top: 4px;
+}
+
 .section-label {
   font-size: 13px;
   color: #6b7280;
