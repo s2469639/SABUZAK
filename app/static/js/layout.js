@@ -50,4 +50,48 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener("resize", function () {
     if (!isMobile()) closeMobileSidebar();
   });
+
+  // 모바일에서 화면 왼쪽 가장자리를 오른쪽으로 스와이프하면 사이드바가
+  // 당겨져 나오고, 열린 상태에서 사이드바를 왼쪽으로 스와이프하면 닫힌다.
+  var sidebarEl = document.querySelector(".sidebar");
+  var EDGE_ZONE = 24;
+  var SWIPE_THRESHOLD = 50;
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var tracking = false;
+
+  document.addEventListener("touchstart", function (e) {
+    if (!isMobile()) return;
+    var t = e.touches[0];
+    var isOpen = layout.classList.contains("sidebar-mobile-open");
+    var withinEdge = t.clientX <= EDGE_ZONE;
+    var onSidebar = sidebarEl && sidebarEl.contains(e.target);
+    if (!isOpen && !withinEdge) return;
+    if (isOpen && !onSidebar) return;
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+    tracking = true;
+  }, { passive: true });
+
+  document.addEventListener("touchmove", function (e) {
+    if (!tracking) return;
+    var t = e.touches[0];
+    // 세로 스크롤 의도면(위아래로 더 많이 움직이면) 스와이프 제스처를 포기한다
+    if (Math.abs(t.clientY - touchStartY) > Math.abs(t.clientX - touchStartX)) {
+      tracking = false;
+    }
+  }, { passive: true });
+
+  document.addEventListener("touchend", function (e) {
+    if (!tracking) return;
+    tracking = false;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - touchStartX;
+    var isOpen = layout.classList.contains("sidebar-mobile-open");
+    if (!isOpen && dx > SWIPE_THRESHOLD) {
+      openMobileSidebar();
+    } else if (isOpen && dx < -SWIPE_THRESHOLD) {
+      closeMobileSidebar();
+    }
+  }, { passive: true });
 });

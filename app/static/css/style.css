@@ -2552,6 +2552,36 @@ p.page-desc:not(:last-child) {
     flex-wrap: wrap;
   }
 
+  /* 부스 컨셉 기획의 삭제 버튼(.concept-header-side): 페이지 헤더가
+     줄바꿈되면 이 칸이 내용 폭만큼만(shrink-to-fit) 차지한 채 화면
+     왼쪽에 놓이고, 그 안에서만 오른쪽 정렬이 돼서 "화면 가운데쯤"에
+     붕 떠 보였다. 칸 자체를 한 줄 전체 폭으로 늘려야 오른쪽 정렬이
+     화면 오른쪽 끝까지 가닿는다. */
+  .concept-header-side {
+    width: 100%;
+  }
+
+  /* 작성 중인 박람회 목록: 트렌드 분석/부스 컨셉(v15) 버튼은 있을 때만
+     나오다 보니, 있는 행과 없는 행에서 컨셉보기·삭제 버튼 위치가
+     서로 달라져 정렬이 안 맞아 보였다. 2열 그리드로 고정해서 버튼이
+     있든 없든 각 버튼 종류가 항상 같은 칸에 오게 한다. */
+  .draft-row-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .draft-row-actions .btn-trend { grid-column: 1; grid-row: 1; }
+  .draft-row-actions .btn-booth { grid-column: 2; grid-row: 1; }
+  .draft-row-actions .btn-concept { grid-column: 1; grid-row: 2; }
+  .draft-row-actions .btn-delete-form { grid-column: 2; grid-row: 2; }
+  .draft-row-actions .btn-chip,
+  .draft-row-actions .btn-delete-form .btn-text-danger {
+    width: 100%;
+    text-align: center;
+  }
+
   /* 제품 목록 행: 제품 정보(flex:1)와 액션 버튼들(모두 white-space:nowrap)이
      한 줄에 같이 있다 보니, 버튼들이 줄어들지 않고 제품명 쪽만 극단적으로
      좁아져서 한 글자씩 줄바꿈되는 문제가 있었다.
