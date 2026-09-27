@@ -89,13 +89,19 @@ def normalize_hs_code(hs_code: str) -> str:
 
 def _product_codes_for_query(hs_code: str) -> list:
     """제품의 HS코드로 TRAINS "products" 필터에 넣을 후보 코드 목록을 만든다.
-    원본 코드 그대로 + 4자리(챕터) 단위를 같이 보낸다 (챕터 단위까지 넣어야
-    TRAINS의 느슨한 품목 태깅에서 관련 규정을 놓치지 않음)."""
+    최대 6자리(HS6) + 4자리(챕터) 단위만 보낸다 (챕터 단위까지 넣어야
+    TRAINS의 느슨한 품목 태깅에서 관련 규정을 놓치지 않음).
+
+    8자리 이상(세부품목 단위)의 원본 코드를 그대로 보내면 TRAINS 서버가
+    500(`{"Error":"Unexpected error Occured"}`)을 내는 게 실제로 확인됐다
+    (products 필드가 TRAINS 자체 품목 마스터 목록에서 고르는 방식이라,
+    6자리보다 세밀한 코드는 그 목록에 없어서 서버 쪽에서 처리하다 죽는
+    것으로 보임). 그래서 6자리보다 길면 앞 6자리로 잘라서 보낸다."""
     digits = normalize_hs_code(hs_code)
     if not digits:
         return DEFAULT_DEBUG_HS_CODES
-    codes = [digits]
-    if len(digits) > 4:
+    codes = [digits[:6]] if len(digits) > 6 else [digits]
+    if len(digits) > 4 and codes[0] != digits[:4]:
         codes.append(digits[:4])
     return codes
 
@@ -239,8 +245,19 @@ def _fetch_pages(reporter_code: str, product_codes: list, page_size: int, max_pa
                 print(f"  [TRAINS] {log_key} page {page} 요청 실패: {exc}", flush=True)
                 raise
             print(f"  [TRAINS] {log_key} page {page} 응답: {resp.status_code}", flush=True)
-            if resp.status_code != 429:
+            if resp.status_code not in (429, 500, 502, 503, 504):
                 break
+            if resp.status_code != 429:
+                # 500/502/503/504도 TRAINS 쪽에서 종종 일시적으로 나는 걸로
+                # 확인돼서(같은 요청을 잠시 후 다시 보내면 성공하는 경우가
+                # 많음), 429와 같은 backoff 스케줄로 재시도한다.
+                if attempt < len(RETRY_BACKOFF_SEC):
+                    print(
+                        f"  [TRAINS] {log_key} page {page} {resp.status_code} - "
+                        f"{RETRY_BACKOFF_SEC[attempt]}초 후 재시도",
+                        flush=True,
+                    )
+                continue
             # 서버가 Retry-After로 대기시간을 알려주기도 하는데, 이 값을 그대로
             # 믿고 sleep하면 서버가 큰 값(몇십초~그 이상)을 줄 경우 아무 로그도
             # 없이 통째로 멈춰버린 것처럼 보인다. 그래서 상한(MAX_RETRY_AFTER_SEC)을
@@ -262,7 +279,15 @@ def _fetch_pages(reporter_code: str, product_codes: list, page_size: int, max_pa
                     wait_sec = min(retry_after_sec, MAX_RETRY_AFTER_SEC)
                     print(f"  [TRAINS] {log_key} page {page} 429, Retry-After={retry_after}s -> {wait_sec}s 대기", flush=True)
                     time.sleep(wait_sec)
-        resp.raise_for_status()
+        try:
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError as exc:
+            body_preview = (resp.text or "")[:300]
+            raise requests.exceptions.HTTPError(
+                f"{exc} (요청 국가={reporter_code}, HS코드후보={product_codes}, "
+                f"응답 본문 앞부분: {body_preview!r})",
+                response=resp,
+            ) from exc
 
         if total_count is None:
             header_total = resp.headers.get("X-Total-Count")

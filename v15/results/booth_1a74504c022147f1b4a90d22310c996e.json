@@ -1,0 +1,864 @@
+{
+  "inputs": {
+    "name": "구운 통곡물 모닝시리얼",
+    "country": "캐나다",
+    "exhibition_name": "The National Women's Show",
+    "exhibition_website": "nationalwomenshow.com/shows/ottawa",
+    "strengths": "통곡물을 튀기지 않고 구워내 아침 대용으로 담백함",
+    "ingredients": "통귀리, 통밀, 옥수수그리츠, 프락토올리고당",
+    "certifications": "HACCP, ISO 9001",
+    "price": "500g (6,500원)",
+    "country_en": "Canada"
+  },
+  "booth": {
+    "summary": "제품 고유의 차별점인 통귀리·통밀·옥수수 세 곡물과 비튀김 굽기 공정을 전면에 세우고, 아침과 건식 간식의 이중 용도는 보조 판매 논리로 활용합니다. 시식은 서면 승인을 전제로 8g Dry Snack Cup만 운영하며, 바이어 상담은 확정된 가격·물류 수치와 완료일이 표시된 캐나다 입점 준비표로 전환합니다.",
+    "positioning": {
+      "target_buyer": "1순위는 할인·일반 식료품 체인의 시리얼·아침식사 카테고리 MD, 2순위는 캐나다 식품 수입·유통사",
+      "core_message": "통귀리·통밀·옥수수 세 곡물을 튀기지 않고 구운 담백한 시리얼로 제품 차별성을 만들고, 하나의 500g SKU로 아침 식사와 건식 간식 두 소비 상황을 공략합니다."
+    },
+    "sections": {
+      "main_visual": {
+        "concept_en": "Three Grains. Baked for Two Moments.",
+        "concept_ko": "세 가지 곡물을 구워, 두 번의 소비 순간으로.",
+        "key_message": "Baked Oats, Wheat & Corn—Breakfast or Snack",
+        "bullets": [
+          {
+            "text": "백월 중앙의 주인공은 일반적인 아침 식탁 사진이 아니라 실제 완제품 알갱이의 초근접 사진으로 정합니다. 제품 사진 아래에는 통귀리·통밀·옥수수그리츠 실물을 각각 투명 원통에 담아 완제품과 나란히 배치하고, ‘3 GRAINS → BAKED → 2 OCCASIONS’ 공정선을 한 줄로 연결합니다.",
+            "quote_ids": [],
+            "company": [
+              "원료",
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "백월 상단에는 ‘Three Grains. Baked for Two Moments.’ 한 문장만 5m 거리에서 읽히도록 크게 표시합니다. 아침 그릇과 건식 스낵 파우치 이미지는 중앙 제품 이미지 아래에 30% 크기로 배치해 제품 증거가 소비 상황 이미지보다 먼저 보이게 합니다.",
+            "quote_ids": [
+              "R3"
+            ],
+            "company": [
+              "강점",
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "색상은 구운 곡물색·크림색·짙은 갈색의 3색으로 제한하고, 원료 원통과 완제품에는 3500~4000K 스폿 조명을 사용합니다. low sugar, high fibre, filling 및 경쟁 제품 대비 우월 수치는 캐나다 기준 분석 전에는 백월에 표시하지 않습니다.",
+            "quote_ids": [
+              "R4",
+              "R5",
+              "R10"
+            ],
+            "company": [
+              "강점"
+            ],
+            "is_idea": false
+          }
+        ]
+      },
+      "slogan": {
+        "main_en": "Three Grains. Baked for Two Daily Occasions.",
+        "main_ko": "세 가지 곡물을 구워, 하루 두 번의 기회로.",
+        "sub_en": "Whole oats, whole wheat and corn—never fried.",
+        "sub_ko": "통귀리·통밀·옥수수를 사용해 튀기지 않고 구웠습니다.",
+        "bullets": [
+          {
+            "text": "메인 슬로건은 경쟁 시리얼도 사용할 수 있는 ‘아침과 간식’만 말하지 않고, 실제 원료 구성과 굽기 공정을 먼저 제시한 뒤 두 소비 상황을 판매 이익으로 연결합니다.",
+            "quote_ids": [
+              "R3"
+            ],
+            "company": [
+              "원료",
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "‘Three Grains’는 통귀리·통밀·옥수수그리츠라는 실제 원료 수를 근거로 사용합니다. 다만 캐나다 패키지에서 ‘whole grain’ 또는 원료별 강조 표현을 사용할 수 있는지는 배합비와 표시 적합성 검토 후 확정합니다.",
+            "quote_ids": [
+              "R9"
+            ],
+            "company": [
+              "원료"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "‘Two Daily Occasions’는 전면 차별점이 아니라 한 SKU로 아침과 간식 수요를 동시에 공략할 수 있다는 바이어용 판매 논리로 사용합니다. 외부 출처가 확인되지 않은 시장 수치는 백월에 싣지 않고 내부 가설 및 현장 설문 설계에만 활용합니다.",
+            "quote_ids": [
+              "R3",
+              "R7"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "signature_pairing": {
+        "item": "8g Dry Grain Crunch Cup과 아침용 우유 그릇의 비섭취 시각 페어링",
+        "intent": "현장에서는 제품 자체의 담백한 맛과 식감을 복잡한 부재료 없이 확인시키고, 같은 제품이 우유를 곁들인 아침 식사와 봉지에서 바로 먹는 간식으로 전환되는 모습을 보여줍니다.",
+        "bullets": [
+          {
+            "text": "서면 시식 승인을 받은 경우에만 8g씩 사전 계량한 뚜껑형 Dry Snack Cup을 제공합니다. 현장 벌크 스쿠핑은 중단하고 1회 제공 후 남은 컵은 재사용하지 않으며, 컵에는 밀·귀리의 글루텐 및 밀 알레르겐 안내를 부착합니다.",
+            "quote_ids": [
+              "R9",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "우유는 시식하지 않고 미개봉 우유 용기와 완성된 아침 그릇 사진 또는 10초 무음 영상으로만 보여줍니다. 주최 측과 Ottawa Public Health가 우유 제공을 별도로 서면 승인한 경우에만 냉장 온도 기록, 유제품 알레르겐 안내 및 폐액 처리 절차를 추가합니다.",
+            "quote_ids": [
+              "R1",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "시식 후 방문객은 ‘With milk at breakfast’, ‘Dry afternoon snack’, ‘Both’ 중 하나를 선택합니다. 결과는 소비자 반응 가설을 검증하는 현장 데이터로만 사용하고 캐나다 전체 소비자를 대표하는 수치로 제시하지 않습니다.",
+            "quote_ids": [
+              "R1",
+              "R3"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "시식 승인을 받지 못하면 현장 개봉과 섭취를 모두 중단하고, 개별 밀봉된 테이크홈 샘플과 QR 설문만 제공합니다. 샘플 포장에는 ‘Take-home sample—do not open onsite’ 안내를 영어와 프랑스어로 표기합니다.",
+            "quote_ids": [
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ]
+      },
+      "demonstration": {
+        "title": "30초 Grain-to-Crunch Proof와 3분 Buyer Readiness Review",
+        "bullets": [
+          {
+            "text": "30초 시연은 투명 원통의 통귀리·통밀·옥수수그리츠를 차례로 가리킨 뒤 완제품을 보여주는 방식으로 진행합니다. 직원 멘트는 ‘Oats, wheat and corn. Baked, not fried. Try it dry now; picture it with milk at breakfast.’로 통일하며, 실제 제조 공정을 현장에서 재현하거나 영양 효익을 단정하지 않습니다.",
+            "quote_ids": [
+              "R10"
+            ],
+            "company": [
+              "원료",
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "시식 운영은 1명 기준 시간당 50컵을 상한으로 합니다. 행사 시간이 하루 7시간이라고 가정하면 이틀간 700컵에 예비분 약 20%를 더한 850컵, 제품 약 6.8kg을 준비합니다. 실제 운영시간이 확정되면 ‘운영시간×시간당 50컵×1.2’ 공식으로 수량을 다시 계산합니다.",
+            "quote_ids": [
+              "R11",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "3분 바이어 시연에서는 빈칸이 있는 가격표를 보여주지 않습니다. 2026년 10월 3일까지 EXW 또는 FOB 단가, 환율 기준일, MOQ, 케이스입수, 리드타임, 월 생산량, 유통기한을 확정하고, 이를 확보한 경우에만 100g당 예상 도착원가·권장소비자가·유통사 및 리테일러 마진 시뮬레이션을 제시합니다.",
+            "quote_ids": [
+              "R4",
+              "R5",
+              "R6",
+              "R7"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "영양분석·FOP 판정·영불문 라벨·알레르겐·lot 추적·COA·리콜 절차는 ‘완료·진행 중·미착수’로 구분한 readiness checklist로 보여주고 각 항목에 담당자와 제공 예정일을 표시합니다. 시연 후 바이어에게 제품 스펙 시트, 확정 상업조건표, 샘플 요청 QR을 제공하고 후속 미팅 날짜를 현장에서 정합니다.",
+            "quote_ids": [
+              "R8",
+              "R9",
+              "R10"
+            ],
+            "company": [
+              "인증"
+            ],
+            "is_idea": false
+          }
+        ]
+      },
+      "packaging": {
+        "direction": "세 곡물과 비튀김 굽기 공정을 한눈에 보여주고, 아침과 건식 간식의 사용 장면을 보조 아이콘으로 설명하는 500g 재밀봉 리테일 패키지",
+        "bullets": [
+          {
+            "text": "전면 정보 우선순위는 ① ‘Three Grains, Baked Not Fried’ ② 실제 완제품 사진 ③ Breakfast Bowl·Dry Snack 두 아이콘으로 제한합니다. low sugar, source of fibre, high protein 등의 영양 강조는 캐나다 기준 분석과 표시 요건을 충족한 경우에만 추가합니다.",
+            "quote_ids": [
+              "R3",
+              "R10"
+            ],
+            "company": [
+              "원료",
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "500g 규격은 지퍼형 스탠드 파우치 적용 가능성을 우선 검토합니다. 시리얼이 아침 외 간식으로도 소비되고 소비자가 재밀봉 포장을 원한다는 조사 가설을 반영하되, 실제 포장 설비와 산소·수분 차단 성능 및 개봉 후 품질 유지 시험을 확인한 뒤 확정합니다.",
+            "quote_ids": [
+              "R3"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "후면에는 영어·프랑스어 common name, 원재료, Nutrition Facts, 순중량, 수입자 정보와 필수 문구를 배치할 공간을 확보합니다. 밀 알레르겐과 밀·귀리의 글루텐 출처를 정확히 선언하고, 교차접촉 정보는 제조시설 확인 후 반영합니다.",
+            "quote_ids": [
+              "R9"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "당류·나트륨·포화지방의 완제품 분석으로 캐나다 front-of-package nutrition symbol 대상 여부를 먼저 판정합니다. 35~40g 체험용 소포장은 생산 가능성, 단가 및 라벨 면적 적합성이 확인될 때만 추가하고, 부스에서는 500g 주력 SKU에 집중합니다.",
+            "quote_ids": [
+              "R10"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          }
+        ]
+      },
+      "merchandising": {
+        "bullets": [
+          {
+            "text": "기본 운영 면적은 3m×3m, 직원은 최소 3명으로 가정합니다. 1번 직원은 통로 호객·바이어 식별·QR 안내, 2번 직원은 위생 시식과 재고 기록, 3번 직원은 바이어 상담과 CRM 입력을 담당합니다. 2명만 배치할 경우 개방 시식을 중단하고 밀봉 샘플 배포와 예약 상담만 운영합니다.",
+            "quote_ids": [
+              "R11",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "반폐쇄형 상담석은 삭제하고 스탠딩 상담대 하나만 둡니다. 독립 손 씻기 설비가 승인 조건에 포함되면 후면 좌측에 최소 60cm 폭을 확보하고 상담대는 접이식 벽부형으로 변경해 체험 대기 줄과 상담 동선이 겹치지 않게 합니다.",
+            "quote_ids": [
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "text": "리테일 선반은 폭 90cm·깊이 35cm·높이 180cm 이내로 구성하고, 눈높이 120~150cm 구간에 500g 제품을 3페이싱합니다. 선반 가격표에는 미확정 수치를 쓰지 않으며, 확정된 경우에만 CAD 권장소비자가와 100g당 가격을 함께 표시합니다.",
+            "quote_ids": [
+              "R4",
+              "R5",
+              "R6"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          },
+          {
+            "text": "매일 개장 전 샘플 수량을 기록하고 2시간마다 잔량·파손·오염 수량을 점검합니다. 개봉되었거나 뚜껑이 손상된 컵은 즉시 폐기하며, 행사 종료 후 남은 사전 소분 컵의 재사용 여부는 보관 조건과 보건 당국 지침에 따릅니다.",
+            "quote_ids": [
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          }
+        ],
+        "zones": [
+          {
+            "name": "1. Three Grains 시선 존",
+            "position": "3m×3m 부스를 가정한 후면 백월 중앙과 통로에서 보이는 전면 좌측",
+            "purpose": "실제 세 원료와 완제품 확대 이미지를 한 화면에 배치해 3초 안에 제품 고유의 원료·공정 차이를 전달합니다.",
+            "quote_ids": [],
+            "company": [
+              "원료",
+              "강점"
+            ],
+            "is_idea": false
+          },
+          {
+            "name": "2. Dry Crunch 체험 존",
+            "position": "통로 전면 우측의 폭 120cm·깊이 60cm 카운터",
+            "purpose": "서면 승인 시 8g 사전 소분 컵을 시간당 최대 50개 제공하고, 아침·간식·둘 다 투표와 QR 설문을 받습니다. 미승인 시 동일 카운터를 밀봉 테이크홈 샘플 배포대로 전환합니다.",
+            "quote_ids": [
+              "R3",
+              "R12"
+            ],
+            "company": [],
+            "is_idea": false
+          },
+          {
+            "name": "3. Retail Proof 상담 존",
+            "position": "후면 우측의 폭 90cm 선반과 후면 좌측의 폭 80cm 스탠딩 상담대",
+            "purpose": "500g 패키지를 3페이싱으로 진열하고 확정된 가격·마진·물류 원페이저 및 캐나다 입점 readiness checklist로 3분 상담을 진행합니다.",
+            "quote_ids": [
+              "R7",
+              "R8",
+              "R9"
+            ],
+            "company": [
+              "가격대"
+            ],
+            "is_idea": false
+          }
+        ]
+      }
+    },
+    "visitor_flow": {
+      "3s": {
+        "headline": "통로에서 3초: 세 원료 실물과 확대된 구운 시리얼",
+        "goal": "일반적인 아침 식탁 이미지보다 제품 고유의 원료 구성과 비튀김 굽기 공정을 먼저 인식시킵니다.",
+        "visitor": [
+          "통귀리·통밀·옥수수그리츠가 담긴 투명 원통과 완제품을 한눈에 봅니다.",
+          "‘Three Grains. Baked for Two Daily Occasions.’ 헤드라인을 읽습니다."
+        ],
+        "staff": [
+          "‘Three grains—baked, not fried. Would you try it as breakfast or a snack?’라고 질문합니다.",
+          "명찰과 소속을 확인해 바이어는 상담 담당자에게 즉시 인계합니다."
+        ],
+        "props": [
+          "세 원료 투명 원통",
+          "완제품 초근접 백월 이미지",
+          "3500~4000K 스폿 조명",
+          "실제 500g 패키지"
+        ],
+        "message": "통귀리·통밀·옥수수 세 곡물을 튀기지 않고 구운 시리얼입니다."
+      },
+      "30s": {
+        "headline": "제품 그대로 맛보고 아침과 간식 중 선택",
+        "goal": "부재료 없이 제품 자체의 담백한 맛과 식감을 확인시키고 두 소비 상황의 선호를 수집합니다.",
+        "visitor": [
+          "서면 승인 시 8g Dry Snack Cup을 받아 제품 자체를 시식합니다.",
+          "아침용·건식 간식용·둘 다 중 하나에 투표합니다.",
+          "맛·식감·구매 의향 QR 설문에 응답합니다."
+        ],
+        "staff": [
+          "사전 소분 컵만 제공하고 시간당 50컵 상한과 위생 기록을 관리합니다.",
+          "밀·귀리의 글루텐 및 밀 알레르겐 정보를 시식 전에 안내합니다.",
+          "시식 미승인 시 현장 개봉 없이 밀봉 테이크홈 샘플로 전환합니다."
+        ],
+        "props": [
+          "8g 뚜껑형 소분 컵 또는 밀봉 테이크홈 샘플",
+          "알레르겐 안내판",
+          "아침·간식·둘 다 투표 보드",
+          "QR 설문 태블릿"
+        ],
+        "message": "세 곡물을 구운 담백한 한 가지 제품을 아침 그릇과 건식 간식으로 활용할 수 있습니다."
+      },
+      "3min": {
+        "headline": "확정 상업조건과 캐나다 입점 준비도 검토",
+        "goal": "제품 관심을 가격·마진·물류·규정 검토로 연결하고 샘플 발송 및 후속 미팅을 확정합니다.",
+        "visitor": [
+          "500g 제품의 실제 3페이싱 진열과 영불문 패키지 목업을 확인합니다.",
+          "확정된 공급가, 예상 도착원가, 권장소비자가, MOQ와 마진 구조를 검토합니다.",
+          "영양분석·FOP·알레르겐·추적성·COA·리콜 절차의 준비 상태와 완료일을 확인합니다."
+        ],
+        "staff": [
+          "바이어 채널, 목표 소비자가, 요구 마진과 예상 발주량을 먼저 질문합니다.",
+          "확정 상업조건표와 담당자·완료일이 표시된 readiness checklist만 제시합니다.",
+          "샘플 수량·주소·담당자와 후속 미팅 날짜를 CRM에 기록합니다."
+        ],
+        "props": [
+          "폭 90cm 리테일 선반과 500g 제품 3페이싱",
+          "가격·MOQ·유통기한·물류 원페이저",
+          "캐나다 입점 readiness checklist",
+          "HACCP·ISO 9001 자료와 샘플 요청 QR"
+        ],
+        "message": "세 곡물을 구운 하나의 500g SKU로 아침과 간식 수요를 공략하며, 상업조건과 캐나다 입점 준비 일정을 명확히 제시합니다."
+      }
+    },
+    "key_actions": [
+      {
+        "title": "서면 허가 전에는 개방 시식을 시작하지 않기",
+        "detail": "부스 책임자가 즉시 주최 측과 Ottawa Public Health에 예외 신청 가능 여부를 확인하고 승인 문서를 현장 파일에 보관합니다. 승인 시 8g Dry Snack Cup, trained food handler, 독립 손 씻기 설비와 위생 기록을 운영하며, 미승인 시 현장 섭취 없이 밀봉 테이크홈 샘플과 QR만 제공합니다.",
+        "quote_ids": [
+          "R12"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      {
+        "title": "2026년 10월 3일까지 바이어 상업조건표를 실제 숫자로 확정하기",
+        "detail": "수출 담당자는 500g 가격의 성격을 확인하고 EXW 또는 FOB CAD 환산가, 인코텀즈, MOQ, 케이스입수, 케이스 크기·중량, 팔레트 적재량, 리드타임, 월 생산량과 잔여 유통기한 보증을 한 장으로 완성합니다. 숫자가 확정되지 않은 항목은 가격표에 싣지 않고 별도 readiness checklist에 제공 예정일만 표시합니다.",
+        "quote_ids": [
+          "R7",
+          "R8"
+        ],
+        "company": [
+          "가격대"
+        ],
+        "is_idea": false
+      },
+      {
+        "title": "세 곡물과 굽기 공정을 모든 접점에서 동일하게 증명하기",
+        "detail": "디자인 담당자는 백월, 패키지 목업, 시식 컵, 원페이저에 통귀리·통밀·옥수수와 ‘Baked, Not Fried’를 동일한 순서로 배치합니다. 영업 직원은 아침·간식보다 원료와 공정을 먼저 설명하도록 30초 스크립트를 리허설합니다.",
+        "quote_ids": [
+          "R3"
+        ],
+        "company": [
+          "원료",
+          "강점"
+        ],
+        "is_idea": false
+      }
+    ],
+    "kpis": [
+      {
+        "metric": "자격 바이어 상담 수",
+        "target": "행사 이틀간 20건 이상, 이 중 사전 예약 상담 10건 이상",
+        "how": "식료품 MD·수입사·유통사 소속과 담당 카테고리가 확인되고 가격, MOQ, 규정 또는 발주 조건 중 하나 이상을 논의한 상담만 CRM에 집계합니다."
+      },
+      {
+        "metric": "바이어 후속 전환율",
+        "target": "자격 상담의 40% 이상 샘플 발송 요청, 25% 이상 후속 미팅 확정",
+        "how": "발송 수량·주소·담당자가 모두 확보된 요청과 캘린더 날짜가 확정된 미팅만 각각 인정합니다."
+      },
+      {
+        "metric": "소비 상황 검증 및 시식 운영량",
+        "target": "유효 설문 250건 이상, 승인 시 최대 850컵 이내 운영",
+        "how": "아침·간식·둘 다 선택과 맛·식감·구매 의향을 모두 완료한 응답만 집계합니다. 시간대별 배포량, 폐기량과 잔량을 별도로 기록하며 현장 표본이라는 한계를 명시합니다."
+      }
+    ],
+    "risks": [
+      {
+        "text": "시식 신청 마감일인 2026년 9월 11일이 지났으므로 서면 예외 승인을 받기 전에는 Dry Snack Cup을 포함한 개방 시식을 진행하지 않습니다. 승인 조건에 trained food handler와 독립 손 씻기 설비가 포함되는지도 함께 확인해야 합니다.",
+        "quote_ids": [
+          "R12"
+        ],
+        "company": [],
+        "is_idea": false
+      },
+      {
+        "text": "HACCP과 ISO 9001은 캐나다 수입 요건 충족 자체를 의미하지 않습니다. 영불문 표시, 영양분석, FOP 심벌 판정, 알레르겐·글루텐 선언, lot 추적, COA, 클레임·리콜 절차와 과거 리콜 이력을 수입사 및 규정 전문가가 검토해야 합니다.",
+        "quote_ids": [
+          "R8",
+          "R9",
+          "R10"
+        ],
+        "company": [
+          "인증"
+        ],
+        "is_idea": false
+      },
+      {
+        "text": "조사 메모의 외부 출처와 경쟁 가격 조사 시점이 확인되지 않았으므로 해당 수치를 바이어용 확정 시장 근거로 인용하지 않습니다. 행사 직전에 경쟁 제품 가격을 재확인하고, 조사 메모는 현장 설문 가설과 내부 기획 근거로만 사용합니다.",
+        "quote_ids": [
+          "R1",
+          "R2",
+          "R3",
+          "R4",
+          "R5",
+          "R6"
+        ],
+        "company": [],
+        "is_idea": false
+      }
+    ],
+    "questions": [
+      "500g 6,500원은 출고가·수출 공급가·국내 소비자가 중 무엇이며, EXW 또는 FOB 단가, 인코텀즈, MOQ, 케이스입수·규격·중량, 팔레트 적재량, 리드타임과 월 생산 가능 수량은 얼마입니까?",
+      "캐나다 기준 1회 제공량별 당류·식이섬유·단백질·나트륨·포화지방 수치와 FOP 심벌 판정, 미개봉 유통기한, 잔여 유통기한 보증 및 개봉 후 권장 섭취 기간은 어떻게 됩니까?",
+      "현재 패키지의 실제 크기와 재밀봉 적용 여부, 35~40g 밀봉 샘플 생산 가능성, 영불문 라벨 원본, 알레르겐 교차접촉 정보, lot 추적·COA·클레임 및 리콜 절차와 과거 리콜 이력을 제공할 수 있습니까?"
+    ],
+    "brief": {
+      "insights": [
+        {
+          "fact": "조사 메모 기준, 캐나다 소비자의 80.3%가 아침을 집에서 먹고 cereal·granola는 선호 아침 메뉴 3위였으며, 아침을 거르는 주요 이유 중 하나는 시간 부족이었다.",
+          "insight": "소비자는 집에서 빠르게 준비하면서도 한 끼로 받아들일 수 있는 간편한 아침 식사를 원한다.",
+          "implication": "우리 제품을 단순한 수입 시리얼이 아니라 별도 조리 없이 먹을 수 있는 담백한 통곡물 아침 대용식으로 정의하고, 준비 편의성과 포만감 관련 제품 정보를 우선 확인·제시해야 한다.",
+          "quote_ids": [
+            "R1"
+          ],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        },
+        {
+          "fact": "시리얼은 아침뿐 아니라 오후와 저녁에도 소비되며 약 30%가 스낵으로 먹는다. 소비자는 건강·맛·편의성과 함께 low sugar, high protein, 인공 색소·향료 무첨가, 재밀봉 포장을 원한다.",
+          "insight": "소비자는 한 번 구입한 시리얼을 아침 식사와 간식 양쪽에서 활용해 구매 가치를 높이고 싶어 한다.",
+          "implication": "바이어에게 아침 식사와 건식 스낵이라는 두 가지 소비 상황을 함께 제안하되, low sugar 등 영양 표현은 캐나다 기준 완제품 분석으로 입증된 항목만 사용해야 한다.",
+          "quote_ids": [
+            "R3",
+            "R10"
+          ],
+          "company": [],
+          "is_idea": false
+        },
+        {
+          "fact": "현지 경쟁 제품은 100% whole grain oats, 1회분 통곡물 함량, 적당한 단맛, fibre와 같은 구체적 수치와 효익을 전면 메시지로 사용하며, 프리미엄 제품에는 가격 부담 반응도 나타난다.",
+          "insight": "현지 소비자와 MD는 막연한 '건강함'보다 1회 제공량 기준의 통곡물·당류·식이섬유 수치와 납득 가능한 가격을 비교한다.",
+          "implication": "통곡물을 구웠다는 공정 차별성만 강조하지 말고, 캐나다 기준 1회 제공량의 통곡물·당류·식이섬유와 예상 소비자가격을 산출해 경쟁 제품과 비교 가능한 바이어 자료로 만들어야 한다.",
+          "quote_ids": [
+            "R4",
+            "R5",
+            "R6"
+          ],
+          "company": [
+            "가격대"
+          ],
+          "is_idea": false
+        },
+        {
+          "fact": "캐나다 cold cereal 구매는 할인·일반 식료품점 비중이 높고 80%가 계획 구매다. 수입 유통에는 식품안전 관리, 추적성, 리콜 절차와 영어·프랑스어 표시 및 알레르겐 선언이 요구된다.",
+          "insight": "유통 바이어는 시식 반응만큼 반복 구매가 가능한 가격 구조와 캐나다 수입·진열 준비도를 확인하려 한다.",
+          "implication": "상담에서는 캐나다 도착원가·권장소비자가·마진 구조와 함께 영불문 라벨, 밀·귀리의 글루텐 및 알레르겐 표시, lot 추적·시험성적서·리콜 절차 준비 상태를 제시해야 한다.",
+          "quote_ids": [
+            "R7",
+            "R8",
+            "R9"
+          ],
+          "company": [],
+          "is_idea": false
+        }
+      ],
+      "target_buyers": [
+        {
+          "priority": 1,
+          "type": "할인·일반 식료품 체인의 시리얼·아침식사 카테고리 MD",
+          "job": "기존 대중 시리얼과 구분되는 비튀김·구운 통곡물 포지션, 예상 회전율, 캐나다 소비자가격과 유통 마진, 500g 규격의 선반 경쟁력, 영불문 라벨과 영양 기준 충족 가능성을 확인하는 것"
+        },
+        {
+          "priority": 2,
+          "type": "캐나다 식품 수입·유통사",
+          "job": "공급가격과 MOQ, 유통기한·보관 조건, 공급 안정성, Safe Food for Canadians 체계에 필요한 제조·위해요소 관리 자료, lot 추적·시험성적서·리콜 절차와 알레르겐 표시 준비도를 확인하는 것"
+        }
+      ],
+      "big_idea": {
+        "line_en": "For retailers seeking all-day cereal value, our baked whole-grain cereal delivers one mild, non-fried format for breakfast and snacking.",
+        "line_ko": "아침과 간식 양쪽의 판매 기회를 찾는 유통 바이어에게, 우리 제품은 튀기지 않고 구운 담백한 통곡물 시리얼 하나로 하루 두 번의 소비 상황을 제공합니다.",
+        "why": "캐나다에서는 시리얼이 아침뿐 아니라 간식으로도 소비되며 편의성·건강·가격 대비 활용성이 중요하다. 이 제품은 통귀리·통밀·옥수수그리츠를 사용하고 튀기지 않고 구운다는 실제 제품 특성으로 두 소비 상황을 연결할 수 있다. 다만 affordable, filling, low sugar 같은 표현은 캐나다 도착원가와 완제품 영양분석이 확인된 뒤 확정해야 한다.",
+        "quote_ids": [
+          "R2",
+          "R3"
+        ],
+        "company": [
+          "강점",
+          "원료"
+        ],
+        "is_idea": false
+      },
+      "rtb": [
+        {
+          "text": "통귀리·통밀·옥수수그리츠를 사용해 여러 통곡물 원료로 구성된 제품이다.",
+          "quote_ids": [],
+          "company": [
+            "원료"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "통곡물을 튀기지 않고 구워내 담백한 아침 대용식과 건식 간식이라는 두 가지 섭취 상황을 제안할 수 있다.",
+          "quote_ids": [
+            "R3"
+          ],
+          "company": [
+            "강점"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "HACCP과 ISO 9001 인증을 보유해 제조·품질관리의 기본 근거를 제시할 수 있다. 단, 이는 캐나다 수입 요건 충족 자체를 의미하지 않으므로 추적성·시험성적서·리콜 절차 자료를 별도로 준비해야 한다.",
+          "quote_ids": [
+            "R8"
+          ],
+          "company": [
+            "인증"
+          ],
+          "is_idea": false
+        },
+        {
+          "text": "500g 단위의 현재 공급 가격 기준이 있어 현지 경쟁 제품과 100g당 가격, 도착원가, 유통 마진을 비교하는 출발점으로 활용할 수 있다.",
+          "quote_ids": [
+            "R4",
+            "R5",
+            "R6"
+          ],
+          "company": [
+            "가격대"
+          ],
+          "is_idea": false
+        }
+      ]
+    },
+    "mode": "B",
+    "stage": "revised",
+    "revise_below": 4,
+    "scores": [
+      {
+        "id": "insight",
+        "label": "인사이트 연결",
+        "score": 4,
+        "reason": "대부분의 실행안이 조사 메모와 비튀김·구운 통곡물 강점에 연결되지만, 핵심 시장 수치의 출처가 미확인이라 바이어 설득 자료로 그대로 쓰기에는 근거가 약합니다."
+      },
+      {
+        "id": "single_minded",
+        "label": "빅 아이디어 일관성",
+        "score": 4,
+        "reason": "시각물·시식·시연·패키지·진열·동선이 모두 ‘한 제품, 아침과 간식 두 용도’를 반복하지만, 컴플라이언스 메시지가 전면화되면서 소비자용 빅 아이디어와 바이어용 증명이 일부 혼재합니다."
+      },
+      {
+        "id": "buyer_value",
+        "label": "바이어 가치",
+        "score": 3,
+        "reason": "가격·마진·MOQ·유통기한·물류·인증 질문의 목록은 잘 잡았지만 실제 수치와 확정 서류가 없어 현재 상태로는 입점 판단을 내릴 수 없습니다."
+      },
+      {
+        "id": "specificity",
+        "label": "구체성",
+        "score": 3,
+        "reason": "시식 중량과 3초·30초·3분 동선은 구체적이나 부스 크기, 직원 수, 시간당 처리량, 총 샘플 수량, 냉장·급배수 설비와 진열 치수가 빠져 현장 운영안으로 확정하기 어렵습니다."
+      },
+      {
+        "id": "distinctiveness",
+        "label": "차별성",
+        "score": 3,
+        "reason": "‘아침과 간식’은 Cheerios 등 경쟁 제품도 사용하는 범용 메시지이며, 구운 공정 외에 수치화된 맛·식감·원료·영양 차별점이 없어 다른 시리얼로 교체해도 성립합니다."
+      },
+      {
+        "id": "feasibility",
+        "label": "실행 가능성",
+        "score": 3,
+        "reason": "시식 불허 대체안은 적절하지만 신청 마감이 지난 상황에서 우유 시식, 손 씻기 설비, 냉장 관리, 네 개 존과 반폐쇄 상담석을 동시에 운영하는 계획은 부스 면적과 인력 확인 없이는 실행 위험이 큽니다."
+      }
+    ],
+    "skill": {
+      "name": "booth_marketing",
+      "folder": "booth_marketing",
+      "files": [
+        "SKILL.md",
+        "examples.md",
+        "rubric.md"
+      ],
+      "chars": 5249,
+      "fingerprint": "52255d5798cb",
+      "warnings": []
+    },
+    "planner_persona": "당신은 해외 식품 박람회 부스 기획 15년차 마케터입니다. Summer Fancy Food Show, ANUGA, FOODEX Japan 등에서 K-푸드 부스를 30회 이상 총괄했고, 부스 방문 바이어의 상담 전환율을 끌어올린 경험이 있습니다. 미국·유럽 대형 유통 바이어와 입점 협상을 해 봤습니다. 조사 자료로 확인된 사실과 기획 아이디어를 구분해서 쓰고, 실제 부스에서 바로 실행할 수 있게 구체적으로 제안합니다.",
+    "reviewer_persona": "당신은 미국 대형 유통 식품 MD 10년차입니다. 박람회에서 하루 50개 부스를 도는 바이어 입장에서, 입점 판단에 필요한 정보(가격, 유통기한, 인증, 물류, 진열 형태)가 빠졌거나 과장된 곳, 바이어 눈에 띄지 않을 연출, 실제 부스에서 실행하기 어려운 계획을 날카롭게 지적합니다.",
+    "review": {
+      "overall": "기획 논리는 정돈됐지만 현 단계는 ‘검증할 항목을 잘 정리한 콘셉트’에 가깝고, 실제 가격·유통기한·물류·캐나다 규정 자료와 차별 수치가 없어 바이어가 입점을 판단할 수 있는 부스는 아닙니다.",
+      "comments": [
+        {
+          "section": "overall",
+          "issue": "500g 6,500원의 가격 성격조차 확정되지 않았고 CAD 공급가, 인코텀즈, MOQ, 케이스입수, 팔레트 적재량, 리드타임, 월 생산량, 미개봉 유통기한이 모두 비어 있습니다.",
+          "suggestion": "박람회 전 바이어 원페이저를 실제 숫자로 완성하십시오. 최소한 EXW 또는 FOB 단가, 환율 기준일, 예상 landed cost 범위, 권장 소비자가, 유통사·리테일러 마진, MOQ, 케이스 규격, 팔레트 수량, 리드타임, 생산능력과 잔여 유통기한 보증을 한 장에 제시해야 합니다."
+        },
+        {
+          "section": "메인 비주얼",
+          "issue": "아침 그릇과 스낵 컵의 좌우 분할 이미지는 이해는 쉽지만 거의 모든 시리얼 브랜드가 사용할 수 있어 300개 이상 부스 환경에서 멈출 이유가 약합니다.",
+          "suggestion": "완제품 분석 후 경쟁 제품과 직접 비교 가능한 한 가지 차별 수치를 전면에 올리십시오. 수치 확보 전에는 실제 알갱이의 독특한 형태·굽기 전후 공정 이미지·세 가지 통곡물의 식감처럼 이 제품만 증명할 수 있는 시각 자산을 주인공으로 삼으십시오."
+        },
+        {
+          "section": "슬로건",
+          "issue": "‘One Baked Cereal. Two Daily Occasions.’는 범용적이며 ‘baked’와 ‘non-fried’가 소비자에게 어떤 맛이나 구매 이익을 주는지 명확하지 않습니다.",
+          "suggestion": "캐나다 표시 적합성과 제품 사실을 확인한 뒤 ‘구운 세 가지 통곡물의 담백한 크런치’처럼 원료·공정·관능 특성을 결합하십시오. ‘하루 두 번’은 보조 판매 논리로 내리고, 경쟁 제품과 바꿔 쓸 수 없는 제품 증거를 헤드라인으로 올리는 편이 낫습니다."
+        },
+        {
+          "section": "시그니처 페어링",
+          "issue": "우유 시식은 냉장 온도 기록, 유제품 알레르겐 안내, 폐액 처리, 손 씻기와 교차오염 관리가 추가되며 허가 마감이 지난 현재 운영 복잡도에 비해 얻는 차별성이 작습니다.",
+          "suggestion": "이번 행사에서는 Dry Snack Cup 하나를 기본안으로 확정하고 8~10g 단위로 사전 소분하십시오. 아침 섭취 장면은 밀봉 우유 용기와 완성 사진 또는 짧은 영상으로 보여주고, 예외 승인이 서면으로 확보된 경우에만 우유 시식을 추가하십시오."
+        },
+        {
+          "section": "시연",
+          "issue": "3분 바이어 시연에서 설명할 핵심 값이 ‘빈칸이나 범위’인 상태라면 빠르게 여러 부스를 도는 MD에게 미준비 브랜드로 보입니다.",
+          "suggestion": "빈칸 자료를 전시하지 말고 확정값, 검증 중인 값, 제공 예정일을 명확히 구분한 readiness checklist를 준비하십시오. 영양성분·FOP 판정, 영불문 라벨, 유통기한, 알레르겐, lot 추적, COA, 리콜 절차는 각각 담당자와 완료일을 표시해야 합니다."
+        },
+        {
+          "section": "진열 가이드",
+          "issue": "전면 시식 존, 측면 3페이싱 선반, 안쪽 반폐쇄 상담석, 독립 손 씻기 설비를 모두 배치하지만 부스 규격과 직원 배치가 없어 일반적인 소형 부스에서는 동선 충돌 가능성이 큽니다.",
+          "suggestion": "실제 부스 가로·세로와 설비 위치를 기준으로 평면도를 작성하고 최소 3인 운영 역할을 명시하십시오. 1인은 호객·QR, 1인은 위생 시식, 1인은 바이어 상담을 맡고, 시간당 시식 목표와 이틀 총 샘플 수량·재고·폐기 기준까지 계산해야 합니다."
+        }
+      ]
+    },
+    "applied": [
+      "범용적인 ‘아침과 간식’ 이미지를 보조 요소로 내리고, 통귀리·통밀·옥수수 세 원료와 비튀김 굽기 공정을 메인 비주얼과 슬로건의 주인공으로 올렸습니다.",
+      "우유 시식을 기본안에서 제외하고, 서면 승인 시 8g Dry Snack Cup만 운영하도록 단순화했습니다. 시식 미승인 시에는 현장 섭취 없는 밀봉 테이크홈 샘플로 전환합니다.",
+      "3m×3m 부스와 최소 3인 운영을 가정해 존 치수, 직원 역할, 시간당 50컵, 이틀 850컵 및 약 6.8kg의 잠정 샘플 수량을 명시했습니다.",
+      "빈칸 가격표 대신 2026년 10월 3일까지 실제 상업조건을 확정하도록 하고, 규정 자료는 상태·담당자·제공 예정일을 표시한 readiness checklist로 바꿨습니다.",
+      "출처가 확인되지 않은 조사 수치는 백월과 바이어 확정 자료에서 제외하고, 행사 직전 재검증하거나 현장 소비자 반응을 확인하기 위한 가설로만 사용하도록 구분했습니다."
+    ],
+    "has_profile": true,
+    "has_product_evidence": null,
+    "model": "gpt-5.6-sol",
+    "research": {
+      "method": "web_search",
+      "notes": [
+        {
+          "id": "R1",
+          "topic": "consumer",
+          "topic_label": "소비자",
+          "text": "[확인 사실] 2024년 캐나다 조사에서 57.2%가 매일 아침을 먹고 80.3%는 집에서 먹었으며, cereal·granola는 선호 아침 메뉴 3위(29.7%)였다. 아침을 거르는 이유는 배고프지 않음 37.1%, 시간 부족 20.3%로 나타났다.",
+          "source_url": "https://cdn.dal.ca/content/dam/dalhousie/pdf/sites/agri-food/Breakfast%20survey%20EN.pdf",
+          "source_title": "Canadian Breakfast Habits Revealed: Majority Still Start Their Day with a Meal, Survey Finds",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R2",
+          "topic": "trend",
+          "topic_label": "트렌드",
+          "text": "[확인 사실] 캐나다 소비자는 빠르게 먹으면서도 affordable, filling하고 breakfast와 snack 양쪽에 활용 가능한 제품을 찾고 있으며, fibre·gut health·low-sugar 관심도 커지고 있다. 51%가 생활비 부담 때문에 구매 행동을 바꾸고 있어 가격 대비 포만감과 활용성을 함께 설명해야 한다.",
+          "source_url": "https://canadiangrocer.com/breakfast-trends-influencing-canadians-morning-meals",
+          "source_title": "Breakfast trends influencing Canadians' morning meals",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R3",
+          "topic": "trend",
+          "topic_label": "트렌드",
+          "text": "[확인 사실] cereal은 아침 외에도 오후 25%, 저녁 19%에 소비되고 약 30%가 snack으로 먹는다. 소비 이유는 건강 50%, 맛 47%, 편의성 44%였고, 소비자는 low sugar·high protein·zero artificial colour/flavour와 resealable packaging을 원한다.",
+          "source_url": "https://www.grocerybusiness.ca/cereals-3/",
+          "source_title": "CEREALS – Beyond the Bowl",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R4",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[확인 사실] Walmart.ca의 Original Cheerios 500 g×2는 조사 시점 CAD$9.94이며, “100% whole grain oats”, “1 gram of sugar per serving”, “breakfast or afternoon snack”을 핵심 메시지로 사용한다.",
+          "source_url": "https://www.walmart.ca/en/ip/Original-Cheerios-Breakfast-Cereal-Jumbo-Size-Whole-Grains-500-g-2-ct/10281468?classType=REGULAR",
+          "source_title": "Original Cheerios Breakfast Cereal, Jumbo Size, Whole Grains, 500gx2",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R5",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[확인 사실] Quaker Life Original 450 g은 Walmart.ca 조사 시점 CAD$3.97이며, “JUST THE RIGHT SWEETNESS”, “100% CANADIAN OATS”, “WHOLE GRAIN 18g/portion”을 강조한다. 현지 대중 제품은 원산지 친숙성·적당한 단맛·1회분 통곡물 수치를 전면에 제시한다.",
+          "source_url": "https://www.walmart.ca/en/ip/Quaker-Life-Original-Whole-Grain-Cereal/10284632",
+          "source_title": "Quaker Life Original Whole Grain Cereal",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R6",
+          "topic": "competitor",
+          "topic_label": "경쟁 제품",
+          "text": "[확인 사실] Nature’s Path Organic Flax Plus Multibran Flakes 375 g은 Walmart.ca 조사 시점 CAD$5.77(CAD$1.54/100g)이며 organic·non-GMO, whole grains, fibre와 Omega-3를 메시지로 사용한다. 리뷰에는 맛과 fibre는 긍정적이지만 “a bit pricey”라는 반응도 확인된다.",
+          "source_url": "https://www.walmart.ca/en/ip/Nature-s-Path-Organic-Flax-Plus-Multibran-Flakes-Cereal/10231802",
+          "source_title": "Nature's Path Organic Flax Plus Multibran Flakes Cereal",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R7",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "[확인 사실] 캐나다 cold cereal 구매처는 discount grocer 49%, conventional grocer 44%, drug store 12%이며 구매의 80%가 planned purchase이다. [실무 시사점] 초기 유통 제안은 할인·일반 식료품 체인을 우선하고, 부스에서는 재구매용 패키지 가격과 판매처 정보를 명확히 제시하는 편이 유리하다.",
+          "source_url": "https://www.grocerybusiness.ca/cereals-3/",
+          "source_title": "CEREALS – Beyond the Bowl",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R8",
+          "topic": "buyer",
+          "topic_label": "바이어·유통",
+          "text": "[확인 사실] 캐나다 식품 수입자는 대부분 Safe Food for Canadians licence, preventive controls/PCP, traceability 및 recall 절차를 갖춰야 하고 해외 제조사가 캐나다와 동등한 수준의 안전관리를 한다는 자료를 확인해야 한다. [실무 시사점] HACCP·ISO 9001 인증서만이 아니라 공정 위해요소 관리, lot 추적, 시험성적서와 클레임·리콜 절차를 함께 바이어 파일로 준비해야 한다.",
+          "source_url": "https://inspection.canada.ca/en/food-safety-industry/toolkit-food-businesses/importing-food",
+          "source_title": "Importing food to Canada: overview",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R9",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "[확인 사실] 캐나다 소비자용 사전포장 식품은 common name, 원재료·알레르겐, Nutrition Facts 등 의무 정보를 영어와 프랑스어로 표시해야 한다. 통밀은 priority allergen이자 gluten source이고 귀리도 gluten source이므로 해당 명칭을 원재료표 또는 Contains 문구에 정확히 선언해야 한다.",
+          "source_url": "https://inspection.canada.ca/en/food-labels/labelling/industry/list-ingredients-and-allergens",
+          "source_title": "List of ingredients and allergens on food labels",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R10",
+          "topic": "regulation",
+          "topic_label": "규정·인증",
+          "text": "[확인 사실] 2026년 1월 1일부터 포화지방·당류·나트륨이 기준 이상인 사전포장 식품에는 캐나다 규격의 front-of-package nutrition symbol이 의무이며 추가 유예가 없다. [실무 시사점] 프락토올리고당을 포함한 완제품의 캐나다 기준 영양분석으로 sugars·sodium 수치를 먼저 판정한 뒤 패키지를 확정해야 한다.",
+          "source_url": "https://inspection.canada.ca/en/food-labels/labelling/industry/nutrition-labelling/fop-nutrition-symbol",
+          "source_title": "Front-of-package (FOP) nutrition symbol",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R11",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "[확인 사실] Ottawa National Women’s Show는 여성 대상 B2C 소비자 행사로 food and wine sampling, health·wellness, cooking demo 등을 운영하며 주최 측은 300+ exhibitors와 10,300 attendees를 제시한다. 2026년 행사는 Cohere Centre에서 October 17–18, 2026에 열린다.",
+          "source_url": "https://nationalwomenshow.com/shows/ottawa/",
+          "source_title": "OTTAWA – The National Women's Show",
+          "source_status": "출처 미확인"
+        },
+        {
+          "id": "R12",
+          "topic": "exhibition",
+          "topic_label": "박람회",
+          "text": "[확인 사실] 식품 시식은 1회 최대 1 oz(28 g), Venue Sampling Authorization과 Ottawa Public Health 신청이 필수이며 onsite consumption 판매는 금지되고 take-home 판매만 가능하다. 최소 1명의 trained food handler와 개방 시식용 독립 handwashing station도 필요하며, 신청 마감 September 11, 2026은 현재 이미 지났으므로 주최 측·Public Health에 즉시 예외 가능 여부를 확인해야 한다.",
+          "source_url": "https://nationalwomenshow.com/exhibitor-manuals/ottawa-exhibitor-manual/",
+          "source_title": "Ottawa Exhibitor Manual – Live",
+          "source_status": "출처 미확인"
+        }
+      ],
+      "citations": [],
+      "error": ""
+    },
+    "source_mode": "openai_self_research",
+    "short": {
+      "summary": "세 곡물·비튀김과 8g 시식·캐나다 입점 준비",
+      "core_message": "세 곡물 비튀김 시리얼, 500g 아침·간식 공략",
+      "big_idea_why": "세 곡물·비튀김으로 아침·간식 연결",
+      "insight.0.fact": "캐나다 80.3% 집 아침식사·시리얼 선호 3위",
+      "insight.0.implication": "무조리 통곡물 아침 대용식·편의성 정보",
+      "insight.1.fact": "약 30% 시리얼 스낵 소비·재밀봉 포장 선호",
+      "insight.1.implication": "아침·건식 스낵 제안과 검증 영양표현",
+      "insight.2.fact": "통곡물·fibre 수치 메시지와 프리미엄 가격 부담",
+      "insight.2.implication": "1회분 통곡물·당류·식이섬유·가격 비교",
+      "insight.3.fact": "캐나다 시리얼 계획구매 80%·영불문 표시",
+      "insight.3.implication": "도착원가·마진·영불문 라벨·추적 준비",
+      "action.0": "승인 시 8g 시식, 미승인 시 밀봉 샘플·QR",
+      "action.1": "EXW·FOB·MOQ·물류·생산량 준비표",
+      "action.2": "세 곡물·Baked, Not Fried 통일 배치",
+      "kpi.0": "조건 논의 바이어 상담만 CRM 집계",
+      "kpi.2": "소비 상황·맛·식감·구매의향 완료 응답 집계",
+      "bullet.main_visual.0": "완제품 초근접 사진·세 곡물·공정선 배치",
+      "bullet.main_visual.1": "Three Grains. Baked for Two Moments. 전면 표기",
+      "bullet.main_visual.2": "3색·3500~4000K 조명, 미검증 영양표현 제외",
+      "bullet.slogan.0": "원료·굽기 공정 우선, 아침·간식 연결",
+      "bullet.slogan.1": "Three Grains 원료 근거·표시 적합성 검토",
+      "bullet.slogan.2": "한 SKU 아침·간식 공략의 바이어 판매 논리",
+      "bullet.signature_pairing.0": "서면 승인 시 8g 컵·글루텐·알레르겐 안내",
+      "bullet.signature_pairing.1": "우유 미시식, 승인 시 냉장·알레르겐 관리",
+      "bullet.signature_pairing.2": "아침·간식·둘 다 현장 반응 데이터 수집",
+      "bullet.signature_pairing.3": "미승인 시 밀봉 테이크홈 샘플·QR 설문",
+      "bullet.demonstration.0": "세 곡물·Baked, not fried 30초 시연",
+      "bullet.demonstration.1": "시간당 50컵, 이틀 850컵·제품 6.8kg",
+      "bullet.demonstration.2": "2026년 10월 3일까지 가격·MOQ·물류 확정",
+      "bullet.demonstration.3": "readiness checklist·상업조건표·샘플 QR 제공",
+      "bullet.packaging.0": "Three Grains·완제품·두 소비 상황 우선",
+      "bullet.packaging.1": "500g 지퍼형 파우치·차단성·품질 시험 검토",
+      "bullet.packaging.2": "영불문 라벨·알레르겐·글루텐 선언 공간",
+      "bullet.packaging.3": "FOP 판정 후 35~40g 소포장 검토",
+      "bullet.merchandising.0": "3m×3m·최소 3명, 2명 시 개방 시식 중단",
+      "bullet.merchandising.1": "스탠딩 상담대·손 씻기 60cm·동선 분리",
+      "bullet.merchandising.2": "90×35×180cm 선반·500g 3페이싱",
+      "bullet.merchandising.3": "샘플 잔량·파손·오염 2시간마다 점검",
+      "zone.merchandising.1": "승인 시 시간당 8g 50컵·미승인 시 밀봉 샘플",
+      "zone.merchandising.2": "500g 3페이싱·3분 바이어 상담",
+      "journey.3s.staff.0": "Three grains—baked, not fried 소비 상황 질문",
+      "risk.0": "서면 예외 승인 전 Dry Snack Cup 시식 금지",
+      "risk.1": "캐나다 수입 요건·라벨·추적·리콜 검토",
+      "risk.2": "경쟁 가격 재확인·조사 메모는 내부 가설 활용",
+      "question.0": "500g 6,500원 성격·EXW·FOB·MOQ 확인",
+      "question.1": "영양 수치·FOP·유통기한·개봉 후 섭취 확인",
+      "question.2": "패키지·밀봉 샘플·라벨·추적·리콜 확인"
+    },
+    "from_cache": false
+  },
+  "booth_error": null,
+  "models": {
+    "booth": "gpt-5.6-sol",
+    "booth_effort": "medium",
+    "task": "gpt-5.6-terra",
+    "task_effort": "low"
+  },
+  "fetched_at": "2026-09-27 13:46"
+}

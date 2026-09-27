@@ -34,12 +34,21 @@ try:
 except ImportError:
     pycountry = None
 
-# 법령 제목/요약 텍스트로 필수/정보/주의 등급을 대략 나누는 키워드
+# 법령 제목/요약 텍스트로 필수/정보/주의 등급을 대략 나누는 키워드.
+# legislation_title(원문, 영어)과 measure_summary(AI가 만든 한국어 요약)를
+# 같이 검사하는데, 한국어 요약에는 영어 키워드가 안 걸려서 실제로는 등록/
+# 인증이 필요한 내용도 전부 "정보"로만 분류되던 버그가 있었다(그 결과
+# classify_regulation_strictness가 거의 항상 "낮음"만 나옴) - 한국어
+# 키워드도 같이 넣어서 고침.
 _MANDATORY_KEYWORDS = [
     "registration", "mandatory", "requirement", "authorization", "license",
     "certificat", "must", "prohibit", "ban",
+    "등록", "의무", "필수", "인증", "허가", "승인", "금지", "제한",
 ]
-_CAUTION_KEYWORDS = ["labelling", "labeling", "tbt", "sps", "inspection", "testing", "residue"]
+_CAUTION_KEYWORDS = [
+    "labelling", "labeling", "tbt", "sps", "inspection", "testing", "residue",
+    "표시", "라벨", "검역", "검사", "잔류",
+]
 
 # 국가 전체 규정 목록 중 식품/농산물 수출과 관련 있을 법한 것만 상위로 올리는 키워드
 _FOOD_RELEVANCE_KEYWORDS = [

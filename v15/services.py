@@ -25,7 +25,7 @@ from sections import TREND_STEPS, run_section1, run_section2
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CACHE_DB_PATH = os.path.join(HERE, "cache.db")
-BOOTH_CACHE_DAYS = 30
+BOOTH_CACHE_DAYS = 7
 
 INPUT_FIELDS = ["name", "country", "exhibition_name", "exhibition_website",
                 "strengths", "ingredients", "certifications", "price"]
