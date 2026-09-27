@@ -2545,6 +2545,39 @@ p.page-desc:not(:last-child) {
     height: auto !important;
     max-height: none !important;
   }
+
+  /* 페이지 헤더(제목+버튼)도 dash-header와 같은 줄바꿈 없는 flex 행이라
+     제목이 길면 화면 밖으로 밀려날 수 있었다 */
+  .page-header {
+    flex-wrap: wrap;
+  }
+
+  /* 제품 목록 행: 제품 정보(flex:1)와 액션 버튼들(모두 white-space:nowrap)이
+     한 줄에 같이 있다 보니, 버튼들이 줄어들지 않고 제품명 쪽만 극단적으로
+     좁아져서 한 글자씩 줄바꿈되는 문제가 있었다. 모바일에서는 세로로 쌓는다. */
+  .product-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-buttons {
+    flex-wrap: wrap;
+  }
+
+  /* 바이어 관리 탭(바이어 목록/메일 템플릿/발신 정보)과 Gmail 연동 상태가
+     한 줄에 같이 있다 보니, Gmail 연동 이메일 주소 때문에 탭 버튼 쪽이
+     극단적으로 좁아져 글자가 한 자씩 줄바꿈됐다. 모바일에서는 줄바꿈. */
+  .tab-nav {
+    flex-wrap: wrap;
+  }
+
+  .tab-nav-buttons {
+    flex-wrap: wrap;
+  }
+
+  .buyer-mail-gmail-connected {
+    flex-wrap: wrap;
+  }
 }
 
 /* 어느 화면 요소가 컨테이너 폭을 넘어서더라도(계산 실수 등) 페이지
