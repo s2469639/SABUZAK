@@ -71,41 +71,48 @@ SABUZAK/
 │   ├── routes/
 │   │   ├── auth.py             # 로그인/회원가입
 │   │   ├── dashboard.py        # 세계 지도 대시보드
-│   │   ├── exhibition.py       # 박람회 상세, 시장/HS코드 탭, 관세율 동기화
+│   │   ├── exhibition.py       # 박람회 상세, 시장/HS코드 탭, 관세율 동기화, 통합보고서 PDF
 │   │   ├── trend_v2.py         # 트렌드 조사 + 부스 컨셉(v15/ 로직 그대로 재사용, 3D 부스 뷰어 포함)
 │   │   ├── concept.py          # 부스 컨셉 기획 (기존 시스템 - concept.py/booth_concept.py 계열, trend_v2와 별개로 유지 중)
 │   │   ├── drafts.py           # 작성 중인 박람회(초안) 목록
 │   │   ├── mypage.py           # 제품 등록/수정/삭제, 엑셀 일괄 등록
-│   │   └── buyers.py           # 바이어 연락처/팔로업/메일템플릿/Gmail 연동 (블루프린트 여러 개)
+│   │   ├── buyers.py           # 바이어 연락처/팔로업/메일템플릿/Gmail 연동 (블루프린트 여러 개)
+│   │   └── chatbot.py          # 플로팅 챗봇 위젯 (gpt-4o-mini + function calling으로 HS코드/박람회 검색)
 │   │
 │   ├── services/
 │   │   ├── hscode.py           # 박람회 상세의 HS코드 탭 컨텍스트 조립
 │   │   ├── tariff_lookup.py    # FTA 협정세율 + MFN 기본세율 조회 (scripts/market/*.csv 기반)
 │   │   ├── trains_client.py    # UNCTAD TRAINS 수출 규제 조회
-│   │   ├── un_comtrade.py      # UN Comtrade 교역 통계
+│   │   ├── un_comtrade.py      # UN Comtrade 교역 통계 + 품목설명 한글 번역(캐시)
 │   │   ├── wto_client.py       # WTO 국가별 평균 관세율(참고용)
 │   │   ├── kr_customs.py       # 관세청 HS코드 마스터 연동
 │   │   ├── booth_concept.py    # 부스 컨셉 AI 생성 (기존 concept.py 계열)
 │   │   ├── exchange.py         # 환율 조회
 │   │   ├── openai_client.py    # OpenAI 클라이언트 래퍼
+│   │   ├── pdf_report.py       # 리포트 PDF 공용 헬퍼 (한글 폰트 서브셋 임베딩, 메모리 최적화)
 │   │   ├── mailer.py / mail_llm.py / mailmerge.py / google_oauth.py / attachments.py / card_scan.py
 │   │   └── macmap_client.py
 │   │
-│   ├── prompts/, schemas/      # LLM 프롬프트 템플릿, 구조화 출력 스키마
+│   ├── prompts/, schemas/      # LLM 프롬프트 템플릿, 구조화 출력 스키마 (현재 비어있음 - v15/로 이관됨)
 │   │
 │   ├── templates/
-│   │   ├── base.html, auth_base.html
+│   │   ├── base.html, auth_base.html, _chatbot_widget.html, _logo_icon.html
 │   │   ├── auth/                (login.html, register.html)
 │   │   ├── dashboard/            (continent_map.html, expo_list.html, index.html)
-│   │   ├── exhibition/           (detail.html + _tab_market.html, _tab_trend.html 등 partial)
-│   │   ├── concept/               (booth_concept.html)
+│   │   ├── exhibition/           (detail.html + _tab_market.html, _tab_trend.html 등 partial,
+│   │   │                          market_report_pdf.html, market_matrix_report_pdf.html,
+│   │   │                          combined_report_pdf.html, _pdf_bar_chart.html)
+│   │   ├── concept/               (booth_concept.html, booth_report_pdf.html)
+│   │   ├── trend_v2/              (trend_report_pdf.html 등, 3D 부스 뷰어 포함)
 │   │   ├── drafts/                (drafts_list.html)
 │   │   ├── mypage/                (mypage.html)
 │   │   └── buyers/                (buyer_manage.html, contact_form.html 등)
 │   │
 │   └── static/
 │       ├── css/style.css, un_dashboard.css
-│       ├── js/                   (tabs.js, mypage.js, dashboard.js, attach_menu.js 등)
+│       ├── js/                   (tabs.js, mypage.js, dashboard.js, attach_menu.js, card_scan.js 등)
+│       ├── fonts/                 (NotoSansKR-Regular/Bold.woff2 - PDF 임베딩용, 한글 상용 글자만 서브셋됨)
+│       ├── data/                  (countries-110m.json - 대시보드 지도용)
 │       └── img/
 │
 ├── scripts/
@@ -114,10 +121,11 @@ SABUZAK/
 │   └── market/          # 관세율 데이터 원천 (build_mfn_rates.py, *_FTA_협정세율_*.csv, mfn_base_rates.csv 등)
 │
 ├── v15/                       # 트렌드 조사 + 부스 컨셉(3D 뷰어 포함) 원본 로직 (app/routes/trend_v2.py가 그대로 재사용)
-├── un_v6/                    # UN Comtrade 대시보드 관련 별도 모듈
+├── 사부작 디자인/              # 프론트엔드 디자인 시스템/프로토타입 (Vite+React, 별도 패키지)
 ├── instance/                 # SQLite DB, 캐시 파일 (git 미포함)
 ├── config.py
 ├── requirements.txt
+├── Procfile                   # gunicorn 실행 설정 (workers 1로 고정)
 ├── run.py
 └── .env (git 미포함)
 ```
