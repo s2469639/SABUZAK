@@ -190,6 +190,13 @@ def _search_hscode_by_similarity(query, limit=20):
         if score >= _SIMILARITY_THRESHOLD:
             candidates.append((score, r))
     candidates.sort(key=lambda t: t[0], reverse=True)
+
+    # 완전 일치(1.0)가 하나라도 있으면 그걸로 검색어가 이미 해결된 것이므로,
+    # "소주" -> "채소 주스"(0.5)처럼 단어 안에 우연히 끼어든 부분일치 노이즈를
+    # 같이 보여줄 이유가 없다. 점수가 정렬돼 있으니 맨 앞이 1.0인지만 보면 된다.
+    if candidates and candidates[0][0] >= 1.0:
+        candidates = [c for c in candidates if c[0] >= 1.0]
+
     return [r for _, r in candidates[:limit]]
 
 
