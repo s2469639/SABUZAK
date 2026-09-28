@@ -26,4 +26,21 @@ document.addEventListener("DOMContentLoaded", function () {
     if (hint) hint.textContent = "명함을 인식하고 있어요...";
     form.requestSubmit ? form.requestSubmit() : form.submit();
   });
+
+  var bulkForm = document.getElementById("scan-bulk-form");
+  var bulkInput = document.getElementById("scan-bulk-input");
+  var bulkBtn = document.getElementById("scan-bulk-btn");
+  var bulkHint = document.getElementById("scan-bulk-hint");
+  if (!bulkForm || !bulkInput || !bulkBtn) return;
+
+  bulkBtn.addEventListener("click", function () {
+    bulkInput.click();
+  });
+
+  bulkInput.addEventListener("change", function () {
+    if (!bulkInput.files || !bulkInput.files.length) return;
+    bulkBtn.disabled = true;
+    if (bulkHint) bulkHint.textContent = "명함 " + bulkInput.files.length + "장을 인식하고 있어요...";
+    bulkForm.requestSubmit ? bulkForm.requestSubmit() : bulkForm.submit();
+  });
 });
