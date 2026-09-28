@@ -59,7 +59,7 @@
   <button type="submit" class="btn-secondary">AI로 생성/수정하기</button>
 </form>
 
-<form method="post" action="{{ url_for('mail_template.save', version=version) }}" class="form">
+<form id="save-form" method="post" action="{{ url_for('mail_template.save', version=version) }}" class="form">
   <div class="form-field">
     <label for="subject">제목</label>
     <input id="subject" name="subject" value="{{ template.subject or '' }}">
@@ -68,13 +68,33 @@
     <label for="body">본문</label>
     <textarea id="body" name="body" rows="14">{{ template.body or '' }}</textarea>
   </div>
-  <div class="form-actions">
-    <button type="submit" form="activate-form" class="btn-secondary" {{ 'disabled' if template.is_active else '' }}>
-      {{ '현재 발송용 템플릿입니다' if template.is_active else '이 버전을 발송용으로 사용' }}
-    </button>
-    <button type="submit" class="btn-primary">템플릿 저장</button>
-  </div>
 </form>
+
+{% if checklist_items %}
+<div class="form-field">
+  <label>첨부 권장 자료</label>
+  <form method="post" action="{{ url_for('mail_template.save_checklist', version=version) }}"
+        class="attachment-checklist-box" onchange="this.submit()">
+    <div class="attachment-checklist-head">
+      <strong>이 단계에서 함께 보내면 좋은 자료</strong>
+      <span class="attachment-checklist-when">권장 발송 시점: {{ checklist_when }}</span>
+    </div>
+    {% for item in checklist_items %}
+    <label class="attachment-checklist-item">
+      <input type="checkbox" name="checked_item" value="{{ item.label }}" {{ 'checked' if item.checked else '' }}>
+      {{ item.label }}
+    </label>
+    {% endfor %}
+  </form>
+</div>
+{% endif %}
+
+<div class="form-actions">
+  <button type="submit" form="activate-form" class="btn-secondary" {{ 'disabled' if template.is_active else '' }}>
+    {{ '현재 발송용 템플릿입니다' if template.is_active else '이 버전을 발송용으로 사용' }}
+  </button>
+  <button type="submit" form="save-form" class="btn-primary">템플릿 저장</button>
+</div>
 <form id="activate-form" method="post" action="{{ url_for('mail_template.activate', version=version) }}"></form>
 </div>
 {% endblock %}

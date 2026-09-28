@@ -7,6 +7,7 @@
 """
 
 import io
+import json
 import logging
 from datetime import datetime, timedelta
 
@@ -27,6 +28,23 @@ from app.services.mailmerge import render_email
 
 STALE_DAYS = 21
 TEMPLATE_VERSIONS = (1, 2, 3)
+
+# 버전(발송 단계)별 "함께 보내면 좋은 자료" 기본 체크리스트 항목. 실제 파일을
+# 물고 있지 않은 안내용 체크리스트라, 발송 시점 안내문과 함께 여기 하드코딩해둔다.
+TEMPLATE_ATTACHMENT_CHECKLISTS = {
+    1: {
+        "when": "박람회 당일 또는 다음 날 (D+0~1)",
+        "items": ["회사 소개서 (Company Profile, PDF)", "제품 카탈로그 (영문)", "부스 상담 메모 요약 (선택)"],
+    },
+    2: {
+        "when": "박람회 후 3~7일차",
+        "items": ["정식 견적서 / 가격표", "인증서 사본 (HACCP 등)", "샘플 배송 안내"],
+    },
+    3: {
+        "when": "박람회 후 14~21일차",
+        "items": ["이전 메일 요약 (선택)", "최신 가격표 (변경 시)"],
+    },
+}
 
 logger = logging.getLogger(__name__)
 
@@ -786,9 +804,30 @@ def edit_template(version):
         version = 1
     template = _get_version(version)
     all_versions = [_get_version(v) for v in TEMPLATE_VERSIONS]
-    return render_template(
-        "buyers/template_edit.html", template=template, all_versions=all_versions, version=version
+
+    checklist = TEMPLATE_ATTACHMENT_CHECKLISTS.get(version)
+    checked = json.loads(template.attachment_checklist) if template.attachment_checklist else {}
+    checklist_items = (
+        [{"label": item, "checked": bool(checked.get(item))} for item in checklist["items"]]
+        if checklist else []
     )
+
+    return render_template(
+        "buyers/template_edit.html", template=template, all_versions=all_versions, version=version,
+        checklist_when=checklist["when"] if checklist else None, checklist_items=checklist_items,
+    )
+
+
+@mail_template_bp.route("/template/<int:version>/checklist", methods=["POST"])
+@login_required
+def save_checklist(version):
+    template = _get_version(version)
+    checklist = TEMPLATE_ATTACHMENT_CHECKLISTS.get(version)
+    if checklist:
+        checked_items = set(request.form.getlist("checked_item"))
+        template.attachment_checklist = json.dumps({item: (item in checked_items) for item in checklist["items"]})
+        db.session.commit()
+    return redirect(url_for("mail_template.edit_template", version=version))
 
 
 @mail_template_bp.route("/template/<int:version>/save", methods=["POST"])

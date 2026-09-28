@@ -263,13 +263,23 @@ class EmailTemplate(db.Model):
     subject = db.Column(db.String(255))
     body = db.Column(db.Text)
     is_active = db.Column(db.Boolean, default=False, nullable=False)
+    # 이 버전(발송 단계)에서 같이 보내면 좋은 자료 체크리스트 - 실제 파일을 물고 있는 게
+    # 아니라 안내용 체크리스트라 JSON으로 {"항목 텍스트": true/false}만 저장한다.
+    attachment_checklist = db.Column(db.Text)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user = db.relationship("User", backref=db.backref("email_templates", lazy=True))
 
+    # 버전별 기본 이름(발송 단계) - 사용자가 label을 따로 지정 안 했을 때 이 이름을 쓴다.
+    _DEFAULT_LABELS = {
+        1: "당일 감사 메일 (D+0~1)",
+        2: "팔로업 메일 (D+3~7)",
+        3: "리마인드 메일 (D+14~21)",
+    }
+
     @property
     def display_name(self):
-        return self.label or f"버전 {self.version}"
+        return self.label or self._DEFAULT_LABELS.get(self.version, f"버전 {self.version}")
 
 
 class Contact(db.Model):

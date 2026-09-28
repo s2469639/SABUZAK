@@ -617,6 +617,39 @@ p.page-desc:not(:last-child) {
   margin-top: 8px;
 }
 
+.attachment-checklist-box {
+  background: #fdf3ec;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.attachment-checklist-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-bottom: 10px;
+}
+.attachment-checklist-head strong {
+  font-size: 14px;
+  color: #222;
+}
+.attachment-checklist-when {
+  font-size: 12px;
+  color: #9a6a44;
+}
+.attachment-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+  padding: 4px 0;
+  cursor: pointer;
+}
+.attachment-checklist-item input { flex-shrink: 0; }
+
 .product-list {
   display: flex;
   flex-direction: column;
