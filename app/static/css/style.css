@@ -2232,6 +2232,53 @@ p.page-desc:not(:last-child) {
   color: #6b7280;
 }
 
+/* display:none 대신 화면 밖으로만 치워서, 일부 모바일 브라우저(구형 iOS
+   Safari, 인앱 브라우저 등)에서 display:none input에 대한 프로그래밍적
+   click()이 씹히는 문제를 피한다. */
+.sr-only-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.scan-bulk-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+.scan-bulk-thumb {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e3e7ec;
+  background: #fff;
+}
+.scan-bulk-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.scan-bulk-thumb button {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  line-height: 16px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+}
+
 /* 명함 일괄 등록 검토 화면: 스캔된 명함 1장 = 카드 1개 */
 .scan-review-list {
   display: flex;
