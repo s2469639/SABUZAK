@@ -1,10 +1,11 @@
 import math
+import os
 import re
 from collections import Counter
 from datetime import datetime
 from urllib.parse import quote, urlencode
 
-from flask import Blueprint, Response, abort, flash, redirect, render_template, request, url_for
+from flask import Blueprint, Response, abort, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from app.extensions import db
@@ -23,6 +24,15 @@ from app.services.trains_client import (
 )
 
 bp = Blueprint("exhibition", __name__, url_prefix="/exhibitions")
+
+
+def _pdf_font_uri(filename):
+    """PDF(WeasyPrint) 안에서 @font-face로 직접 불러 쓸 한글 폰트 파일의
+    file:// 경로. 배포 서버 OS에 한글 폰트가 깔려 있는지 여부와 상관없이
+    항상 같은 폰트로 렌더링되게 하려고, 시스템 폰트에 기대지 않고
+    app/static/fonts에 직접 넣어둔 폰트 파일을 절대경로로 가리킨다."""
+    path = os.path.join(current_app.static_folder, "fonts", filename)
+    return "file://" + path
 
 # scripts/crawl/tradefairdates_scraper.py의 UNKNOWN_DATE와 같은 값. 날짜 전체가
 # 미상인 박람회는 start_date/end_date가 이 값으로 들어있다 (오름차순 정렬 시 항상
@@ -739,8 +749,15 @@ def market_report_pdf(expo_id, product_id):
         "exhibition/market_report_pdf.html",
         expo=expo, product=product, result=result,
         country_label=country_label, generated_at=datetime.now(),
+        font_regular_uri=_pdf_font_uri("NotoSansKR-Regular.woff2"),
+        font_bold_uri=_pdf_font_uri("NotoSansKR-Bold.woff2"),
     )
-    pdf_bytes = HTML(string=html, base_url=request.url_root).write_pdf()
+    # base_url 없이 문자열만 넘긴다 - 폰트는 @font-face에 절대 file:// 경로를
+    # 직접 박아넣으므로, 배포 서버(운영체제에 한글 폰트가 없을 수 있음)에
+    # 시스템 폰트가 없어도 항상 같은 폰트로 렌더링된다. Render 같은 환경은
+    # 보통 한글 폰트가 안 깔려 있어서, 시스템 폰트에 기대면 글자가 깨지거나
+    # (문자 없음) 폰트마다 굵기가 안 맞아 밀려 보이는 문제가 있었다.
+    pdf_bytes = HTML(string=html).write_pdf()
 
     filename = f"{expo.name}_{product.name}_유망시장조사.pdf".replace("/", "-")
     return Response(
