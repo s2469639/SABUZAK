@@ -15,7 +15,7 @@ from app.routes.trend_v2 import QUESTION_LABELS, _get_job as get_trend_job
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
 from app.services.exchange import get_exchange_info
-from app.services.pdf_report import pdf_font_context, render_pdf_bytes
+from app.services.pdf_report import pdf_font_context, render_pdf_bytes, merge_pdfs
 from app.services.wto_client import get_country_tariff_averages
 from app.services.trains_client import (
     fetch_regulations_for_country,
@@ -837,16 +837,35 @@ def _gather_combined_report_data(expo_id):
 @bp.route("/detail/<int:expo_id>/combined-report")
 @login_required
 def combined_report_pdf(expo_id):
+    """통합보고서 PDF. 표·그래프·본문이 많은 3개 파트(유망시장/트렌드/부스컨셉)를
+    한 번의 WeasyPrint 호출에 몰아서 그리면 메모리 사용량이 크게 튀어서
+    (Render 무료 플랜에서 OOM으로 워커가 죽는 사고가 있었다), 파트별로 따로
+    작게 렌더링한 뒤 PDF 파일 자체를 이어붙인다."""
     data = _gather_combined_report_data(expo_id)
     if data is None:
         flash("아직 완료된 조사·기획이 없습니다. 유망시장 조사·트렌드 분석·부스 컨셉 중 하나라도 먼저 만들어주세요.", "danger")
         return redirect(url_for("exhibition.detail", expo_id=expo_id))
 
-    html = render_template(
-        "exhibition/combined_report_pdf.html", **data,
-        generated_at=datetime.now(), **pdf_font_context(),
-    )
-    pdf_bytes = render_pdf_bytes(html)
+    available_parts = [
+        ("part1", data.get("market_result")),
+        ("part2", data.get("trend_data")),
+        ("part3", data.get("booth_ready")),
+    ]
+    parts_to_render = [name for name, has_data in available_parts if has_data]
+
+    pdf_parts = []
+    for i, part in enumerate(parts_to_render):
+        render_parts = {part}
+        if i == 0:
+            render_parts.add("cover")  # 표지는 첫 파트 문서에만 얹는다
+        html = render_template(
+            "exhibition/combined_report_pdf.html", **data,
+            render_parts=render_parts,
+            generated_at=datetime.now(), **pdf_font_context(),
+        )
+        pdf_parts.append(render_pdf_bytes(html))
+
+    pdf_bytes = pdf_parts[0] if len(pdf_parts) == 1 else merge_pdfs(pdf_parts)
 
     filename = f"{data['expo'].name}_통합기획서.pdf".replace("/", "-")
     return Response(

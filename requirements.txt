@@ -21,3 +21,4 @@ pydantic
 openpyxl
 gunicorn
 brotli
+pypdf
