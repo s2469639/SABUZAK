@@ -610,6 +610,15 @@ p.page-desc:not(:last-child) {
   color: #374151;
 }
 
+.modal-dialog-sm {
+  max-width: 340px;
+}
+
+.report-format-actions {
+  justify-content: center;
+  margin-top: 16px;
+}
+
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -2025,6 +2034,7 @@ p.page-desc:not(:last-child) {
   white-space: nowrap;
 }
 .btn-chip:hover { border-color: #ea580c; color: #ea580c; }
+.btn-chip-accent { color: #ea580c; font-weight: 600; }
 .btn-chip-danger { color: #d64545; border-color: #f3cccc; }
 .btn-chip-danger:hover { border-color: #d64545; background: #fdf1f1; color: #d64545; }
 .btn-chip-active { border-color: #ea580c; background: #fdece1; color: #ea580c; font-weight: 600; }

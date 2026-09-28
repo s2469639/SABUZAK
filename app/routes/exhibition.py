@@ -758,15 +758,11 @@ def market_report_pdf(expo_id, product_id):
     )
 
 
-@bp.route("/detail/<int:expo_id>/combined-report")
-@login_required
-def combined_report_pdf(expo_id):
-    """유망시장 조사 + 트렌드 분석 + 부스 컨셉 기획, 이미 만들어둔 결과 세
-    가지를 하나의 통합 기획서 PDF로 합친다. 셋 다 새로 생성하지 않는다 -
-    AI를 다시 부르지 않으므로 추가 비용이 들지 않는다. 셋 중 하나라도
-    없으면 그 파트는 건너뛰고, 하나도 없으면 안내만 하고 돌려보낸다."""
-    from weasyprint import HTML
-
+def _gather_combined_report_data(expo_id):
+    """유망시장 조사 + 트렌드 분석 + 부스 컨셉 기획, 이미 만들어둔 결과 세 가지를
+    모은다 (PDF/Word 두 내보내기 라우트가 공통으로 씀). 셋 다 새로 생성하지 않는다 -
+    AI를 다시 부르지 않으므로 추가 비용이 들지 않는다. 셋 중 하나라도 없으면 그
+    파트는 건너뛰고, 하나도 없으면 None을 돌려준다."""
     expo = Exhibition.query.get_or_404(expo_id)
     linked_products = Product.query.filter(
         Product.user_id == current_user.id,
@@ -806,28 +802,60 @@ def combined_report_pdf(expo_id):
         buyer_appeal = extra.get("buyer_appeal") or []
 
     if not market_result and not trend_data and not booth_ready:
+        return None
+
+    return {
+        "expo": expo, "product": product, "country_label": country_label,
+        "market_result": market_result,
+        "trend_data": trend_data, "trend_form": trend_form, "question_labels": QUESTION_LABELS,
+        "draft": draft, "booth_ready": booth_ready,
+        "selling_points": json.loads(draft.selling_points) if booth_ready and draft.selling_points else [],
+        "events": json.loads(draft.events) if booth_ready and draft.events else [],
+        "target_buyers": json.loads(draft.target_buyers) if booth_ready and draft.target_buyers else [],
+        "buyer_appeal": buyer_appeal,
+    }
+
+
+@bp.route("/detail/<int:expo_id>/combined-report")
+@login_required
+def combined_report_pdf(expo_id):
+    from weasyprint import HTML
+
+    data = _gather_combined_report_data(expo_id)
+    if data is None:
         flash("아직 완료된 조사·기획이 없습니다. 유망시장 조사·트렌드 분석·부스 컨셉 중 하나라도 먼저 만들어주세요.", "danger")
         return redirect(url_for("exhibition.detail", expo_id=expo_id))
 
     html = render_template(
-        "exhibition/combined_report_pdf.html",
-        expo=expo, product=product, country_label=country_label,
-        market_result=market_result,
-        trend_data=trend_data, trend_form=trend_form, question_labels=QUESTION_LABELS,
-        draft=draft, booth_ready=booth_ready,
-        selling_points=json.loads(draft.selling_points) if booth_ready and draft.selling_points else [],
-        events=json.loads(draft.events) if booth_ready and draft.events else [],
-        target_buyers=json.loads(draft.target_buyers) if booth_ready and draft.target_buyers else [],
-        buyer_appeal=buyer_appeal,
-        generated_at=datetime.now(),
-        **pdf_font_context(),
+        "exhibition/combined_report_pdf.html", **data,
+        generated_at=datetime.now(), **pdf_font_context(),
     )
     pdf_bytes = HTML(string=html).write_pdf()
 
-    filename = f"{expo.name}_통합기획서.pdf".replace("/", "-")
+    filename = f"{data['expo'].name}_통합기획서.pdf".replace("/", "-")
     return Response(
         pdf_bytes,
         mimetype="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
+    )
+
+
+@bp.route("/detail/<int:expo_id>/combined-report/word")
+@login_required
+def combined_report_docx(expo_id):
+    from app.services.docx_report import build_combined_report_docx
+
+    data = _gather_combined_report_data(expo_id)
+    if data is None:
+        flash("아직 완료된 조사·기획이 없습니다. 유망시장 조사·트렌드 분석·부스 컨셉 중 하나라도 먼저 만들어주세요.", "danger")
+        return redirect(url_for("exhibition.detail", expo_id=expo_id))
+
+    buffer = build_combined_report_docx(**data, generated_at=datetime.now())
+
+    filename = f"{data['expo'].name}_통합기획서.docx".replace("/", "-")
+    return Response(
+        buffer.getvalue(),
+        mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
     )
 
