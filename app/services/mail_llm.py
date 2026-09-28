@@ -26,6 +26,50 @@ def _business_context(sender_company: str, product_description: str) -> str:
     return f"당신은 '{company}'의 해외영업 담당자입니다.\n"
 
 
+# 사용자가 목적/방향에 아래 키워드를 넣으면, AI 해석에 맡기지 않고 그 단계에 맞는
+# 규칙을 프롬프트에 직접 강제로 박아넣는다 (LLM이 알아서 판단하게 두면 톤/지시가
+# 흐릿해질 때가 있어서, 명확한 키워드가 있으면 결정적으로 처리).
+# 공백 유무·대소문자에 안 흔들리도록 매칭 전에 정규화한다.
+_STAGE1_KEYWORDS = ["감사메일", "감사인사", "감사레터", "땡큐레터", "땡큐메일", "thankyou"]
+_STAGE2_KEYWORDS = [
+    "2차팔로업", "2차메일", "2차이메일", "회신답장", "거래조건", "인코텀즈", "incoterms", "협상조건",
+]
+
+_STAGE1_RULES = (
+    "- [1차 메일 확정] 이 메일은 1차(당일/직후 발송) 감사 메일입니다. 부스 방문에 대한 "
+    "짧고 정중한 감사 인사만 담으세요.\n"
+    "- 가격, MOQ, 리드타임, 결제조건, Incoterms(인코텀즈) 등 어떠한 거래 조건도 이 메일에는 "
+    "절대 넣지 마세요. 거래 조건 얘기는 다음 메일(2차 팔로업)에서 다룰 내용입니다.\n"
+    "- 분량은 3~6문장 정도로 짧게 쓰고, 조만간 카탈로그/견적 등으로 다시 연락드리겠다는 "
+    "짧은 언급 정도만 덧붙이세요.\n"
+)
+
+_STAGE2_RULES = (
+    "- [2차 메일 확정] 이 메일은 2차 팔로업(거래 조건 제시/협상) 메일입니다. 1차 감사 인사는 "
+    "이미 보냈다고 가정하고, 감사 인사를 반복하지 말고 곧바로 실질적인 거래 진행 내용으로 "
+    "들어가세요.\n"
+    "- 아래 거래 조건을 반드시 불릿으로 구체적인 예시 수치와 함께 명시하세요: 단가/가격대, "
+    "MOQ, 리드타임, 결제조건, Incoterms(예: FOB Busan, CIF 목적항 등 구체적인 조건 하나를 "
+    "명시), 견적 유효기간. 사용자가 실제 수치를 몰라도 되도록 업계 평균 감으로 그럴듯한 "
+    "예시 수치를 넣고, 나중에 숫자만 바꿔 쓰면 되게 하세요.\n"
+)
+
+
+def _normalize_for_match(text: str) -> str:
+    return re.sub(r"\s+", "", text).lower()
+
+
+def _detect_stage_rules(purpose: str) -> str:
+    """목적/방향 문구에 1차·2차를 가리키는 확정 키워드가 있으면 그 단계 규칙을,
+    없으면 빈 문자열을 반환한다 (기존의 느슨한 자유 해석 방식으로 넘어감)."""
+    normalized = _normalize_for_match(purpose)
+    if any(keyword in normalized for keyword in _STAGE2_KEYWORDS):
+        return _STAGE2_RULES
+    if any(keyword in normalized for keyword in _STAGE1_KEYWORDS):
+        return _STAGE1_RULES
+    return ""
+
+
 def revise_email_template(
     instruction: str,
     current_subject: str = "",
@@ -51,6 +95,7 @@ def revise_email_template(
         "조건:\n"
         "- 위에서 밝힌 목적에 맞는 내용으로 작성하세요 (예: 감사 인사, 샘플/견적 제안, 협상 조건 제시, "
         "단순 리마인드 등 - 목적이 다르면 내용도 완전히 달라져야 합니다. 목적에 없는 내용은 임의로 넣지 마세요)\n"
+        + _detect_stage_rules(purpose)
         + (
             "- 위 '현재 템플릿'은 참고용 서식일 뿐입니다. 새 목적/방향이 현재 템플릿과 다른 "
             "종류의 이메일(예: 감사 인사 ↔ 협상/팔로업 ↔ 리마인드)을 요구한다면, 기존 문구를 "
@@ -98,7 +143,8 @@ def revise_individual_email(
         f"사용자가 요청한 수정 방향: {instruction or '(특별한 요청 없음, 자연스럽게 다듬어주세요)'}\n\n"
         "조건:\n"
         "- 이미 채워진 실제 이름·회사명·날짜 등은 그대로 유지하세요 (자리표시자로 바꾸지 마세요)\n"
-        "- 영어로 작성\n"
+        + _detect_stage_rules(instruction)
+        + "- 영어로 작성\n"
         "- 일반 텍스트 이메일이라 **굵게** 같은 마크다운 문법을 쓰지 마세요 (불릿은 \"- \"만 사용)\n"
         "- 아래 형식을 반드시 지켜서 출력 (다른 설명은 붙이지 말 것)\n\n"
         "SUBJECT: <제목>\n"
