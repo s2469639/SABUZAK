@@ -23,17 +23,19 @@
   <div class="scan-bar-buttons">
     <button type="button" class="btn-secondary" id="scan-camera-btn">카메라 촬영</button>
   </div>
-  <input type="file" name="card_image" accept="image/*" capture="environment" id="scan-card-input" hidden>
+  <input type="file" name="card_image" accept="image/*" capture="environment" id="scan-card-input" class="sr-only-file-input">
   <span class="scan-bar-hint" id="scan-bar-hint">사진을 찍으면 자동으로 인식해서 아래 항목을 채워줘요</span>
 </form>
 
 <form method="post" action="{{ url_for('contacts.scan_cards_bulk') }}" enctype="multipart/form-data"
       class="scan-bar" id="scan-bulk-form">
   <div class="scan-bar-buttons">
-    <button type="button" class="btn-secondary" id="scan-bulk-btn">파일 업로드</button>
+    <button type="button" class="btn-secondary" id="scan-bulk-add-btn">명함 추가</button>
+    <button type="submit" class="btn-primary" id="scan-bulk-submit-btn" hidden>업로드 시작 (<span id="scan-bulk-count">0</span>장)</button>
   </div>
-  <input type="file" name="card_images" accept="image/*" multiple id="scan-bulk-input" hidden>
-  <span class="scan-bar-hint" id="scan-bulk-hint">명함 파일을 골라 올리면 확인 화면에서 등록할 수 있어요 (여러 장 가능, 최대 20장)</span>
+  <input type="file" name="card_images" accept="image/*" multiple id="scan-bulk-input" class="sr-only-file-input">
+  <span class="scan-bar-hint" id="scan-bulk-hint">사진을 한 장씩 찍거나 여러 장을 골라 "명함 추가"로 계속 담은 뒤, 업로드 시작을 누르세요 (최대 20장)</span>
+  <div class="scan-bulk-preview" id="scan-bulk-preview"></div>
 </form>
 {% endif %}
 
