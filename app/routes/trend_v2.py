@@ -30,7 +30,7 @@ from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.models import ConceptDraft, Exhibition, TrendResult
-from app.services.pdf_report import pdf_font_context
+from app.services.pdf_report import pdf_font_context, render_pdf_bytes
 
 _V15_ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "v15")
 if _V15_ROOT not in sys.path:
@@ -212,8 +212,6 @@ def trend_result(job_id):
 def trend_report_pdf(job_id):
     """이미 완료된 트렌드 조사 결과를 인쇄용 레이아웃으로 다시 그려서
     PDF로 내려준다. 새로 조사하지 않는다 - 추가 비용이 들지 않는다."""
-    from weasyprint import HTML
-
     job = _get_job(job_id, "trend")
     if not job or job["status"] != "done" or not job.get("result"):
         flash("먼저 트렌드 조사를 완료한 뒤 다시 시도해주세요.", "danger")
@@ -231,7 +229,7 @@ def trend_report_pdf(job_id):
         current_user=current_user, generated_at=datetime.now(),
         **pdf_font_context(),
     )
-    pdf_bytes = HTML(string=html).write_pdf()
+    pdf_bytes = render_pdf_bytes(html)
 
     title = (expo.name if expo else form.get("exhibition_name") or form.get("name") or "트렌드조사")
     filename = f"{title}_트렌드분석.pdf".replace("/", "-")

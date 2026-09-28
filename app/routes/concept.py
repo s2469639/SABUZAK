@@ -9,7 +9,7 @@ from app.extensions import db
 from app.models import ConceptDraft, Exhibition, Product
 from app.routes.trend_v2 import _get_job, start_booth_job
 from app.services.booth_concept import draft_fields, v15_form
-from app.services.pdf_report import pdf_font_context
+from app.services.pdf_report import pdf_font_context, render_pdf_bytes
 
 bp = Blueprint("concept", __name__, url_prefix="/concept")
 
@@ -123,8 +123,6 @@ def booth_report_pdf(draft_id):
     """이미 생성된 부스 컨셉 기획안(draft)을 인쇄용 레이아웃으로 다시 그려서
     PDF로 내려준다. 새로 생성하지 않는다 - AI를 다시 부르지 않으므로 추가
     비용이 들지 않는다."""
-    from weasyprint import HTML
-
     draft = ConceptDraft.query.filter_by(id=draft_id, user_id=current_user.id).first_or_404()
     if not draft.theme:
         flash("먼저 '컨셉 자동 생성하기'로 부스 컨셉을 만든 뒤 다시 시도해주세요.", "danger")
@@ -144,7 +142,7 @@ def booth_report_pdf(draft_id):
         current_user=current_user, generated_at=datetime.now(),
         **pdf_font_context(),
     )
-    pdf_bytes = HTML(string=html).write_pdf()
+    pdf_bytes = render_pdf_bytes(html)
 
     filename = f"{expo.name}_부스컨셉기획서.pdf".replace("/", "-")
     return Response(

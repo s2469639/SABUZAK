@@ -81,10 +81,12 @@
   .slogan-box .desc { margin: 0; color: #4b5563; }
 
   .sp-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 10px;
   }
+  .sp-slot { flex: 1 1 calc(50% - 5px); min-width: 0; }
+  .sp-grid > .sp-slot:last-child:nth-child(odd) { flex: 1 1 100%; }
   .sp-card {
     border: 1px solid #e5e7eb;
     border-radius: 8px;
@@ -139,10 +141,11 @@
   .event-block ol, .event-block ul { margin: 0; padding-left: 16px; }
 
   .appeal-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 10px;
   }
+  .appeal-slot { flex: 1 1 calc(50% - 5px); min-width: 0; }
   .appeal-card {
     border: 1px solid #e5e7eb;
     border-radius: 8px;
@@ -213,11 +216,11 @@
 <h2 class="section-title">핵심 셀링포인트</h2>
 <div class="sp-grid">
   {% for sp in selling_points %}
-  <div class="sp-card">
+  <div class="sp-slot"><div class="sp-card">
     <span class="sp-badge level-{{ sp.badge }}">{{ sp.badge }}</span>
     <strong>{{ sp.title }}</strong>
     <p>{{ sp.description }}</p>
-  </div>
+  </div></div>
   {% endfor %}
 </div>
 {% endif %}
@@ -233,11 +236,11 @@
 <h2 class="section-title">바이어 어필 포인트</h2>
 <div class="appeal-grid">
   {% for a in buyer_appeal %}
-  <div class="appeal-card">
+  <div class="appeal-slot"><div class="appeal-card">
     <strong>{{ a.title }}</strong>
     {% if a.why %}<p><span class="appeal-label">왜 중요한가</span> {{ a.why }}</p>{% endif %}
     {% if a.show %}<p><span class="appeal-label">부스에서 보여줄 것</span> {{ a.show }}</p>{% endif %}
-  </div>
+  </div></div>
   {% endfor %}
 </div>
 {% endif %}

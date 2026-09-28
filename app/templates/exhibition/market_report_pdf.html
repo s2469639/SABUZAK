@@ -141,11 +141,11 @@
   /* px 고정 높이 + absolute 좌표로 그리는 PDF 전용 막대 그래프 (pdf_bar_chart 매크로).
      weasyprint는 flex 아이템에 퍼센트 높이(height:%)를 주면 막대가 찌그러지는
      버그가 있어서, 여기서는 퍼센트를 전혀 안 쓰고 전부 px absolute로 배치한다. */
-  .pbars { position: relative; height: 110px; margin: 20px 0 34px 44px; border-bottom: 1px solid #cfd5de; }
+  .pbars { position: relative; height: 180px; margin: 20px 0 34px 44px; border-bottom: 1px solid #cfd5de; }
   .pbars-gridline { position: absolute; left: 0; right: 0; border-top: 1px solid #f1f3f4; }
   .pbars-gridline span { position: absolute; left: -44px; width: 40px; text-align: right; font-size: 8px; color: #9ca3af; top: -5px; }
   .pbars-cols { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; gap: 4px; padding: 0 2px; }
-  .pbar-col { position: relative; flex: 1; min-width: 0; height: 110px; }
+  .pbar-col { position: relative; flex: 1; min-width: 0; height: 180px; }
   .pbar { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60%; max-width: 22px; border-radius: 2px 2px 0 0; background: #1a8cff; }
   .pbar.kor { background: #34c38f; }
   .pbar-val { position: absolute; left: 50%; transform: translateX(-50%); font-size: 8px; color: #6b7280; white-space: nowrap; }
@@ -175,7 +175,8 @@
 
 {% if result.official_item_desc %}
 <h2 class="section-title">품목 설명 (HS {{ result.hscode }})</h2>
-<p>{{ result.official_item_desc }}</p>
+<p>{{ item_desc_ko or result.official_item_desc }}</p>
+{% if item_desc_ko %}<p class="un-note">원문: {{ result.official_item_desc }}</p>{% endif %}
 {% endif %}
 
 {% if result.global_import_ranking %}
