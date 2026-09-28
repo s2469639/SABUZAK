@@ -213,6 +213,8 @@
 .un-page .ai-sub { font-size: 14px; font-weight: 700; margin: 4px 0 8px; }
 .un-page .ai-box { border: 1px solid var(--line); padding: 14px 16px; font-size: 14px; line-height: 1.8; }
 .un-page .ai-box .ai-label { font-weight: 700; color: var(--primary-dark); display: block; }
+.un-page .ai-box .ai-label-risk { color: var(--danger); }
+.un-page .ai-box .ai-label-strategy { color: var(--kor); }
 .un-page .ai-box > div + div { margin-top: 10px; }
 .un-page .tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
 .un-page .tabs a { padding: 10px 16px; font-size: 14px; font-weight: 500; color: var(--sub); text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; }
