@@ -610,12 +610,54 @@ p.page-desc:not(:last-child) {
   color: #374151;
 }
 
+.modal-dialog-sm {
+  max-width: 340px;
+}
+
+.report-format-actions {
+  justify-content: center;
+  margin-top: 16px;
+}
+
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
   margin-top: 8px;
 }
+
+.attachment-checklist-box {
+  background: #fdf3ec;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.attachment-checklist-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-bottom: 10px;
+}
+.attachment-checklist-head strong {
+  font-size: 14px;
+  color: #222;
+}
+.attachment-checklist-when {
+  font-size: 12px;
+  color: #9a6a44;
+}
+.attachment-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+  padding: 4px 0;
+  cursor: pointer;
+}
+.attachment-checklist-item input { flex-shrink: 0; }
 
 .product-list {
   display: flex;
@@ -1992,6 +2034,7 @@ p.page-desc:not(:last-child) {
   white-space: nowrap;
 }
 .btn-chip:hover { border-color: #ea580c; color: #ea580c; }
+.btn-chip-accent { color: #ea580c; font-weight: 600; }
 .btn-chip-danger { color: #d64545; border-color: #f3cccc; }
 .btn-chip-danger:hover { border-color: #d64545; background: #fdf1f1; color: #d64545; }
 .btn-chip-active { border-color: #ea580c; background: #fdece1; color: #ea580c; font-weight: 600; }
@@ -2103,6 +2146,7 @@ p.page-desc:not(:last-child) {
 .version-tabs .tab-active { color: #ea580c; border-bottom-color: #ea580c; font-weight: 600; }
 .tab-badge { font-size: 10px; opacity: 0.85; }
 .tab-badge-muted { color: #6b7280; }
+.tab-suggested { font-size: 11px; color: #9ca3af; font-weight: 400; }
 
 .tab-edit-btn {
   background: none;

@@ -758,15 +758,11 @@ def market_report_pdf(expo_id, product_id):
     )
 
 
-@bp.route("/detail/<int:expo_id>/combined-report")
-@login_required
-def combined_report_pdf(expo_id):
-    """유망시장 조사 + 트렌드 분석 + 부스 컨셉 기획, 이미 만들어둔 결과 세
-    가지를 하나의 통합 기획서 PDF로 합친다. 셋 다 새로 생성하지 않는다 -
-    AI를 다시 부르지 않으므로 추가 비용이 들지 않는다. 셋 중 하나라도
-    없으면 그 파트는 건너뛰고, 하나도 없으면 안내만 하고 돌려보낸다."""
-    from weasyprint import HTML
-
+def _gather_combined_report_data(expo_id):
+    """유망시장 조사 + 트렌드 분석 + 부스 컨셉 기획, 이미 만들어둔 결과 세 가지를
+    모은다 (PDF/Word 두 내보내기 라우트가 공통으로 씀). 셋 다 새로 생성하지 않는다 -
+    AI를 다시 부르지 않으므로 추가 비용이 들지 않는다. 셋 중 하나라도 없으면 그
+    파트는 건너뛰고, 하나도 없으면 None을 돌려준다."""
     expo = Exhibition.query.get_or_404(expo_id)
     linked_products = Product.query.filter(
         Product.user_id == current_user.id,
@@ -778,10 +774,22 @@ def combined_report_pdf(expo_id):
 
     # 1. 유망시장 조사 (캐시만, 네트워크 호출 없음)
     market_result = None
+    hs6 = None
     if product:
         hs6 = _hs6(product.hs_code)
         market_result = un_comtrade.get_cached_market_research(hs6, expo.country) if hs6 else None
     country_label = _country_ko(expo) or expo.country_ko or expo.country
+
+    # 1b. 품목별 유망시장 매트릭스 - 같은 HS코드로 "품목별 유망시장" 화면에서
+    # 이미 조회해둔 결과가 있으면 같이 넣는다 (역시 캐시만, 새로 조회하지 않음).
+    matrix_result, matrix, overview, import_line = None, None, None, None
+    if hs6:
+        matrix_result = un_comtrade.get_cached_multi_country_comparison(hs6)
+        if matrix_result:
+            matrix = build_matrix(matrix_result["candidates"], matrix_result["thresholds"])
+        overview = un_comtrade.get_cached_market_overview(hs6)
+        if overview:
+            import_line = _svg_line_series(overview["import_share_trend"], height=250)
 
     # 2. 트렌드 분석 (이미 끝난 job만, 새로 조사하지 않음)
     trend_data, trend_form = None, None
@@ -806,28 +814,61 @@ def combined_report_pdf(expo_id):
         buyer_appeal = extra.get("buyer_appeal") or []
 
     if not market_result and not trend_data and not booth_ready:
+        return None
+
+    return {
+        "expo": expo, "product": product, "country_label": country_label,
+        "market_result": market_result,
+        "matrix_result": matrix_result, "matrix": matrix, "overview": overview, "import_line": import_line,
+        "trend_data": trend_data, "trend_form": trend_form, "question_labels": QUESTION_LABELS,
+        "draft": draft, "booth_ready": booth_ready,
+        "selling_points": json.loads(draft.selling_points) if booth_ready and draft.selling_points else [],
+        "events": json.loads(draft.events) if booth_ready and draft.events else [],
+        "target_buyers": json.loads(draft.target_buyers) if booth_ready and draft.target_buyers else [],
+        "buyer_appeal": buyer_appeal,
+    }
+
+
+@bp.route("/detail/<int:expo_id>/combined-report")
+@login_required
+def combined_report_pdf(expo_id):
+    from weasyprint import HTML
+
+    data = _gather_combined_report_data(expo_id)
+    if data is None:
         flash("아직 완료된 조사·기획이 없습니다. 유망시장 조사·트렌드 분석·부스 컨셉 중 하나라도 먼저 만들어주세요.", "danger")
         return redirect(url_for("exhibition.detail", expo_id=expo_id))
 
     html = render_template(
-        "exhibition/combined_report_pdf.html",
-        expo=expo, product=product, country_label=country_label,
-        market_result=market_result,
-        trend_data=trend_data, trend_form=trend_form, question_labels=QUESTION_LABELS,
-        draft=draft, booth_ready=booth_ready,
-        selling_points=json.loads(draft.selling_points) if booth_ready and draft.selling_points else [],
-        events=json.loads(draft.events) if booth_ready and draft.events else [],
-        target_buyers=json.loads(draft.target_buyers) if booth_ready and draft.target_buyers else [],
-        buyer_appeal=buyer_appeal,
-        generated_at=datetime.now(),
-        **pdf_font_context(),
+        "exhibition/combined_report_pdf.html", **data,
+        generated_at=datetime.now(), **pdf_font_context(),
     )
     pdf_bytes = HTML(string=html).write_pdf()
 
-    filename = f"{expo.name}_통합기획서.pdf".replace("/", "-")
+    filename = f"{data['expo'].name}_통합기획서.pdf".replace("/", "-")
     return Response(
         pdf_bytes,
         mimetype="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
+    )
+
+
+@bp.route("/detail/<int:expo_id>/combined-report/word")
+@login_required
+def combined_report_docx(expo_id):
+    from app.services.docx_report import build_combined_report_docx
+
+    data = _gather_combined_report_data(expo_id)
+    if data is None:
+        flash("아직 완료된 조사·기획이 없습니다. 유망시장 조사·트렌드 분석·부스 컨셉 중 하나라도 먼저 만들어주세요.", "danger")
+        return redirect(url_for("exhibition.detail", expo_id=expo_id))
+
+    buffer = build_combined_report_docx(**data, generated_at=datetime.now())
+
+    filename = f"{data['expo'].name}_통합기획서.docx".replace("/", "-")
+    return Response(
+        buffer.getvalue(),
+        mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
     )
 
@@ -935,10 +976,22 @@ def market_matrix_report_pdf():
         un_comtrade.translate_item_desc(result["official_item_desc"])
         if result.get("official_item_desc") else None
     )
+    matrix = build_matrix(result["candidates"], result["thresholds"])
+
+    # ①②(세계시장 현황)도 화면과 동일하게 캐시가 있으면 그대로 보여준다.
+    # force=False라 여기서도 새로 API를 부르지 않고, 없으면 그냥 생략한다.
+    overview = import_line = export_line = None
+    try:
+        overview = un_comtrade.get_market_overview(hscode, top_n=top_n or 10, force=False)
+        import_line = _svg_line_series(overview["import_share_trend"], height=250)
+        export_line = _svg_line_series(overview["export_share_trend"], height=250)
+    except Exception as e:
+        overview = {"unavailable_reason": str(e)}
 
     html = render_template(
         "exhibition/market_matrix_report_pdf.html",
         result=result, hscode=hscode, top_n=top_n, item_desc_ko=item_desc_ko,
+        matrix=matrix, overview=overview, import_line=import_line, export_line=export_line,
         generated_at=datetime.now(),
         **pdf_font_context(),
     )

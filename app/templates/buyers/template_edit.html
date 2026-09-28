@@ -31,6 +31,9 @@
       <a href="{{ url_for('mail_template.edit_template', version=v.version) }}"
          class="tab {{ 'tab-active' if v.version == version else '' }}">
         {{ v.display_name }}
+        {% if not v.label and suggested_labels.get(v.version) %}
+          <span class="tab-suggested">· {{ suggested_labels[v.version] }} 추천</span>
+        {% endif %}
         {% if v.is_active %} <span class="tab-badge">사용중</span>
         {% elif not v.body %} <span class="tab-badge tab-badge-muted">미작성</span>
         {% endif %}
@@ -38,7 +41,7 @@
       <button type="button" class="tab-edit-btn" onclick="toggleRename({{ v.version }})" title="버전 이름 수정" aria-label="버전 이름 수정"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
       <form id="rename-form-{{ v.version }}" method="post"
             action="{{ url_for('mail_template.rename', version=v.version) }}" class="rename-form">
-        <input type="text" name="label" placeholder="버전 {{ v.version }}" value="{{ v.label or '' }}" maxlength="60">
+        <input type="text" name="label" placeholder="{{ suggested_labels.get(v.version, '버전 ' ~ v.version) }}" value="{{ v.label or '' }}" maxlength="60">
         <button type="submit" class="btn-chip">저장</button>
       </form>
     </div>
@@ -55,11 +58,11 @@
 
 <div class="card">
 <form method="post" action="{{ url_for('mail_template.revise_template', version=version) }}" class="revise-bar">
-  <input type="text" name="instruction" placeholder="수정 방향을 제시하세요 (예: 더 짧고 캐주얼하게)">
+  <input type="text" name="instruction" placeholder="이 메일의 목적/톤을 알려주세요 (예: 2차 팔로업, 할인율·결제조건 등 추가 거래 조건 제안 / 땡큐레터 / 단순 리마인드 / 더 짧고 캐주얼하게 등)">
   <button type="submit" class="btn-secondary">AI로 생성/수정하기</button>
 </form>
 
-<form method="post" action="{{ url_for('mail_template.save', version=version) }}" class="form">
+<form id="save-form" method="post" action="{{ url_for('mail_template.save', version=version) }}" class="form">
   <div class="form-field">
     <label for="subject">제목</label>
     <input id="subject" name="subject" value="{{ template.subject or '' }}">
@@ -68,13 +71,33 @@
     <label for="body">본문</label>
     <textarea id="body" name="body" rows="14">{{ template.body or '' }}</textarea>
   </div>
-  <div class="form-actions">
-    <button type="submit" form="activate-form" class="btn-secondary" {{ 'disabled' if template.is_active else '' }}>
-      {{ '현재 발송용 템플릿입니다' if template.is_active else '이 버전을 발송용으로 사용' }}
-    </button>
-    <button type="submit" class="btn-primary">템플릿 저장</button>
-  </div>
 </form>
+
+{% if checklist_items %}
+<div class="form-field">
+  <label>첨부 권장 자료</label>
+  <form method="post" action="{{ url_for('mail_template.save_checklist', version=version) }}"
+        class="attachment-checklist-box" onchange="this.submit()">
+    <div class="attachment-checklist-head">
+      <strong>이 단계에서 함께 보내면 좋은 자료</strong>
+      <span class="attachment-checklist-when">권장 발송 시점: {{ checklist_when }}</span>
+    </div>
+    {% for item in checklist_items %}
+    <label class="attachment-checklist-item">
+      <input type="checkbox" name="checked_item" value="{{ item.label }}" {{ 'checked' if item.checked else '' }}>
+      {{ item.label }}
+    </label>
+    {% endfor %}
+  </form>
+</div>
+{% endif %}
+
+<div class="form-actions">
+  <button type="submit" form="activate-form" class="btn-secondary" {{ 'disabled' if template.is_active else '' }}>
+    {{ '현재 발송용 템플릿입니다' if template.is_active else '이 버전을 발송용으로 사용' }}
+  </button>
+  <button type="submit" form="save-form" class="btn-primary">템플릿 저장</button>
+</div>
 <form id="activate-form" method="post" action="{{ url_for('mail_template.activate', version=version) }}"></form>
 </div>
 {% endblock %}

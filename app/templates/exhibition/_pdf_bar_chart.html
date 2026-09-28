@@ -1,0 +1,31 @@
+{# weasyprint(PDF 렌더러)는 flex 아이템에 퍼센트 높이(height:%)를 주면
+   막대가 0에 가깝게 찌그러지는 버그가 있어서(브라우저에서만 쓰는
+   _un_macros.html의 bar_chart를 그대로 못 씀), 여기서는 높이를 px로
+   직접 계산하는 PDF 전용 막대 그래프를 만들어 여러 PDF 템플릿이 공유한다.
+   쓰는 템플릿은 반드시 아래 CSS 클래스(.pbars 등)를 자기 <style>에도 넣어야
+   한다 (각 PDF는 base_url 없이 렌더링되는 독립 문서라 외부 스타일시트를
+   못 불러오므로, 이 매크로만 import해도 스타일은 각자 <style>에 복붙해야 함 -
+   market_report_pdf.html/combined_report_pdf.html의 .pbars* 규칙 참고). #}
+{% macro pdf_bar_chart(rows, label_attr, value_attr) %}
+  {% set vals = rows | map(attribute=value_attr) | select | list %}
+  {% set vmax = (vals | max) if vals else 0 %}
+  {% set track_h = 110 %}
+  <div class="pbars">
+    <div class="pbars-gridline" style="bottom: {{ track_h }}px;"><span>{{ vmax | usd_short }}</span></div>
+    <div class="pbars-gridline" style="bottom: {{ (track_h / 2) | round | int }}px;"><span>{{ (vmax / 2) | usd_short }}</span></div>
+    <div class="pbars-gridline" style="bottom: 0;"><span>$0</span></div>
+    <div class="pbars-cols">
+      {% for r in rows %}
+        {% set v = r[value_attr] or 0 %}
+        {% set lbl = r[label_attr] ~ '' %}
+        {% set is_kor = ('Korea' in lbl) or lbl == 'KOR' %}
+        {% set h = ((v / vmax * track_h) if vmax else 0) | round | int %}
+        <div class="pbar-col">
+          <span class="pbar-val" style="bottom: {{ h + 3 }}px;">{{ v | usd_short }}</span>
+          <div class="pbar{{ ' kor' if is_kor else '' }}" style="height: {{ h }}px;"></div>
+          <span class="pbar-label{{ ' kor' if is_kor else '' }}">{{ lbl }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endmacro %}

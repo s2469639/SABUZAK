@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>{{ product.name }} · {{ country_label }} 유망시장 조사</title>
+{% from "exhibition/_un_macros.html" import yoy %}
+{% from "exhibition/_pdf_bar_chart.html" import pdf_bar_chart %}
 <style>
   @page {
     size: A4;
@@ -123,12 +125,45 @@
     border-top: 1px solid #e5e7eb;
     padding-top: 8px;
   }
+
+  /* 글로벌 수입 순위 · 성장 트렌드 · 한국 수출 추이 · 연도별 교역 현황 -
+     _tab_market.html(un_dashboard.css)을 PDF용으로 축약 이식 */
+  .grid-2 { display: flex; gap: 14px; margin: 0 0 8px; }
+  .grid-2 > .panel { flex: 1; min-width: 0; }
+  .panel { border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px 14px; page-break-inside: avoid; }
+  .sub-title { font-size: 11px; font-weight: 700; margin: 0 0 8px; }
+  .un-unit { font-size: 9px; color: #9ca3af; margin-bottom: 4px; }
+  .un-empty { color: #9ca3af; text-align: center; padding: 12px 0; font-size: 9.5px; }
+  .un-note { font-size: 8.5px; color: #9ca3af; margin: 4px 0 0; }
+  .un-badge { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 9px; font-weight: 500; }
+  .un-badge.mirror { background: #e0f2f1; color: #00695c; }
+
+  /* px 고정 높이 + absolute 좌표로 그리는 PDF 전용 막대 그래프 (pdf_bar_chart 매크로).
+     weasyprint는 flex 아이템에 퍼센트 높이(height:%)를 주면 막대가 찌그러지는
+     버그가 있어서, 여기서는 퍼센트를 전혀 안 쓰고 전부 px absolute로 배치한다. */
+  .pbars { position: relative; height: 110px; margin: 20px 0 34px 44px; border-bottom: 1px solid #cfd5de; }
+  .pbars-gridline { position: absolute; left: 0; right: 0; border-top: 1px solid #f1f3f4; }
+  .pbars-gridline span { position: absolute; left: -44px; width: 40px; text-align: right; font-size: 8px; color: #9ca3af; top: -5px; }
+  .pbars-cols { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; gap: 4px; padding: 0 2px; }
+  .pbar-col { position: relative; flex: 1; min-width: 0; height: 110px; }
+  .pbar { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60%; max-width: 22px; border-radius: 2px 2px 0 0; background: #1a8cff; }
+  .pbar.kor { background: #34c38f; }
+  .pbar-val { position: absolute; left: 50%; transform: translateX(-50%); font-size: 8px; color: #6b7280; white-space: nowrap; }
+  .pbar-label { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 4px; font-size: 8px; font-weight: 500; color: #6b7280; white-space: nowrap; }
+  .pbar-label.kor { color: #188038; font-weight: 700; }
+  .cagr { font-size: 10px; font-weight: 700; margin: 8px 0 0; }
+  .cagr.up { color: #188038; }
+  .cagr.down { color: #d93025; }
+  .section-divider { font-size: 12px; font-weight: 700; padding-bottom: 6px; border-bottom: 1px solid #e5e7eb; margin: 18px 0 10px; }
+  .yoy { font-size: 9px; font-variant-numeric: tabular-nums; }
+  .yoy.up { color: #188038; }
+  .yoy.down { color: #d93025; }
 </style>
 </head>
 <body>
 
 <div class="report-header">
-  <div class="report-kicker">FairMate · 유망시장 조사 기획서</div>
+  <div class="report-kicker">FairMate · 타깃 국가 조사 기획서</div>
   <div class="report-title">{{ product.name }} — {{ country_label }} 시장 진출 검토</div>
   <div class="report-meta">
     <span>박람회: <b>{{ expo.name }}</b></span>
@@ -143,37 +178,116 @@
 <p>{{ result.official_item_desc }}</p>
 {% endif %}
 
-{% set comp = result.competitiveness %}
-{% if comp and comp.top_suppliers %}
-<h2 class="section-title">{{ country_label }} 수입지역 상위 공급국 ({{ comp.year }}년)</h2>
-{% if comp.total_import_usd %}
-<p class="stat-line">
-  {{ comp.year }}년 전체 수입액 <b>${{ "{:,.0f}".format(comp.total_import_usd) }}</b>
-  {% if comp.supplier_country_count %} · 공급국 <b>{{ comp.supplier_country_count }}개국</b>{% endif %}
-  {% if comp.is_mirror_estimate %} · (상대국 보고 기반 추정치){% endif %}
-</p>
-{% endif %}
+{% if result.global_import_ranking %}
+<h2 class="section-title">글로벌 수입 순위 (상위 10개국)</h2>
 <table class="report-table">
-  <tr><th>순위</th><th>수입지역</th><th>수입금액(USD)</th><th>비중</th></tr>
-  {% if comp.korea_supplier %}
-  <tr class="kor-row">
-    <td>{{ comp.korea_supplier.rank }}</td>
-    <td>한국 ({{ comp.korea_supplier.label }})</td>
-    <td class="num">${{ "{:,.0f}".format(comp.korea_supplier.import_value_usd) }}</td>
-    <td>{{ comp.korea_supplier.share_pct | pct }}</td>
-  </tr>
-  {% else %}
-  <tr class="kor-row"><td>-</td><td>한국</td><td colspan="2">이 시장으로의 한국산 수입 기록 없음</td></tr>
-  {% endif %}
-  {% for sup in comp.top_suppliers if not sup.is_korea %}
+  <tr><th>#</th><th>국가</th><th>수입액(USD)</th></tr>
+  {% for r in result.global_import_ranking %}
+  <tr><td>{{ loop.index }}</td><td>{{ r.country }}</td><td class="num">${{ "{:,.0f}".format(r.import_value_usd) }}</td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<div class="grid-2">
+  <div class="panel">
+    {% set comp = result.competitiveness %}
+    {% if comp and comp.top_suppliers %}
+      <p class="sub-title">{{ country_label }}의 수입지역 순위 ({{ comp.year }}년)</p>
+      {% if comp.is_mirror_estimate %}<span class="un-badge mirror">상대국 보고 기반 추정치</span>{% endif %}
+      {% if comp.total_import_usd %}
+      <p class="un-note">
+        {{ comp.year }}년 전체 수입액 <b>${{ "{:,.0f}".format(comp.total_import_usd) }}</b>
+        {% if comp.supplier_country_count %} · 공급국 {{ comp.supplier_country_count }}개국{% endif %}
+      </p>
+      {% endif %}
+      <table class="report-table">
+        <tr><th>순위</th><th>수입지역</th><th>수입금액(USD)</th><th>비중</th></tr>
+        {% if comp.korea_supplier %}
+        <tr class="kor-row">
+          <td>{{ comp.korea_supplier.rank }}</td>
+          <td>한국 ({{ comp.korea_supplier.label }})</td>
+          <td class="num">${{ "{:,.0f}".format(comp.korea_supplier.import_value_usd) }}</td>
+          <td>{{ comp.korea_supplier.share_pct | pct }}</td>
+        </tr>
+        {% else %}
+        <tr class="kor-row"><td>-</td><td>한국</td><td colspan="2">이 시장으로의 한국산 수입 기록 없음</td></tr>
+        {% endif %}
+        {% for sup in comp.top_suppliers if not sup.is_korea %}
+        <tr>
+          <td>{{ sup.rank }}</td>
+          <td>{{ sup.label }}</td>
+          <td class="num">${{ "{:,.0f}".format(sup.import_value_usd) }}</td>
+          <td>{{ sup.share_pct | pct }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p class="sub-title">{{ country_label }}의 주요 경쟁국 비교</p>
+      <div class="un-empty">데이터 없음</div>
+    {% endif %}
+  </div>
+
+  <div class="panel">
+    {% set gt = result.growth_trend %}
+    <p class="sub-title">{{ country_label }}의 수입 추이{% if gt %} ({{ gt.years_with_data }}/{{ gt.years_requested | length }}개년){% endif %}</p>
+    {% if gt and gt.by_year %}
+      {% if gt.is_mirror_estimate %}<span class="un-badge mirror">상대국 보고 기반 추정치</span>{% endif %}
+      <div class="un-unit">단위: USD</div>
+      {{ pdf_bar_chart(gt.by_year, 'year', 'import_value_usd') }}
+      {% if gt.cagr_pct is not none %}
+      <p class="cagr {{ 'up' if gt.cagr_pct >= 0 else 'down' }}">CAGR{% if gt.cagr_start_year %} ({{ gt.cagr_start_year }}→{{ gt.cagr_end_year }}){% endif %}: {{ gt.cagr_pct }}%</p>
+      {% endif %}
+    {% else %}
+      <div class="un-empty">데이터 없음</div>
+    {% endif %}
+  </div>
+</div>
+
+{% set ke = result.korea_exports_customs %}
+<h2 class="section-title">한국의 {{ country_label }} 수출 추이 <span style="font-size:9px; font-weight:400; color:#9ca3af;">관세청 기준(FOB)</span></h2>
+{% if ke and ke.available and ke.by_year and (ke.by_year | map(attribute='export_usd') | select | list) %}
+  <div class="panel">
+    <div class="un-unit">단위: USD</div>
+    {{ pdf_bar_chart(ke.by_year, 'year', 'export_usd') }}
+  </div>
+{% elif ke and ke.available %}
+  <div class="un-empty">조회 기간 동안 한국의 이 나라 수출 실적이 없습니다 (관세청 기준 $0).</div>
+{% elif ke %}
+  <div class="un-empty">관세청 자료를 불러오지 못했습니다 ({{ ke.reason }}).</div>
+{% endif %}
+
+{% set dv = result.derived %}
+{% if dv and dv.yearly_rows %}
+<h2 class="section-title">연도별 교역 현황</h2>
+<table class="report-table">
   <tr>
-    <td>{{ sup.rank }}</td>
-    <td>{{ sup.label }}</td>
-    <td class="num">${{ "{:,.0f}".format(sup.import_value_usd) }}</td>
-    <td>{{ sup.share_pct | pct }}</td>
+    <th>연도</th>
+    <th>{{ country_label }} 수입액</th>
+    <th>전년 대비</th>
+    {% if dv.has_customs %}
+      <th>한국 → {{ country_label }} 수출액</th>
+      <th>전년 대비</th>
+    {% endif %}
+  </tr>
+  {% for r in dv.yearly_rows %}
+  <tr>
+    <td>{{ r.year }}</td>
+    <td class="num">{{ ('$' ~ '{:,.0f}'.format(r.import_usd)) if r.import_usd is not none else '-' }}</td>
+    <td class="num">{{ yoy(r.import_yoy_pct) }}</td>
+    {% if dv.has_customs %}
+      {% if r.korea_export_usd is none %}
+        <td class="num">-</td><td class="num">{{ yoy(none) }}</td>
+      {% elif r.korea_export_usd == 0 %}
+        <td class="num">실적 없음</td><td class="num">{{ yoy(none) }}</td>
+      {% else %}
+        <td class="num">{{ '$' ~ '{:,.0f}'.format(r.korea_export_usd) }}</td>
+        <td class="num">{{ yoy(r.korea_export_yoy_pct) }}</td>
+      {% endif %}
+    {% endif %}
   </tr>
   {% endfor %}
 </table>
+<p class="un-note">수입액은 {{ country_label }} 측 신고(CIF) 기준, 한국 수출액은 한국 관세청(FOB) 기준이라 두 값을 직접 나눠 비교하면 안 됩니다.</p>
 {% endif %}
 
 {% set ai = result.ai_insight %}

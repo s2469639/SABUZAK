@@ -1051,6 +1051,57 @@ def get_cached_market_research(hscode: str, target_country: str, ttl_days: int =
         conn.close()
 
 
+def get_cached_multi_country_comparison(
+    hscode: str, top_n: int = 10, years: list[int] | None = None,
+    db_path: str | None = None, ttl_days: int = CACHE_TTL_DAYS,
+):
+    """네트워크/AI 호출 없이 캐시만 읽는다 (통합 기획서처럼 "이미 조회해둔 결과만
+    있으면 보여주고, 없으면 그냥 생략" 용도). get_multi_country_comparison()은
+    force=False라도 캐시가 없으면 그 자리에서 새로 계산(API+AI 호출)해버리므로
+    이 용도로는 못 쓴다. 관심 국가(candidate_countries) 없이 수입 상위 top_n개국
+    기본 비교 결과만 조회한다 - 캐시 없으면 None."""
+    if not HSCODE_RE.match(hscode):
+        return None
+    if years is None:
+        years, _ = default_years()
+    years = sorted(years)
+    years_key = ",".join(str(y) for y in years)
+    result_key = f"{years_key}|top{top_n}|"
+
+    db_path = db_path or DEFAULT_DB_PATH
+    os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
+    conn = sqlite3.connect(db_path, timeout=10)
+    try:
+        ensure_multi_schema(conn)
+        return _load_result_cache(conn, hscode, result_key, ttl_days)
+    finally:
+        conn.close()
+
+
+def get_cached_market_overview(
+    hscode: str, years: list[int] | None = None,
+    db_path: str | None = None, ttl_days: int = CACHE_TTL_DAYS,
+):
+    """get_cached_multi_country_comparison()과 같은 이유로, get_market_overview()의
+    캐시만 읽는 버전. 캐시 없으면 None."""
+    if not HSCODE_RE.match(hscode):
+        return None
+    if years is None:
+        base_year = datetime.now(timezone.utc).year - 2
+        years = [base_year - 4, base_year - 3, base_year - 2, base_year - 1, base_year]
+    years = sorted(years)
+    years_key = ",".join(str(y) for y in years)
+
+    db_path = db_path or DEFAULT_DB_PATH
+    os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
+    conn = sqlite3.connect(db_path, timeout=10)
+    try:
+        ensure_overview_schema(conn)
+        return _load_overview_cache(conn, hscode, years_key, ttl_days)
+    finally:
+        conn.close()
+
+
 def get_market_research(
     hscode: str,
     target_country: str,

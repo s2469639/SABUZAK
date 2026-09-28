@@ -263,6 +263,9 @@ class EmailTemplate(db.Model):
     subject = db.Column(db.String(255))
     body = db.Column(db.Text)
     is_active = db.Column(db.Boolean, default=False, nullable=False)
+    # 이 버전(발송 단계)에서 같이 보내면 좋은 자료 체크리스트 - 실제 파일을 물고 있는 게
+    # 아니라 안내용 체크리스트라 JSON으로 {"항목 텍스트": true/false}만 저장한다.
+    attachment_checklist = db.Column(db.Text)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user = db.relationship("User", backref=db.backref("email_templates", lazy=True))
