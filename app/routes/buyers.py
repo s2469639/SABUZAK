@@ -31,6 +31,12 @@ TEMPLATE_VERSIONS = (1, 2, 3)
 
 # 버전(발송 단계)별 "함께 보내면 좋은 자료" 기본 체크리스트 항목. 실제 파일을
 # 물고 있지 않은 안내용 체크리스트라, 발송 시점 안내문과 함께 여기 하드코딩해둔다.
+SUGGESTED_TEMPLATE_LABELS = {
+    1: "당일 감사 메일 (D+0~1)",
+    2: "팔로업 메일 (D+3~7)",
+    3: "리마인드 메일 (D+14~21)",
+}
+
 TEMPLATE_ATTACHMENT_CHECKLISTS = {
     1: {
         "when": "박람회 당일 또는 다음 날 (D+0~1)",
@@ -815,6 +821,7 @@ def edit_template(version):
     return render_template(
         "buyers/template_edit.html", template=template, all_versions=all_versions, version=version,
         checklist_when=checklist["when"] if checklist else None, checklist_items=checklist_items,
+        suggested_labels=SUGGESTED_TEMPLATE_LABELS,
     )
 
 

@@ -31,6 +31,9 @@
       <a href="{{ url_for('mail_template.edit_template', version=v.version) }}"
          class="tab {{ 'tab-active' if v.version == version else '' }}">
         {{ v.display_name }}
+        {% if not v.label and suggested_labels.get(v.version) %}
+          <span class="tab-suggested">({{ suggested_labels[v.version] }} 추천)</span>
+        {% endif %}
         {% if v.is_active %} <span class="tab-badge">사용중</span>
         {% elif not v.body %} <span class="tab-badge tab-badge-muted">미작성</span>
         {% endif %}
@@ -38,7 +41,7 @@
       <button type="button" class="tab-edit-btn" onclick="toggleRename({{ v.version }})" title="버전 이름 수정" aria-label="버전 이름 수정"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
       <form id="rename-form-{{ v.version }}" method="post"
             action="{{ url_for('mail_template.rename', version=v.version) }}" class="rename-form">
-        <input type="text" name="label" placeholder="버전 {{ v.version }}" value="{{ v.label or '' }}" maxlength="60">
+        <input type="text" name="label" placeholder="{{ suggested_labels.get(v.version, '버전 ' ~ v.version) }}" value="{{ v.label or '' }}" maxlength="60">
         <button type="submit" class="btn-chip">저장</button>
       </form>
     </div>

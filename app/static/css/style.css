@@ -2136,6 +2136,7 @@ p.page-desc:not(:last-child) {
 .version-tabs .tab-active { color: #ea580c; border-bottom-color: #ea580c; font-weight: 600; }
 .tab-badge { font-size: 10px; opacity: 0.85; }
 .tab-badge-muted { color: #6b7280; }
+.tab-suggested { font-size: 11px; color: #9ca3af; font-weight: 400; }
 
 .tab-edit-btn {
   background: none;

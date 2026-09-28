@@ -270,16 +270,9 @@ class EmailTemplate(db.Model):
 
     user = db.relationship("User", backref=db.backref("email_templates", lazy=True))
 
-    # 버전별 기본 이름(발송 단계) - 사용자가 label을 따로 지정 안 했을 때 이 이름을 쓴다.
-    _DEFAULT_LABELS = {
-        1: "당일 감사 메일 (D+0~1)",
-        2: "팔로업 메일 (D+3~7)",
-        3: "리마인드 메일 (D+14~21)",
-    }
-
     @property
     def display_name(self):
-        return self.label or self._DEFAULT_LABELS.get(self.version, f"버전 {self.version}")
+        return self.label or f"버전 {self.version}"
 
 
 class Contact(db.Model):
