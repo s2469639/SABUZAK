@@ -8,10 +8,68 @@ app/templates/exhibition/combined_report_pdf.html과 같은 데이터를 받아�
 import io
 
 from docx import Document
+from docx.oxml.ns import qn
 from docx.shared import Pt, RGBColor
 
 ACCENT = RGBColor(0xEA, 0x58, 0x0C)
+DARK = RGBColor(0x1F, 0x29, 0x33)
 MUTED = RGBColor(0x6B, 0x72, 0x80)
+FONT_NAME = "맑은 고딕"  # 대부분의 Windows/Word에 기본 내장 - 한글이 네모/깨짐 없이 뜬다
+
+
+def _set_east_asian_font(font, name=FONT_NAME):
+    """python-docx의 font.name은 영문(ascii) 폰트만 지정하고 한글(eastAsia)은 그대로
+    둬서, 그냥 두면 워드 기본 템플릿 폰트로 한글이 렌더링돼 가독성이 떨어진다.
+    rFonts의 eastAsia 속성까지 XML로 직접 지정해야 한글에도 적용된다."""
+    font.name = name
+    rpr = font.element  # 이 Font가 감싸고 있는 <w:rPr> 엘리먼트 그 자체
+    rFonts = rpr.find(qn("w:rFonts"))
+    if rFonts is None:
+        rFonts = rpr.makeelement(qn("w:rFonts"), {})
+        rpr.append(rFonts)
+    rFonts.set(qn("w:eastAsia"), name)
+
+
+def _setup_styles(doc):
+    """기본 스타일(본문/제목1/제목2/리스트)의 폰트·크기·색·문단 간격을 한 번에
+    잡아서, 문서 전체에서 폰트가 깨지거나 문단이 다닥다닥 붙어 보이지 않게 한다."""
+    styles = doc.styles
+
+    normal = styles["Normal"]
+    _set_east_asian_font(normal.font)
+    normal.font.size = Pt(10.5)
+    normal.font.color.rgb = DARK
+    normal.paragraph_format.space_after = Pt(8)
+    normal.paragraph_format.line_spacing = 1.35
+
+    title = styles["Title"]
+    _set_east_asian_font(title.font)
+    title.font.size = Pt(24)
+    title.font.color.rgb = ACCENT
+    title.font.bold = True
+
+    h1 = styles["Heading 1"]
+    _set_east_asian_font(h1.font)
+    h1.font.size = Pt(15)
+    h1.font.color.rgb = DARK
+    h1.font.bold = True
+    h1.paragraph_format.space_before = Pt(4)
+    h1.paragraph_format.space_after = Pt(10)
+
+    h2 = styles["Heading 2"]
+    _set_east_asian_font(h2.font)
+    h2.font.size = Pt(12.5)
+    h2.font.color.rgb = ACCENT
+    h2.font.bold = True
+    h2.paragraph_format.space_before = Pt(14)
+    h2.paragraph_format.space_after = Pt(6)
+
+    for style_name in ("List Bullet", "List Number"):
+        s = styles[style_name]
+        _set_east_asian_font(s.font)
+        s.font.size = Pt(10.5)
+        s.font.color.rgb = DARK
+        s.paragraph_format.space_after = Pt(4)
 
 
 def _add_part_heading(doc, kicker, title):
@@ -22,13 +80,12 @@ def _add_part_heading(doc, kicker, title):
     run.bold = True
     run.font.color.rgb = ACCENT
     run.font.size = Pt(10)
+    p.paragraph_format.space_after = Pt(2)
     doc.add_heading(title, level=1)
 
 
 def _add_section_heading(doc, text):
-    h = doc.add_heading(text, level=2)
-    for run in h.runs:
-        run.font.color.rgb = ACCENT
+    doc.add_heading(text, level=2)
 
 
 def _add_muted(doc, text):
@@ -42,11 +99,16 @@ def _add_table(doc, headers, rows):
     table = doc.add_table(rows=1, cols=len(headers))
     table.style = "Light Grid Accent 2"
     for cell, header in zip(table.rows[0].cells, headers):
-        cell.paragraphs[0].add_run(header).bold = True
+        run = cell.paragraphs[0].add_run(header)
+        run.bold = True
+        run.font.size = Pt(10)
+        _set_east_asian_font(run.font)
     for row in rows:
         cells = table.add_row().cells
         for cell, value in zip(cells, row):
-            cell.text = "" if value is None else str(value)
+            run = cell.paragraphs[0].add_run("" if value is None else str(value))
+            run.font.size = Pt(10)
+            _set_east_asian_font(run.font)
     doc.add_paragraph()
 
 
@@ -226,15 +288,58 @@ def _add_booth_part(doc, data):
             if event.get("prep"):
                 doc.add_paragraph(f"준비물·인원: {event['prep']}")
 
+    _add_section_heading(doc, "박람회 준비 & 사전 검증 필수 체크리스트 (Gating Checklist)")
+    for group_title, items in (
+        ("인허가 & 수입 적격성", [
+            "타깃 국가 동물성/가공식품 수입 승인 조건 및 제조시설 등록 여부 확인",
+            "박람회 주최 측 및 현지 관할청의 축산/식품 반입 및 무상 시식 사전 서면 승인 확보",
+            "현장 판매 및 전시품 가격표 부착 가능/금지 규정 최종 확인",
+        ]),
+        ("원재료 & 패키징 라벨링", [
+            "알레르겐 표기 및 복합 원재료·첨가물 현지 기준 검증 및 규격서 구비",
+            "현지어 표기 라벨 내 책임자(수입자) 표기 및 유통기한·보관조건 표기 공간 확보",
+            "물류 규격(W×D×H, GTIN, 박스 입수, 팔레트 적재 단수) 및 공급 가격 조건 확정",
+        ]),
+        ("현장 운영 & 리스크 방어", [
+            "시식 현장용 알레르겐 안내 카드 제작 및 교차오염 방지 집기 세팅 완료",
+            "부스 면적 대비 가열/냉장 설비 규격 점검 및 피크타임 리허설 통과",
+            "인허가/규격 미확정 시 '상업 도입'에서 '수입 파트너 발굴/시장성 조사' 모드로 전환 준비",
+        ]),
+    ):
+        doc.add_paragraph(group_title).runs[0].bold = True
+        for item in items:
+            doc.add_paragraph(item, style="List Bullet")
+
     _add_muted(doc, "AI가 조사·기획한 부스 컨셉 초안입니다. 실제 집행 전 규정·인허가·물류 조건은 별도 확인이 필요합니다.")
+
+
+def _add_matrix_part(doc, matrix_result):
+    """품목별 유망시장(다국가 비교) - 같은 HS코드로 이미 조회해둔 결과가 있으면
+    후보국 비교 표만 담는다. 버블 매트릭스 차트 자체는 Word로 그리기 번거로워서
+    (PDF는 그림이라 그대로 넣을 수 있지만 Word는 표만) 표로 같은 정보를 전달한다."""
+    _add_section_heading(doc, "품목별 유망시장 비교 (같은 HS코드 기준)")
+    rows = []
+    for c in matrix_result["candidates"]:
+        share = c.get("korea_share_pct")
+        rows.append([
+            ("★ " if c.get("is_focus") else "") + c.get("label", ""),
+            c.get("quadrant") or "-",
+            f"{c.get('cagr_pct')}%" if c.get("cagr_pct") is not None else "-",
+            _pct(share),
+            _money(c.get("total_import_usd")),
+            _money(c.get("korea_import_usd")),
+        ])
+    _add_table(doc, ["국가", "사분면", "수입 성장률", "한국 점유율", "시장 규모", "한국산 수입액"], rows)
 
 
 def build_combined_report_docx(
     expo, product, country_label, market_result, trend_data, trend_form, question_labels,
     draft, booth_ready, selling_points, events, target_buyers, buyer_appeal, generated_at,
+    matrix_result=None, matrix=None, overview=None, import_line=None,
 ):
     """빠진 파트는 건너뛰고, 있는 파트만 담아서 .docx 바이트를 돌려준다."""
     doc = Document()
+    _setup_styles(doc)
 
     title = doc.add_heading(f"{expo.name}", level=0)
     for run in title.runs:
@@ -257,6 +362,8 @@ def build_combined_report_docx(
 
     if market_result:
         _add_market_part(doc, data)
+    if matrix_result:
+        _add_matrix_part(doc, matrix_result)
     if trend_data:
         _add_trend_part(doc, data)
     if booth_ready:

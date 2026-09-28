@@ -774,10 +774,22 @@ def _gather_combined_report_data(expo_id):
 
     # 1. 유망시장 조사 (캐시만, 네트워크 호출 없음)
     market_result = None
+    hs6 = None
     if product:
         hs6 = _hs6(product.hs_code)
         market_result = un_comtrade.get_cached_market_research(hs6, expo.country) if hs6 else None
     country_label = _country_ko(expo) or expo.country_ko or expo.country
+
+    # 1b. 품목별 유망시장 매트릭스 - 같은 HS코드로 "품목별 유망시장" 화면에서
+    # 이미 조회해둔 결과가 있으면 같이 넣는다 (역시 캐시만, 새로 조회하지 않음).
+    matrix_result, matrix, overview, import_line = None, None, None, None
+    if hs6:
+        matrix_result = un_comtrade.get_cached_multi_country_comparison(hs6)
+        if matrix_result:
+            matrix = build_matrix(matrix_result["candidates"], matrix_result["thresholds"])
+        overview = un_comtrade.get_cached_market_overview(hs6)
+        if overview:
+            import_line = _svg_line_series(overview["import_share_trend"], height=250)
 
     # 2. 트렌드 분석 (이미 끝난 job만, 새로 조사하지 않음)
     trend_data, trend_form = None, None
@@ -807,6 +819,7 @@ def _gather_combined_report_data(expo_id):
     return {
         "expo": expo, "product": product, "country_label": country_label,
         "market_result": market_result,
+        "matrix_result": matrix_result, "matrix": matrix, "overview": overview, "import_line": import_line,
         "trend_data": trend_data, "trend_form": trend_form, "question_labels": QUESTION_LABELS,
         "draft": draft, "booth_ready": booth_ready,
         "selling_points": json.loads(draft.selling_points) if booth_ready and draft.selling_points else [],
