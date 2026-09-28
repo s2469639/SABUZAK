@@ -26,10 +26,15 @@
       <span class="note" style="display:inline;">→ {{ row.country_ko or expo.country_ko or expo.country }}</span>
     </h3>
     {% if row.hs6 %}
-    <form method="post" class="research-form" action="{{ url_for('exhibition.market_research', expo_id=expo.id, product_id=row.product.id) }}">
-      {% if row.result %}<input type="hidden" name="force" value="1">{% endif %}
-      <button type="submit" class="btn-secondary">{{ '다시 조사하기' if row.result else '지금 조사하기' }}</button>
-    </form>
+    <div class="card-head-actions">
+      <form method="post" class="research-form" action="{{ url_for('exhibition.market_research', expo_id=expo.id, product_id=row.product.id) }}">
+        {% if row.result %}<input type="hidden" name="force" value="1">{% endif %}
+        <button type="submit" class="btn-secondary">{{ '다시 조사하기' if row.result else '지금 조사하기' }}</button>
+      </form>
+      {% if row.result %}
+      <a class="btn-secondary" href="{{ url_for('exhibition.market_report_pdf', expo_id=expo.id, product_id=row.product.id) }}">보고서로 내보내기</a>
+      {% endif %}
+    </div>
     {% else %}
     <span class="note">HS코드가 6자리 미만이라 UN Comtrade 조회 불가</span>
     {% endif %}

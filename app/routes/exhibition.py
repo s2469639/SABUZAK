@@ -1,9 +1,10 @@
 import math
 import re
 from collections import Counter
-from urllib.parse import urlencode
+from datetime import datetime
+from urllib.parse import quote, urlencode
 
-from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
+from flask import Blueprint, Response, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from app.extensions import db
@@ -714,6 +715,39 @@ def market_research(expo_id, product_id):
         flash(f"UN Comtrade 조사 중 오류가 발생했습니다: {e}", "danger")
 
     return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#market")
+
+
+@bp.route("/detail/<int:expo_id>/market-report/<int:product_id>")
+@login_required
+def market_report_pdf(expo_id, product_id):
+    """시장 개요 탭에 이미 나와 있는 조사 결과(캐시)를 인쇄용 레이아웃으로
+    다시 그려서 PDF로 내려준다. 새로 조사하거나 AI를 다시 부르지 않는다 -
+    "지금 조사하기"로 만들어둔 결과를 그대로 문서로 뽑는 것뿐이라 추가
+    비용이 들지 않는다."""
+    from weasyprint import HTML
+
+    expo = Exhibition.query.get_or_404(expo_id)
+    product = Product.query.filter_by(id=product_id, user_id=current_user.id).first_or_404()
+    hs6 = _hs6(product.hs_code)
+    result = un_comtrade.get_cached_market_research(hs6, expo.country) if hs6 else None
+    if not result:
+        flash("먼저 '지금 조사하기'로 시장 조사를 실행한 뒤 다시 시도해주세요.", "danger")
+        return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#market")
+
+    country_label = _country_ko(expo) or expo.country_ko or expo.country
+    html = render_template(
+        "exhibition/market_report_pdf.html",
+        expo=expo, product=product, result=result,
+        country_label=country_label, generated_at=datetime.now(),
+    )
+    pdf_bytes = HTML(string=html, base_url=request.url_root).write_pdf()
+
+    filename = f"{expo.name}_{product.name}_유망시장조사.pdf".replace("/", "-")
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
+    )
 
 
 @bp.route("/market-matrix", methods=["GET", "POST"])
