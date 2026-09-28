@@ -55,7 +55,7 @@
 
 <div class="card">
 <form method="post" action="{{ url_for('mail_template.revise_template', version=version) }}" class="revise-bar">
-  <input type="text" name="instruction" placeholder="수정 방향을 제시하세요 (예: 더 짧고 캐주얼하게)">
+  <input type="text" name="instruction" placeholder="이 메일의 목적/톤을 알려주세요 (예: 2차 팔로업, 할인율·결제조건 등 추가 거래 조건 제안 / 땡큐레터 / 단순 리마인드 / 더 짧고 캐주얼하게 등)">
   <button type="submit" class="btn-secondary">AI로 생성/수정하기</button>
 </form>
 
