@@ -738,7 +738,7 @@ def market_report_pdf(expo_id, product_id):
 
     country_label = _country_ko(expo) or expo.country_ko or expo.country
     item_desc_ko = (
-        un_comtrade.translate_item_desc(result["official_item_desc"])
+        un_comtrade.get_cached_item_desc_ko(result["official_item_desc"])
         if result.get("official_item_desc") else None
     )
     html = render_template(
@@ -784,7 +784,7 @@ def _gather_combined_report_data(expo_id):
         hs6 = _hs6(product.hs_code)
         market_result = un_comtrade.get_cached_market_research(hs6, expo.country) if hs6 else None
         if market_result and market_result.get("official_item_desc"):
-            market_item_desc_ko = un_comtrade.translate_item_desc(market_result["official_item_desc"])
+            market_item_desc_ko = un_comtrade.get_cached_item_desc_ko(market_result["official_item_desc"])
     country_label = _country_ko(expo) or expo.country_ko or expo.country
 
     # 1b. 품목별 유망시장 매트릭스 - 같은 HS코드로 "품목별 유망시장" 화면에서
@@ -960,7 +960,7 @@ def market_matrix_report_pdf():
         return redirect(url_for("exhibition.market_matrix", hscode=hscode))
 
     item_desc_ko = (
-        un_comtrade.translate_item_desc(result["official_item_desc"])
+        un_comtrade.get_cached_item_desc_ko(result["official_item_desc"])
         if result.get("official_item_desc") else None
     )
     matrix = build_matrix(result["candidates"], result["thresholds"])
