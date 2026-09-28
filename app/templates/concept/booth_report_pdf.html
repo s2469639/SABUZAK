@@ -169,6 +169,24 @@
     border-top: 1px solid #e5e7eb;
     padding-top: 8px;
   }
+
+  .checklist-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px 16px;
+    page-break-inside: avoid;
+  }
+  .checklist-group { margin-bottom: 10px; }
+  .checklist-group:last-child { margin-bottom: 0; }
+  .checklist-group-title {
+    display: block;
+    font-weight: 700;
+    font-size: 11px;
+    color: #ea580c;
+    margin-bottom: 4px;
+  }
+  .checklist-items { margin: 0; padding-left: 16px; }
+  .checklist-items li { margin-bottom: 2px; color: #4b5563; }
 </style>
 </head>
 <body>
@@ -255,6 +273,35 @@
 </div>
 {% endfor %}
 {% endif %}
+
+<h2 class="section-title">박람회 준비 &amp; 사전 검증 필수 체크리스트 (Gating Checklist)</h2>
+<div class="checklist-card">
+  {% set checklist = [
+    ("인허가 & 수입 적격성", [
+      "타깃 국가 동물성/가공식품 수입 승인 조건 및 제조시설 등록 여부 확인",
+      "박람회 주최 측 및 현지 관할청의 축산/식품 반입 및 무상 시식 사전 서면 승인 확보",
+      "현장 판매 및 전시품 가격표 부착 가능/금지 규정 최종 확인",
+    ]),
+    ("원재료 & 패키징 라벨링", [
+      "알레르겐 표기 및 복합 원재료·첨가물 현지 기준 검증 및 규격서 구비",
+      "현지어 표기 라벨 내 책임자(수입자) 표기 및 유통기한·보관조건 표기 공간 확보",
+      "물류 규격(W×D×H, GTIN, 박스 입수, 팔레트 적재 단수) 및 공급 가격 조건 확정",
+    ]),
+    ("현장 운영 & 리스크 방어", [
+      "시식 현장용 알레르겐 안내 카드 제작 및 교차오염 방지 집기 세팅 완료",
+      "부스 면적 대비 가열/냉장 설비 규격 점검 및 피크타임 리허설 통과",
+      "인허가/규격 미확정 시 '상업 도입'에서 '수입 파트너 발굴/시장성 조사' 모드로 전환 준비",
+    ]),
+  ] %}
+  {% for group_title, items in checklist %}
+  <div class="checklist-group">
+    <span class="checklist-group-title">{{ group_title }}</span>
+    <ul class="checklist-items">
+      {% for item in items %}<li>{{ item }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+</div>
 
 <div class="report-footer">
   AI가 조사·기획한 부스 컨셉 초안입니다. 실제 집행 전 규정·인허가·물류 조건은 별도 확인이 필요합니다.
