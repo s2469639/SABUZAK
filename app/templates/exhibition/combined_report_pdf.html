@@ -226,6 +226,7 @@
 <body>
 
 {# ============================ 표지 ============================ #}
+{% if 'cover' in render_parts %}
 <div class="cover">
   <div class="cover-kicker">FairMate · 통합 기획서</div>
   <div class="cover-title">{{ expo.name }}<br>{{ product.name if product else '제품' }} 진출 기획서</div>
@@ -243,9 +244,10 @@
       {% if not booth_ready %}<span class="skip">— 미작성, 이 파트는 생략됨</span>{% endif %}</div>
   </div>
 </div>
+{% endif %}
 
 {# ============================ PART 1. 유망시장 조사 ============================ #}
-{% if market_result %}
+{% if 'part1' in render_parts and market_result %}
 {% set result = market_result %}
 <div class="part-header">
   <div class="part-kicker">PART 1</div>
@@ -465,7 +467,7 @@
 {% endif %}
 
 {# ============================ PART 2. 트렌드 분석 ============================ #}
-{% if trend_data %}
+{% if 'part2' in render_parts and trend_data %}
 <div class="part-header">
   <div class="part-kicker">PART 2</div>
   <div class="part-title">트렌드 분석 — {{ trend_form.country or country_label }}</div>
@@ -543,7 +545,7 @@
 {% endif %}
 
 {# ============================ PART 3. 부스 컨셉 기획 ============================ #}
-{% if booth_ready %}
+{% if 'part3' in render_parts and booth_ready %}
 <div class="part-header">
   <div class="part-kicker">PART 3</div>
   <div class="part-title">부스 컨셉 기획</div>
