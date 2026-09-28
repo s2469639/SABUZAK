@@ -638,6 +638,17 @@ p.page-desc:not(:last-child) {
   flex: 1;
 }
 
+/* 마이페어 목록의 박람회명: 평범한 굵은 글씨처럼 보이되, 누르면 그
+   박람회 상세로 가는 링크라는 걸 hover 시에만 살짝 드러낸다 */
+.draft-expo-link {
+  color: inherit;
+  text-decoration: none;
+}
+.draft-expo-link:hover {
+  color: #ea580c;
+  text-decoration: underline;
+}
+
 .hs-tag {
   margin-left: 8px;
   font-size: 12px;

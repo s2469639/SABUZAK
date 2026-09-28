@@ -14,7 +14,7 @@
   {% for draft in drafts %}
   <div class="product-row">
     <div class="product-info">
-      <strong>{{ draft.exhibition_name }}</strong>
+      <strong><a href="{{ url_for('exhibition.detail', expo_id=draft.exhibition_id) }}" class="draft-expo-link">{{ draft.exhibition_name }}</a></strong>
       <span class="hs-tag">{{ draft.exhibition_country }}</span>
       <p class="ingredients">{{ status_labels.get(draft.status, draft.status) }} · 마지막 수정 {{ draft.updated_at.strftime('%Y-%m-%d') }}</p>
     </div>
