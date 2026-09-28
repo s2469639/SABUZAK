@@ -13,9 +13,22 @@
       color: #9ca3af;
     }
   }
+  /* 시스템에 깔린 한글 폰트에 기대지 않고, 폰트 파일을 직접 지정한다.
+     배포 서버(OS)에 한글 폰트가 없으면 글자가 깨지거나, 폰트마다 다른
+     대체 글꼴이 섞여서 굵기가 안 맞고 줄이 밀려 보이는 문제가 있었다. */
+  @font-face {
+    font-family: "Report KR";
+    src: url("{{ font_regular_uri }}") format("woff2");
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: "Report KR";
+    src: url("{{ font_bold_uri }}") format("woff2");
+    font-weight: 700;
+  }
   * { box-sizing: border-box; }
   body {
-    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    font-family: "Report KR", sans-serif;
     color: #1f2933;
     font-size: 11px;
     line-height: 1.65;
