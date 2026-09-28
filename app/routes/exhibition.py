@@ -935,10 +935,22 @@ def market_matrix_report_pdf():
         un_comtrade.translate_item_desc(result["official_item_desc"])
         if result.get("official_item_desc") else None
     )
+    matrix = build_matrix(result["candidates"], result["thresholds"])
+
+    # ①②(세계시장 현황)도 화면과 동일하게 캐시가 있으면 그대로 보여준다.
+    # force=False라 여기서도 새로 API를 부르지 않고, 없으면 그냥 생략한다.
+    overview = import_line = export_line = None
+    try:
+        overview = un_comtrade.get_market_overview(hscode, top_n=top_n or 10, force=False)
+        import_line = _svg_line_series(overview["import_share_trend"], height=250)
+        export_line = _svg_line_series(overview["export_share_trend"], height=250)
+    except Exception as e:
+        overview = {"unavailable_reason": str(e)}
 
     html = render_template(
         "exhibition/market_matrix_report_pdf.html",
         result=result, hscode=hscode, top_n=top_n, item_desc_ko=item_desc_ko,
+        matrix=matrix, overview=overview, import_line=import_line, export_line=export_line,
         generated_at=datetime.now(),
         **pdf_font_context(),
     )

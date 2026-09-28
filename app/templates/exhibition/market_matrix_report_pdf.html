@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>HS {{ hscode }} 유망시장 매트릭스</title>
-{% from "exhibition/_un_macros.html" import money %}
+{% from "exhibition/_un_macros.html" import money, hbar_chart %}
 <style>
   @page {
     size: A4;
@@ -64,6 +64,53 @@
   .ai-list li { margin-bottom: 2px; }
 
   .report-footer { margin-top: 14px; font-size: 9.5px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 8px; }
+
+  /* ①②③ (세계시장 현황 · 유망시장 매트릭스) - un_dashboard.css를 PDF용으로 축약 이식 */
+  .grid-2 { display: flex; gap: 14px; }
+  .grid-2 > section { flex: 1; min-width: 0; }
+  .un-card { border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px 14px; page-break-inside: avoid; }
+  .un-unit { font-size: 9px; color: #9ca3af; margin-bottom: 6px; }
+  .un-empty { color: #9ca3af; text-align: center; padding: 16px 0; font-size: 9.5px; }
+  .un-banner { background: #fffbe6; color: #b06000; border-left: 3px solid #f5b400; padding: 6px 10px; font-size: 9px; margin-bottom: 8px; border-radius: 3px; }
+
+  .hbars { display: flex; flex-direction: column; gap: 4px; }
+  .hbar-row { display: grid; grid-template-columns: 16px 76px 1fr 46px; align-items: center; gap: 6px; font-size: 9px; }
+  .hbar-rank { color: #9ca3af; text-align: right; }
+  .hbar-name { font-weight: 500; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hbar-row.kor .hbar-name, .hbar-row.kor .hbar-val { color: #188038; font-weight: 700; }
+  .hbar-track { height: 10px; background: #f1f3f4; border-radius: 2px; overflow: hidden; }
+  .hbar-fill { display: block; height: 100%; background: #d4d9e1; border-radius: 2px; }
+  .hbar-row.top .hbar-fill { background: #1a8cff; }
+  .hbar-row.kor .hbar-fill { background: #34c38f; }
+  .hbar-val { text-align: right; color: #6b7280; }
+
+  .line-chart-legend { display: flex; gap: 2px 8px; flex-wrap: wrap; justify-content: center; font-size: 8.5px; color: #6b7280; margin: 2px 0 6px; }
+  .line-chart-legend span { display: inline-flex; align-items: center; gap: 3px; }
+  .line-chart-legend .swatch { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .axis-label-svg { font-size: 8px; fill: #9ca3af; }
+
+  .matrix-canvas { position: relative; padding: 14px 20px 40px 56px; }
+  .plot { position: relative; height: 300px; }
+  .quad-bg { position: absolute; }
+  .q-bg-tl { background: #f4f8ff; } .q-bg-tr { background: #f1faf4; }
+  .q-bg-bl { background: #f7f8fa; } .q-bg-br { background: #fffaf0; }
+  .y-tick { position: absolute; left: -46px; width: 42px; text-align: right; font-size: 8px; color: #c07aa9; transform: translateY(-50%); }
+  .x-tick { position: absolute; top: calc(100% + 8px); font-size: 8px; color: #6b7280; transform: translateX(-50%); white-space: nowrap; }
+  .axis-line { position: absolute; z-index: 1; }
+  .axis-line.h { left: 0; right: 0; height: 0; border-top: 1px dashed #b7bfcb; }
+  .axis-line.v { top: 0; bottom: 0; width: 0; border-left: 1px dashed #b7bfcb; }
+  .axis-title-x { position: absolute; left: 50%; transform: translateX(-50%); top: calc(100% + 22px); font-size: 8.5px; font-weight: 700; color: #6b7280; white-space: nowrap; }
+  .axis-title-y { position: absolute; left: -50px; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); font-size: 8.5px; font-weight: 700; color: #c07aa9; white-space: nowrap; }
+  .quadrant-tag { position: absolute; font-size: 8px; font-weight: 700; padding: 2px 6px; background: #fff; border: 1px solid; border-radius: 3px; z-index: 1; }
+  .quadrant-tag.q-focus { color: #188038; border-color: #b7dfc2; }
+  .quadrant-tag.q-harvest { color: #1a73e8; border-color: #c3d7f7; }
+  .quadrant-tag.q-strengthen { color: #b06000; border-color: #f0d9a8; }
+  .quadrant-tag.q-low { color: #666; border-color: #ddd; }
+  .bubble { position: absolute; border-radius: 50%; background: #8fcbff; opacity: 0.9; transform: translate(-50%, -50%); z-index: 2; }
+  .bubble.focus { background: #ffc36b; }
+  .bubble-label { position: absolute; font-size: 8px; font-weight: 700; color: #3b4453; white-space: nowrap; transform: translateX(-50%); z-index: 3; }
+  .bubble-label.focus { color: #c25e00; }
+  .matrix-note { font-size: 8.5px; color: #9ca3af; margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -78,7 +125,74 @@
   </div>
 </div>
 
-<h2 class="section-title">비교 국가별 상세</h2>
+<div class="grid-2">
+  <section class="un-card">
+    <h2 class="section-title" style="margin-top:0;">① 세계시장 교역 순위</h2>
+    {% if overview and overview.unavailable_reason %}
+      <div class="un-empty">세계시장 교역 현황을 가져오지 못했습니다 ({{ overview.unavailable_reason }}).</div>
+    {% elif overview %}
+      <div class="un-unit">단위: USD · {{ overview.years[-1] }}년 기준 상위 {{ top_n or 10 }}개국 (수입 기준)</div>
+      {{ hbar_chart(overview.import_ranking) }}
+    {% else %}
+      <div class="un-empty">데이터 없음</div>
+    {% endif %}
+  </section>
+
+  <section class="un-card">
+    <h2 class="section-title" style="margin-top:0;">② 주요국 세계시장 점유율</h2>
+    {% if overview and not overview.unavailable_reason and import_line and import_line.lines %}
+      <div class="un-unit">단위: % (수입 기준)</div>
+      {% with chart = import_line %}{% include "exhibition/_un_line_chart.html" %}{% endwith %}
+    {% else %}
+      <div class="un-empty">데이터 없음</div>
+    {% endif %}
+  </section>
+</div>
+
+<h2 class="section-title">③ 유망시장 매트릭스</h2>
+<p style="color:#6b7280; font-size:9px; margin:0 0 8px;">X축 = 수입시장 성장률(CAGR) · Y축 = 한국 점유율 · 버블 크기 = 수입금액</p>
+{% if result.comparison_too_small %}
+  <div class="un-banner">비교 국가가 {{ result.candidates | length }}개뿐이라 사분면 구분은 표시하지 않았습니다.</div>
+{% elif result.korea_presence == 'negligible' %}
+  <div class="un-banner">이 품목은 모든 후보국에서 한국 점유율이 {{ result.thresholds.min_meaningful_share_pct }}% 미만입니다.</div>
+{% endif %}
+{% if matrix and matrix.points %}
+  <div class="matrix-canvas">
+    <div class="plot">
+      {% if not result.comparison_too_small %}
+      <div class="quad-bg q-bg-tl" style="left:0; top:0; width:{{ matrix.threshold_x_pct }}%; height:{{ matrix.threshold_y_pct }}%;"></div>
+      <div class="quad-bg q-bg-tr" style="left:{{ matrix.threshold_x_pct }}%; right:0; top:0; height:{{ matrix.threshold_y_pct }}%;"></div>
+      <div class="quad-bg q-bg-bl" style="left:0; bottom:0; width:{{ matrix.threshold_x_pct }}%; top:{{ matrix.threshold_y_pct }}%;"></div>
+      <div class="quad-bg q-bg-br" style="left:{{ matrix.threshold_x_pct }}%; right:0; bottom:0; top:{{ matrix.threshold_y_pct }}%;"></div>
+      <div class="axis-line h" style="top: {{ matrix.threshold_y_pct }}%;"></div>
+      <div class="axis-line v" style="left: {{ matrix.threshold_x_pct }}%;"></div>
+      {% endif %}
+      {% for t in matrix.y_ticks %}<div class="y-tick" style="top: {{ t.pct }}%;">{{ t.value }}%</div>{% endfor %}
+      {% for t in matrix.x_ticks %}<div class="x-tick" style="left: {{ t.pct }}%;">{{ t.value }}%</div>{% endfor %}
+      <span class="axis-title-y">한국 점유율(%)</span>
+      <span class="axis-title-x">수입시장 성장률 CAGR(%)</span>
+      {% if not result.comparison_too_small %}
+        {% for q in matrix.quadrants %}
+          {% if q.pos == 'tl' %}{% set qpos = 'left:4px; top:4px;' %}
+          {% elif q.pos == 'tr' %}{% set qpos = 'right:4px; top:4px;' %}
+          {% elif q.pos == 'bl' %}{% set qpos = 'left:4px; bottom:4px;' %}
+          {% else %}{% set qpos = 'right:4px; bottom:4px;' %}{% endif %}
+          <span class="quadrant-tag {{ q.css }}" style="{{ qpos }}">{{ q.label }}</span>
+        {% endfor %}
+      {% endif %}
+      {% for b in matrix.points | sort(attribute='bubble_radius', reverse=true) %}
+        <div class="bubble{{ ' focus' if b.is_focus }}"
+             style="left: {{ b.x_pct }}%; top: {{ b.y_pct }}%; width: {{ b.bubble_radius }}px; height: {{ b.bubble_radius }}px;"></div>
+        <div class="bubble-label{{ ' focus' if b.is_focus }}" style="left: {{ b.x_pct }}%; top: calc({{ b.y_pct }}% + {{ b.bubble_radius / 2 + 3 }}px);">{{ '★ ' if b.is_focus }}{{ b.label }}</div>
+      {% endfor %}
+    </div>
+  </div>
+  <p class="matrix-note">위로 갈수록 한국이 이미 선전 중인 시장 · 오른쪽으로 갈수록 시장이 빠르게 크고 있음 · 버블이 클수록 큰 시장</p>
+{% else %}
+  <div class="un-empty">매트릭스를 그릴 데이터가 부족합니다.</div>
+{% endif %}
+
+<h2 class="section-title">④ 비교 국가별 상세</h2>
 <table class="report-table">
   <tr>
     <th>국가</th><th>사분면</th><th>수입 성장률</th><th>한국 점유율</th>
@@ -103,7 +217,7 @@
 
 {% if result.ai_summary %}
 {% set ai = result.ai_summary %}
-<h2 class="section-title">AI 분석</h2>
+<h2 class="section-title">⑤ AI 분석</h2>
 <div class="ai-box">
   {% if ai.key_findings %}
   <div class="ai-block">
