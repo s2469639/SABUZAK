@@ -15,7 +15,7 @@ from app.routes.trend_v2 import QUESTION_LABELS, _get_job as get_trend_job
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
 from app.services.exchange import get_exchange_info
-from app.services.pdf_report import pdf_font_context
+from app.services.pdf_report import pdf_font_context, render_pdf_bytes
 from app.services.wto_client import get_country_tariff_averages
 from app.services.trains_client import (
     fetch_regulations_for_country,
@@ -726,8 +726,6 @@ def market_report_pdf(expo_id, product_id):
     다시 그려서 PDF로 내려준다. 새로 조사하거나 AI를 다시 부르지 않는다 -
     "지금 조사하기"로 만들어둔 결과를 그대로 문서로 뽑는 것뿐이라 추가
     비용이 들지 않는다."""
-    from weasyprint import HTML
-
     expo = Exhibition.query.get_or_404(expo_id)
     product = Product.query.filter_by(id=product_id, user_id=current_user.id).first_or_404()
     hs6 = _hs6(product.hs_code)
@@ -752,7 +750,7 @@ def market_report_pdf(expo_id, product_id):
     # 시스템 폰트가 없어도 항상 같은 폰트로 렌더링된다. Render 같은 환경은
     # 보통 한글 폰트가 안 깔려 있어서, 시스템 폰트에 기대면 글자가 깨지거나
     # (문자 없음) 폰트마다 굵기가 안 맞아 밀려 보이는 문제가 있었다.
-    pdf_bytes = HTML(string=html).write_pdf()
+    pdf_bytes = render_pdf_bytes(html)
 
     filename = f"{expo.name}_{product.name}_유망시장조사.pdf".replace("/", "-")
     return Response(
@@ -839,8 +837,6 @@ def _gather_combined_report_data(expo_id):
 @bp.route("/detail/<int:expo_id>/combined-report")
 @login_required
 def combined_report_pdf(expo_id):
-    from weasyprint import HTML
-
     data = _gather_combined_report_data(expo_id)
     if data is None:
         flash("아직 완료된 조사·기획이 없습니다. 유망시장 조사·트렌드 분석·부스 컨셉 중 하나라도 먼저 만들어주세요.", "danger")
@@ -850,7 +846,7 @@ def combined_report_pdf(expo_id):
         "exhibition/combined_report_pdf.html", **data,
         generated_at=datetime.now(), **pdf_font_context(),
     )
-    pdf_bytes = HTML(string=html).write_pdf()
+    pdf_bytes = render_pdf_bytes(html)
 
     filename = f"{data['expo'].name}_통합기획서.pdf".replace("/", "-")
     return Response(
@@ -929,8 +925,6 @@ def market_matrix_report_pdf():
     """유망시장 매트릭스(품목별 유망시장) 화면에 이미 나와 있는 결과를 PDF로
     내려준다. force=False로만 조회하므로 캐시에 있는 결과만 쓰고, 캐시가
     없으면(=아직 조회한 적 없으면) 새로 AI를 부르지 않고 안내만 한다."""
-    from weasyprint import HTML
-
     hscode = _hs6(request.args.get("hscode", "")) or re.sub(r"\D", "", request.args.get("hscode", ""))
     candidates_raw = request.args.get("candidates", "").strip()
     try:
@@ -982,7 +976,7 @@ def market_matrix_report_pdf():
         generated_at=datetime.now(),
         **pdf_font_context(),
     )
-    pdf_bytes = HTML(string=html).write_pdf()
+    pdf_bytes = render_pdf_bytes(html)
 
     filename = f"HS{hscode}_유망시장매트릭스.pdf"
     return Response(
