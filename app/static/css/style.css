@@ -2825,6 +2825,14 @@ p.page-desc:not(:last-child) {
   .row-name-company-position > .form-field:nth-child(2) {
     flex: 1 1 100%;
   }
+
+  /* form-row가 세로로 쌓이면 각 칸이 사실상 그냥 한 줄씩인데,
+     ".form-field:last-child { margin-bottom: 0 }"가 각 row의 마지막
+     칸(직급, 전화번호 등)에 걸려서 그 다음 칸(이메일, 주소)과 유독
+     붙어 보였다. 모바일에서는 전부 같은 간격으로. */
+  .form-row > .form-field:last-child {
+    margin-bottom: 18px;
+  }
 }
 
 /* 어느 화면 요소가 컨테이너 폭을 넘어서더라도(계산 실수 등) 페이지
