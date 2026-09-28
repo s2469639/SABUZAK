@@ -850,7 +850,7 @@ def _situation_flags(derived):
     elif rank and rank <= 3:
         flags.append(f"한국이 이미 상위 공급국 ({rank}위, 점유율 {share}%)")
     else:
-        flags.append(f"한국 존재감 작음 ({rank or '-'}위, 점유율 {share}%)")
+        flags.append(f"한국 점유율 낮음 ({rank or '-'}위, 점유율 {share}%)")
 
     ytd = korea.get("customs_ytd") or {}
     if ytd.get("yoy_pct") is not None:
@@ -912,6 +912,8 @@ def interpret_with_llm(client, model, official_item_desc, hscode, target_country
 6. yearly_table의 note가 있는 연도는 집계 미완 가능성이 있으니 그 연도만으로 "역성장"이라 단정하지 마세요.
 7. is_mirror_estimate가 true면 "상대국 보고 기반 추정치"라는 점을 시장 매력도 문단에서 밝히세요.
 8. 과장된 표현(예: "엄청난", "반드시 성공")을 쓰지 말고, 담당자에게 보고하는 담백한 문체로 쓰세요.
+8-1. "존재감이 작다/크다", "입지가 좁다"처럼 막연한 표현 대신, 웬만하면 "점유율 X%", "공급국 N위"처럼
+     구체적인 수치로 쓰세요.
 9. 나라 이름은 "{country}"의 이름 부분으로 쓰고, "DEU 시장"처럼 3자리 코드만 쓰지 마세요.
 10. yearly_table과 computed_metrics의 모든 연도 값은 이미 집계가 끝난 "실제 통계"입니다.
     "~로 예상된다", "~할 것으로 전망된다", "~로 보인다"처럼 추측하는 표현을 절대 쓰지 말고
@@ -1045,6 +1047,57 @@ def get_cached_market_research(hscode: str, target_country: str, ttl_days: int =
         if result:
             result["derived"] = derive_detail_metrics(result)
         return result
+    finally:
+        conn.close()
+
+
+def get_cached_multi_country_comparison(
+    hscode: str, top_n: int = 10, years: list[int] | None = None,
+    db_path: str | None = None, ttl_days: int = CACHE_TTL_DAYS,
+):
+    """네트워크/AI 호출 없이 캐시만 읽는다 (통합 기획서처럼 "이미 조회해둔 결과만
+    있으면 보여주고, 없으면 그냥 생략" 용도). get_multi_country_comparison()은
+    force=False라도 캐시가 없으면 그 자리에서 새로 계산(API+AI 호출)해버리므로
+    이 용도로는 못 쓴다. 관심 국가(candidate_countries) 없이 수입 상위 top_n개국
+    기본 비교 결과만 조회한다 - 캐시 없으면 None."""
+    if not HSCODE_RE.match(hscode):
+        return None
+    if years is None:
+        years, _ = default_years()
+    years = sorted(years)
+    years_key = ",".join(str(y) for y in years)
+    result_key = f"{years_key}|top{top_n}|"
+
+    db_path = db_path or DEFAULT_DB_PATH
+    os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
+    conn = sqlite3.connect(db_path, timeout=10)
+    try:
+        ensure_multi_schema(conn)
+        return _load_result_cache(conn, hscode, result_key, ttl_days)
+    finally:
+        conn.close()
+
+
+def get_cached_market_overview(
+    hscode: str, years: list[int] | None = None,
+    db_path: str | None = None, ttl_days: int = CACHE_TTL_DAYS,
+):
+    """get_cached_multi_country_comparison()과 같은 이유로, get_market_overview()의
+    캐시만 읽는 버전. 캐시 없으면 None."""
+    if not HSCODE_RE.match(hscode):
+        return None
+    if years is None:
+        base_year = datetime.now(timezone.utc).year - 2
+        years = [base_year - 4, base_year - 3, base_year - 2, base_year - 1, base_year]
+    years = sorted(years)
+    years_key = ",".join(str(y) for y in years)
+
+    db_path = db_path or DEFAULT_DB_PATH
+    os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
+    conn = sqlite3.connect(db_path, timeout=10)
+    try:
+        ensure_overview_schema(conn)
+        return _load_overview_cache(conn, hscode, years_key, ttl_days)
     finally:
         conn.close()
 
@@ -1446,7 +1499,8 @@ korea_export_customs_usd는 한국 관세청 기준 한국의 수출액(FOB)으�
 [데이터 끝]
 
 한국 중소기업 관점에서 담당자에게 보고하는 담백한 문체로 작성하세요. 금액은 "약 23억 달러"처럼
-읽기 쉽게 쓰고, 성장률에는 기간(cagr_start_year~cagr_end_year)을 함께 밝히세요.
+읽기 쉽게 쓰고, 성장률에는 기간(cagr_start_year~cagr_end_year)을 함께 밝히세요. "존재감이 작다/크다"
+처럼 막연한 표현 대신, 웬만하면 "점유율 X%", "공급국 N위"처럼 구체적인 수치로 쓰세요.
 1) key_findings: 비교 국가 전체에서 데이터로 드러나는 핵심 사실 3~4개 (각 1문장, 근거 수치 포함)
 2) top_priority_markets: 우선 공략 국가 1~3개와 이유 (이유는 2~3문장, 시장 규모·증가 금액·한국 현황
    중 근거 수치 2개 이상 포함)

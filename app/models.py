@@ -197,6 +197,26 @@ class ConceptDraft(db.Model):
 
     user = db.relationship("User", backref=db.backref("concept_drafts", lazy=True))
 
+    @staticmethod
+    def get_or_create(user_id, expo):
+        """'부스 컨셉 기획' 버튼을 안 눌러도, 시장 개요 조사·트렌드 조사처럼 더 가벼운
+        (토큰 비용이 적거나 없는) 액션만 해봤어도 '작성 중인 박람회'/바이어 메일 박람회
+        목록에 뜨도록 draft를 미리 만들어둔다. 여기서는 절대 AI 생성(gpt-4o 부스 기획
+        등)을 호출하지 않는다 - status="concept"인 빈 draft만 만들고, 실제 컨셉 생성은
+        여전히 사용자가 '생성하기'를 눌러야 시작된다."""
+        draft = ConceptDraft.query.filter_by(user_id=user_id, exhibition_id=expo.id).first()
+        if draft is None:
+            draft = ConceptDraft(
+                user_id=user_id,
+                exhibition_id=expo.id,
+                exhibition_name=expo.name,
+                exhibition_country=expo.country_ko or expo.country,
+                status="concept",
+            )
+            db.session.add(draft)
+            db.session.commit()
+        return draft
+
     def __repr__(self):
         return f"<ConceptDraft {self.exhibition_name} ({self.status})>"
 
@@ -243,6 +263,9 @@ class EmailTemplate(db.Model):
     subject = db.Column(db.String(255))
     body = db.Column(db.Text)
     is_active = db.Column(db.Boolean, default=False, nullable=False)
+    # 이 버전(발송 단계)에서 같이 보내면 좋은 자료 체크리스트 - 실제 파일을 물고 있는 게
+    # 아니라 안내용 체크리스트라 JSON으로 {"항목 텍스트": true/false}만 저장한다.
+    attachment_checklist = db.Column(db.Text)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user = db.relationship("User", backref=db.backref("email_templates", lazy=True))

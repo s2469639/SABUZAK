@@ -1,18 +1,21 @@
+import json
 import math
 import re
 from collections import Counter
-from urllib.parse import urlencode
+from datetime import datetime
+from urllib.parse import quote, urlencode
 
-from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
+from flask import Blueprint, Response, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from app.extensions import db
-from app.models import Exhibition, NtmMeasure, Product, TrendResult
+from app.models import ConceptDraft, Exhibition, NtmMeasure, Product, TrendResult
 from app.routes.dashboard import CONTINENT_DB_VALUES, is_pipeline_running, pop_pipeline_banner
-from app.routes.trend_v2 import _get_job as get_trend_job
+from app.routes.trend_v2 import QUESTION_LABELS, _get_job as get_trend_job
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
 from app.services.exchange import get_exchange_info
+from app.services.pdf_report import pdf_font_context
 from app.services.wto_client import get_country_tariff_averages
 from app.services.trains_client import (
     fetch_regulations_for_country,
@@ -707,10 +710,147 @@ def market_research(expo_id, product_id):
     try:
         # 성공 시엔 시장 개요 탭에 결과가 바로 보이므로 따로 알리지 않는다
         un_comtrade.get_market_research(hs6, expo.country, force=force)
+        # 부스 컨셉 기획(AI 생성, 토큰 비용 큼)을 안 눌러도 시장 조사를 해봤으면
+        # '작성 중인 박람회'/바이어 메일 박람회 목록에 뜨도록 draft를 만들어둔다
+        ConceptDraft.get_or_create(current_user.id, expo)
     except Exception as e:
         flash(f"UN Comtrade 조사 중 오류가 발생했습니다: {e}", "danger")
 
     return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#market")
+
+
+@bp.route("/detail/<int:expo_id>/market-report/<int:product_id>")
+@login_required
+def market_report_pdf(expo_id, product_id):
+    """시장 개요 탭에 이미 나와 있는 조사 결과(캐시)를 인쇄용 레이아웃으로
+    다시 그려서 PDF로 내려준다. 새로 조사하거나 AI를 다시 부르지 않는다 -
+    "지금 조사하기"로 만들어둔 결과를 그대로 문서로 뽑는 것뿐이라 추가
+    비용이 들지 않는다."""
+    from weasyprint import HTML
+
+    expo = Exhibition.query.get_or_404(expo_id)
+    product = Product.query.filter_by(id=product_id, user_id=current_user.id).first_or_404()
+    hs6 = _hs6(product.hs_code)
+    result = un_comtrade.get_cached_market_research(hs6, expo.country) if hs6 else None
+    if not result:
+        flash("먼저 '지금 조사하기'로 시장 조사를 실행한 뒤 다시 시도해주세요.", "danger")
+        return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#market")
+
+    country_label = _country_ko(expo) or expo.country_ko or expo.country
+    html = render_template(
+        "exhibition/market_report_pdf.html",
+        expo=expo, product=product, result=result,
+        country_label=country_label, generated_at=datetime.now(),
+        **pdf_font_context(),
+    )
+    # base_url 없이 문자열만 넘긴다 - 폰트는 @font-face에 절대 file:// 경로를
+    # 직접 박아넣으므로, 배포 서버(운영체제에 한글 폰트가 없을 수 있음)에
+    # 시스템 폰트가 없어도 항상 같은 폰트로 렌더링된다. Render 같은 환경은
+    # 보통 한글 폰트가 안 깔려 있어서, 시스템 폰트에 기대면 글자가 깨지거나
+    # (문자 없음) 폰트마다 굵기가 안 맞아 밀려 보이는 문제가 있었다.
+    pdf_bytes = HTML(string=html).write_pdf()
+
+    filename = f"{expo.name}_{product.name}_유망시장조사.pdf".replace("/", "-")
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
+    )
+
+
+def _gather_combined_report_data(expo_id):
+    """유망시장 조사 + 트렌드 분석 + 부스 컨셉 기획, 이미 만들어둔 결과 세 가지를
+    모은다 (PDF/Word 두 내보내기 라우트가 공통으로 씀). 셋 다 새로 생성하지 않는다 -
+    AI를 다시 부르지 않으므로 추가 비용이 들지 않는다. 셋 중 하나라도 없으면 그
+    파트는 건너뛰고, 하나도 없으면 None을 돌려준다."""
+    expo = Exhibition.query.get_or_404(expo_id)
+    linked_products = Product.query.filter(
+        Product.user_id == current_user.id,
+        Product.is_checked == True,  # noqa: E712
+        Product.hs_code.isnot(None),
+        Product.hs_code != "",
+    ).all()
+    product = linked_products[0] if linked_products else None
+
+    # 1. 유망시장 조사 (캐시만, 네트워크 호출 없음)
+    market_result = None
+    hs6 = None
+    if product:
+        hs6 = _hs6(product.hs_code)
+        market_result = un_comtrade.get_cached_market_research(hs6, expo.country) if hs6 else None
+    country_label = _country_ko(expo) or expo.country_ko or expo.country
+
+    # 1b. 품목별 유망시장 매트릭스 - 같은 HS코드로 "품목별 유망시장" 화면에서
+    # 이미 조회해둔 결과가 있으면 같이 넣는다 (역시 캐시만, 새로 조회하지 않음).
+    matrix_result, matrix, overview, import_line = None, None, None, None
+    if hs6:
+        matrix_result = un_comtrade.get_cached_multi_country_comparison(hs6)
+        if matrix_result:
+            matrix = build_matrix(matrix_result["candidates"], matrix_result["thresholds"])
+        overview = un_comtrade.get_cached_market_overview(hs6)
+        if overview:
+            import_line = _svg_line_series(overview["import_share_trend"], height=250)
+
+    # 2. 트렌드 분석 (이미 끝난 job만, 새로 조사하지 않음)
+    trend_data, trend_form = None, None
+    if product:
+        trend_row = TrendResult.query.filter_by(
+            user_id=current_user.id, exhibition_id=expo.id, product_id=product.id,
+        ).first()
+        if trend_row and trend_row.job_id:
+            job = get_trend_job(trend_row.job_id, "trend")
+            if job and job["status"] == "done" and job.get("result"):
+                trend_data, trend_form = job["result"], job.get("form") or {}
+
+    # 3. 부스 컨셉 기획 (이미 생성된 draft만, 새로 생성하지 않음)
+    draft = ConceptDraft.query.filter_by(user_id=current_user.id, exhibition_id=expo.id).first()
+    booth_ready = bool(draft and draft.theme)
+    buyer_appeal = []
+    if booth_ready:
+        try:
+            extra = json.loads(draft.extra_data) if draft.extra_data else {}
+        except ValueError:
+            extra = {}
+        buyer_appeal = extra.get("buyer_appeal") or []
+
+    if not market_result and not trend_data and not booth_ready:
+        return None
+
+    return {
+        "expo": expo, "product": product, "country_label": country_label,
+        "market_result": market_result,
+        "matrix_result": matrix_result, "matrix": matrix, "overview": overview, "import_line": import_line,
+        "trend_data": trend_data, "trend_form": trend_form, "question_labels": QUESTION_LABELS,
+        "draft": draft, "booth_ready": booth_ready,
+        "selling_points": json.loads(draft.selling_points) if booth_ready and draft.selling_points else [],
+        "events": json.loads(draft.events) if booth_ready and draft.events else [],
+        "target_buyers": json.loads(draft.target_buyers) if booth_ready and draft.target_buyers else [],
+        "buyer_appeal": buyer_appeal,
+    }
+
+
+@bp.route("/detail/<int:expo_id>/combined-report")
+@login_required
+def combined_report_pdf(expo_id):
+    from weasyprint import HTML
+
+    data = _gather_combined_report_data(expo_id)
+    if data is None:
+        flash("아직 완료된 조사·기획이 없습니다. 유망시장 조사·트렌드 분석·부스 컨셉 중 하나라도 먼저 만들어주세요.", "danger")
+        return redirect(url_for("exhibition.detail", expo_id=expo_id))
+
+    html = render_template(
+        "exhibition/combined_report_pdf.html", **data,
+        generated_at=datetime.now(), **pdf_font_context(),
+    )
+    pdf_bytes = HTML(string=html).write_pdf()
+
+    filename = f"{data['expo'].name}_통합기획서.pdf".replace("/", "-")
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
+    )
 
 
 @bp.route("/market-matrix", methods=["GET", "POST"])
@@ -774,6 +914,75 @@ def market_matrix():
                 ctx["overview"] = {"unavailable_reason": str(e)}
 
     return render_template("exhibition/market_matrix.html", **ctx)
+
+
+@bp.route("/market-matrix/report")
+@login_required
+def market_matrix_report_pdf():
+    """유망시장 매트릭스(품목별 유망시장) 화면에 이미 나와 있는 결과를 PDF로
+    내려준다. force=False로만 조회하므로 캐시에 있는 결과만 쓰고, 캐시가
+    없으면(=아직 조회한 적 없으면) 새로 AI를 부르지 않고 안내만 한다."""
+    from weasyprint import HTML
+
+    hscode = _hs6(request.args.get("hscode", "")) or re.sub(r"\D", "", request.args.get("hscode", ""))
+    candidates_raw = request.args.get("candidates", "").strip()
+    try:
+        top_n = int(request.args.get("top_n") or 10)
+    except (TypeError, ValueError):
+        top_n = 10
+    top_n = max(0, min(top_n, 20))
+
+    if not re.fullmatch(r"\d{6}", hscode):
+        flash("HS코드는 6자리 숫자로 입력해주세요 (예: 1905.90).", "danger")
+        return redirect(url_for("exhibition.market_matrix"))
+
+    candidate_list = _normalize_country_inputs(
+        c for c in re.split(r"[,，;、/]", candidates_raw) if c.strip()
+    )
+
+    try:
+        result = un_comtrade.get_multi_country_comparison(
+            hscode, candidate_list or None, top_n=top_n, force=False,
+        )
+    except Exception as e:
+        flash(f"조사 결과를 불러오지 못했습니다: {e}", "danger")
+        return redirect(url_for("exhibition.market_matrix", hscode=hscode))
+
+    if not result:
+        flash("먼저 '통합분석'으로 조회를 실행한 뒤 다시 시도해주세요.", "danger")
+        return redirect(url_for("exhibition.market_matrix", hscode=hscode))
+
+    item_desc_ko = (
+        un_comtrade.translate_item_desc(result["official_item_desc"])
+        if result.get("official_item_desc") else None
+    )
+    matrix = build_matrix(result["candidates"], result["thresholds"])
+
+    # ①②(세계시장 현황)도 화면과 동일하게 캐시가 있으면 그대로 보여준다.
+    # force=False라 여기서도 새로 API를 부르지 않고, 없으면 그냥 생략한다.
+    overview = import_line = export_line = None
+    try:
+        overview = un_comtrade.get_market_overview(hscode, top_n=top_n or 10, force=False)
+        import_line = _svg_line_series(overview["import_share_trend"], height=250)
+        export_line = _svg_line_series(overview["export_share_trend"], height=250)
+    except Exception as e:
+        overview = {"unavailable_reason": str(e)}
+
+    html = render_template(
+        "exhibition/market_matrix_report_pdf.html",
+        result=result, hscode=hscode, top_n=top_n, item_desc_ko=item_desc_ko,
+        matrix=matrix, overview=overview, import_line=import_line, export_line=export_line,
+        generated_at=datetime.now(),
+        **pdf_font_context(),
+    )
+    pdf_bytes = HTML(string=html).write_pdf()
+
+    filename = f"HS{hscode}_유망시장매트릭스.pdf"
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
+    )
 
 
 @bp.route("/detail/<int:expo_id>/sync-ntm/<int:product_id>", methods=["POST"])

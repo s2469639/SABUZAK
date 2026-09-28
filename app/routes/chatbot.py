@@ -150,11 +150,50 @@ TOOLS = [
 ]
 
 
+def _bigrams(s):
+    """유사도 계산용 2-gram 집합. 한 글자짜리 단어도 빈 집합이 되지 않게
+    그 글자 자체를 넣어준다."""
+    s = re.sub(r"\s+", "", s)
+    if len(s) < 2:
+        return {s} if s else set()
+    return {s[i : i + 2] for i in range(len(s) - 1)}
+
+
+def _bigram_similarity(a, b):
+    """Dice 계수 기반 문자열 유사도(0~1). 관세청 공식 품목명은 어순/표현이
+    실제 제품명과 달라 ILIKE 부분일치로는 못 잡는 경우가 많아서, 이 유사도로
+    "표현은 다르지만 겹치는 글자가 많은" 후보를 찾아낸다."""
+    A, B = _bigrams(a), _bigrams(b)
+    if not A or not B:
+        return 0.0
+    return 2 * len(A & B) / (len(A) + len(B))
+
+
+_SIMILARITY_THRESHOLD = 0.28
+
+
+def _search_hscode_by_similarity(query, limit=20):
+    """ILIKE 검색이 비었을 때의 최후 수단. 전체 마스터(약 1만 건)를 유사도
+    점수로 스캔해서 상위 후보를 돌려준다. 테이블이 작아서(1만여 건) 매 요청
+    풀스캔해도 챗봇 응답속도에 문제되지 않는 수준이다."""
+    candidates = []
+    for r in HsCodeMaster.query.all():
+        name = r.name_ko or r.hsk_name or ""
+        if not name:
+            continue
+        score = max(_bigram_similarity(query, name), _bigram_similarity(query, r.hsk_name or ""))
+        if score >= _SIMILARITY_THRESHOLD:
+            candidates.append((score, r))
+    candidates.sort(key=lambda t: t[0], reverse=True)
+    return [r for _, r in candidates[:limit]]
+
+
 def _lookup_hscode(query):
     """제품명으로 관세청 마스터를 검색한다. name_ko는 공식 품목명이라 "냉동
     손만두"처럼 실제 제품명을 통째로 넣으면 거의 매칭이 안 된다 (실제로는
     "만두 냉동한 것"처럼 순서/표현이 다름). 그래서 문구 전체로 먼저
-    시도하고, 안 걸리면 단어 단위로 쪼개서 OR 검색한다."""
+    시도하고, 안 걸리면 단어 단위로 쪼개서 OR 검색하고, 그래도 안 걸리면
+    유사도 기반 검색으로 넓힌다."""
     if not query or not _hs_master_query_available():
         return []
     query = query.strip()
@@ -181,6 +220,8 @@ def _lookup_hscode(query):
         words = [w for w in re.split(r"\s+", query) if len(w) >= 2]
         if words:
             rows = _search(words)
+    if not rows:
+        rows = _search_hscode_by_similarity(query)
     return [{"hscode": r.hscode, "name_ko": r.name_ko or r.hsk_name} for r in rows]
 
 

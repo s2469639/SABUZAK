@@ -11,6 +11,13 @@
 </head>
 <body>
   <div class="layout" id="layout-root">
+    {% if current_user.is_authenticated %}
+      <div class="mobile-topbar">
+        <button type="button" id="mobile-sidebar-toggle" class="sidebar-toggle" aria-label="메뉴 열기">☰</button>
+        <h2 class="brand">FairMate</h2>
+      </div>
+      <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+    {% endif %}
     <aside class="sidebar">
       {% if current_user.is_authenticated %}
         <button type="button" id="sidebar-toggle" class="sidebar-toggle" aria-label="사이드바 접기/펴기">☰</button>
@@ -125,5 +132,6 @@
   <script src="{{ url_for('static', filename='js/mypage.js') }}"></script>
   <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
   <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/card_scan.js') }}"></script>
 </body>
 </html>

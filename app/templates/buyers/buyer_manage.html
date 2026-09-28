@@ -115,10 +115,10 @@
     {% for c in contacts %}
     <tr class="{{ 'stale-row' if c.id in stale_ids else '' }}">
       <td class="col-shrink"><input type="checkbox" name="contact_ids" value="{{ c.id }}" form="bulk-send-form"></td>
-      <td>{{ c.exhibition_name }}</td>
+      <td class="cell-expo">{{ c.exhibition_name }}</td>
       <td class="cell-date">{{ c.created_at.strftime('%y.%m.%d') }}</td>
       <td class="cell-name">{{ c.name }}</td>
-      <td>
+      <td class="cell-company">
         <div>{{ c.company }}</div>
         {% if c.position %}<div class="cell-sub">{{ c.position }}</div>{% endif %}
       </td>
@@ -130,7 +130,7 @@
       </td>
       {# 메일 상태: 색 점 + 짧은 글자만 (템플릿 버전은 마우스를 올리면 보임) #}
       {% set version_label = template_labels.get(c.followup.template_version) or ('버전 ' ~ c.followup.template_version) if c.followup else (template_labels.get(active_version) or ('버전 ' ~ active_version) if active_version else '') %}
-      <td class="col-shrink">
+      <td class="col-shrink cell-mailstate">
         {% if c.followup and c.followup.last_sent_at %}
           <a href="{{ url_for('followup.view_followup', contact_id=c.id) }}" class="mail-state is-sent" title="보낸 메일 보기">{{ c.followup.last_sent_at.strftime('%y.%m.%d') }} 발송</a>
           {% if c.id in stale_ids %}

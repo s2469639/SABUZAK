@@ -7,6 +7,7 @@
 """
 
 import io
+import json
 import logging
 from datetime import datetime, timedelta
 
@@ -27,6 +28,29 @@ from app.services.mailmerge import render_email
 
 STALE_DAYS = 21
 TEMPLATE_VERSIONS = (1, 2, 3)
+
+# 버전(발송 단계)별 "함께 보내면 좋은 자료" 기본 체크리스트 항목. 실제 파일을
+# 물고 있지 않은 안내용 체크리스트라, 발송 시점 안내문과 함께 여기 하드코딩해둔다.
+SUGGESTED_TEMPLATE_LABELS = {
+    1: "당일 감사 메일 (D+0~1)",
+    2: "팔로업 메일 (D+3~7)",
+    3: "리마인드 메일 (D+14~21)",
+}
+
+TEMPLATE_ATTACHMENT_CHECKLISTS = {
+    1: {
+        "when": "박람회 당일 또는 다음 날 (D+0~1)",
+        "items": ["회사 소개서 (Company Profile, PDF)", "제품 카탈로그 (영문)", "부스 상담 메모 요약 (선택)"],
+    },
+    2: {
+        "when": "박람회 후 3~7일차",
+        "items": ["정식 견적서 / 가격표", "인증서 사본 (HACCP 등)", "샘플 배송 안내"],
+    },
+    3: {
+        "when": "박람회 후 14~21일차",
+        "items": ["이전 메일 요약 (선택)", "최신 가격표 (변경 시)"],
+    },
+}
 
 logger = logging.getLogger(__name__)
 
@@ -158,6 +182,104 @@ def scan_card():
         flash(f"명함 인식에 실패했습니다: {exc}", "danger")
 
     return redirect(url_for("contacts.new_contact"))
+
+
+MAX_BULK_CARDS = 20
+
+
+@contacts_bp.route("/contacts/scan_cards_bulk", methods=["POST"])
+@login_required
+def scan_cards_bulk():
+    """명함 사진 여러 장을 한 번에 인식해서, 바로 저장하지 않고 검수 화면에
+    편집 가능한 목록으로 보여준다. 스캔 결과는 쿠키 세션에 담기엔 너무 커질
+    수 있어서 서버에 저장하지 않고, 검수 폼의 hidden input에 그대로 실어
+    브라우저가 들고 있게 한다 (다음 요청에 그대로 다시 실려 온다)."""
+    images = [f for f in request.files.getlist("card_images") if f and f.filename]
+    if not images:
+        flash("명함 이미지를 선택해주세요.", "danger")
+        return redirect(url_for("contacts.new_contact"))
+    if len(images) > MAX_BULK_CARDS:
+        flash(f"한 번에 최대 {MAX_BULK_CARDS}장까지 인식할 수 있습니다.", "danger")
+        return redirect(url_for("contacts.new_contact"))
+
+    rows, failed = [], 0
+    for image in images:
+        if not (image.mimetype or "").startswith("image/"):
+            failed += 1
+            continue
+        try:
+            data = scan_business_card(image.read(), image.mimetype)
+        except Exception:
+            failed += 1
+            continue
+        data["_source"] = image.filename
+        rows.append(data)
+
+    if not rows:
+        flash("업로드한 이미지에서 명함 정보를 인식하지 못했습니다.", "danger")
+        return redirect(url_for("contacts.new_contact"))
+    if failed:
+        flash(f"{len(rows)}장 인식 완료, {failed}장은 인식하지 못해 목록에서 빠졌습니다.", "danger")
+
+    return render_template(
+        "buyers/scan_cards_review.html",
+        rows=rows,
+        exhibitions=_drafted_exhibitions(),
+    )
+
+
+@contacts_bp.route("/contacts/save_scanned_cards", methods=["POST"])
+@login_required
+def save_scanned_cards():
+    exhibitions = {e.id: e for e in _drafted_exhibitions()}
+    exhibition = exhibitions.get(request.form.get("exhibition_id", type=int))
+    if not exhibition:
+        flash("바이어를 등록할 박람회를 선택해주세요.", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+
+    row_count = request.form.get("row_count", type=int) or 0
+    existing = {
+        (c.email or "").lower()
+        for c in Contact.query.filter_by(user_id=current_user.id, exhibition_id=exhibition.id).all()
+    }
+    added, skipped = 0, []
+    for i in range(row_count):
+        if not request.form.get(f"include_{i}"):
+            continue
+        name = request.form.get(f"name_{i}", "").strip()
+        email = request.form.get(f"email_{i}", "").strip()
+        if not name or not email:
+            skipped.append(f"{i + 1}번째 (이름/이메일 누락)")
+            continue
+        if "@" not in email:
+            skipped.append(f"{i + 1}번째 '{name}' (이메일 형식 오류)")
+            continue
+        if email.lower() in existing:
+            skipped.append(f"{i + 1}번째 '{name}' (이미 등록된 이메일)")
+            continue
+        existing.add(email.lower())
+        db.session.add(Contact(
+            user_id=current_user.id,
+            exhibition_id=exhibition.id,
+            exhibition_name=exhibition.name,
+            name=name,
+            email=email,
+            company=request.form.get(f"company_{i}", "").strip(),
+            position=request.form.get(f"position_{i}", "").strip(),
+            phone=request.form.get(f"phone_{i}", "").strip(),
+            address=request.form.get(f"address_{i}", "").strip(),
+            remarks=request.form.get(f"remarks_{i}", "").strip(),
+        ))
+        added += 1
+    db.session.commit()
+
+    if skipped:
+        flash(f"건너뛴 항목 {len(skipped)}개: " + " / ".join(skipped[:10]), "danger")
+    if not added and not skipped:
+        flash("등록할 바이어를 선택해주세요.", "danger")
+    elif added:
+        flash(f"바이어 {added}명이 등록되었습니다.", "success")
+    return redirect(url_for("contacts.list_contacts"))
 
 
 @contacts_bp.route("/contacts/<int:contact_id>/edit", methods=["GET", "POST"])
@@ -688,9 +810,31 @@ def edit_template(version):
         version = 1
     template = _get_version(version)
     all_versions = [_get_version(v) for v in TEMPLATE_VERSIONS]
-    return render_template(
-        "buyers/template_edit.html", template=template, all_versions=all_versions, version=version
+
+    checklist = TEMPLATE_ATTACHMENT_CHECKLISTS.get(version)
+    checked = json.loads(template.attachment_checklist) if template.attachment_checklist else {}
+    checklist_items = (
+        [{"label": item, "checked": bool(checked.get(item))} for item in checklist["items"]]
+        if checklist else []
     )
+
+    return render_template(
+        "buyers/template_edit.html", template=template, all_versions=all_versions, version=version,
+        checklist_when=checklist["when"] if checklist else None, checklist_items=checklist_items,
+        suggested_labels=SUGGESTED_TEMPLATE_LABELS,
+    )
+
+
+@mail_template_bp.route("/template/<int:version>/checklist", methods=["POST"])
+@login_required
+def save_checklist(version):
+    template = _get_version(version)
+    checklist = TEMPLATE_ATTACHMENT_CHECKLISTS.get(version)
+    if checklist:
+        checked_items = set(request.form.getlist("checked_item"))
+        template.attachment_checklist = json.dumps({item: (item in checked_items) for item in checklist["items"]})
+        db.session.commit()
+    return redirect(url_for("mail_template.edit_template", version=version))
 
 
 @mail_template_bp.route("/template/<int:version>/save", methods=["POST"])

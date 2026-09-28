@@ -42,7 +42,9 @@
 .un-page .card { background: var(--card); border-radius: 4px; box-shadow: 0 1px 4px rgba(20, 40, 80, 0.08); padding: 20px 22px; margin-bottom: 18px; }
 .un-page .notice { font-size: 13px; font-weight: 500; line-height: 1.8; color: var(--sub); }
 .un-page .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
-.un-page .card-head h3 { margin: 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+.un-page .card-head h3 { margin: 0; font-size: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.un-page .card-head-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.un-page .card-head-actions .research-form { margin: 0; }
 .un-page .unit { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
 .un-page .source { font-size: 11px; color: var(--muted); text-align: right; margin-top: 8px; }
 .un-page .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
@@ -213,6 +215,8 @@
 .un-page .ai-sub { font-size: 14px; font-weight: 700; margin: 4px 0 8px; }
 .un-page .ai-box { border: 1px solid var(--line); padding: 14px 16px; font-size: 14px; line-height: 1.8; }
 .un-page .ai-box .ai-label { font-weight: 700; color: var(--primary-dark); display: block; }
+.un-page .ai-box .ai-label-risk { color: var(--danger); }
+.un-page .ai-box .ai-label-strategy { color: var(--kor); }
 .un-page .ai-box > div + div { margin-top: 10px; }
 .un-page .tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
 .un-page .tabs a { padding: 10px 16px; font-size: 14px; font-weight: 500; color: var(--sub); text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; }

@@ -617,6 +617,39 @@ p.page-desc:not(:last-child) {
   margin-top: 8px;
 }
 
+.attachment-checklist-box {
+  background: #fdf3ec;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.attachment-checklist-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-bottom: 10px;
+}
+.attachment-checklist-head strong {
+  font-size: 14px;
+  color: #222;
+}
+.attachment-checklist-when {
+  font-size: 12px;
+  color: #9a6a44;
+}
+.attachment-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+  padding: 4px 0;
+  cursor: pointer;
+}
+.attachment-checklist-item input { flex-shrink: 0; }
+
 .product-list {
   display: flex;
   flex-direction: column;
@@ -636,6 +669,17 @@ p.page-desc:not(:last-child) {
 
 .product-info {
   flex: 1;
+}
+
+/* 마이페어 목록의 박람회명: 평범한 굵은 글씨처럼 보이되, 누르면 그
+   박람회 상세로 가는 링크라는 걸 hover 시에만 살짝 드러낸다 */
+.draft-expo-link {
+  color: inherit;
+  text-decoration: none;
+}
+.draft-expo-link:hover {
+  color: #ea580c;
+  text-decoration: underline;
 }
 
 .hs-tag {
@@ -1981,6 +2025,7 @@ p.page-desc:not(:last-child) {
   white-space: nowrap;
 }
 .btn-chip:hover { border-color: #ea580c; color: #ea580c; }
+.btn-chip-accent { color: #ea580c; font-weight: 600; }
 .btn-chip-danger { color: #d64545; border-color: #f3cccc; }
 .btn-chip-danger:hover { border-color: #d64545; background: #fdf1f1; color: #d64545; }
 .btn-chip-active { border-color: #ea580c; background: #fdece1; color: #ea580c; font-weight: 600; }
@@ -2092,6 +2137,7 @@ p.page-desc:not(:last-child) {
 .version-tabs .tab-active { color: #ea580c; border-bottom-color: #ea580c; font-weight: 600; }
 .tab-badge { font-size: 10px; opacity: 0.85; }
 .tab-badge-muted { color: #6b7280; }
+.tab-suggested { font-size: 11px; color: #9ca3af; font-weight: 400; }
 
 .tab-edit-btn {
   background: none;
@@ -2151,8 +2197,9 @@ p.page-desc:not(:last-child) {
 
 .scan-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 10px 14px;
   margin-bottom: 8px;
   background: #fdf3ec;
   border: 1px dashed #ea580c;
@@ -2160,17 +2207,44 @@ p.page-desc:not(:last-child) {
   border-radius: 10px;
   max-width: 760px;
 }
-.scan-bar input[type="file"] { flex: 1; font-size: 13px; color: #6b7280; }
-.scan-bar input[type="file"]::file-selector-button {
-  margin-right: 10px;
-  padding: 8px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  background: #fff;
-  color: #333;
+.scan-bar-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.scan-bar-buttons .btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.scan-bar-hint {
+  flex: 1 1 auto;
+  min-width: 160px;
   font-size: 13px;
-  font-family: inherit;
+  color: #6b7280;
+}
+
+/* 명함 일괄 등록 검토 화면: 스캔된 명함 1장 = 카드 1개 */
+.scan-review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0 24px;
+}
+.scan-review-row {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 18px;
+}
+.scan-review-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
   cursor: pointer;
+}
+.scan-review-source {
+  font-size: 12px;
+  color: #9ca3af;
 }
 
 /* ---- 대시보드 (사부작 디자인 확정본 포팅) ---- */
@@ -2404,6 +2478,429 @@ p.page-desc:not(:last-child) {
 .un-bubble-detail { position: absolute; display: none; background: #3c4043; color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.6; min-width: 190px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 5; pointer-events: none; }
 .un-bubble-detail strong { display: block; font-size: 13px; margin-bottom: 4px; }
 .un-bubble-detail a { color: #8ab4f8; pointer-events: auto; }
+
+/* ============================================================
+   Mobile responsive (<=768px): off-canvas sidebar + stacked layout
+   ============================================================ */
+.sidebar-backdrop {
+  display: none;
+}
+
+.mobile-topbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    display: block;
+  }
+
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #fff;
+    border-bottom: 1px solid #ece5d8;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+
+  .mobile-topbar .brand {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  #sidebar-toggle {
+    background: #ea580c;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 80vw;
+    max-width: 300px;
+    padding: 24px 16px;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    z-index: 50;
+    overflow-y: auto;
+  }
+
+  .layout.sidebar-collapsed .sidebar {
+    width: 80vw;
+    max-width: 300px;
+    padding: 24px 16px;
+  }
+
+  .layout.sidebar-collapsed .sidebar > *:not(.sidebar-toggle) {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .layout.sidebar-mobile-open .sidebar {
+    transform: translateX(0);
+    box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0);
+  }
+
+  .layout.sidebar-mobile-open .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 15, 15, 0.45);
+    z-index: 40;
+  }
+
+  .sidebar .sidebar-toggle {
+    top: 12px;
+    right: 12px;
+  }
+
+  .main {
+    width: 100%;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .detail-list {
+    grid-template-columns: 1fr;
+    row-gap: 6px;
+  }
+
+  .detail-list dt {
+    margin-top: 8px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn-primary,
+  .form-actions .btn-secondary {
+    width: 100%;
+  }
+
+  .modal-dialog {
+    width: calc(100vw - 32px);
+    max-width: none;
+  }
+
+  /* 대시보드 헤더: 제목+설명+버튼이 줄바꿈 없는 flex 한 줄이라 설명 문구가
+     길면 그 줄 전체 폭이 화면보다 커져서 페이지 전체가 옆으로 밀렸다.
+     모바일에서는 세로로 쌓이게 바꾼다. */
+  .dash-header {
+    flex-wrap: wrap;
+  }
+
+  .dash-title-row {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  /* 대륙별 지도: JS가 뷰포트 "높이" 기준으로 px 높이를 잡고 폭은
+     aspect-ratio로 따라가다 보니, 세로로 긴 휴대폰 화면에서는 지도 폭이
+     화면 너비를 넘어서 페이지 전체가 옆으로 밀리는 문제가 있었다.
+     모바일에서는 반대로 폭을 100%로 고정하고 높이를 aspect-ratio로
+     따라가게 해서 가로 오버플로를 막는다 (JS의 인라인 height px보다
+     !important로 우선). */
+  .world-map {
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  /* 페이지 헤더(제목+버튼)도 dash-header와 같은 줄바꿈 없는 flex 행이라
+     제목이 길면 화면 밖으로 밀려날 수 있었다 */
+  .page-header {
+    flex-wrap: wrap;
+  }
+
+  /* "수출 주의사항" 제목 줄: 제목+긴 부연설명+배지 여러 개+"TRAINS 데이터
+     다시 가져오기" 버튼이 전부 줄바꿈 없는 한 줄이라, 같은 이유로
+     제목/배지가 좁게 눌리고 버튼이 구석으로 밀렸다. */
+  .section-label-row {
+    flex-wrap: wrap;
+    gap: 8px 0;
+  }
+
+  .section-label-row form {
+    margin-left: auto;
+  }
+
+  /* 부스 컨셉 기획의 삭제 버튼(.concept-header-side): 페이지 헤더가
+     줄바꿈되면 이 칸이 내용 폭만큼만(shrink-to-fit) 차지한 채 화면
+     왼쪽에 놓이고, 그 안에서만 오른쪽 정렬이 돼서 "화면 가운데쯤"에
+     붕 떠 보였다. 칸 자체를 한 줄 전체 폭으로 늘려야 오른쪽 정렬이
+     화면 오른쪽 끝까지 가닿는다. */
+  .concept-header-side {
+    width: 100%;
+  }
+
+  /* 작성 중인 박람회 목록: 트렌드 분석/부스 컨셉(v15) 버튼은 있을 때만
+     나오다 보니, 있는 행과 없는 행에서 컨셉보기·삭제 버튼 위치가
+     서로 달라져 정렬이 안 맞아 보였다. 2열 그리드로 고정해서 버튼이
+     있든 없든 각 버튼 종류가 항상 같은 칸에 오게 한다. */
+  .draft-row-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .draft-row-actions .btn-trend { grid-column: 1; grid-row: 1; }
+  .draft-row-actions .btn-booth { grid-column: 2; grid-row: 1; }
+  .draft-row-actions .btn-concept { grid-column: 1; grid-row: 2; }
+  .draft-row-actions .btn-delete-form { grid-column: 2; grid-row: 2; }
+  .draft-row-actions .btn-chip,
+  .draft-row-actions .btn-delete-form .btn-text-danger {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* 제품 목록 행: 제품 정보(flex:1)와 액션 버튼들(모두 white-space:nowrap)이
+     한 줄에 같이 있다 보니, 버튼들이 줄어들지 않고 제품명 쪽만 극단적으로
+     좁아져서 한 글자씩 줄바꿈되는 문제가 있었다.
+     처음엔 flex-direction:column으로 세로로 쌓았더니, 체크박스가 (product-info와
+     같은 줄이 아니라) 독립된 한 칸을 차지해서 제품명 위에 혼자 붕 떠 보이는
+     문제가 생겼다. 대신 줄바꿈만 허용해서 체크박스+제품정보는 첫 줄에 같이
+     두고, 버튼들만 다음 줄로 내려가게 한다. */
+  .product-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .product-row > input[type="checkbox"] {
+    margin-top: 4px;
+  }
+
+  .action-buttons {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  /* 바이어 관리 탭(바이어 목록/메일 템플릿/발신 정보)과 Gmail 연동 상태가
+     한 줄에 같이 있다 보니, Gmail 연동 이메일 주소 때문에 탭 버튼 쪽이
+     극단적으로 좁아져 글자가 한 자씩 줄바꿈됐다. 모바일에서는 줄바꿈. */
+  .tab-nav {
+    flex-wrap: wrap;
+  }
+
+  .tab-nav-buttons {
+    flex-wrap: wrap;
+  }
+
+  .buyer-mail-gmail-connected {
+    flex-wrap: wrap;
+  }
+
+  /* 박람회 목록 카드: 썸네일(고정폭) + 본문(줄어듦) + 오른쪽 날짜/카테고리/
+     배지(white-space:nowrap, 안 줄어듦)가 한 줄이라, 본문 쪽만 극단적으로
+     좁아져서 국가명이 한 글자씩 줄바꿈됐다. 오른쪽 묶음이 안 들어가면
+     그냥 다음 줄로 내려가게 한다. */
+  .expo-row {
+    flex-wrap: wrap;
+  }
+
+  .expo-side {
+    white-space: normal;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-left: 72px;
+  }
+
+  /* 바이어 목록 표: 컬럼이 8~9개라 모바일에서 가로 스크롤 표로 두면
+     계속 옆으로 넘겨야 해서 쓰기 어렵다. 핵심 정보(이름·박람회·회사·
+     이메일·메일상태·액션)만 카드로 세로 배치하고, 등록일·비고는 감추되
+     "정보 수정" 링크(더보기 메뉴 안)를 누르면 전화번호·주소·메모까지
+     전부 볼 수 있는 상세 화면이라 정보가 사라지진 않는다. */
+  .buyer-table {
+    min-width: 0 !important;
+  }
+
+  .buyer-table thead {
+    display: none;
+  }
+
+  .buyer-table, .buyer-table tbody, .buyer-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .buyer-table tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 2px 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .buyer-table tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .buyer-table td {
+    display: block;
+    border: none !important;
+    padding: 0 !important;
+    width: auto;
+  }
+
+  .buyer-table td.col-shrink:first-child {
+    order: -1;
+    align-self: center;
+  }
+
+  .buyer-table td.cell-date,
+  .buyer-table td.notes-cell {
+    display: none;
+  }
+
+  .buyer-table td.cell-expo {
+    order: 1;
+    flex: 1 1 100%;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+
+  .buyer-table td.cell-name {
+    order: 2;
+    flex: 1 1 100%;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .buyer-table td.cell-company {
+    order: 3;
+    flex: 1 1 100%;
+    font-size: 13px;
+    color: #6b7280;
+  }
+
+  /* 회사·직급이 세로 두 줄이라 카드가 쓸데없이 길어져서, 모바일 카드에서는
+     "회사 · 직급" 한 줄로 합친다 */
+  .buyer-table td.cell-company div {
+    display: inline;
+  }
+
+  .buyer-table td.cell-company div:first-child:has(+ .cell-sub)::after {
+    content: " · ";
+  }
+
+  .buyer-table td.cell-company .cell-sub {
+    margin-top: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  .buyer-table td.cell-email {
+    order: 4;
+    flex: 1 1 100%;
+    font-size: 13px;
+  }
+
+  .buyer-table td.cell-mailstate {
+    order: 5;
+    margin-top: 4px;
+  }
+
+  .buyer-table td.actions {
+    order: 6;
+    flex: 1 1 100%;
+    margin-top: 8px;
+  }
+
+  .buyer-table .row-actions {
+    justify-content: flex-start;
+  }
+
+  /* 메일 템플릿 "AI로 생성/수정" 줄: 입력창(flex:1)과 버튼이 줄바꿈 없이
+     한 줄이라, 입력창의 최소 폭(브라우저 기본값) 때문에 버튼이 화면
+     밖으로 밀려 잘려 보였다. 안 들어가면 버튼이 다음 줄로 내려가게. */
+  .revise-bar {
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+
+  .revise-bar input {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  /* 바이어 등록 "명함 스캔해서 채우기": 파일 선택창(flex:1)과 버튼이
+     줄바꿈 없는 한 줄이라 버튼이 화면 밖으로 밀려 잘렸다. 지금은 파일
+     input을 숨기고 버튼 2개(카메라로 촬영/파일에서 선택)로 바꿔서 기본
+     CSS(.scan-bar-buttons)가 이미 줄바꿈되니 폭만 꽉 채운다. */
+  .scan-bar {
+    max-width: 100%;
+  }
+
+  .scan-bar-buttons .btn-secondary {
+    flex: 1 1 auto;
+  }
+
+  /* 이름/회사명/직급, 이메일/전화번호처럼 한 줄에 나란히 두던 입력칸들이
+     좁은 화면에서 다닥다닥 붙어 눌리지 않도록 세로로 쌓는다 (바이어 등록
+     폼, 명함 일괄 등록 검토 화면 등에서 공용으로 씀). */
+  .form-row {
+    flex-wrap: wrap;
+  }
+
+  .form-row > .form-field {
+    flex: 1 1 100%;
+  }
+
+  /* 이름 칸을 좁히고 회사명 칸을 넓히던 데스크톱 전용 비율(0.7/1.3)이
+     nth-child 선택자라 위 규칙보다 우선순위가 높아서 모바일에서도 그대로
+     적용돼 두 칸이 나란히 눌려 있었다. 모바일에서는 똑같이 전체 폭으로. */
+  .row-name-company-position > .form-field:nth-child(1),
+  .row-name-company-position > .form-field:nth-child(2) {
+    flex: 1 1 100%;
+  }
+
+  /* form-row가 세로로 쌓이면 각 칸이 사실상 그냥 한 줄씩인데,
+     ".form-field:last-child { margin-bottom: 0 }"가 각 row의 마지막
+     칸(직급, 전화번호 등)에 걸려서 그 다음 칸(이메일, 주소)과 유독
+     붙어 보였다. 모바일에서는 전부 같은 간격으로. */
+  .form-row > .form-field:last-child {
+    margin-bottom: 18px;
+  }
+}
+
+/* 어느 화면 요소가 컨테이너 폭을 넘어서더라도(계산 실수 등) 페이지
+   전체가 옆으로 스크롤되며 레이아웃이 깨지는 일은 막는 안전장치.
+   body에만 걸면 모바일 브라우저(특히 안드로이드 크롬)가 실제 화면
+   너비가 아니라 넘친 콘텐츠 너비만큼 레이아웃 뷰포트를 넓혀버려서,
+   position:fixed로 오른쪽 정렬된 챗봇 버튼이 화면 밖(빈 공백)으로
+   밀려나는 문제가 있었다. html에도 같이 걸어야 실제 뷰포트 너비가
+   화면 너비로 고정된다. */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* 어딘가 flex 칸이 예상보다 좁아지는 경우에도, 한글이 글자 하나마다
+   줄바꿈되는 일은 없게 하는 전역 안전장치. 띄어쓰기 단위로만 줄바꿈하고
+   (word-break: keep-all), 그래도 단어 하나가 너무 길면 그때만 잘라
+   넘치지 않게 한다 (overflow-wrap: break-word). */
+body {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
 
 /* 플로팅 챗봇 위젯: 평소엔 우하단 로봇 얼굴 아이콘, 클릭하면 팝업 채팅창.
    기본 위치는 right/bottom이고, 드래그를 시작하면 JS가 left/top으로
