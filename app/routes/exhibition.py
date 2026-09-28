@@ -1,3 +1,4 @@
+import json
 import math
 import re
 from collections import Counter
@@ -10,7 +11,7 @@ from flask_login import current_user, login_required
 from app.extensions import db
 from app.models import ConceptDraft, Exhibition, NtmMeasure, Product, TrendResult
 from app.routes.dashboard import CONTINENT_DB_VALUES, is_pipeline_running, pop_pipeline_banner
-from app.routes.trend_v2 import _get_job as get_trend_job
+from app.routes.trend_v2 import QUESTION_LABELS, _get_job as get_trend_job
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
 from app.services.exchange import get_exchange_info
@@ -750,6 +751,80 @@ def market_report_pdf(expo_id, product_id):
     pdf_bytes = HTML(string=html).write_pdf()
 
     filename = f"{expo.name}_{product.name}_유망시장조사.pdf".replace("/", "-")
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
+    )
+
+
+@bp.route("/detail/<int:expo_id>/combined-report")
+@login_required
+def combined_report_pdf(expo_id):
+    """유망시장 조사 + 트렌드 분석 + 부스 컨셉 기획, 이미 만들어둔 결과 세
+    가지를 하나의 통합 기획서 PDF로 합친다. 셋 다 새로 생성하지 않는다 -
+    AI를 다시 부르지 않으므로 추가 비용이 들지 않는다. 셋 중 하나라도
+    없으면 그 파트는 건너뛰고, 하나도 없으면 안내만 하고 돌려보낸다."""
+    from weasyprint import HTML
+
+    expo = Exhibition.query.get_or_404(expo_id)
+    linked_products = Product.query.filter(
+        Product.user_id == current_user.id,
+        Product.is_checked == True,  # noqa: E712
+        Product.hs_code.isnot(None),
+        Product.hs_code != "",
+    ).all()
+    product = linked_products[0] if linked_products else None
+
+    # 1. 유망시장 조사 (캐시만, 네트워크 호출 없음)
+    market_result = None
+    if product:
+        hs6 = _hs6(product.hs_code)
+        market_result = un_comtrade.get_cached_market_research(hs6, expo.country) if hs6 else None
+    country_label = _country_ko(expo) or expo.country_ko or expo.country
+
+    # 2. 트렌드 분석 (이미 끝난 job만, 새로 조사하지 않음)
+    trend_data, trend_form = None, None
+    if product:
+        trend_row = TrendResult.query.filter_by(
+            user_id=current_user.id, exhibition_id=expo.id, product_id=product.id,
+        ).first()
+        if trend_row and trend_row.job_id:
+            job = get_trend_job(trend_row.job_id, "trend")
+            if job and job["status"] == "done" and job.get("result"):
+                trend_data, trend_form = job["result"], job.get("form") or {}
+
+    # 3. 부스 컨셉 기획 (이미 생성된 draft만, 새로 생성하지 않음)
+    draft = ConceptDraft.query.filter_by(user_id=current_user.id, exhibition_id=expo.id).first()
+    booth_ready = bool(draft and draft.theme)
+    buyer_appeal = []
+    if booth_ready:
+        try:
+            extra = json.loads(draft.extra_data) if draft.extra_data else {}
+        except ValueError:
+            extra = {}
+        buyer_appeal = extra.get("buyer_appeal") or []
+
+    if not market_result and not trend_data and not booth_ready:
+        flash("아직 완료된 조사·기획이 없습니다. 유망시장 조사·트렌드 분석·부스 컨셉 중 하나라도 먼저 만들어주세요.", "danger")
+        return redirect(url_for("exhibition.detail", expo_id=expo_id))
+
+    html = render_template(
+        "exhibition/combined_report_pdf.html",
+        expo=expo, product=product, country_label=country_label,
+        market_result=market_result,
+        trend_data=trend_data, trend_form=trend_form, question_labels=QUESTION_LABELS,
+        draft=draft, booth_ready=booth_ready,
+        selling_points=json.loads(draft.selling_points) if booth_ready and draft.selling_points else [],
+        events=json.loads(draft.events) if booth_ready and draft.events else [],
+        target_buyers=json.loads(draft.target_buyers) if booth_ready and draft.target_buyers else [],
+        buyer_appeal=buyer_appeal,
+        generated_at=datetime.now(),
+        **pdf_font_context(),
+    )
+    pdf_bytes = HTML(string=html).write_pdf()
+
+    filename = f"{expo.name}_통합기획서.pdf".replace("/", "-")
     return Response(
         pdf_bytes,
         mimetype="application/pdf",

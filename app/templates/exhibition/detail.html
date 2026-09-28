@@ -33,6 +33,11 @@
       <p class="expo-head-meta">{{ expo.country_ko or expo.country }} · {{ expo.city }} · {{ kdate_range(expo.start_date, expo.end_date) }}</p>
     </div>
   </div>
+  {% if has_linked_product %}
+  <div class="page-header-actions">
+    <a class="btn-secondary" href="{{ url_for('exhibition.combined_report_pdf', expo_id=expo.id) }}">통합 기획서 다운로드</a>
+  </div>
+  {% endif %}
 </div>
 
 <div class="tabs" data-active="overview">
