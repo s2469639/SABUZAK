@@ -15,7 +15,9 @@ Noto Sans KR은 한글 완성형 11,172자를 전부 담고 있어서(파일 자
 실제로 쓰인 글자만" 담은 훨씬 작은 서브셋 폰트를 먼저 만들어서(보통
 수백 글자 수준), WeasyPrint가 그 작은 폰트만 처리하게 한다."""
 
+import gc
 import hashlib
+import io
 import os
 import re
 import tempfile
@@ -111,4 +113,26 @@ def render_pdf_bytes(html):
     except Exception as e:
         print(f"[PDF 폰트 서브셋 실패 - 전체 폰트로 렌더링] {e}")
 
-    return HTML(string=html).write_pdf()
+    pdf_bytes = HTML(string=html).write_pdf()
+    # WeasyPrint가 렌더링 트리에 물고 있던 메모리를 다음 파트를 그리기 전에
+    # 확실히 반납하게 한다 - 통합보고서처럼 여러 파트를 이어서 렌더링할 때
+    # (combined_report_pdf) 파트별로 메모리를 안 놓아주면 계속 쌓여서 Render
+    # 무료 플랜(메모리 적음)에서 OOM(SIGKILL)으로 죽는 문제가 있었다.
+    gc.collect()
+    return pdf_bytes
+
+
+def merge_pdfs(pdf_bytes_list):
+    """PDF bytes 여러 개를 순서대로 이어붙인 PDF bytes 하나로 합친다.
+    combined_report_pdf처럼 파트별로 따로 렌더링한 뒤 하나로 합칠 때 쓴다 -
+    한 번의 WeasyPrint 호출에 표·그래프·여러 페이지를 다 몰아넣는 것보다,
+    파트마다 작게 나눠 렌더링한 뒤 여기서 합치는 쪽이 메모리 사용량 피크가
+    훨씬 낮다."""
+    from pypdf import PdfWriter
+
+    writer = PdfWriter()
+    for pdf_bytes in pdf_bytes_list:
+        writer.append(io.BytesIO(pdf_bytes))
+    out = io.BytesIO()
+    writer.write(out)
+    return out.getvalue()
