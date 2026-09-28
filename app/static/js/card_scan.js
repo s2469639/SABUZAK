@@ -32,4 +32,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // HTML에 뭐가 붙어 있든 여기서 확실하게 맞춰 둔다.
   bulkInput.removeAttribute("capture");
   bulkInput.multiple = true;
-  bulkInput.setAttribute("accept",
+  bulkInput.setAttribute("accept", "image/*");
+
+  bulkBtn.addEventListener("click", function () {
+    bulkInput.click();
+  });
+
+  bulkInput.addEventListener("change", function () {
+    if (!bulkInput.files || !bulkInput.files.length) return;
+    bulkBtn.disabled = true;
+    if (bulkHint) bulkHint.textContent = "명함 " + bulkInput.files.length + "장을 인식하고 있어요...";
+    bulkForm.requestSubmit ? bulkForm.requestSubmit() : bulkForm.submit();
+  });
+});
