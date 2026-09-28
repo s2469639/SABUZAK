@@ -32,7 +32,7 @@
          class="tab {{ 'tab-active' if v.version == version else '' }}">
         {{ v.display_name }}
         {% if not v.label and suggested_labels.get(v.version) %}
-          <span class="tab-suggested">({{ suggested_labels[v.version] }} 추천)</span>
+          <span class="tab-suggested">· {{ suggested_labels[v.version] }} 추천</span>
         {% endif %}
         {% if v.is_active %} <span class="tab-badge">사용중</span>
         {% elif not v.body %} <span class="tab-badge tab-badge-muted">미작성</span>
