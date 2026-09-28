@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}명함 일괄 등록 검토 | FairMate{% endblock %}
+
+{% block content %}
+{% include "buyers/_nav.html" %}
+
+<div class="page-header">
+  <div>
+    <h1>명함 일괄 등록 검토</h1>
+    <p class="page-desc">인식된 내용을 확인하고 필요하면 고친 뒤, 등록할 항목만 선택해서 한 번에 등록하세요.</p>
+  </div>
+  <a href="{{ url_for('contacts.new_contact') }}" class="btn-secondary">← 취소</a>
+</div>
+
+<div class="card">
+<form method="post" action="{{ url_for('contacts.save_scanned_cards') }}" class="form contact-form" autocomplete="off">
+  <input type="hidden" name="row_count" value="{{ rows|length }}">
+
+  <div class="form-field">
+    <label for="exhibition_id">박람회 (아래 전체에 적용됩니다)</label>
+    <select id="exhibition_id" name="exhibition_id" required>
+      <option value="" disabled selected>선택하세요</option>
+      {% for e in exhibitions %}
+      <option value="{{ e.id }}">{{ e.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="scan-review-list">
+    {% for row in rows %}
+    <div class="scan-review-row">
+      <label class="scan-review-check">
+        <input type="checkbox" name="include_{{ loop.index0 }}" checked>
+        <span class="scan-review-source">{{ row._source }}</span>
+      </label>
+
+      <div class="form-row row-name-company-position">
+        <div class="form-field">
+          <label for="name_{{ loop.index0 }}">이름</label>
+          <input id="name_{{ loop.index0 }}" name="name_{{ loop.index0 }}" value="{{ row.name }}" required>
+        </div>
+        <div class="form-field">
+          <label for="company_{{ loop.index0 }}">회사명</label>
+          <input id="company_{{ loop.index0 }}" name="company_{{ loop.index0 }}" value="{{ row.company }}">
+        </div>
+        <div class="form-field">
+          <label for="position_{{ loop.index0 }}">직급</label>
+          <input id="position_{{ loop.index0 }}" name="position_{{ loop.index0 }}" value="{{ row.position }}">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="email_{{ loop.index0 }}">이메일</label>
+          <input id="email_{{ loop.index0 }}" type="email" name="email_{{ loop.index0 }}" value="{{ row.email }}" required>
+        </div>
+        <div class="form-field">
+          <label for="phone_{{ loop.index0 }}">전화번호</label>
+          <input id="phone_{{ loop.index0 }}" name="phone_{{ loop.index0 }}" value="{{ row.phone }}">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="address_{{ loop.index0 }}">주소</label>
+        <input id="address_{{ loop.index0 }}" name="address_{{ loop.index0 }}" value="{{ row.address }}">
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="form-actions">
+    <a href="{{ url_for('contacts.new_contact') }}" class="btn-secondary">취소</a>
+    <button type="submit" class="btn-primary">선택한 바이어 등록</button>
+  </div>
+</form>
+</div>
+{% endblock %}

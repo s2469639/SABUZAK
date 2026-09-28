@@ -160,6 +160,104 @@ def scan_card():
     return redirect(url_for("contacts.new_contact"))
 
 
+MAX_BULK_CARDS = 20
+
+
+@contacts_bp.route("/contacts/scan_cards_bulk", methods=["POST"])
+@login_required
+def scan_cards_bulk():
+    """명함 사진 여러 장을 한 번에 인식해서, 바로 저장하지 않고 검수 화면에
+    편집 가능한 목록으로 보여준다. 스캔 결과는 쿠키 세션에 담기엔 너무 커질
+    수 있어서 서버에 저장하지 않고, 검수 폼의 hidden input에 그대로 실어
+    브라우저가 들고 있게 한다 (다음 요청에 그대로 다시 실려 온다)."""
+    images = [f for f in request.files.getlist("card_images") if f and f.filename]
+    if not images:
+        flash("명함 이미지를 선택해주세요.", "danger")
+        return redirect(url_for("contacts.new_contact"))
+    if len(images) > MAX_BULK_CARDS:
+        flash(f"한 번에 최대 {MAX_BULK_CARDS}장까지 인식할 수 있습니다.", "danger")
+        return redirect(url_for("contacts.new_contact"))
+
+    rows, failed = [], 0
+    for image in images:
+        if not (image.mimetype or "").startswith("image/"):
+            failed += 1
+            continue
+        try:
+            data = scan_business_card(image.read(), image.mimetype)
+        except Exception:
+            failed += 1
+            continue
+        data["_source"] = image.filename
+        rows.append(data)
+
+    if not rows:
+        flash("업로드한 이미지에서 명함 정보를 인식하지 못했습니다.", "danger")
+        return redirect(url_for("contacts.new_contact"))
+    if failed:
+        flash(f"{len(rows)}장 인식 완료, {failed}장은 인식하지 못해 목록에서 빠졌습니다.", "danger")
+
+    return render_template(
+        "buyers/scan_cards_review.html",
+        rows=rows,
+        exhibitions=_drafted_exhibitions(),
+    )
+
+
+@contacts_bp.route("/contacts/save_scanned_cards", methods=["POST"])
+@login_required
+def save_scanned_cards():
+    exhibitions = {e.id: e for e in _drafted_exhibitions()}
+    exhibition = exhibitions.get(request.form.get("exhibition_id", type=int))
+    if not exhibition:
+        flash("바이어를 등록할 박람회를 선택해주세요.", "danger")
+        return redirect(url_for("contacts.list_contacts"))
+
+    row_count = request.form.get("row_count", type=int) or 0
+    existing = {
+        (c.email or "").lower()
+        for c in Contact.query.filter_by(user_id=current_user.id, exhibition_id=exhibition.id).all()
+    }
+    added, skipped = 0, []
+    for i in range(row_count):
+        if not request.form.get(f"include_{i}"):
+            continue
+        name = request.form.get(f"name_{i}", "").strip()
+        email = request.form.get(f"email_{i}", "").strip()
+        if not name or not email:
+            skipped.append(f"{i + 1}번째 (이름/이메일 누락)")
+            continue
+        if "@" not in email:
+            skipped.append(f"{i + 1}번째 '{name}' (이메일 형식 오류)")
+            continue
+        if email.lower() in existing:
+            skipped.append(f"{i + 1}번째 '{name}' (이미 등록된 이메일)")
+            continue
+        existing.add(email.lower())
+        db.session.add(Contact(
+            user_id=current_user.id,
+            exhibition_id=exhibition.id,
+            exhibition_name=exhibition.name,
+            name=name,
+            email=email,
+            company=request.form.get(f"company_{i}", "").strip(),
+            position=request.form.get(f"position_{i}", "").strip(),
+            phone=request.form.get(f"phone_{i}", "").strip(),
+            address=request.form.get(f"address_{i}", "").strip(),
+            remarks=request.form.get(f"remarks_{i}", "").strip(),
+        ))
+        added += 1
+    db.session.commit()
+
+    if skipped:
+        flash(f"건너뛴 항목 {len(skipped)}개: " + " / ".join(skipped[:10]), "danger")
+    if not added and not skipped:
+        flash("등록할 바이어를 선택해주세요.", "danger")
+    elif added:
+        flash(f"바이어 {added}명이 등록되었습니다.", "success")
+    return redirect(url_for("contacts.list_contacts"))
+
+
 @contacts_bp.route("/contacts/<int:contact_id>/edit", methods=["GET", "POST"])
 @login_required
 def edit_contact(contact_id):
