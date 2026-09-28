@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>{{ form.name }} 트렌드 분석</title>
+<style>
+  @page {
+    size: A4;
+    margin: 22mm 18mm;
+    @bottom-center {
+      content: "FairMate · " counter(page) " / " counter(pages);
+      font-size: 9px;
+      color: #9ca3af;
+    }
+  }
+  @font-face {
+    font-family: "Report KR";
+    src: url("{{ font_regular_uri }}") format("woff2");
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: "Report KR";
+    src: url("{{ font_bold_uri }}") format("woff2");
+    font-weight: 700;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Report KR", sans-serif;
+    color: #1f2933;
+    font-size: 10.5px;
+    line-height: 1.6;
+  }
+
+  .report-header {
+    border-bottom: 3px solid #ea580c;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+  }
+  .report-kicker { font-size: 11px; font-weight: 700; color: #ea580c; }
+  .report-title { font-size: 21px; font-weight: 700; margin: 4px 0 8px; }
+  .report-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    font-size: 10px;
+    color: #6b7280;
+  }
+  .report-meta b { color: #374151; }
+
+  h2.section-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #111827;
+    border-left: 4px solid #ea580c;
+    padding-left: 8px;
+    margin: 20px 0 10px;
+    page-break-after: avoid;
+  }
+
+  .cluster-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .cluster-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px 12px;
+    page-break-inside: avoid;
+  }
+  .cluster-card.empty { color: #9ca3af; }
+  .cluster-num { color: #ea580c; font-weight: 700; margin-right: 4px; }
+  .cluster-title { font-weight: 700; font-size: 11.5px; margin: 2px 0 4px; }
+  .cluster-summary { color: #4b5563; margin-bottom: 6px; }
+  .kw-row { display: flex; flex-wrap: wrap; gap: 5px; }
+  .kw-chip {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 3px 7px;
+    font-size: 9.5px;
+  }
+  .kw-chip .badge { color: #ea580c; font-weight: 700; margin-left: 3px; }
+  .cluster-insight {
+    margin-top: 6px;
+    background: #fff7ed;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 9.5px;
+    color: #9a3412;
+  }
+
+  .s2-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .s2-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px 12px;
+    page-break-inside: avoid;
+  }
+  .s2-card .k { color: #ea580c; font-weight: 700; font-size: 9.5px; margin: 6px 0 2px; }
+  .s2-card .k:first-child { margin-top: 0; }
+  .price-big { font-size: 17px; font-weight: 700; color: #111827; }
+
+  .research-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    page-break-inside: avoid;
+  }
+  .research-card .qtag {
+    display: inline-block;
+    background: #f3f4f6;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 9px;
+    color: #6b7280;
+    margin-bottom: 3px;
+  }
+  .research-card .title { font-weight: 700; font-size: 11.5px; margin-bottom: 2px; }
+  .research-card .conclusion { font-weight: 700; margin: 4px 0; }
+  .research-card .interp { color: #6b7280; font-size: 9.5px; }
+  .research-card ul { margin: 4px 0 0; padding-left: 16px; }
+
+  .report-footer {
+    margin-top: 14px;
+    font-size: 9.5px;
+    color: #9ca3af;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="report-header">
+  <div class="report-kicker">FairMate · 트렌드 분석 기획서</div>
+  <div class="report-title">{{ form.name }} — {{ form.country }} 트렌드 분석</div>
+  <div class="report-meta">
+    {% if expo %}<span>박람회: <b>{{ expo.name }}</b></span>{% elif form.exhibition_name %}<span>박람회: <b>{{ form.exhibition_name }}</b></span>{% endif %}
+    {% if current_user.company %}<span>작성: <b>{{ current_user.company }}</b>{% if current_user.name %} · {{ current_user.name }}{% endif %}</span>{% endif %}
+    <span>생성일: <b>{{ generated_at.strftime('%Y.%m.%d') }}</b></span>
+  </div>
+</div>
+
+{% set s1 = data.section1 %}
+{% if s1 %}
+<h2 class="section-title">1. 연관 검색어 기반 시장 트렌드 클러스터링</h2>
+<p style="color:#6b7280; margin:0 0 8px;">대상 시장 {{ s1.country_ko }} ({{ s1.geo }}) · 검색 언어 {{ s1.languages|join(", ") }} · Google 데이터 신뢰도 {{ s1.reliability_label_ko }}</p>
+<div class="cluster-grid">
+  {% for c in s1.clusters %}
+  {% if c.keywords %}
+  <div class="cluster-card">
+    <span class="cluster-num">{{ "%02d"|format(loop.index) }}</span>{{ c.label }}
+    <div class="cluster-title">{{ c.title_ko }}</div>
+    {% if c.summary %}<div class="cluster-summary">{{ c.summary }}</div>{% endif %}
+    <div class="kw-row">
+      {% for kw in c.keywords %}
+      <span class="kw-chip">{{ kw.keyword }}{% if kw.ko %} ({{ kw.ko }}){% endif %}
+        {% if kw.is_breakout %}<span class="badge">급등</span>
+        {% elif kw.badge and kw.badge.kind == 'yoy' %}<span class="badge">{{ '+' if kw.badge.pct > 0 }}{{ kw.badge.pct }}%</span>
+        {% elif kw.badge and kw.badge.kind == 'rising' %}<span class="badge">+{{ kw.badge.pct }}%</span>
+        {% endif %}
+      </span>
+      {% endfor %}
+    </div>
+    {% if c.insight %}<div class="cluster-insight">{{ c.insight }}</div>{% endif %}
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+{% set s2 = data.section2 %}
+{% if s2 %}
+{% set rp = s2.retail_price %}
+<h2 class="section-title">2. 현지 리테일 벤치마킹 &amp; 경쟁 제품 가격 분석</h2>
+<div class="s2-grid">
+  <div class="s2-card">
+    <div class="k">타깃 제품</div>{{ s2.target_product.title }}
+    {% if s2.target_product.specs %}<div class="k">제품 스펙</div>{{ s2.target_product.specs }}{% endif %}
+    {% if s2.target_product.complaints %}<div class="k">소비자 페인 포인트</div>{{ s2.target_product.complaints }}{% endif %}
+  </div>
+  <div class="s2-card">
+    <div class="k">리테일 판매가</div>
+    <div class="price-big">{{ rp.price }}</div>
+    {% if rp.usd_price %}<div style="color:#6b7280;">{{ rp.usd_price }}{% if rp.krw_price %} · {{ rp.krw_price }}{% endif %}</div>{% endif %}
+  </div>
+  <div class="s2-card">
+    <div class="k">진출 타깃 채널</div>
+    {% if s2.sales_channels.shelf %}추천 매대: {{ s2.sales_channels.shelf }}<br>{% endif %}
+    {% if s2.sales_channels.channels %}{{ s2.sales_channels.channels|join(", ") }}{% endif %}
+  </div>
+  <div class="s2-card">
+    <div class="k">가격·USP 전략</div>{{ s2.price_strategy.positioning }}
+    {% if s2.price_strategy.pitch %}<div class="k">바이어 피칭</div>“{{ s2.price_strategy.pitch }}”{% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% set r = data.research %}
+{% if r %}
+<h2 class="section-title">3. 현지 시장 트렌드 분석</h2>
+{% for c in r.cards %}
+<div class="research-card">
+  <span class="qtag">{{ question_labels.get(c.qid, c.qid) }}</span>
+  <div class="title">{{ c.title }}</div>
+  {% if c.conclusion %}<div class="conclusion">{{ c.conclusion.text }}</div>{% endif %}
+  {% if c.interpretation %}<div class="interp">{{ c.interpretation|replace("AI 해석:", "")|trim }}</div>{% endif %}
+  {% if c.points %}
+  <ul>{% for p in c.points %}<li>{{ p.text }}</li>{% endfor %}</ul>
+  {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="report-footer">
+  Google 트렌드·현지 웹 검색을 바탕으로 자동 생성된 분석입니다. 실제 진출 결정 전 현지 조사가 추가로 필요합니다.
+</div>
+
+</body>
+</html>

@@ -850,7 +850,7 @@ def _situation_flags(derived):
     elif rank and rank <= 3:
         flags.append(f"한국이 이미 상위 공급국 ({rank}위, 점유율 {share}%)")
     else:
-        flags.append(f"한국 존재감 작음 ({rank or '-'}위, 점유율 {share}%)")
+        flags.append(f"한국 점유율 낮음 ({rank or '-'}위, 점유율 {share}%)")
 
     ytd = korea.get("customs_ytd") or {}
     if ytd.get("yoy_pct") is not None:
@@ -912,6 +912,8 @@ def interpret_with_llm(client, model, official_item_desc, hscode, target_country
 6. yearly_table의 note가 있는 연도는 집계 미완 가능성이 있으니 그 연도만으로 "역성장"이라 단정하지 마세요.
 7. is_mirror_estimate가 true면 "상대국 보고 기반 추정치"라는 점을 시장 매력도 문단에서 밝히세요.
 8. 과장된 표현(예: "엄청난", "반드시 성공")을 쓰지 말고, 담당자에게 보고하는 담백한 문체로 쓰세요.
+8-1. "존재감이 작다/크다", "입지가 좁다"처럼 막연한 표현 대신, 웬만하면 "점유율 X%", "공급국 N위"처럼
+     구체적인 수치로 쓰세요.
 9. 나라 이름은 "{country}"의 이름 부분으로 쓰고, "DEU 시장"처럼 3자리 코드만 쓰지 마세요.
 10. yearly_table과 computed_metrics의 모든 연도 값은 이미 집계가 끝난 "실제 통계"입니다.
     "~로 예상된다", "~할 것으로 전망된다", "~로 보인다"처럼 추측하는 표현을 절대 쓰지 말고
@@ -1446,7 +1448,8 @@ korea_export_customs_usd는 한국 관세청 기준 한국의 수출액(FOB)으�
 [데이터 끝]
 
 한국 중소기업 관점에서 담당자에게 보고하는 담백한 문체로 작성하세요. 금액은 "약 23억 달러"처럼
-읽기 쉽게 쓰고, 성장률에는 기간(cagr_start_year~cagr_end_year)을 함께 밝히세요.
+읽기 쉽게 쓰고, 성장률에는 기간(cagr_start_year~cagr_end_year)을 함께 밝히세요. "존재감이 작다/크다"
+처럼 막연한 표현 대신, 웬만하면 "점유율 X%", "공급국 N위"처럼 구체적인 수치로 쓰세요.
 1) key_findings: 비교 국가 전체에서 데이터로 드러나는 핵심 사실 3~4개 (각 1문장, 근거 수치 포함)
 2) top_priority_markets: 우선 공략 국가 1~3개와 이유 (이유는 2~3문장, 시장 규모·증가 금액·한국 현황
    중 근거 수치 2개 이상 포함)

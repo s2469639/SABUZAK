@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>{{ expo.name }} 통합 기획서</title>
+<style>
+  @page {
+    size: A4;
+    margin: 22mm 18mm;
+    @bottom-center {
+      content: "FairMate · " counter(page) " / " counter(pages);
+      font-size: 9px;
+      color: #9ca3af;
+    }
+  }
+  @font-face {
+    font-family: "Report KR";
+    src: url("{{ font_regular_uri }}") format("woff2");
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: "Report KR";
+    src: url("{{ font_bold_uri }}") format("woff2");
+    font-weight: 700;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Report KR", sans-serif;
+    color: #1f2933;
+    font-size: 10.5px;
+    line-height: 1.6;
+  }
+
+  /* ---- 표지 ---- */
+  .cover {
+    height: 235mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .cover-kicker { font-size: 13px; font-weight: 700; color: #ea580c; margin-bottom: 10px; }
+  .cover-title { font-size: 30px; font-weight: 700; line-height: 1.4; margin-bottom: 14px; }
+  .cover-meta { font-size: 12px; color: #6b7280; margin-bottom: 40px; }
+  .cover-meta div { margin-bottom: 4px; }
+  .cover-meta b { color: #374151; }
+  .cover-toc { border-top: 1px solid #e5e7eb; padding-top: 20px; }
+  .cover-toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px dashed #e5e7eb;
+    font-size: 13px;
+  }
+  .cover-toc-item .num { color: #ea580c; font-weight: 700; }
+  .cover-toc-item .skip { color: #9ca3af; font-size: 11px; margin-left: auto; }
+
+  /* ---- 파트 구분 ---- */
+  .part-header {
+    border-bottom: 3px solid #ea580c;
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+    page-break-before: always;
+  }
+  .part-kicker { font-size: 11px; font-weight: 700; color: #ea580c; }
+  .part-title { font-size: 19px; font-weight: 700; margin: 4px 0 0; }
+
+  h2.section-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #111827;
+    border-left: 4px solid #ea580c;
+    padding-left: 8px;
+    margin: 18px 0 10px;
+    page-break-after: avoid;
+  }
+
+  /* ---- 1. 유망시장 조사 ---- */
+  table.report-table { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
+  table.report-table th, table.report-table td { border: 1px solid #e5e7eb; padding: 6px 8px; text-align: left; font-size: 10.5px; }
+  table.report-table th { background: #f9fafb; font-weight: 700; }
+  table.report-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.report-table tr.kor-row { background: #fff7ed; }
+  table.report-table tr.kor-row td { font-weight: 700; }
+  .stat-line { font-size: 11px; color: #4b5563; margin: 4px 0 10px; }
+  .stat-line b { color: #111827; }
+  .ai-box { border: 1px solid #e5e7eb; border-radius: 6px; padding: 14px 16px; page-break-inside: avoid; }
+  .ai-summary { font-weight: 700; background: #eff6ff; border-radius: 4px; padding: 10px 12px; margin-bottom: 12px; }
+  .ai-block { margin-bottom: 12px; page-break-inside: avoid; }
+  .ai-block:last-child { margin-bottom: 0; }
+  .ai-label { display: block; font-weight: 700; color: #0a6fd8; margin-bottom: 3px; }
+  .ai-label-risk { color: #d93025; }
+  .ai-label-strategy { color: #0e8a4a; }
+  .ai-list { margin: 2px 0 0; padding-left: 16px; }
+  .ai-list li { margin-bottom: 2px; }
+
+  /* ---- 2. 트렌드 분석 ---- */
+  .cluster-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .cluster-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; page-break-inside: avoid; }
+  .cluster-num { color: #ea580c; font-weight: 700; margin-right: 4px; }
+  .cluster-title { font-weight: 700; font-size: 11.5px; margin: 2px 0 4px; }
+  .cluster-summary { color: #4b5563; margin-bottom: 6px; }
+  .kw-row { display: flex; flex-wrap: wrap; gap: 5px; }
+  .kw-chip { border: 1px solid #e5e7eb; border-radius: 6px; padding: 3px 7px; font-size: 9.5px; }
+  .kw-chip .badge { color: #ea580c; font-weight: 700; margin-left: 3px; }
+  .cluster-insight { margin-top: 6px; background: #fff7ed; border-radius: 6px; padding: 6px 8px; font-size: 9.5px; color: #9a3412; }
+  .s2-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .s2-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; page-break-inside: avoid; }
+  .s2-card .k { color: #ea580c; font-weight: 700; font-size: 9.5px; margin: 6px 0 2px; }
+  .s2-card .k:first-child { margin-top: 0; }
+  .price-big { font-size: 17px; font-weight: 700; color: #111827; }
+  .research-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; page-break-inside: avoid; }
+  .research-card .qtag { display: inline-block; background: #f3f4f6; border-radius: 4px; padding: 1px 6px; font-size: 9px; color: #6b7280; margin-bottom: 3px; }
+  .research-card .title { font-weight: 700; font-size: 11.5px; margin-bottom: 2px; }
+  .research-card .conclusion { font-weight: 700; margin: 4px 0; }
+  .research-card .interp { color: #6b7280; font-size: 9.5px; }
+  .research-card ul { margin: 4px 0 0; padding-left: 16px; }
+
+  /* ---- 3. 부스 컨셉 ---- */
+  .slogan-box { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px 16px; page-break-inside: avoid; }
+  .slogan-box .slogan { color: #ea580c; font-weight: 700; font-size: 13px; margin: 0 0 8px; }
+  .slogan-box .desc { margin: 0; color: #4b5563; }
+  .sp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .sp-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; page-break-inside: avoid; }
+  .sp-badge { display: inline-block; border-radius: 4px; padding: 1px 7px; font-size: 9.5px; font-weight: 700; margin-bottom: 4px; }
+  .sp-badge.level-핵심 { background: #fed7aa; color: #9a3412; }
+  .sp-badge.level-보조 { background: #e5e7eb; color: #4b5563; }
+  .sp-card strong { display: block; margin-bottom: 3px; font-size: 11.5px; }
+  .sp-card p { margin: 0; color: #6b7280; }
+  .event-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; page-break-inside: avoid; }
+  .event-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 3px; }
+  .event-idx { color: #ea580c; font-weight: 700; font-size: 12px; }
+  .event-title { font-weight: 700; font-size: 12px; }
+  .event-tag { background: #f3f4f6; border-radius: 999px; padding: 1px 8px; font-size: 9.5px; color: #6b7280; }
+  .event-summary { margin: 2px 0; color: #4b5563; }
+  .event-why { margin: 2px 0; color: #9ca3af; font-size: 10px; }
+  .event-block { margin-top: 6px; }
+  .event-block-title { display: block; font-size: 9.5px; font-weight: 700; color: #ea580c; margin-bottom: 2px; }
+  .event-block ol, .event-block ul { margin: 0; padding-left: 16px; }
+  .appeal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .appeal-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; page-break-inside: avoid; }
+  .appeal-card strong { display: block; margin-bottom: 4px; font-size: 11.5px; }
+  .appeal-card p { margin: 0 0 4px; color: #4b5563; }
+  .appeal-label { color: #ea580c; font-weight: 700; font-size: 9.5px; }
+  .buyer-tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .buyer-tag { background: #f3f4f6; border-radius: 999px; padding: 3px 10px; font-size: 10.5px; color: #374151; }
+
+  .part-footer { margin-top: 14px; font-size: 9.5px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 8px; }
+</style>
+</head>
+<body>
+
+{# ============================ 표지 ============================ #}
+<div class="cover">
+  <div class="cover-kicker">FairMate · 통합 기획서</div>
+  <div class="cover-title">{{ expo.name }}<br>{{ product.name if product else '제품' }} 진출 기획서</div>
+  <div class="cover-meta">
+    <div>박람회 국가: <b>{{ expo.country_ko or expo.country }}</b></div>
+    {% if product %}<div>제품: <b>{{ product.name }}</b></div>{% endif %}
+    <div>생성일: <b>{{ generated_at.strftime('%Y.%m.%d') }}</b></div>
+  </div>
+  <div class="cover-toc">
+    <div class="cover-toc-item"><span class="num">1</span> 유망시장 조사
+      {% if not market_result %}<span class="skip">— 미작성, 이 파트는 생략됨</span>{% endif %}</div>
+    <div class="cover-toc-item"><span class="num">2</span> 트렌드 분석
+      {% if not trend_data %}<span class="skip">— 미작성, 이 파트는 생략됨</span>{% endif %}</div>
+    <div class="cover-toc-item"><span class="num">3</span> 부스 컨셉 기획
+      {% if not booth_ready %}<span class="skip">— 미작성, 이 파트는 생략됨</span>{% endif %}</div>
+  </div>
+</div>
+
+{# ============================ PART 1. 유망시장 조사 ============================ #}
+{% if market_result %}
+{% set result = market_result %}
+<div class="part-header">
+  <div class="part-kicker">PART 1</div>
+  <div class="part-title">유망시장 조사 — {{ country_label }}</div>
+</div>
+
+{% if result.official_item_desc %}
+<h2 class="section-title">품목 설명 (HS {{ result.hscode }})</h2>
+<p>{{ result.official_item_desc }}</p>
+{% endif %}
+
+{% set comp = result.competitiveness %}
+{% if comp and comp.top_suppliers %}
+<h2 class="section-title">{{ country_label }} 수입지역 상위 공급국 ({{ comp.year }}년)</h2>
+{% if comp.total_import_usd %}
+<p class="stat-line">
+  {{ comp.year }}년 전체 수입액 <b>${{ "{:,.0f}".format(comp.total_import_usd) }}</b>
+  {% if comp.supplier_country_count %} · 공급국 <b>{{ comp.supplier_country_count }}개국</b>{% endif %}
+</p>
+{% endif %}
+<table class="report-table">
+  <tr><th>순위</th><th>수입지역</th><th>수입금액(USD)</th><th>비중</th></tr>
+  {% if comp.korea_supplier %}
+  <tr class="kor-row">
+    <td>{{ comp.korea_supplier.rank }}</td>
+    <td>한국 ({{ comp.korea_supplier.label }})</td>
+    <td class="num">${{ "{:,.0f}".format(comp.korea_supplier.import_value_usd) }}</td>
+    <td>{{ comp.korea_supplier.share_pct | pct }}</td>
+  </tr>
+  {% endif %}
+  {% for sup in comp.top_suppliers if not sup.is_korea %}
+  <tr>
+    <td>{{ sup.rank }}</td>
+    <td>{{ sup.label }}</td>
+    <td class="num">${{ "{:,.0f}".format(sup.import_value_usd) }}</td>
+    <td>{{ sup.share_pct | pct }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% set ai = result.ai_insight %}
+{% if ai and ai.summary is defined %}
+<h2 class="section-title">AI 전략 시사점</h2>
+<div class="ai-box">
+  <div class="ai-summary">{{ ai.summary }}</div>
+  <div class="ai-block"><span class="ai-label">시장 매력도</span>{{ ai.market_attractiveness }}</div>
+  <div class="ai-block"><span class="ai-label">경쟁 구도</span>{{ ai.competitive_position }}</div>
+  <div class="ai-block"><span class="ai-label">한국 현황</span>{{ ai.korea_position }}</div>
+  {% if ai.risks %}
+  <div class="ai-block">
+    <span class="ai-label ai-label-risk">리스크 · 유의점</span>
+    <ul class="ai-list">{% for r in ai.risks %}<li>{{ r }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+  <div class="ai-block"><span class="ai-label ai-label-strategy">전략 제언</span>{{ ai.strategic_recommendation }}</div>
+  {% if ai.action_items %}
+  <div class="ai-block">
+    <span class="ai-label">실행 과제</span>
+    <ol class="ai-list">{% for r in ai.action_items %}<li>{{ r }}</li>{% endfor %}</ol>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+<div class="part-footer">UN Comtrade · 관세청 수치와 AI 해석을 바탕으로 자동 생성됐습니다.</div>
+{% endif %}
+
+{# ============================ PART 2. 트렌드 분석 ============================ #}
+{% if trend_data %}
+<div class="part-header">
+  <div class="part-kicker">PART 2</div>
+  <div class="part-title">트렌드 분석 — {{ trend_form.country or country_label }}</div>
+</div>
+
+{% set s1 = trend_data.section1 %}
+{% if s1 %}
+<h2 class="section-title">연관 검색어 기반 시장 트렌드 클러스터링</h2>
+<p style="color:#6b7280; margin:0 0 8px;">대상 시장 {{ s1.country_ko }} ({{ s1.geo }}) · 검색 언어 {{ s1.languages|join(", ") }} · Google 데이터 신뢰도 {{ s1.reliability_label_ko }}</p>
+<div class="cluster-grid">
+  {% for c in s1.clusters %}
+  {% if c.keywords %}
+  <div class="cluster-card">
+    <span class="cluster-num">{{ "%02d"|format(loop.index) }}</span>{{ c.label }}
+    <div class="cluster-title">{{ c.title_ko }}</div>
+    {% if c.summary %}<div class="cluster-summary">{{ c.summary }}</div>{% endif %}
+    <div class="kw-row">
+      {% for kw in c.keywords %}
+      <span class="kw-chip">{{ kw.keyword }}{% if kw.ko %} ({{ kw.ko }}){% endif %}
+        {% if kw.is_breakout %}<span class="badge">급등</span>
+        {% elif kw.badge and kw.badge.kind == 'yoy' %}<span class="badge">{{ '+' if kw.badge.pct > 0 }}{{ kw.badge.pct }}%</span>
+        {% elif kw.badge and kw.badge.kind == 'rising' %}<span class="badge">+{{ kw.badge.pct }}%</span>
+        {% endif %}
+      </span>
+      {% endfor %}
+    </div>
+    {% if c.insight %}<div class="cluster-insight">{{ c.insight }}</div>{% endif %}
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+{% set s2 = trend_data.section2 %}
+{% if s2 %}
+{% set rp = s2.retail_price %}
+<h2 class="section-title">현지 리테일 벤치마킹 &amp; 경쟁 제품 가격 분석</h2>
+<div class="s2-grid">
+  <div class="s2-card">
+    <div class="k">타깃 제품</div>{{ s2.target_product.title }}
+    {% if s2.target_product.specs %}<div class="k">제품 스펙</div>{{ s2.target_product.specs }}{% endif %}
+    {% if s2.target_product.complaints %}<div class="k">소비자 페인 포인트</div>{{ s2.target_product.complaints }}{% endif %}
+  </div>
+  <div class="s2-card">
+    <div class="k">리테일 판매가</div>
+    <div class="price-big">{{ rp.price }}</div>
+    {% if rp.usd_price %}<div style="color:#6b7280;">{{ rp.usd_price }}{% if rp.krw_price %} · {{ rp.krw_price }}{% endif %}</div>{% endif %}
+  </div>
+  <div class="s2-card">
+    <div class="k">진출 타깃 채널</div>
+    {% if s2.sales_channels.shelf %}추천 매대: {{ s2.sales_channels.shelf }}<br>{% endif %}
+    {% if s2.sales_channels.channels %}{{ s2.sales_channels.channels|join(", ") }}{% endif %}
+  </div>
+  <div class="s2-card">
+    <div class="k">가격·USP 전략</div>{{ s2.price_strategy.positioning }}
+    {% if s2.price_strategy.pitch %}<div class="k">바이어 피칭</div>“{{ s2.price_strategy.pitch }}”{% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% set r = trend_data.research %}
+{% if r %}
+<h2 class="section-title">현지 시장 트렌드 분석</h2>
+{% for c in r.cards %}
+<div class="research-card">
+  <span class="qtag">{{ question_labels.get(c.qid, c.qid) }}</span>
+  <div class="title">{{ c.title }}</div>
+  {% if c.conclusion %}<div class="conclusion">{{ c.conclusion.text }}</div>{% endif %}
+  {% if c.interpretation %}<div class="interp">{{ c.interpretation|replace("AI 해석:", "")|trim }}</div>{% endif %}
+  {% if c.points %}<ul>{% for p in c.points %}<li>{{ p.text }}</li>{% endfor %}</ul>{% endif %}
+</div>
+{% endfor %}
+{% endif %}
+<div class="part-footer">Google 트렌드·현지 웹 검색을 바탕으로 자동 생성됐습니다.</div>
+{% endif %}
+
+{# ============================ PART 3. 부스 컨셉 기획 ============================ #}
+{% if booth_ready %}
+<div class="part-header">
+  <div class="part-kicker">PART 3</div>
+  <div class="part-title">부스 컨셉 기획</div>
+</div>
+
+<h2 class="section-title">부스 테마 &amp; 슬로건</h2>
+<div class="slogan-box">
+  <p style="font-size:13px; font-weight:700; margin:0 0 6px;">{{ draft.theme }}</p>
+  <p class="slogan">슬로건: {{ draft.slogan }}</p>
+  {% if draft.description %}<p class="desc">{{ draft.description }}</p>{% endif %}
+</div>
+
+{% if selling_points %}
+<h2 class="section-title">핵심 셀링포인트</h2>
+<div class="sp-grid">
+  {% for sp in selling_points %}
+  <div class="sp-card">
+    <span class="sp-badge level-{{ sp.badge }}">{{ sp.badge }}</span>
+    <strong>{{ sp.title }}</strong>
+    <p>{{ sp.description }}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if target_buyers %}
+<h2 class="section-title">주요 타겟 바이어</h2>
+<div class="buyer-tag-list">
+  {% for buyer in target_buyers %}<span class="buyer-tag">{{ buyer }}</span>{% endfor %}
+</div>
+{% endif %}
+
+{% if buyer_appeal %}
+<h2 class="section-title">바이어 어필 포인트</h2>
+<div class="appeal-grid">
+  {% for a in buyer_appeal %}
+  <div class="appeal-card">
+    <strong>{{ a.title }}</strong>
+    {% if a.why %}<p><span class="appeal-label">왜 중요한가</span> {{ a.why }}</p>{% endif %}
+    {% if a.show %}<p><span class="appeal-label">부스에서 보여줄 것</span> {{ a.show }}</p>{% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if events %}
+<h2 class="section-title">현장 이벤트 기획안</h2>
+{% for event in events %}
+<div class="event-card">
+  <div class="event-head">
+    <span class="event-idx">{{ event.id or "%02d"|format(loop.index) }}</span>
+    <span class="event-title">{{ event.title }}</span>
+    {% if event.tag %}<span class="event-tag">{{ event.tag }}</span>{% endif %}
+  </div>
+  {% if event.summary or event.description %}<p class="event-summary">{{ event.summary or event.description }}</p>{% endif %}
+  {% if event.why %}<p class="event-why">{{ event.why }}</p>{% endif %}
+  {% if event.steps %}
+  <div class="event-block">
+    <span class="event-block-title">진행 방법</span>
+    <ol>{% for step in event.steps %}<li>{{ step }}</li>{% endfor %}</ol>
+  </div>
+  {% endif %}
+  {% for d in event.details or [] %}
+  <div class="event-block">
+    <span class="event-block-title">{{ d.heading }}</span>
+    <ul>{% for line in d.lines %}<li>{{ line }}</li>{% endfor %}</ul>
+  </div>
+  {% endfor %}
+  {% if event.reward %}<div class="event-block"><span class="event-block-title">경품·혜택</span>{{ event.reward }}</div>{% endif %}
+  {% if event.prep %}<div class="event-block"><span class="event-block-title">준비물·인원</span>{{ event.prep }}</div>{% endif %}
+</div>
+{% endfor %}
+{% endif %}
+<div class="part-footer">AI가 조사·기획한 부스 컨셉 초안입니다. 실제 집행 전 규정·인허가·물류 조건은 별도 확인이 필요합니다.</div>
+{% endif %}
+
+</body>
+</html>

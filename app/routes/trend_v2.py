@@ -22,12 +22,15 @@ url_prefix를 붙이면 그 JS 호출이 다 깨진다. 입력 폼 화면(v15 �
 import json
 import os
 import sys
+from datetime import datetime
+from urllib.parse import quote
 
-from flask import Blueprint, jsonify, redirect, render_template, request
+from flask import Blueprint, Response, flash, jsonify, redirect, render_template, request
 from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.models import ConceptDraft, Exhibition, TrendResult
+from app.services.pdf_report import pdf_font_context
 
 _V15_ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "v15")
 if _V15_ROOT not in sys.path:
@@ -201,6 +204,41 @@ def trend_result(job_id):
     return _trend_page(
         job["form"], job["result"], job["error"], job["force"],
         booth_job_id=booth_job_id, job_id=job_id,
+    )
+
+
+@pages_bp.get("/trend/<job_id>/report")
+@login_required
+def trend_report_pdf(job_id):
+    """이미 완료된 트렌드 조사 결과를 인쇄용 레이아웃으로 다시 그려서
+    PDF로 내려준다. 새로 조사하지 않는다 - 추가 비용이 들지 않는다."""
+    from weasyprint import HTML
+
+    job = _get_job(job_id, "trend")
+    if not job or job["status"] != "done" or not job.get("result"):
+        flash("먼저 트렌드 조사를 완료한 뒤 다시 시도해주세요.", "danger")
+        return redirect("/trend-research")
+
+    data = job["result"]
+    form = job["form"] or {}
+    expo_id, _product_id = _linked_expo_product(job)
+    expo = Exhibition.query.get(expo_id) if expo_id else None
+
+    html = render_template(
+        "trend_v2/trend_report_pdf.html",
+        data=data, form=form, expo=expo,
+        question_labels=QUESTION_LABELS,
+        current_user=current_user, generated_at=datetime.now(),
+        **pdf_font_context(),
+    )
+    pdf_bytes = HTML(string=html).write_pdf()
+
+    title = (expo.name if expo else form.get("exhibition_name") or form.get("name") or "트렌드조사")
+    filename = f"{title}_트렌드분석.pdf".replace("/", "-")
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
     )
 
 
