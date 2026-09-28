@@ -895,6 +895,63 @@ def market_matrix():
     return render_template("exhibition/market_matrix.html", **ctx)
 
 
+@bp.route("/market-matrix/report")
+@login_required
+def market_matrix_report_pdf():
+    """유망시장 매트릭스(품목별 유망시장) 화면에 이미 나와 있는 결과를 PDF로
+    내려준다. force=False로만 조회하므로 캐시에 있는 결과만 쓰고, 캐시가
+    없으면(=아직 조회한 적 없으면) 새로 AI를 부르지 않고 안내만 한다."""
+    from weasyprint import HTML
+
+    hscode = _hs6(request.args.get("hscode", "")) or re.sub(r"\D", "", request.args.get("hscode", ""))
+    candidates_raw = request.args.get("candidates", "").strip()
+    try:
+        top_n = int(request.args.get("top_n") or 10)
+    except (TypeError, ValueError):
+        top_n = 10
+    top_n = max(0, min(top_n, 20))
+
+    if not re.fullmatch(r"\d{6}", hscode):
+        flash("HS코드는 6자리 숫자로 입력해주세요 (예: 1905.90).", "danger")
+        return redirect(url_for("exhibition.market_matrix"))
+
+    candidate_list = _normalize_country_inputs(
+        c for c in re.split(r"[,，;、/]", candidates_raw) if c.strip()
+    )
+
+    try:
+        result = un_comtrade.get_multi_country_comparison(
+            hscode, candidate_list or None, top_n=top_n, force=False,
+        )
+    except Exception as e:
+        flash(f"조사 결과를 불러오지 못했습니다: {e}", "danger")
+        return redirect(url_for("exhibition.market_matrix", hscode=hscode))
+
+    if not result:
+        flash("먼저 '통합분석'으로 조회를 실행한 뒤 다시 시도해주세요.", "danger")
+        return redirect(url_for("exhibition.market_matrix", hscode=hscode))
+
+    item_desc_ko = (
+        un_comtrade.translate_item_desc(result["official_item_desc"])
+        if result.get("official_item_desc") else None
+    )
+
+    html = render_template(
+        "exhibition/market_matrix_report_pdf.html",
+        result=result, hscode=hscode, top_n=top_n, item_desc_ko=item_desc_ko,
+        generated_at=datetime.now(),
+        **pdf_font_context(),
+    )
+    pdf_bytes = HTML(string=html).write_pdf()
+
+    filename = f"HS{hscode}_유망시장매트릭스.pdf"
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
+    )
+
+
 @bp.route("/detail/<int:expo_id>/sync-ntm/<int:product_id>", methods=["POST"])
 @login_required
 def sync_ntm(expo_id, product_id):
