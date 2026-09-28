@@ -169,7 +169,12 @@ def _bigram_similarity(a, b):
     return 2 * len(A & B) / (len(A) + len(B))
 
 
-_SIMILARITY_THRESHOLD = 0.28
+# 0.28은 "냉동만두" -> "냉동 연육"류처럼 흔한 단어 하나만 겹쳐도 통과하는
+# 오탐이 실측 확인됐다 (관세청 마스터 11,499건 기준 재현). 0.35에서는 그
+# 오탐과 "고추장" -> "고추다진양념" 같은 경계선 노이즈가 사라지면서도,
+# 실제 정답 매치(식혜/라면/김치/고추장/된장/간장/과자/홍삼/미역 등)는 전부
+# 그대로 유지됨을 같은 데이터로 확인했다.
+_SIMILARITY_THRESHOLD = 0.35
 
 
 def _search_hscode_by_similarity(query, limit=20):
