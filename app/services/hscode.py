@@ -19,7 +19,8 @@ product(HS코드) 필터와 무관하게 그 나라의 전체 무역 규정 목�
 
 페이지 로드마다 직접 부르지 않고, scripts/market/sync_ntm_cache.py 또는 상세
 페이지의 "지금 실제 데이터 가져오기" 버튼이 NtmMeasure 테이블에 채워둔 캐시를
-읽기만 한다. 캐시가 아직 없는 국가는 DEFAULT_REGULATION_NOTES로 폴백한다.
+읽기만 한다. 캐시가 아직 없으면 빈 목록으로 두고(가짜 예시 데이터로 폴백하지
+않음), 화면에는 "아직 조회 안 함" 상태로 안내한다.
 
 NtmMeasure.reporter 컬럼은 ISO3(예: "SGP")를 저장하고, product 컬럼은
 국가 단위 조회라 "ALL" 고정값을 쓴다.
@@ -76,79 +77,6 @@ COUNTRY_ISO_MAP = {
     "greece": "GRC", "denmark": "DNK", "norway": "NOR", "finland": "FIN",
     "chile": "CHL", "argentina": "ARG", "colombia": "COL", "peru": "PER",
 }
-
-# 국가별 수출 주의사항 카드 (필수/정보/주의)
-REGULATION_NOTES = {
-    "USA": [
-        {
-            "level": "필수",
-            "title": "FDA 식품 시설 등록",
-            "desc": "미국 수출 전 FDA 시설 등록 필수. 2년마다 갱신.",
-            "ref": "FDA 21 CFR 1.225",
-        },
-        {
-            "level": "필수",
-            "title": "FSMA 준수 (식품안전현대화법)",
-            "desc": "공급망 위해요소 관리 계획(HARPC) 수립 의무.",
-            "ref": "FSMA 2011",
-        },
-        {
-            "level": "정보",
-            "title": "KORUS FTA 무관세 혜택",
-            "desc": "한-미 FTA로 대부분 식품류 무관세. 원산지 증명 필수.",
-            "ref": "KORUS FTA Schedule",
-        },
-    ],
-    "CHN": [
-        {
-            "level": "필수",
-            "title": "중국 해관 수출입 식품 등록(CIFER)",
-            "desc": "해외 식품 생산기업 등록 필수. 미등록 시 통관 불가.",
-            "ref": "GACC 총局令 248호",
-        },
-        {
-            "level": "필수",
-            "title": "중문 라벨 사전 심사",
-            "desc": "중문 라벨·성분표 표기 규정 준수 필요.",
-            "ref": "중국 식품안전국가표준 GB 7718",
-        },
-        {
-            "level": "정보",
-            "title": "한-중 FTA 관세 인하",
-            "desc": "품목별 단계적 관세 인하 적용 중. 원산지 증명서 필요.",
-            "ref": "한-중 FTA",
-        },
-    ],
-    "JPN": [
-        {
-            "level": "필수",
-            "title": "식품위생법 수입 신고",
-            "desc": "일본 후생노동성 식품 수입 신고 및 검역 절차 필요.",
-            "ref": "일본 식품위생법",
-        },
-        {
-            "level": "정보",
-            "title": "RCEP 관세 혜택",
-            "desc": "RCEP 협정 적용 시 단계적 관세 인하.",
-            "ref": "RCEP 협정문",
-        },
-    ],
-}
-
-DEFAULT_REGULATION_NOTES = [
-    {
-        "level": "필수",
-        "title": "현지 식품 수입 규정 확인",
-        "desc": "수입국 식품 관련 인증·통관 요건은 국가별로 상이합니다. KOTRA/현지 대사관 확인 권장.",
-        "ref": "국가별 상이",
-    },
-    {
-        "level": "정보",
-        "title": "원산지 증명서(C/O) 준비",
-        "desc": "FTA 체결국의 경우 원산지 증명서로 관세 혜택을 받을 수 있습니다.",
-        "ref": "관세청",
-    },
-]
 
 # 필요 인증 (국가별, 식품 여부에 따라)
 CERT_RULES = {
@@ -286,14 +214,6 @@ def get_country_regulations(country_iso, hs_code, limit=6):
     return notes
 
 
-def get_regulation_notes(country_iso, ntm_notes=None):
-    """TRAINS 캐시에서 가져온 실데이터(ntm_notes)가 있으면 그걸 우선 쓰고,
-    없으면 정적 기본 예시(REGULATION_NOTES/DEFAULT_REGULATION_NOTES)로 폴백."""
-    if ntm_notes:
-        return ntm_notes
-    return REGULATION_NOTES.get(country_iso, DEFAULT_REGULATION_NOTES)
-
-
 def get_required_certs(country_iso, food_yn):
     if country_iso in CERT_RULES:
         return CERT_RULES[country_iso]
@@ -338,7 +258,7 @@ def build_hscode_context(expo, products):
         product_regulations = get_country_regulations(country_iso, product.hs_code)
         is_synced = product_regulations is not None
         no_match_after_sync = is_synced and not product_regulations
-        regulation_notes = product_regulations if is_synced else get_regulation_notes(country_iso, None)
+        regulation_notes = product_regulations if is_synced else []
 
         product_rows.append({
             "product": product,
