@@ -17,6 +17,9 @@
         {% endfor %}
       </div>
       {% endif %}
+      {% if draft.theme %}
+      <a class="btn-secondary" href="{{ url_for('concept.booth_report_pdf', draft_id=draft.id) }}">보고서로 내보내기</a>
+      {% endif %}
       <form method="post" action="{{ url_for('drafts.delete', draft_id=draft.id) }}">
         <button type="submit" class="btn-text-danger" onclick="return confirm('이 박람회의 컨셉 기획을 삭제하시겠습니까?')">삭제</button>
       </form>

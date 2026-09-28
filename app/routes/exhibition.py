@@ -1,11 +1,10 @@
 import math
-import os
 import re
 from collections import Counter
 from datetime import datetime
 from urllib.parse import quote, urlencode
 
-from flask import Blueprint, Response, abort, current_app, flash, redirect, render_template, request, url_for
+from flask import Blueprint, Response, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from app.extensions import db
@@ -15,6 +14,7 @@ from app.routes.trend_v2 import _get_job as get_trend_job
 from app.services.hscode import build_hscode_context, resolve_country_iso
 from app.services import un_comtrade
 from app.services.exchange import get_exchange_info
+from app.services.pdf_report import pdf_font_context
 from app.services.wto_client import get_country_tariff_averages
 from app.services.trains_client import (
     fetch_regulations_for_country,
@@ -24,15 +24,6 @@ from app.services.trains_client import (
 )
 
 bp = Blueprint("exhibition", __name__, url_prefix="/exhibitions")
-
-
-def _pdf_font_uri(filename):
-    """PDF(WeasyPrint) 안에서 @font-face로 직접 불러 쓸 한글 폰트 파일의
-    file:// 경로. 배포 서버 OS에 한글 폰트가 깔려 있는지 여부와 상관없이
-    항상 같은 폰트로 렌더링되게 하려고, 시스템 폰트에 기대지 않고
-    app/static/fonts에 직접 넣어둔 폰트 파일을 절대경로로 가리킨다."""
-    path = os.path.join(current_app.static_folder, "fonts", filename)
-    return "file://" + path
 
 # scripts/crawl/tradefairdates_scraper.py의 UNKNOWN_DATE와 같은 값. 날짜 전체가
 # 미상인 박람회는 start_date/end_date가 이 값으로 들어있다 (오름차순 정렬 시 항상
@@ -749,8 +740,7 @@ def market_report_pdf(expo_id, product_id):
         "exhibition/market_report_pdf.html",
         expo=expo, product=product, result=result,
         country_label=country_label, generated_at=datetime.now(),
-        font_regular_uri=_pdf_font_uri("NotoSansKR-Regular.woff2"),
-        font_bold_uri=_pdf_font_uri("NotoSansKR-Bold.woff2"),
+        **pdf_font_context(),
     )
     # base_url 없이 문자열만 넘긴다 - 폰트는 @font-face에 절대 file:// 경로를
     # 직접 박아넣으므로, 배포 서버(운영체제에 한글 폰트가 없을 수 있음)에

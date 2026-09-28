@@ -1,12 +1,15 @@
 import json
+from datetime import datetime
+from urllib.parse import quote
 
-from flask import Blueprint, flash, redirect, render_template, url_for
+from flask import Blueprint, Response, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.models import ConceptDraft, Exhibition, Product
 from app.routes.trend_v2 import _get_job, start_booth_job
 from app.services.booth_concept import draft_fields, v15_form
+from app.services.pdf_report import pdf_font_context
 
 bp = Blueprint("concept", __name__, url_prefix="/concept")
 
@@ -111,6 +114,43 @@ def detail(draft_id):
         buyer_appeal=extra.get("buyer_appeal") or [],
         booth_job_id=extra.get("booth_job_id") if running else None,
         booth_error=extra.get("booth_error"),
+    )
+
+
+@bp.route("/<int:draft_id>/report")
+@login_required
+def booth_report_pdf(draft_id):
+    """이미 생성된 부스 컨셉 기획안(draft)을 인쇄용 레이아웃으로 다시 그려서
+    PDF로 내려준다. 새로 생성하지 않는다 - AI를 다시 부르지 않으므로 추가
+    비용이 들지 않는다."""
+    from weasyprint import HTML
+
+    draft = ConceptDraft.query.filter_by(id=draft_id, user_id=current_user.id).first_or_404()
+    if not draft.theme:
+        flash("먼저 '컨셉 자동 생성하기'로 부스 컨셉을 만든 뒤 다시 시도해주세요.", "danger")
+        return redirect(url_for("concept.detail", draft_id=draft.id))
+
+    expo = Exhibition.query.get_or_404(draft.exhibition_id)
+    products = _checked_products()
+    extra = _load_extra(draft)
+
+    html = render_template(
+        "concept/booth_report_pdf.html",
+        draft=draft, expo=expo, products=products,
+        selling_points=json.loads(draft.selling_points) if draft.selling_points else [],
+        events=json.loads(draft.events) if draft.events else [],
+        target_buyers=json.loads(draft.target_buyers) if draft.target_buyers else [],
+        buyer_appeal=extra.get("buyer_appeal") or [],
+        current_user=current_user, generated_at=datetime.now(),
+        **pdf_font_context(),
+    )
+    pdf_bytes = HTML(string=html).write_pdf()
+
+    filename = f"{expo.name}_부스컨셉기획서.pdf".replace("/", "-")
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
     )
 
 

@@ -48,12 +48,22 @@
   .conclusion { font-size: 14px; font-weight: 700; line-height: 1.6; }
   .points { font-size: 13px; line-height: 1.6; }
   .interp { font-size: 13px; line-height: 1.6; }
+  .btn-report-export {
+    display: inline-flex; align-items: center; flex-shrink: 0;
+    background: #fff; border: 1px solid var(--line-2); color: var(--text);
+    text-decoration: none; border-radius: 6px; padding: 9px 16px; font-size: 14px; font-weight: 700;
+  }
+  .btn-report-export:hover { border-color: var(--accent); color: var(--accent); }
 </style>
   <div class="page-head">
     <div>
       <h1>트렌드 조사</h1>
       <p class="desc">현지 검색 트렌드 · 리테일 가격 · 현지 시장 트렌드를 한 화면에서 확인하세요.</p>
-    </div>  </div>
+    </div>
+    {% if data and job_id %}
+    <a class="btn-report-export" href="/trend/{{ job_id }}/report">보고서로 내보내기</a>
+    {% endif %}
+  </div>
 
   {# 결과 화면(/trend/<job_id>)은 expo_id·product_id를 안 넘겨받으므로, 박람회
      상세 탭이 쿼리스트링으로 붙여준 값을 폼에 채워서 여기서 다시 조사해도
