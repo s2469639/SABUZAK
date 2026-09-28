@@ -9,7 +9,7 @@
 {% macro pdf_bar_chart(rows, label_attr, value_attr) %}
   {% set vals = rows | map(attribute=value_attr) | select | list %}
   {% set vmax = (vals | max) if vals else 0 %}
-  {% set track_h = 110 %}
+  {% set track_h = 180 %}
   <div class="pbars">
     <div class="pbars-gridline" style="bottom: {{ track_h }}px;"><span>{{ vmax | usd_short }}</span></div>
     <div class="pbars-gridline" style="bottom: {{ (track_h / 2) | round | int }}px;"><span>{{ (vmax / 2) | usd_short }}</span></div>

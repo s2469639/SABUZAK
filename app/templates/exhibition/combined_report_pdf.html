@@ -97,7 +97,8 @@
   .ai-list li { margin-bottom: 2px; }
 
   /* ---- 2. 트렌드 분석 ---- */
-  .cluster-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .cluster-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cluster-slot { flex: 1 1 calc(50% - 4px); min-width: 0; }
   .cluster-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; page-break-inside: avoid; }
   .cluster-num { color: #ea580c; font-weight: 700; margin-right: 4px; }
   .cluster-title { font-weight: 700; font-size: 11.5px; margin: 2px 0 4px; }
@@ -106,7 +107,8 @@
   .kw-chip { border: 1px solid #e5e7eb; border-radius: 6px; padding: 3px 7px; font-size: 9.5px; }
   .kw-chip .badge { color: #ea580c; font-weight: 700; margin-left: 3px; }
   .cluster-insight { margin-top: 6px; background: #fff7ed; border-radius: 6px; padding: 6px 8px; font-size: 9.5px; color: #9a3412; }
-  .s2-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .s2-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .s2-slot { flex: 1 1 calc(50% - 4px); min-width: 0; }
   .s2-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; page-break-inside: avoid; }
   .s2-card .k { color: #ea580c; font-weight: 700; font-size: 9.5px; margin: 6px 0 2px; }
   .s2-card .k:first-child { margin-top: 0; }
@@ -122,7 +124,9 @@
   .slogan-box { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px 16px; page-break-inside: avoid; }
   .slogan-box .slogan { color: #ea580c; font-weight: 700; font-size: 13px; margin: 0 0 8px; }
   .slogan-box .desc { margin: 0; color: #4b5563; }
-  .sp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .sp-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+  .sp-slot { flex: 1 1 calc(50% - 5px); min-width: 0; }
+  .sp-grid > .sp-slot:last-child:nth-child(odd) { flex: 1 1 100%; }
   .sp-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; page-break-inside: avoid; }
   .sp-badge { display: inline-block; border-radius: 4px; padding: 1px 7px; font-size: 9.5px; font-weight: 700; margin-bottom: 4px; }
   .sp-badge.level-핵심 { background: #fed7aa; color: #9a3412; }
@@ -139,7 +143,8 @@
   .event-block { margin-top: 6px; }
   .event-block-title { display: block; font-size: 9.5px; font-weight: 700; color: #ea580c; margin-bottom: 2px; }
   .event-block ol, .event-block ul { margin: 0; padding-left: 16px; }
-  .appeal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .appeal-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+  .appeal-slot { flex: 1 1 calc(50% - 5px); min-width: 0; }
   .appeal-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; page-break-inside: avoid; }
   .appeal-card strong { display: block; margin-bottom: 4px; font-size: 11.5px; }
   .appeal-card p { margin: 0 0 4px; color: #4b5563; }
@@ -165,11 +170,11 @@
   .yoy { font-size: 9px; font-variant-numeric: tabular-nums; }
   .yoy.up { color: #188038; }
   .yoy.down { color: #d93025; }
-  .pbars { position: relative; height: 110px; margin: 20px 0 34px 44px; border-bottom: 1px solid #cfd5de; }
+  .pbars { position: relative; height: 180px; margin: 20px 0 34px 44px; border-bottom: 1px solid #cfd5de; }
   .pbars-gridline { position: absolute; left: 0; right: 0; border-top: 1px solid #f1f3f4; }
   .pbars-gridline span { position: absolute; left: -44px; width: 40px; text-align: right; font-size: 8px; color: #9ca3af; top: -5px; }
   .pbars-cols { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; gap: 4px; padding: 0 2px; }
-  .pbar-col { position: relative; flex: 1; min-width: 0; height: 110px; }
+  .pbar-col { position: relative; flex: 1; min-width: 0; height: 180px; }
   .pbar { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60%; max-width: 22px; border-radius: 2px 2px 0 0; background: #1a8cff; }
   .pbar.kor { background: #34c38f; }
   .pbar-val { position: absolute; left: 50%; transform: translateX(-50%); font-size: 8px; color: #6b7280; white-space: nowrap; }
@@ -221,6 +226,7 @@
 <body>
 
 {# ============================ 표지 ============================ #}
+{% if 'cover' in render_parts %}
 <div class="cover">
   <div class="cover-kicker">FairMate · 통합 기획서</div>
   <div class="cover-title">{{ expo.name }}<br>{{ product.name if product else '제품' }} 진출 기획서</div>
@@ -238,9 +244,10 @@
       {% if not booth_ready %}<span class="skip">— 미작성, 이 파트는 생략됨</span>{% endif %}</div>
   </div>
 </div>
+{% endif %}
 
 {# ============================ PART 1. 유망시장 조사 ============================ #}
-{% if market_result %}
+{% if 'part1' in render_parts and market_result %}
 {% set result = market_result %}
 <div class="part-header">
   <div class="part-kicker">PART 1</div>
@@ -249,7 +256,8 @@
 
 {% if result.official_item_desc %}
 <h2 class="section-title">품목 설명 (HS {{ result.hscode }})</h2>
-<p>{{ result.official_item_desc }}</p>
+<p>{{ market_item_desc_ko or result.official_item_desc }}</p>
+{% if market_item_desc_ko %}<p class="un-note">원문: {{ result.official_item_desc }}</p>{% endif %}
 {% endif %}
 
 {% if result.global_import_ranking %}
@@ -459,7 +467,7 @@
 {% endif %}
 
 {# ============================ PART 2. 트렌드 분석 ============================ #}
-{% if trend_data %}
+{% if 'part2' in render_parts and trend_data %}
 <div class="part-header">
   <div class="part-kicker">PART 2</div>
   <div class="part-title">트렌드 분석 — {{ trend_form.country or country_label }}</div>
@@ -472,7 +480,7 @@
 <div class="cluster-grid">
   {% for c in s1.clusters %}
   {% if c.keywords %}
-  <div class="cluster-card">
+  <div class="cluster-slot"><div class="cluster-card">
     <span class="cluster-num">{{ "%02d"|format(loop.index) }}</span>{{ c.label }}
     <div class="cluster-title">{{ c.title_ko }}</div>
     {% if c.summary %}<div class="cluster-summary">{{ c.summary }}</div>{% endif %}
@@ -487,7 +495,7 @@
       {% endfor %}
     </div>
     {% if c.insight %}<div class="cluster-insight">{{ c.insight }}</div>{% endif %}
-  </div>
+  </div></div>
   {% endif %}
   {% endfor %}
 </div>
@@ -498,25 +506,25 @@
 {% set rp = s2.retail_price %}
 <h2 class="section-title">현지 리테일 벤치마킹 &amp; 경쟁 제품 가격 분석</h2>
 <div class="s2-grid">
-  <div class="s2-card">
+  <div class="s2-slot"><div class="s2-card">
     <div class="k">타깃 제품</div>{{ s2.target_product.title }}
     {% if s2.target_product.specs %}<div class="k">제품 스펙</div>{{ s2.target_product.specs }}{% endif %}
     {% if s2.target_product.complaints %}<div class="k">소비자 페인 포인트</div>{{ s2.target_product.complaints }}{% endif %}
-  </div>
-  <div class="s2-card">
+  </div></div>
+  <div class="s2-slot"><div class="s2-card">
     <div class="k">리테일 판매가</div>
     <div class="price-big">{{ rp.price }}</div>
     {% if rp.usd_price %}<div style="color:#6b7280;">{{ rp.usd_price }}{% if rp.krw_price %} · {{ rp.krw_price }}{% endif %}</div>{% endif %}
-  </div>
-  <div class="s2-card">
+  </div></div>
+  <div class="s2-slot"><div class="s2-card">
     <div class="k">진출 타깃 채널</div>
     {% if s2.sales_channels.shelf %}추천 매대: {{ s2.sales_channels.shelf }}<br>{% endif %}
     {% if s2.sales_channels.channels %}{{ s2.sales_channels.channels|join(", ") }}{% endif %}
-  </div>
-  <div class="s2-card">
+  </div></div>
+  <div class="s2-slot"><div class="s2-card">
     <div class="k">가격·USP 전략</div>{{ s2.price_strategy.positioning }}
     {% if s2.price_strategy.pitch %}<div class="k">바이어 피칭</div>“{{ s2.price_strategy.pitch }}”{% endif %}
-  </div>
+  </div></div>
 </div>
 {% endif %}
 
@@ -537,7 +545,7 @@
 {% endif %}
 
 {# ============================ PART 3. 부스 컨셉 기획 ============================ #}
-{% if booth_ready %}
+{% if 'part3' in render_parts and booth_ready %}
 <div class="part-header">
   <div class="part-kicker">PART 3</div>
   <div class="part-title">부스 컨셉 기획</div>
@@ -554,11 +562,11 @@
 <h2 class="section-title">핵심 셀링포인트</h2>
 <div class="sp-grid">
   {% for sp in selling_points %}
-  <div class="sp-card">
+  <div class="sp-slot"><div class="sp-card">
     <span class="sp-badge level-{{ sp.badge }}">{{ sp.badge }}</span>
     <strong>{{ sp.title }}</strong>
     <p>{{ sp.description }}</p>
-  </div>
+  </div></div>
   {% endfor %}
 </div>
 {% endif %}
@@ -574,11 +582,11 @@
 <h2 class="section-title">바이어 어필 포인트</h2>
 <div class="appeal-grid">
   {% for a in buyer_appeal %}
-  <div class="appeal-card">
+  <div class="appeal-slot"><div class="appeal-card">
     <strong>{{ a.title }}</strong>
     {% if a.why %}<p><span class="appeal-label">왜 중요한가</span> {{ a.why }}</p>{% endif %}
     {% if a.show %}<p><span class="appeal-label">부스에서 보여줄 것</span> {{ a.show }}</p>{% endif %}
-  </div>
+  </div></div>
   {% endfor %}
 </div>
 {% endif %}

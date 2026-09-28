@@ -58,10 +58,11 @@
   }
 
   .cluster-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 8px;
   }
+  .cluster-slot { flex: 1 1 calc(50% - 4px); min-width: 0; }
   .cluster-card {
     border: 1px solid #e5e7eb;
     border-radius: 8px;
@@ -89,7 +90,8 @@
     color: #9a3412;
   }
 
-  .s2-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .s2-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .s2-slot { flex: 1 1 calc(50% - 4px); min-width: 0; }
   .s2-card {
     border: 1px solid #e5e7eb;
     border-radius: 8px;
@@ -149,7 +151,7 @@
 <div class="cluster-grid">
   {% for c in s1.clusters %}
   {% if c.keywords %}
-  <div class="cluster-card">
+  <div class="cluster-slot"><div class="cluster-card">
     <span class="cluster-num">{{ "%02d"|format(loop.index) }}</span>{{ c.label }}
     <div class="cluster-title">{{ c.title_ko }}</div>
     {% if c.summary %}<div class="cluster-summary">{{ c.summary }}</div>{% endif %}
@@ -164,7 +166,7 @@
       {% endfor %}
     </div>
     {% if c.insight %}<div class="cluster-insight">{{ c.insight }}</div>{% endif %}
-  </div>
+  </div></div>
   {% endif %}
   {% endfor %}
 </div>
@@ -175,25 +177,25 @@
 {% set rp = s2.retail_price %}
 <h2 class="section-title">2. 현지 리테일 벤치마킹 &amp; 경쟁 제품 가격 분석</h2>
 <div class="s2-grid">
-  <div class="s2-card">
+  <div class="s2-slot"><div class="s2-card">
     <div class="k">타깃 제품</div>{{ s2.target_product.title }}
     {% if s2.target_product.specs %}<div class="k">제품 스펙</div>{{ s2.target_product.specs }}{% endif %}
     {% if s2.target_product.complaints %}<div class="k">소비자 페인 포인트</div>{{ s2.target_product.complaints }}{% endif %}
-  </div>
-  <div class="s2-card">
+  </div></div>
+  <div class="s2-slot"><div class="s2-card">
     <div class="k">리테일 판매가</div>
     <div class="price-big">{{ rp.price }}</div>
     {% if rp.usd_price %}<div style="color:#6b7280;">{{ rp.usd_price }}{% if rp.krw_price %} · {{ rp.krw_price }}{% endif %}</div>{% endif %}
-  </div>
-  <div class="s2-card">
+  </div></div>
+  <div class="s2-slot"><div class="s2-card">
     <div class="k">진출 타깃 채널</div>
     {% if s2.sales_channels.shelf %}추천 매대: {{ s2.sales_channels.shelf }}<br>{% endif %}
     {% if s2.sales_channels.channels %}{{ s2.sales_channels.channels|join(", ") }}{% endif %}
-  </div>
-  <div class="s2-card">
+  </div></div>
+  <div class="s2-slot"><div class="s2-card">
     <div class="k">가격·USP 전략</div>{{ s2.price_strategy.positioning }}
     {% if s2.price_strategy.pitch %}<div class="k">바이어 피칭</div>“{{ s2.price_strategy.pitch }}”{% endif %}
-  </div>
+  </div></div>
 </div>
 {% endif %}
 
