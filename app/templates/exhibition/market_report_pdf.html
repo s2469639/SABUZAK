@@ -3,7 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <title>{{ product.name }} · {{ country_label }} 유망시장 조사</title>
-{% from "exhibition/_un_macros.html" import bar_chart, yoy %}
+{% from "exhibition/_un_macros.html" import yoy %}
+{# weasyprint(PDF 렌더러)는 flex 아이템에 퍼센트 높이(height:%)를 주면
+   막대가 0에 가깝게 찌그러지는 버그가 있어서(브라우저에서만 쓰는
+   _un_macros.html의 bar_chart를 그대로 못 씀), 여기서는 높이를 px로
+   직접 계산하는 PDF 전용 막대 그래프를 따로 둔다. #}
+{% macro pdf_bar_chart(rows, label_attr, value_attr) %}
+  {% set vals = rows | map(attribute=value_attr) | select | list %}
+  {% set vmax = (vals | max) if vals else 0 %}
+  {% set track_h = 110 %}
+  <div class="pbars">
+    <div class="pbars-gridline" style="bottom: {{ track_h }}px;"><span>{{ vmax | usd_short }}</span></div>
+    <div class="pbars-gridline" style="bottom: {{ (track_h / 2) | round | int }}px;"><span>{{ (vmax / 2) | usd_short }}</span></div>
+    <div class="pbars-gridline" style="bottom: 0;"><span>$0</span></div>
+    <div class="pbars-cols">
+      {% for r in rows %}
+        {% set v = r[value_attr] or 0 %}
+        {% set lbl = r[label_attr] ~ '' %}
+        {% set is_kor = ('Korea' in lbl) or lbl == 'KOR' %}
+        {% set h = ((v / vmax * track_h) if vmax else 0) | round | int %}
+        <div class="pbar-col">
+          <span class="pbar-val" style="bottom: {{ h + 3 }}px;">{{ v | usd_short }}</span>
+          <div class="pbar{{ ' kor' if is_kor else '' }}" style="height: {{ h }}px;"></div>
+          <span class="pbar-label{{ ' kor' if is_kor else '' }}">{{ lbl }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endmacro %}
 <style>
   @page {
     size: A4;
@@ -137,18 +164,19 @@
   .un-badge { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 9px; font-weight: 500; }
   .un-badge.mirror { background: #e0f2f1; color: #00695c; }
 
-  .bars { position: relative; height: 150px; margin: 6px 0 0 40px; border-bottom: 1px solid #cfd5de; }
-  .bars-gridline { position: absolute; left: 0; right: 0; border-top: 1px solid #f1f3f4; }
-  .bars-gridline span { position: absolute; left: -40px; width: 36px; text-align: right; font-size: 8px; color: #9ca3af; transform: translateY(-50%); }
-  .bars-cols { position: absolute; inset: 14px 0 0 0; display: flex; align-items: flex-end; gap: 4px; padding: 0 2px; }
-  .bar-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
-  .bar { width: 70%; max-width: 22px; border-radius: 2px 2px 0 0; background: #d9dde4; }
-  .bar.top { background: #1a8cff; }
-  .bar.kor { background: #34c38f; }
-  .bar-val { font-size: 8px; color: #6b7280; margin-bottom: 2px; white-space: nowrap; }
-  .bars-labels { display: flex; gap: 4px; padding: 4px 2px 0; margin-left: 40px; }
-  .bars-labels span { flex: 1; min-width: 0; font-size: 8px; font-weight: 500; color: #6b7280; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .bars-labels span.kor { color: #188038; font-weight: 700; }
+  /* px 고정 높이 + absolute 좌표로 그리는 PDF 전용 막대 그래프 (pdf_bar_chart 매크로).
+     weasyprint는 flex 아이템에 퍼센트 높이(height:%)를 주면 막대가 찌그러지는
+     버그가 있어서, 여기서는 퍼센트를 전혀 안 쓰고 전부 px absolute로 배치한다. */
+  .pbars { position: relative; height: 110px; margin: 20px 0 34px 44px; border-bottom: 1px solid #cfd5de; }
+  .pbars-gridline { position: absolute; left: 0; right: 0; border-top: 1px solid #f1f3f4; }
+  .pbars-gridline span { position: absolute; left: -44px; width: 40px; text-align: right; font-size: 8px; color: #9ca3af; top: -5px; }
+  .pbars-cols { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; gap: 4px; padding: 0 2px; }
+  .pbar-col { position: relative; flex: 1; min-width: 0; height: 110px; }
+  .pbar { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60%; max-width: 22px; border-radius: 2px 2px 0 0; background: #1a8cff; }
+  .pbar.kor { background: #34c38f; }
+  .pbar-val { position: absolute; left: 50%; transform: translateX(-50%); font-size: 8px; color: #6b7280; white-space: nowrap; }
+  .pbar-label { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 4px; font-size: 8px; font-weight: 500; color: #6b7280; white-space: nowrap; }
+  .pbar-label.kor { color: #188038; font-weight: 700; }
   .cagr { font-size: 10px; font-weight: 700; margin: 8px 0 0; }
   .cagr.up { color: #188038; }
   .cagr.down { color: #d93025; }
@@ -161,7 +189,7 @@
 <body>
 
 <div class="report-header">
-  <div class="report-kicker">FairMate · 유망시장 조사 기획서</div>
+  <div class="report-kicker">FairMate · 타깃 국가 조사 기획서</div>
   <div class="report-title">{{ product.name }} — {{ country_label }} 시장 진출 검토</div>
   <div class="report-meta">
     <span>박람회: <b>{{ expo.name }}</b></span>
@@ -231,7 +259,7 @@
     {% if gt and gt.by_year %}
       {% if gt.is_mirror_estimate %}<span class="un-badge mirror">상대국 보고 기반 추정치</span>{% endif %}
       <div class="un-unit">단위: USD</div>
-      {{ bar_chart(gt.by_year, 'year', 'import_value_usd', highlight_first=false) }}
+      {{ pdf_bar_chart(gt.by_year, 'year', 'import_value_usd') }}
       {% if gt.cagr_pct is not none %}
       <p class="cagr {{ 'up' if gt.cagr_pct >= 0 else 'down' }}">CAGR{% if gt.cagr_start_year %} ({{ gt.cagr_start_year }}→{{ gt.cagr_end_year }}){% endif %}: {{ gt.cagr_pct }}%</p>
       {% endif %}
@@ -246,7 +274,7 @@
 {% if ke and ke.available and ke.by_year and (ke.by_year | map(attribute='export_usd') | select | list) %}
   <div class="panel">
     <div class="un-unit">단위: USD</div>
-    {{ bar_chart(ke.by_year, 'year', 'export_usd', highlight_first=false) }}
+    {{ pdf_bar_chart(ke.by_year, 'year', 'export_usd') }}
   </div>
 {% elif ke and ke.available %}
   <div class="un-empty">조회 기간 동안 한국의 이 나라 수출 실적이 없습니다 (관세청 기준 $0).</div>
