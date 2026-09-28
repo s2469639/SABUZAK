@@ -27,6 +27,7 @@
       <a href="/booth/{{ trend.booth_job_id }}" class="btn-chip btn-booth">부스 컨셉(v15)</a>
       {% endif %}
       <a href="{{ url_for('concept.detail', draft_id=draft.id) }}" class="btn-chip btn-concept">컨셉보기</a>
+      <a href="{{ url_for('exhibition.combined_report_pdf', expo_id=draft.exhibition_id) }}" class="btn-chip btn-chip-accent">보고서 다운</a>
       <form method="post" action="{{ url_for('drafts.delete', draft_id=draft.id) }}" class="btn-delete-form">
         <button type="submit" class="btn-text-danger" onclick="return confirm('이 박람회의 컨셉 기획을 삭제하시겠습니까?')">삭제</button>
       </form>
