@@ -172,6 +172,18 @@ def _save_desc_cache(cache):
         pass  # 캐시 저장 실패는 화면 표시에 영향 없음
 
 
+def get_cached_item_desc_ko(text):
+    """translate_item_desc()가 이미 캐시해둔 번역이 있으면 돌려주고, 없으면
+    OpenAI를 부르지 않고 그냥 None을 돌려준다 (네트워크 호출 없음).
+    PDF 생성처럼 응답 시간이 중요한 곳에서 써서, 캐시 미스일 때 OpenAI 호출이
+    오래 걸려 요청 타임아웃(500)이 나는 걸 막는다 - 화면(대시보드)에서 이미
+    한 번 translate_item_desc()를 불러 캐시를 채워둔 뒤라 대부분 여기서 잡힌다."""
+    if not text:
+        return None
+    cache = _load_desc_cache()
+    return cache.get(f"{_DESC_PROMPT_VERSION}:{text}")
+
+
 def translate_item_desc(text):
     """UN Comtrade 영문 품목 설명을 한국어로 번역한다 (OpenAI 사용).
     실패하면 None을 돌려주고, 화면에는 영문 원문이 그대로 나온다."""
