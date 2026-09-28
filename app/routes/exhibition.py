@@ -737,9 +737,13 @@ def market_report_pdf(expo_id, product_id):
         return redirect(url_for("exhibition.detail", expo_id=expo_id) + "#market")
 
     country_label = _country_ko(expo) or expo.country_ko or expo.country
+    item_desc_ko = (
+        un_comtrade.translate_item_desc(result["official_item_desc"])
+        if result.get("official_item_desc") else None
+    )
     html = render_template(
         "exhibition/market_report_pdf.html",
-        expo=expo, product=product, result=result,
+        expo=expo, product=product, result=result, item_desc_ko=item_desc_ko,
         country_label=country_label, generated_at=datetime.now(),
         **pdf_font_context(),
     )
@@ -774,10 +778,13 @@ def _gather_combined_report_data(expo_id):
 
     # 1. 유망시장 조사 (캐시만, 네트워크 호출 없음)
     market_result = None
+    market_item_desc_ko = None
     hs6 = None
     if product:
         hs6 = _hs6(product.hs_code)
         market_result = un_comtrade.get_cached_market_research(hs6, expo.country) if hs6 else None
+        if market_result and market_result.get("official_item_desc"):
+            market_item_desc_ko = un_comtrade.translate_item_desc(market_result["official_item_desc"])
     country_label = _country_ko(expo) or expo.country_ko or expo.country
 
     # 1b. 품목별 유망시장 매트릭스 - 같은 HS코드로 "품목별 유망시장" 화면에서
@@ -818,7 +825,7 @@ def _gather_combined_report_data(expo_id):
 
     return {
         "expo": expo, "product": product, "country_label": country_label,
-        "market_result": market_result,
+        "market_result": market_result, "market_item_desc_ko": market_item_desc_ko,
         "matrix_result": matrix_result, "matrix": matrix, "overview": overview, "import_line": import_line,
         "trend_data": trend_data, "trend_form": trend_form, "question_labels": QUESTION_LABELS,
         "draft": draft, "booth_ready": booth_ready,
