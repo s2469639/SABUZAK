@@ -266,8 +266,6 @@
             수출 주의사항 <span class="section-label-sub">({{ row.product.name }} 관련 식품·농산물 수입규정 참고 · {{ expo.country_ko or expo.country }})</span>
             {% if row.regulation_notes_is_live %}
               <span class="data-source-badge live">UNCTAD TRAINS 실데이터</span>
-            {% else %}
-              <span class="data-source-badge">예시 데이터 · 이 제품은 아직 수집 안 됨</span>
             {% endif %}
             {% if row.regulation_strictness %}
               <span class="strictness-badge strictness-{{ row.regulation_strictness }}">규제 강도: {{ row.regulation_strictness }}</span>
@@ -290,6 +288,8 @@
         </div>
         {% if row.regulation_no_match %}
         <p class="placeholder-note">해당 부분에 해당되는 파일이 없습니다. ({{ row.product.name }} · {{ expo.country_ko or expo.country }} 관련 UNCTAD TRAINS 규정을 조회했지만 관련 항목을 찾지 못했습니다.)</p>
+        {% elif not row.regulation_notes_is_live %}
+        <p class="placeholder-note">아직 이 나라의 수입규정을 조회하지 않았습니다. 위 "지금 실제 데이터 가져오기" 버튼을 눌러 UNCTAD TRAINS 실데이터를 가져와 주세요.</p>
         {% else %}
         <p class="placeholder-note">
           이 목록에 대한 안내
