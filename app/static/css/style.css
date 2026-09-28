@@ -610,15 +610,6 @@ p.page-desc:not(:last-child) {
   color: #374151;
 }
 
-.modal-dialog-sm {
-  max-width: 340px;
-}
-
-.report-format-actions {
-  justify-content: center;
-  margin-top: 16px;
-}
-
 .form-actions {
   display: flex;
   justify-content: flex-end;

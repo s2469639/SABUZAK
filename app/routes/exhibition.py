@@ -853,26 +853,6 @@ def combined_report_pdf(expo_id):
     )
 
 
-@bp.route("/detail/<int:expo_id>/combined-report/word")
-@login_required
-def combined_report_docx(expo_id):
-    from app.services.docx_report import build_combined_report_docx
-
-    data = _gather_combined_report_data(expo_id)
-    if data is None:
-        flash("아직 완료된 조사·기획이 없습니다. 유망시장 조사·트렌드 분석·부스 컨셉 중 하나라도 먼저 만들어주세요.", "danger")
-        return redirect(url_for("exhibition.detail", expo_id=expo_id))
-
-    buffer = build_combined_report_docx(**data, generated_at=datetime.now())
-
-    filename = f"{data['expo'].name}_통합기획서.docx".replace("/", "-")
-    return Response(
-        buffer.getvalue(),
-        mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
-    )
-
-
 @bp.route("/market-matrix", methods=["GET", "POST"])
 @login_required
 def market_matrix():
