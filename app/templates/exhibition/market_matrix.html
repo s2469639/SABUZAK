@@ -16,7 +16,7 @@
   </div>
   <div class="page-header-actions">
     {% if result %}
-    <a class="btn-secondary" href="{{ url_for('exhibition.market_matrix_report_pdf', hscode=hscode, candidates=candidates_raw, top_n=top_n) }}">보고서로 내보내기</a>
+    <a class="btn-chip" href="{{ url_for('exhibition.market_matrix_report_pdf', hscode=hscode, candidates=candidates_raw, top_n=top_n) }}">보고서로 내보내기</a>
     {% endif %}
     <a href="{{ url_for('mypage.index') }}" class="btn-secondary">← 내 제품 관리로</a>
   </div>

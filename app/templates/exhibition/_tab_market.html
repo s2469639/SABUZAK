@@ -32,7 +32,7 @@
         <button type="submit" class="btn-secondary">{{ '다시 조사하기' if row.result else '지금 조사하기' }}</button>
       </form>
       {% if row.result %}
-      <a class="btn-secondary" href="{{ url_for('exhibition.market_report_pdf', expo_id=expo.id, product_id=row.product.id) }}">보고서로 내보내기</a>
+      <a class="btn-chip" href="{{ url_for('exhibition.market_report_pdf', expo_id=expo.id, product_id=row.product.id) }}">보고서로 내보내기</a>
       {% endif %}
     </div>
     {% else %}
