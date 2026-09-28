@@ -1,8 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // ---- 1장 촬영 (카메라) ----
   var form = document.getElementById("scan-card-form");
   var input = document.getElementById("scan-card-input");
   var cameraBtn = document.getElementById("scan-camera-btn");
   var hint = document.getElementById("scan-bar-hint");
+
   if (form && input && cameraBtn) {
     // capture 속성은 HTML에 고정으로 붙어 있어서(모바일에서 바로 촬영 화면으로 감),
     // 여기선 버튼을 누르면 그 input을 열어주기만 하면 된다.
@@ -18,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // ---- 여러 장 한번에 (갤러리) ----
   var bulkForm = document.getElementById("scan-bulk-form");
   var bulkInput = document.getElementById("scan-bulk-input");
   var bulkAddBtn = document.getElementById("scan-bulk-add-btn");
@@ -46,35 +49,14 @@ document.addEventListener("DOMContentLoaded", function () {
       var thumb = document.createElement("div");
       thumb.className = "scan-bulk-thumb";
 
-      var img = document.createElement("img");
-      img.src = URL.createObjectURL(file);
-      img.alt = file.name;
-      thumb.appendChild(img);
+  // 모바일에서 여러 장을 고르려면 capture가 없어야 한다
+  // (capture가 있으면 갤러리 대신 카메라가 열려서 한 장만 찍힘).
+  // HTML에 뭐가 붙어 있든 여기서 확실하게 맞춰 둔다.
+  bulkInput.removeAttribute("capture");
+  bulkInput.multiple = true;
+  bulkInput.setAttribute("accept", "image/*");
 
-      var removeBtn = document.createElement("button");
-      removeBtn.type = "button";
-      removeBtn.textContent = "×";
-      removeBtn.setAttribute("aria-label", "삭제");
-      removeBtn.addEventListener("click", function () {
-        staged.splice(idx, 1);
-        syncInputFiles();
-        renderPreview();
-      });
-      thumb.appendChild(removeBtn);
-
-      bulkPreview.appendChild(thumb);
-    });
-
-    bulkCount.textContent = String(staged.length);
-    bulkSubmitBtn.hidden = staged.length === 0;
-    if (bulkHint) {
-      bulkHint.textContent = staged.length
-        ? "총 " + staged.length + "장 담았어요. 더 추가하거나 업로드 시작을 누르세요."
-        : "사진을 한 장씩 찍거나 여러 장을 골라 \"명함 추가\"로 계속 담은 뒤, 업로드 시작을 누르세요 (최대 20장)";
-    }
-  }
-
-  bulkAddBtn.addEventListener("click", function () {
+  bulkBtn.addEventListener("click", function () {
     bulkInput.click();
   });
 
