@@ -261,7 +261,11 @@
         <div class="cert-badges">
           <span class="cert-label">필요 인증:</span>
           {% for cert in row.certs %}
+          {% if hscode_ctx.cert_links and hscode_ctx.cert_links.get(cert) %}
+          <a class="cert-badge cert-badge-link" href="{{ hscode_ctx.cert_links[cert] }}" target="_blank" rel="noopener">{{ cert }} ↗</a>
+          {% else %}
           <span class="cert-badge">{{ cert }}</span>
+          {% endif %}
           {% endfor %}
         </div>
         {% endif %}
