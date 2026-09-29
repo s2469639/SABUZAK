@@ -157,6 +157,14 @@ CERT_RULES = {
     "JPN": ["HACCP"],
     "DEU": ["HACCP", "EU 식품등록"],
     "FRA": ["HACCP", "EU 식품등록"],
+    # GCC(걸프협력회의) 국가는 식품 수입 시 할랄 인증이 사실상 필수라
+    # DEFAULT_CERTS_FOOD(HACCP만)로는 안내가 부족해서 별도로 등록한다.
+    "ARE": ["할랄", "HACCP"],
+    "SAU": ["할랄", "HACCP"],
+    "QAT": ["할랄", "HACCP"],
+    "KWT": ["할랄", "HACCP"],
+    "BHR": ["할랄", "HACCP"],
+    "OMN": ["할랄", "HACCP"],
 }
 DEFAULT_CERTS_FOOD = ["HACCP"]
 DEFAULT_CERTS_NONFOOD = []
