@@ -170,6 +170,26 @@ CERT_RULES = {
     "BHR": ["할랄(바레인 표준인증기관)", "HACCP"],
     "OMN": ["할랄(오만 표준청 인정기관)", "HACCP"],
 }
+
+# 위 CERT_RULES 라벨과 정확히 같은 문자열을 키로 써서, 화면에서 그 인증
+# 배지를 누르면 담당 기관 공식 홈페이지로 바로 연결한다. 세부 요건(서류·
+# 절차)을 우리가 텍스트로 직접 적어두면 기관명처럼 바뀌었을 때 계속
+# 오래된 정보로 남을 위험이 있어서, 텍스트 대신 '항상 최신인 원본 링크'로
+# 대체하는 방식을 택했다.
+CERT_LINKS = {
+    "할랄(MOIAT 인정기관)": "https://www.moiat.gov.ae/en/services/halal-certification",
+    "할랄(SFDA 인정기관)": "https://www.sfda.gov.sa/en",
+    "할랄(QS 인정기관)": "https://www.mopa.gov.qa/",
+    "할랄(PAI 인정기관)": "https://www.pai.gov.kw/",
+    "할랄(바레인 표준인증기관)": "https://www.moic.gov.bh/",
+    "할랄(오만 표준청 인정기관)": "https://dgsm.gov.om/",
+    "FDA": "https://www.fda.gov/food",
+    "CIFER": "https://ciferquery.singlewindow.cn/",
+    "EU 식품등록": "https://food.ec.europa.eu/",
+    # HACCP은 국가마다 담당 기관이 달라 특정 한 곳을 링크하기 어려우므로,
+    # 국제 공통 기준인 Codex(국제식품규격위원회) 가이드라인으로 연결한다.
+    "HACCP": "https://www.fao.org/fao-who-codexalimentarius/en/",
+}
 DEFAULT_CERTS_FOOD = ["HACCP"]
 DEFAULT_CERTS_NONFOOD = []
 
@@ -380,4 +400,5 @@ def build_hscode_context(expo, products):
         "has_country_data": has_country_data,
         "product_rows": product_rows,
         "overall_best": overall_best,
+        "cert_links": CERT_LINKS,
     }
