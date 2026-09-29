@@ -157,6 +157,38 @@ CERT_RULES = {
     "JPN": ["HACCP"],
     "DEU": ["HACCP", "EU 식품등록"],
     "FRA": ["HACCP", "EU 식품등록"],
+    # GCC(걸프협력회의) 국가는 식품 수입 시 할랄 인증이 사실상 필수라
+    # DEFAULT_CERTS_FOOD(HACCP만)로는 안내가 부족해서 별도로 등록한다.
+    # 공통적으로 GSO(GCC 표준기구) 규격을 기반으로 하되, 실제 인증은
+    # 국가별 기관이 담당한다. 괄호 안 기관명은 일반적으로 알려진 담당
+    # 기관이며, 조직 개편으로 명칭이 바뀔 수 있어 신청 전 최신 승인
+    # 기관 목록을 반드시 재확인해야 한다.
+    "ARE": ["할랄(MOIAT 인정기관)", "HACCP"],
+    "SAU": ["할랄(SFDA 인정기관)", "HACCP"],
+    "QAT": ["할랄(QS 인정기관)", "HACCP"],
+    "KWT": ["할랄(PAI 인정기관)", "HACCP"],
+    "BHR": ["할랄(바레인 표준인증기관)", "HACCP"],
+    "OMN": ["할랄(오만 표준청 인정기관)", "HACCP"],
+}
+
+# 위 CERT_RULES 라벨과 정확히 같은 문자열을 키로 써서, 화면에서 그 인증
+# 배지를 누르면 담당 기관 공식 홈페이지로 바로 연결한다. 세부 요건(서류·
+# 절차)을 우리가 텍스트로 직접 적어두면 기관명처럼 바뀌었을 때 계속
+# 오래된 정보로 남을 위험이 있어서, 텍스트 대신 '항상 최신인 원본 링크'로
+# 대체하는 방식을 택했다.
+CERT_LINKS = {
+    "할랄(MOIAT 인정기관)": "https://www.moiat.gov.ae/en/services/halal-certification",
+    "할랄(SFDA 인정기관)": "https://www.sfda.gov.sa/en",
+    "할랄(QS 인정기관)": "https://www.mopa.gov.qa/",
+    "할랄(PAI 인정기관)": "https://www.pai.gov.kw/",
+    "할랄(바레인 표준인증기관)": "https://www.moic.gov.bh/",
+    "할랄(오만 표준청 인정기관)": "https://dgsm.gov.om/",
+    "FDA": "https://www.fda.gov/food",
+    "CIFER": "https://ciferquery.singlewindow.cn/",
+    "EU 식품등록": "https://food.ec.europa.eu/",
+    # HACCP은 국가마다 담당 기관이 달라 특정 한 곳을 링크하기 어려우므로,
+    # 국제 공통 기준인 Codex(국제식품규격위원회) 가이드라인으로 연결한다.
+    "HACCP": "https://www.fao.org/fao-who-codexalimentarius/en/",
 }
 DEFAULT_CERTS_FOOD = ["HACCP"]
 DEFAULT_CERTS_NONFOOD = []
@@ -368,4 +400,5 @@ def build_hscode_context(expo, products):
         "has_country_data": has_country_data,
         "product_rows": product_rows,
         "overall_best": overall_best,
+        "cert_links": CERT_LINKS,
     }

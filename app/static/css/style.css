@@ -1501,6 +1501,16 @@ p.page-desc:not(:last-child) {
   color: #374151;
 }
 
+.cert-badge-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cert-badge-link:hover {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+}
+
 .tariff-card-side {
   text-align: right;
   white-space: nowrap;
