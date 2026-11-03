@@ -1590,6 +1590,91 @@ p.page-desc:not(:last-child) {
   color: #991b1b;
 }
 
+.regulation-level.level-미검증 {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+.official-requirement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.official-requirement-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #fff;
+}
+
+.official-requirement-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.official-requirement-exception {
+  color: #9a3412;
+  font-size: 13px;
+}
+
+.official-status-badge {
+  display: inline-block;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.official-status-badge.status-적용-확인 {
+  background: #bbf7d0;
+  color: #166534;
+}
+
+.official-status-badge.status-추가-확인-필요 {
+  background: #fde68a;
+  color: #92400e;
+}
+
+.official-status-badge.status-비해당 {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+.official-status-badge.status-pending {
+  background: #f3f4f6;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.regulation-unconfirmed {
+  position: relative;
+  display: inline-block;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 8px;
+  background: #e5e7eb;
+  color: #4b5563;
+  cursor: help;
+}
+
+.regulation-unconfirmed:hover .info-icon-pop,
+.regulation-unconfirmed:focus .info-icon-pop {
+  display: block;
+}
+
+.regulation-unconfirmed .info-icon-pop {
+  left: 0;
+  top: 24px;
+  width: 260px;
+}
+
 .regulation-ref {
   display: block;
   font-family: monospace;
