@@ -149,16 +149,16 @@
     {% if hscode_ctx.overall_best %}
     <div class="best-tariff-banner">
       <div>
-        <div class="best-tariff-label">최적 관세 추천</div>
+        <div class="best-tariff-label">조회된 협정세율 비교</div>
         <div class="best-tariff-main">
           <strong>{{ hscode_ctx.overall_best.product.name }}</strong>
           ({{ hscode_ctx.overall_best.product.hs_code }})
           — <strong>{{ hscode_ctx.overall_best.best_regime.regime }}</strong>
-          적용 시 <span class="best-tariff-rate">{{ hscode_ctx.overall_best.best_regime.display }}</span>로 가장 유리
+          적용 시 <span class="best-tariff-rate">{{ hscode_ctx.overall_best.best_regime.display }}</span>로 세율이 가장 낮음 (원산지 등 적용 요건은 별도 확인 필요)
         </div>
         {% if hscode_ctx.overall_best.certs %}
         <div class="best-tariff-certs">
-          필요 서류: {{ hscode_ctx.overall_best.certs|join(', ') }}
+          관련 서류·인증: {{ hscode_ctx.overall_best.certs|join(', ') }}
         </div>
         {% endif %}
       </div>
@@ -259,7 +259,7 @@
 
         {% if row.certs %}
         <div class="cert-badges">
-          <span class="cert-label">필요 인증:</span>
+          <span class="cert-label">관련 인증·확인사항:</span>
           {% for cert in row.certs %}
           {% if hscode_ctx.cert_links and hscode_ctx.cert_links.get(cert) %}
           <a class="cert-badge cert-badge-link" href="{{ hscode_ctx.cert_links[cert] }}" target="_blank" rel="noopener">{{ cert }} ↗</a>
@@ -310,6 +310,15 @@
           {% for note in row.regulation_notes %}
           <div class="regulation-card level-{{ note.level }}">
             <span class="regulation-level level-{{ note.level }}">{{ note.level }}</span>
+            {% if row.regulation_notes_is_live %}
+            <span class="regulation-unconfirmed" tabindex="0">적용 여부 확인 필요
+              <span class="info-icon-pop">
+                UNCTAD TRAINS 원본에 세부 HS코드가 태깅 안 돼 있어, 이 항목이 실제로
+                {{ row.product.name }}({{ row.product.hs_code }})에 적용되는지는 관련도 순
+                정렬로 추정한 것입니다. 정확한 적용 여부는 별도 확인이 필요합니다.
+              </span>
+            </span>
+            {% endif %}
             <strong>{{ note.title }}</strong>
             <p>{{ note.desc }}</p>
             <span class="regulation-ref">

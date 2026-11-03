@@ -1590,6 +1590,30 @@ p.page-desc:not(:last-child) {
   color: #991b1b;
 }
 
+.regulation-unconfirmed {
+  position: relative;
+  display: inline-block;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 8px;
+  background: #e5e7eb;
+  color: #4b5563;
+  cursor: help;
+}
+
+.regulation-unconfirmed:hover .info-icon-pop,
+.regulation-unconfirmed:focus .info-icon-pop {
+  display: block;
+}
+
+.regulation-unconfirmed .info-icon-pop {
+  left: 0;
+  top: 24px;
+  width: 260px;
+}
+
 .regulation-ref {
   display: block;
   font-family: monospace;
