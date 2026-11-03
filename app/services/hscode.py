@@ -347,15 +347,44 @@ def build_hscode_context(expo, products):
     product_rows = []
     for product in products:
         regimes = get_tariff_regimes(product.hs_code, country_iso) if country_iso else []
-        best = None
-        numeric_regimes = [r for r in regimes if r["tariff_ave"] is not None]
-        if numeric_regimes:
-            best = min(numeric_regimes, key=lambda r: r["tariff_ave"])
-        for r in regimes:
-            r["is_best"] = (r is best) if best else False
         mfn_rate = (
             tariff_lookup.get_mfn_rate(product.hs_code, country_iso) if country_iso else None
         )
+        mfn_numeric = (
+            mfn_rate["tariff_ave"]
+            if mfn_rate and mfn_rate.get("tariff_ave") is not None and not mfn_rate.get("is_range")
+            else None
+        )
+
+        # 협정세율(FTA/RCEP)은 원칙적으로 기본세율(MFN)보다 낮거나 같아야
+        # 정상이다(협정은 '혜택'이지 기본세율보다 불리할 수 없음). 그런데
+        # 이 CSV(농림축산식품부 "농축산물 FTA 협정세율 현황")는 한국이
+        # 각 상대국에서 수입할 때 적용하는 한국 측 세율표라, 반대 방향
+        # (한국 -> 상대국 수출)에 그대로 갖다 쓰면 숫자가 안 맞을 수 있다
+        # (실제로 싱가포르의 경우 MFN 0%인데 RCEP(아세안) 컬럼만 5.3%로
+        # 나온 사례를 발견함). MFN보다 높게 나온 협정세율은 이 방향 전환
+        # 과정에서 신뢰할 수 없다고 보고, "확정된 세율"로 보여주지 않는다
+        # (최적 관세 후보에서 제외 + 화면에 검증 필요 표시).
+        for r in regimes:
+            r["data_unreliable"] = (
+                mfn_numeric is not None
+                and r["tariff_ave"] is not None
+                and r["tariff_ave"] > mfn_numeric
+            )
+
+        best = None
+        numeric_regimes = [
+            r for r in regimes if r["tariff_ave"] is not None and not r["data_unreliable"]
+        ]
+        if numeric_regimes:
+            best = min(numeric_regimes, key=lambda r: r["tariff_ave"])
+        # 협정세율이 MFN(기본세율)보다 실제로 낮지 않다면("이미 무관세"
+        # 등으로 동률 포함) 굳이 그 협정을 "추천"할 이유가 없다. 둘 다
+        # 같은 결과인데 한쪽만 "가장 유리"라고 단정하면 오해를 준다.
+        if best is not None and mfn_numeric is not None and mfn_numeric <= best["tariff_ave"]:
+            best = None
+        for r in regimes:
+            r["is_best"] = (r is best) if best else False
         # FTA 협정 세율뿐 아니라 MFN(기본세율)이 세부품목별로 갈려도(예: 협정은
         # 전부 0%인데 MFN만 8.3~54.3%처럼 다름) "우리 제품이 정확히 몇 %인지"를
         # 알려줘야 하므로, 어느 쪽이 범위든 세부품목 표를 띄운다.
