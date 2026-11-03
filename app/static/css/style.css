@@ -1470,6 +1470,31 @@ p.page-desc:not(:last-child) {
   font-weight: 600;
 }
 
+.data-unreliable-badge {
+  position: relative;
+  display: inline-block;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10px;
+  margin-left: 6px;
+  font-weight: 600;
+  cursor: help;
+}
+
+.data-unreliable-badge:hover .info-icon-pop,
+.data-unreliable-badge:focus .info-icon-pop {
+  display: block;
+}
+
+.data-unreliable-badge .info-icon-pop {
+  left: 0;
+  top: 20px;
+  width: 260px;
+  font-weight: 400;
+}
+
 .tariff-rate-cell {
   text-align: right;
   font-weight: 600;

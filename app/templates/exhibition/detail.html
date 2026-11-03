@@ -220,6 +220,15 @@
               <td>
                 {{ regime.regime }}
                 {% if regime.is_best %}<span class="best-pick-tag">추천</span>{% endif %}
+                {% if regime.data_unreliable %}
+                <span class="data-unreliable-badge" tabindex="0">검증 필요
+                  <span class="info-icon-pop">
+                    협정세율이 기본세율(MFN)보다 높게 나와 데이터 방향(한국 수입용 세율표를
+                    수출용으로 참조했을 가능성)이 의심되는 값입니다. 확정된 세율로 보지 말고
+                    관세사 또는 해당국 관세청을 통해 반드시 재확인하세요.
+                  </span>
+                </span>
+                {% endif %}
               </td>
               <td class="tariff-rate-cell {% if regime.tariff_ave == 0 %}zero{% endif %}">
                 {{ regime.display }}
