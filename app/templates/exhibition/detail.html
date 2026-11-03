@@ -270,13 +270,50 @@
         </div>
         {% endif %}
 
+        {% if row.official_requirements %}
         <div class="section-label-row">
           <h4 class="section-label">
-            수출 주의사항 <span class="section-label-sub">({{ row.product.name }} 관련 식품·농산물 수입규정 참고 · {{ expo.country_ko or expo.country }})</span>
+            싱가포르 수출 시 확인할 주요 요건 <span class="section-label-sub">({{ row.product.name }} · 공식 기관 자료 기반)</span>
+            <span class="data-source-badge live">공식 출처 확인</span>
+          </h4>
+        </div>
+        <p class="placeholder-note">
+          이 표는 TRAINS 추정이 아니라 SFA(싱가포르 식품청)·싱가포르 관세청 등 공식 자료를 직접 조사해
+          HS {{ row.product.hs_code }}(스위트 비스킷) 조건에 맞춰 정리한 것입니다. "적용 확인"은 규제
+          준수가 끝났다는 뜻이 아니라, 이 요건이 적용되는 것으로 공식 자료와 대조해 확인했다는 뜻입니다.
+        </p>
+        <div class="official-requirement-list">
+          {% for req in row.official_requirements %}
+          <div class="official-requirement-card status-{{ loop.index }}">
+            <div class="official-requirement-head">
+              <strong>{{ req.title }}</strong>
+              <span class="official-status-badge status-{{ req.status|replace(' ', '-') }}">{{ req.status }}</span>
+              {% if req.verification_status != "reviewed" %}
+              <span class="official-status-badge status-pending">근거 추가 확인 중</span>
+              {% endif %}
+            </div>
+            <p>{{ req.requirement_summary }}</p>
+            {% if req.exceptions %}
+            <p class="official-requirement-exception">예외·조건: {{ req.exceptions }}</p>
+            {% endif %}
+            <span class="regulation-ref">
+              출처: <a href="{{ req.official_source_url }}" target="_blank" rel="noopener">공식 링크</a>
+              · 확인일 {{ req.checked_at }}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+        <p class="placeholder-note" style="margin-top:12px;">아래는 UNCTAD TRAINS에서 함께 찾은 참고자료입니다 — 위 공식 표와 달리 품목별 적용 여부가 검증되지 않았습니다.</p>
+        {% endif %}
+
+        <div class="section-label-row">
+          <h4 class="section-label">
+            {% if row.official_requirements %}참고자료 (TRAINS){% else %}수출 주의사항{% endif %}
+            <span class="section-label-sub">({{ row.product.name }} 관련 식품·농산물 수입규정 참고 · {{ expo.country_ko or expo.country }})</span>
             {% if row.regulation_notes_is_live %}
               <span class="data-source-badge live">UNCTAD TRAINS 실데이터</span>
             {% endif %}
-            {% if row.regulation_strictness %}
+            {% if row.regulation_strictness and not row.official_requirements %}
               <span class="strictness-badge strictness-{{ row.regulation_strictness }}">규제 강도: {{ row.regulation_strictness }}</span>
               <span class="info-icon" tabindex="0">i
                 <span class="info-icon-pop">
@@ -308,9 +345,13 @@
         </p>
         <div class="regulation-list">
           {% for note in row.regulation_notes %}
-          <div class="regulation-card level-{{ note.level }}">
+          <div class="regulation-card {% if row.official_requirements %}level-미검증{% else %}level-{{ note.level }}{% endif %}">
+            {% if row.official_requirements %}
+            <span class="regulation-level level-미검증">적용 여부 미검증</span>
+            {% else %}
             <span class="regulation-level level-{{ note.level }}">{{ note.level }}</span>
-            {% if row.regulation_notes_is_live %}
+            {% endif %}
+            {% if row.regulation_notes_is_live and not row.official_requirements %}
             <span class="regulation-unconfirmed" tabindex="0">적용 여부 확인 필요
               <span class="info-icon-pop">
                 UNCTAD TRAINS 원본에 세부 HS코드가 태깅 안 돼 있어, 이 항목이 실제로

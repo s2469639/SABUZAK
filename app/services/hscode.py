@@ -28,6 +28,7 @@ NtmMeasure.reporter 컬럼은 ISO3(예: "SGP")를 저장하고, product 컬럼�
 from app.models import NtmMeasure
 from app.services import tariff_lookup
 from app.services import trains_client
+from app.services.regulation_knowledge.matcher import get_official_requirements
 
 try:
     import pycountry
@@ -372,6 +373,17 @@ def build_hscode_context(expo, products):
         no_match_after_sync = is_synced and not product_regulations
         regulation_notes = product_regulations if is_synced else get_regulation_notes(country_iso, None)
 
+        # 국가+HS코드 조합이 공식 규제 지식팩 범위(현재는 싱가포르 x 스위트
+        # 비스킷 HS 190531 하나뿐)에 해당하면, TRAINS 추정 대신 공식 자료
+        # 기반 결과를 우선 보여준다. 범위 밖이면 None이라 기존 흐름 그대로.
+        official_requirements = get_official_requirements(country_iso, product.hs_code)
+        certs = get_required_certs(country_iso, expo.food_yn)
+        if official_requirements is not None:
+            # 공식 지식팩 표가 인증 상태(HACCP 조건부 등)까지 더 정확히
+            # 보여주므로, 여기서 단정적으로 뽑히는 고정 인증 배지는 끈다
+            # (예: SGP 기본 폴백이던 "HACCP 필요" 단정 표시 제거).
+            certs = []
+
         product_rows.append({
             "product": product,
             "regimes": regimes,
@@ -380,7 +392,8 @@ def build_hscode_context(expo, products):
             "has_range": has_range,
             "subitems": subitems,
             "mfn_rate": mfn_rate,
-            "certs": get_required_certs(country_iso, expo.food_yn),
+            "certs": certs,
+            "official_requirements": official_requirements,
             "regulation_notes": regulation_notes,
             "regulation_notes_is_live": is_synced,
             "regulation_no_match": no_match_after_sync,
