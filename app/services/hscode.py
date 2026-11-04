@@ -371,6 +371,10 @@ def build_hscode_context(expo, products):
                 and r["tariff_ave"] is not None
                 and r["tariff_ave"] > mfn_numeric
             )
+            # 신뢰할 수 없는 수치는 "5.3%"처럼 확정된 세율로 보이는 숫자를
+            # 그대로 노출하지 않고, 검증 중이라는 문구로 대체해서 보여준다.
+            if r["data_unreliable"]:
+                r["display"] = "세율 검증 중"
 
         best = None
         numeric_regimes = [
